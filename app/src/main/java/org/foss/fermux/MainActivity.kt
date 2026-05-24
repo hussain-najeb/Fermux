@@ -2,6 +2,10 @@ package org.foss.fermux
 
 import android.os.Bundle
 import android.util.Log
+import android.content.Intent
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.ui.platform.LocalContext
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -49,7 +53,7 @@ class MainActivity : ComponentActivity() {
                 Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .background(Color(0xFF1E1E2E))
+                    .background(Color(0xFF11112A))
             ) {
                 LazyColumn {
                     items(commands) { command ->
