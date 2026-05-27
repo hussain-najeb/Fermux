@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Button
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
@@ -36,6 +37,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -59,6 +61,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen() {
+    val scrollState = rememberScrollState()
     val context = LocalContext.current
     var userCommand by remember { mutableStateOf("") }
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -69,9 +72,11 @@ fun MainScreen() {
                 .background(
                     brush = Brush.linearGradient(
                         colorStops = arrayOf(
-                            0.21f to Color(0xFF152671),
-                            0.4f to Color(0xFF1B2C78),
-                            1.0f to Color(0xFF5669BD)
+                            0.21f to Color(0xFF152671), // Your original dark
+                            0.4f to Color(0xFF1B2C78),  // Your original mid
+                            0.6f to Color(0xFF2E3E8C),  // Subtle Slate Indigo (New)
+                            1.8f to Color(0xFF4353A5),  // Subtle Muted Blue (New)
+                            1.0f to Color(0xFF5669BD)   // Your original light
                         )
                     )
                 )
@@ -83,7 +88,7 @@ fun MainScreen() {
             OutlinedTextField(
                 value = userCommand,
                 onValueChange = { userCommand = it },
-                label = { Text("User Command") },
+                label = { Text("|") },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Send
@@ -91,7 +96,7 @@ fun MainScreen() {
                 keyboardActions = KeyboardActions(
                     onSend = {
                         if (userCommand.isNotBlank()) {
-                            myTermuxCommands(context, "$userCommand; exec bash")
+                            myTermuxCommands(context, userCommand)
                         }
                     }
                 ),
@@ -102,6 +107,14 @@ fun MainScreen() {
                     focusedTextColor = Color(0xFFFEFEFE),
                     unfocusedTextColor = Color(0xFFFEFEFE)
                 )
+                )
+            Text(
+                text = TermuxOutput.output,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f)
+                .padding(10.dp)
+                .verticalScroll(state = scrollState),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -112,9 +125,14 @@ fun MainScreen() {
 
 
 data class TermuxCommand(
+
     val label: String,
     val script: String
 )
+object TermuxOutput {
+    var output by mutableStateOf("")
+}
+
 
 @SuppressLint("SdCardPath")
 fun myTermuxCommands(context: Context, command: String) {
@@ -135,7 +153,7 @@ fun myTermuxCommands(context: Context, command: String) {
         putExtra("com.termux.RUN_COMMAND_PATH", "/data/data/com.termux/files/usr/bin/bash")
         putExtra("com.termux.RUN_COMMAND_ARGUMENTS", arrayOf("-c", command))
         putExtra("com.termux.RUN_COMMAND_WORKDIR", "/data/data/com.termux/files/home")
-        putExtra("com.termux.RUN_COMMAND_BACKGROUND", false)
+        putExtra("com.termux.RUN_COMMAND_BACKGROUND", true)
         putExtra("com.termux.RUN_COMMAND_SESSION_ACTION", "0")
         putExtra("com.termux.RUN_COMMAND_PENDING_INTENT", pendingIntent)
     }

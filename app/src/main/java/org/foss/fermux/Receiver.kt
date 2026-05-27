@@ -19,6 +19,17 @@ class Receiver : BroadcastReceiver() {
         val errCode = result.getInt("err")
         val errorMessage = result.getString("errmsg").orEmpty()
 
+        TermuxOutput.output += """
+$ stdout:
+$stdout
+
+$ stderr:
+$stderr
+
+exit code: $exitCode
+
+""".trimIndent()
+
         Log.d("fermux", "output: $stdout")
         Log.d("fermux", "error: $stderr")
         Log.d("fermux", "ExitCode: $exitCode")
