@@ -1,15 +1,8 @@
 package org.foss.fermux
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.text.input.ImeAction
 import android.app.PendingIntent
+
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -18,34 +11,24 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Button
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.unit.dp
 import org.foss.fermux.ui.theme.FermuxTheme
+import org.foss.fermux.ui.theme.JetbrainsMono
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +37,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             FermuxTheme {
                 MainScreen()
+
             }
         }
     }
@@ -61,9 +45,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen() {
-    val scrollState = rememberScrollState()
     val context = LocalContext.current
-    var userCommand by remember { mutableStateOf("") }
+    var userCommand by remember { mutableStateOf(TextFieldValue("")) }
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
             Modifier
@@ -72,63 +55,114 @@ fun MainScreen() {
                 .background(
                     brush = Brush.linearGradient(
                         colorStops = arrayOf(
-                            0.21f to Color(0xFF152671), // Your original dark
-                            0.4f to Color(0xFF1B2C78),  // Your original mid
-                            0.6f to Color(0xFF2E3E8C),  // Subtle Slate Indigo (New)
-                            1.8f to Color(0xFF4353A5),  // Subtle Muted Blue (New)
-                            1.0f to Color(0xFF5669BD)   // Your original light
+                            0.21f to Color(0xFF152671),
+                            0.4f to Color(0xFF1B2C78),
+                            0.6f to Color(0xFF2E3E8C),
+                            1.8f to Color(0xFF4353A5),
+                            1.0f to Color(0xFF5669BD)
                         )
                     )
                 )
         )
         {
 
-            Spacer(modifier = Modifier.height(10.dp))
 
-            OutlinedTextField(
-                value = userCommand,
-                onValueChange = { userCommand = it },
-                label = { Text("|") },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Send
-                ),
-                keyboardActions = KeyboardActions(
-                    onSend = {
-                        if (userCommand.isNotBlank()) {
-                            myTermuxCommands(context, userCommand)
+                Spacer(modifier = Modifier.height(10.dp))
+                OutlinedTextField(
+                    value = userCommand,
+                    onValueChange = { userCommand = it },
+                    label = { Text("") },
+                    modifier = Modifier.
+                    fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Send
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onSend = {
+                            if (userCommand.text.isNotBlank()) {
+                                myTermuxCommands(context, userCommand.text)
+                                userCommand = TextFieldValue("")
+                            }
+
+                        }
+                    ),
+                    textStyle = LocalTextStyle.current.copy(color = Color(0xFFFEFEFE)),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF8F97BC),
+                        unfocusedBorderColor = Color(0xFF5669bd), // change this to #5669bd so it looks better
+                        focusedTextColor = Color(0xFFFEFEFE),
+                        unfocusedTextColor = Color(0xFFFEFEFE)
+                    )
+                )
+                LazyColumn {
+                    item {
+                        SelectionContainer {
+
+
+                            Text(
+                                text = TermuxOutput.output,
+                                fontFamily = JetbrainsMono,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(10.dp),
+                            )
                         }
                     }
-                ),
-                textStyle = LocalTextStyle.current.copy(color = Color(0xFFFEFEFE)),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF8F97BC),
-                    unfocusedBorderColor = Color(0xFF8F97BC),
-                    focusedTextColor = Color(0xFFFEFEFE),
-                    unfocusedTextColor = Color(0xFFFEFEFE)
-                )
-                )
-            Text(
-                text = TermuxOutput.output,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f)
-                .padding(10.dp)
-                .verticalScroll(state = scrollState),
-            )
-
+                }
             Spacer(modifier = Modifier.height(16.dp))
+            ArrowKeyMovement(
+                userCommand = userCommand,
+                onCommandChange = { userCommand = it })
+            }
         }
     }
-}
 
 
 
-data class TermuxCommand(
 
-    val label: String,
-    val script: String
-)
+@Composable
+fun ArrowKeyMovement(
+    userCommand: TextFieldValue,
+    onCommandChange: (TextFieldValue) -> Unit, )
+{
+    Row(modifier = Modifier
+        ) {
+        Button(onClick = {
+            val newPos = (userCommand.selection.start -1).coerceAtLeast(0)
+            onCommandChange(TextFieldValue(
+                text = userCommand.text,
+                selection = TextRange(newPos)))
+
+        }) {
+            Text("<-")
+        }
+
+
+    }
+
+
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 object TermuxOutput {
     var output by mutableStateOf("")
 }
@@ -136,6 +170,7 @@ object TermuxOutput {
 
 @SuppressLint("SdCardPath")
 fun myTermuxCommands(context: Context, command: String) {
+    TermuxOutput.output += "$ $command\n"
     Log.d("fermux", "Sending: $command")
 
     val resultIntent = Intent(context, Receiver::class.java).apply {
