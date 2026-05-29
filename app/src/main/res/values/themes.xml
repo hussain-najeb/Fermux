@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Fermux" parent="android:Theme.Material.Light.NoActionBar"/>
+    <style name="Theme.Fermux" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">#FF5669BD</item>
+        <item name="android:navigationBarColor">#FF5669BD</item>
+    </style>
 </resources>
