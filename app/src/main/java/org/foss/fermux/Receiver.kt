@@ -54,7 +54,11 @@ class Receiver : BroadcastReceiver() {
         // Terminal programs embed color/cursor codes like 32m and ?25h
         // that look like garbage in a plain text view.
         // This regex matches and removes all of them.
-        val cleaned = stdout.replace(Regex("\u001B\\[[^m]*m"), "")
+        val cleaned = stdout
+            .replace(Regex("\u001B\\[\\??[\\d;]*[A-Za-z]"), "") // CSI sequences: [2J, [?25h, [32m etc
+            .replace(Regex("\u001B[()][AB012]"), "")             // charset sequences
+            .replace(Regex("\u001B[^\\[]"), "")                  // other bare ESC sequences
+            .replace(Regex("\u001B"), "")                        // any remaining lone ESC
 
         // Append cleaned output to the shared state object.
         // Because TermuxOutput.output uses mutableStateOf, this
