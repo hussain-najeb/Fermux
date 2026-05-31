@@ -1,4 +1,4 @@
-package org.foss.fermux.Terminal
+package org.foss.fermux.terminal
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Button

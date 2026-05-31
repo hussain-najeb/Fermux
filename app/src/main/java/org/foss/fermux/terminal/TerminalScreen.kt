@@ -1,4 +1,4 @@
-package org.foss.fermux.Terminal
+package org.foss.fermux.terminal
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

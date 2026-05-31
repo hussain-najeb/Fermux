@@ -1,4 +1,4 @@
-package org.foss.fermux.Terminal
+package org.foss.fermux.terminal
 
 import android.annotation.SuppressLint
 import android.app.PendingIntent

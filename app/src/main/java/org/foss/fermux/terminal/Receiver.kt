@@ -1,4 +1,4 @@
-package org.foss.fermux.Terminal
+package org.foss.fermux.terminal
 
 import android.content.BroadcastReceiver
 import android.content.Context
