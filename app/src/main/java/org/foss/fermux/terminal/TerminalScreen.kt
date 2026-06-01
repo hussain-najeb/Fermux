@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.unit.sp
 import org.foss.fermux.ui.theme.JetbrainsMono
 
@@ -33,6 +34,11 @@ fun FermuxMainScreen(
 ) {
     val context = LocalContext.current
     var userCommand by remember { mutableStateOf(TextFieldValue("")) }
+    var history by remember { mutableStateOf(listOf<String>()) }
+    var commandplace by remember { mutableStateOf(-1) }
+
+
+
 
 
     Column(
@@ -45,7 +51,23 @@ fun FermuxMainScreen(
     )
     {
 
-        Spacer(modifier = Modifier.height(10.dp))
+        LazyColumn(modifier = Modifier
+            .weight(1f))
+
+        {
+            item {
+                SelectionContainer {
+                    Text(
+                        text = TermuxOutput.output,
+                        fontFamily = JetbrainsMono,
+                        color = Color.White,
+                        modifier = Modifier
+                            .padding(10.dp),
+                    )
+                }
+            }
+        }
+        Spacer(modifier = Modifier.height(1.dp))
 
 
 
@@ -65,6 +87,8 @@ fun FermuxMainScreen(
                             } else {
                                 myTermuxCommands(context, cancelCommand)
                             }
+                            history = history + cancelCommand
+                            commandplace = -1
                             userCommand = TextFieldValue("")
                         }
                     }
@@ -128,20 +152,7 @@ fun FermuxMainScreen(
         }
 
 
-        LazyColumn(modifier = Modifier.weight(1f)){
-            item {
-                SelectionContainer {
-                    Text(
-                        text = TermuxOutput.output,
-                        fontFamily = JetbrainsMono,
-                        color = Color.White,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(10.dp),
-                    )
-                }
-            }
-        }
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -149,7 +160,21 @@ fun FermuxMainScreen(
         // Sits above the keyboard when the text field is focused.
         ArrowKeyMovement(
             userCommand = userCommand,
-            onCommandChange = { userCommand = it }
+            onCommandChange = { userCommand = it },
+            onHistoryUp = {
+                if (history.isNotEmpty()) {
+                    commandplace = (commandplace + 1).coerceAtLeast(history.size - 1)
+                    val command = history[history.size - 1 - commandplace]
+                    userCommand = TextFieldValue(command, TextRange(command.length))
+                }
+            },
+            onHistoryDown = {
+                if (history.isNotEmpty()) {
+                    commandplace = (commandplace - 0 ).coerceAtMost(history.size - 1)
+                    val command = history[history.size - 1 - commandplace]
+                    userCommand = TextFieldValue(command, TextRange(command.length))
+                }
+            }
         )
     }
 }

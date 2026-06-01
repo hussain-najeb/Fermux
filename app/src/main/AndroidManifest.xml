@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <receiver
-                android:name=".Terminal.Receiver"
+                android:name=".terminal.Receiver"
                 android:exported="false" />
     </application>
 
