@@ -1,6 +1,7 @@
 package org.foss.fermux.terminal
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,7 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.unit.sp
 import org.foss.fermux.ui.theme.JetbrainsMono
-import java.lang.Compiler.command
 
 @Composable
 fun FermuxMainScreen(
@@ -39,7 +39,22 @@ fun FermuxMainScreen(
     var commandplace by remember { mutableStateOf(-1) }
 
 
-
+// val listState = rememberLazyListState()
+//
+//LaunchedEffect(TermuxOutput.lines.size) {
+//    if (TermuxOutput.lines.isNotEmpty()) {
+//        listState.scrollToItem(TermuxOutput.lines.size - 1)
+//    }
+//}
+    // LazyColumn(
+    //    modifier = Modifier.weight(1f),
+    //    state = listState,
+    //    reverseLayout = true
+    //) {
+    //    items(TermuxOutput.lines.reversed()) { line ->
+    //        when (line) { ... }
+    //    }
+    //}
 
 
     Column(
@@ -53,107 +68,111 @@ fun FermuxMainScreen(
     )
     {
 
-        LazyColumn(
-            modifier = Modifier
-                .weight(1f)
-        )
 
-        {
-            item {
-                SelectionContainer {
-                    Text(
-                        text = TermuxOutput.output,
-                        fontFamily = JetbrainsMono,
+        LazyColumn(modifier = Modifier.weight(1f)) {
+            items(TermuxOutput.lines) { line ->
+                when (line) {
+                    is TerminalLine.Output -> Text(
+                        text = line.outputText,
                         color = Color.White,
-                        modifier = Modifier
-                            .padding(10.dp),
+                        fontFamily = JetbrainsMono,
+                        modifier = Modifier.padding(horizontal = 10.dp)
+                    )
+
+                    is TerminalLine.Prompt -> Text(
+                        text = "$ ${line.userPrompt}",
+                        color = Color(0xFF9EA55D),
+                        fontFamily = JetbrainsMono,
+                        modifier = Modifier.padding(horizontal = 10.dp)
+
                     )
                 }
             }
         }
+
         Spacer(modifier = Modifier.height(1.dp))
 
 
 
-        Column {
-            BasicTextField(
-                value = userCommand,
-                onValueChange = { userCommand = it },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Send
-                ),
-                keyboardActions = KeyboardActions(
-                    onSend = {
-                        if (userCommand.text.isNotBlank()) {
-                            val cancelCommand = userCommand.text.trim()
-                            if (cancelCommand == "clear") {
-                                TermuxOutput.output = ""
-                            } else {
-                                myTermuxCommands(context, cancelCommand)
-                            }
-                            history = history + cancelCommand
-                            commandplace = -1
-                            userCommand = TextFieldValue("")
+        BasicTextField(
+            value = userCommand,
+            onValueChange = { userCommand = it },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Send
+            ),
+            keyboardActions = KeyboardActions(
+                onSend = {
+                    if (userCommand.text.isNotBlank()) {
+                        val cancelCommand = userCommand.text.trim()
+                        if (cancelCommand == "clear") {
+                            TermuxOutput.lines = listOf()
+                        } else {
+                            TermuxOutput.lines += TerminalLine.Prompt(cancelCommand)
+                            myTermuxCommands(context, cancelCommand)
                         }
+                        history = history + cancelCommand
+                        commandplace = -1
+                        userCommand = TextFieldValue("")
                     }
-                ),
-                textStyle = TextStyle(
-                    fontFamily = JetbrainsMono,
-                    color = Color(0xFF9EA55D),
-                    fontSize = 14.sp
-                ),
-                cursorBrush = SolidColor(Color(0xFF678E55)),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 8.dp),
-                decorationBox = { innerTextField ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "u0_a319",
-                            color = Color(0xFF5669BD),
-                            fontFamily = JetbrainsMono,
-                            fontSize = 14.sp
-                        )
-                        Text(
-                            text = "@",
-                            color = Color(0xFFABB2BF),
-                            fontFamily = JetbrainsMono,
-                            fontSize = 14.sp
-                        )
-                        Text(
-                            text = "fermux",
-                            color = Color(0xFF678E55),
-                            fontFamily = JetbrainsMono,
-                            fontSize = 14.sp
-                        )
-                        Text(
-                            text = ":",
-                            color = Color(0xFFABB2BF),
-                            fontFamily = JetbrainsMono,
-                            fontSize = 14.sp
-                        )
-                        Text(
-                            text = "~",
-                            color = Color(0xFF678E55),
-                            fontFamily = JetbrainsMono,
-                            fontSize = 14.sp
-                        )
-                        Text(
-                            text = "$ ",
-                            color = Color(0xFFABB2BF),
-                            fontFamily = JetbrainsMono,
-                            fontSize = 14.sp
-                        )
+                }
+            ),
+            textStyle = TextStyle(
+                fontFamily = JetbrainsMono,
+                color = Color(0xFF9EA55D),
+                fontSize = 14.sp
+            ),
+            cursorBrush = SolidColor(Color(0xFF678E55)),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 8.dp),
+            decorationBox = { innerTextField ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "u0_a319",
+                        color = Color(0xFF5669BD),
+                        fontFamily = JetbrainsMono,
+                        fontSize = 14.sp
+                    )
+                    Text(
+                        text = "@",
+                        color = Color(0xFFABB2BF),
+                        fontFamily = JetbrainsMono,
+                        fontSize = 14.sp
+                    )
+                    Text(
+                        text = "fermux",
+                        color = Color(0xFF678E55),
+                        fontFamily = JetbrainsMono,
+                        fontSize = 14.sp
+                    )
+                    Text(
+                        text = ":",
+                        color = Color(0xFFABB2BF),
+                        fontFamily = JetbrainsMono,
+                        fontSize = 14.sp
+                    )
+                    Text(
+                        text = "~",
+                        color = Color(0xFF678E55),
+                        fontFamily = JetbrainsMono,
+                        fontSize = 14.sp
+                    )
+                    Text(
+                        text = "$ ",
+                        color = Color(0xFFABB2BF),
+                        fontFamily = JetbrainsMono,
+                        fontSize = 14.sp
+                    )
 
-                        innerTextField()
-                    }
+                    innerTextField()
+                }
 
-                })
+            })
 
-        }
+
 
 
 
@@ -184,6 +203,7 @@ fun FermuxMainScreen(
         )
     }
 }
+
 
 
 

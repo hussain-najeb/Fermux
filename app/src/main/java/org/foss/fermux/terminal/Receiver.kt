@@ -63,7 +63,7 @@ class Receiver : BroadcastReceiver() {
         // Append cleaned output to the shared state object.
         // Because TermuxOutput.output uses mutableStateOf, this
         // automatically triggers a recompose in MainScreen.
-        TermuxOutput.output += cleaned + "\n"
+        TermuxOutput.lines += TerminalLine.Output(cleaned)
 
         // Debug logging — visible in Android Studio Logcat, not to the user
         Log.d("fermux", "output: $stdout")

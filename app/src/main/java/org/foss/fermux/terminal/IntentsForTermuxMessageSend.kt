@@ -9,8 +9,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
+
+sealed class TerminalLine {
+    data class Output(val outputText: String) : TerminalLine()
+    data class Prompt(val userPrompt: String) : TerminalLine()
+}
 object TermuxOutput {
-    var output by mutableStateOf("")
+    var lines by mutableStateOf(listOf<TerminalLine>())
 }
 
 
