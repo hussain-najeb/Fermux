@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.unit.sp
 import org.foss.fermux.ui.theme.JetbrainsMono
+import java.lang.Compiler.command
 
 @Composable
 fun FermuxMainScreen(
@@ -46,13 +47,16 @@ fun FermuxMainScreen(
             .fillMaxSize()
             .imePadding()
             .systemBarsPadding()
-            .background( Color(0xFF282C34)
+            .background(
+                Color(0xFF282C34)
             )
     )
     {
 
-        LazyColumn(modifier = Modifier
-            .weight(1f))
+        LazyColumn(
+            modifier = Modifier
+                .weight(1f)
+        )
 
         {
             item {
@@ -163,14 +167,16 @@ fun FermuxMainScreen(
             onCommandChange = { userCommand = it },
             onHistoryUp = {
                 if (history.isNotEmpty()) {
-                    commandplace = (commandplace + 1).coerceAtLeast(history.size - 1)
+                    commandplace = (commandplace + 1).coerceAtMost(history.size - 1)
                     val command = history[history.size - 1 - commandplace]
                     userCommand = TextFieldValue(command, TextRange(command.length))
                 }
             },
             onHistoryDown = {
-                if (history.isNotEmpty()) {
-                    commandplace = (commandplace - 0 ).coerceAtMost(history.size - 1)
+                commandplace = (commandplace - 1).coerceAtLeast(-1)
+                if (commandplace == -1) {
+                    userCommand = TextFieldValue("")
+                } else {
                     val command = history[history.size - 1 - commandplace]
                     userCommand = TextFieldValue(command, TextRange(command.length))
                 }
@@ -178,5 +184,6 @@ fun FermuxMainScreen(
         )
     }
 }
+
 
 

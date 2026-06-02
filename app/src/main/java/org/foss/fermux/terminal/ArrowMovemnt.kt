@@ -29,8 +29,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 fun ArrowKeyMovement(
     userCommand: TextFieldValue,
     onCommandChange: (TextFieldValue) -> Unit,
-    onHistoryUp: (TextFieldValue) -> Unit,
-    onHistoryDown: (TextFieldValue) -> Unit
+    onHistoryUp: () -> Unit,
+    onHistoryDown: () -> Unit
 ) {
 
 
@@ -69,48 +69,13 @@ fun ArrowKeyMovement(
             Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, "right-arrow")
 
         }
-        IconButton(onClick = {
-            onHistoryUp(
-                TextFieldValue(
-                    text = onHistoryUp.toString(),
-                    selection = TextRange(1)
-                )
-            )
-        })
-        {
-            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, "up-arrow")
-
+        IconButton(onClick = { onHistoryUp() }) {
+            Icon(Icons.Filled.KeyboardArrowUp, "up-arrow")
         }
 
-        IconButton(onClick = {
-            onHistoryDown(
-                TextFieldValue(
-                    text = onHistoryUp.toString(),
-                    selection = TextRange(0)
-                )
-            )
-        })
-        {
-            Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, "Down-arrow")
-
+        IconButton(onClick = { onHistoryDown() }) {
+            Icon(Icons.Filled.KeyboardArrowDown, "down-arrow")
         }
-        try {
-onHistoryDown(
-    TextFieldValue(
-        text = onHistoryDown.toString(),
-        selection = TextRange(0)
-    )
-)
-            onHistoryUp(
-                TextFieldValue(
-                    text = onHistoryUp.toString(),
-                    selection = TextRange(1)
-                )
-            )
-        } catch (e: Exception) {
-            Log.e("fermux", "Error with the arrows", e)
-        }
-    }
-}
+    }}
 
 
