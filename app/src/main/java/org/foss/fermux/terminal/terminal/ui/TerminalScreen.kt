@@ -1,6 +1,7 @@
 package org.foss.fermux.terminal.terminal.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,16 +19,20 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
-import org.foss.fermux.terminal.terminal.logic.ArrowKeyMovement
 import org.foss.fermux.terminal.terminal.logic.TerminalLine
 import org.foss.fermux.terminal.terminal.logic.TermuxOutput
 import org.foss.fermux.terminal.terminal.logic.myTermuxCommands
@@ -72,9 +77,15 @@ fun FermuxMainScreen(
                     )
 
                     is TerminalLine.Prompt -> Text(
-                        text = " ${line.userPrompt}",
-                        color = Color(0xFF9EA55D),
+                        text = buildAnnotatedString {
+                            withStyle(SpanStyle(color = Color(0xFF5669BD))) { append("u0_a319") }
+                            withStyle(SpanStyle(color = Color(0xFFABB2BF))) { append("@") }
+                            withStyle(SpanStyle(color = Color(0xFF678E55))) { append("fermux") }
+                            withStyle(SpanStyle(color = Color(0xFFABB2BF))) { append(":~$ ") }
+                            withStyle(SpanStyle(color = Color(0xFF9EA55D))) { append(line.userPrompt) }
+                },
                         fontFamily = JetbrainsMono,
+                        fontSize = 14.sp,
                         modifier = Modifier.padding(horizontal = 10.dp)
 
                     )
@@ -89,11 +100,17 @@ fun FermuxMainScreen(
         BasicTextField(
             value = userCommand,
             onValueChange = { userCommand = it },
+            singleLine = true,
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Send,
-                autoCorrect = false,
-                capitalization = KeyboardCapitalization.None
+                keyboardType = KeyboardType.Ascii,
+                capitalization = KeyboardCapitalization.None,
+                autoCorrect = false
             ),
+            modifier = Modifier
+                    .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
+                .padding(horizontal = 12.dp, vertical = 8.dp),
             keyboardActions = KeyboardActions(
                 onSend = {
                     if (userCommand.text.isNotBlank()) {
@@ -116,9 +133,6 @@ fun FermuxMainScreen(
                 fontSize = 14.sp
             ),
             cursorBrush = SolidColor(Color(0xFF678E55)),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 8.dp),
             decorationBox = { innerTextField ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
