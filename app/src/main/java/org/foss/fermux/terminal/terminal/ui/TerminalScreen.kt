@@ -1,4 +1,4 @@
-package org.foss.fermux.terminal
+package org.foss.fermux.terminal.terminal.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.lazy.items
@@ -22,12 +22,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.sp
+import org.foss.fermux.terminal.terminal.logic.ArrowKeyMovement
+import org.foss.fermux.terminal.terminal.logic.TerminalLine
+import org.foss.fermux.terminal.terminal.logic.TermuxOutput
+import org.foss.fermux.terminal.terminal.logic.myTermuxCommands
 import org.foss.fermux.ui.theme.JetbrainsMono
+import kotlin.collections.plus
 
 @Composable
 fun FermuxMainScreen(
@@ -38,23 +43,6 @@ fun FermuxMainScreen(
     var history by remember { mutableStateOf(listOf<String>()) }
     var commandplace by remember { mutableStateOf(-1) }
 
-
-// val listState = rememberLazyListState()
-//
-//LaunchedEffect(TermuxOutput.lines.size) {
-//    if (TermuxOutput.lines.isNotEmpty()) {
-//        listState.scrollToItem(TermuxOutput.lines.size - 1)
-//    }
-//}
-    // LazyColumn(
-    //    modifier = Modifier.weight(1f),
-    //    state = listState,
-    //    reverseLayout = true
-    //) {
-    //    items(TermuxOutput.lines.reversed()) { line ->
-    //        when (line) { ... }
-    //    }
-    //}
 
 
     Column(
@@ -69,8 +57,12 @@ fun FermuxMainScreen(
     {
 
 
-        LazyColumn(modifier = Modifier.weight(1f)) {
-            items(TermuxOutput.lines) { line ->
+        LazyColumn(modifier = Modifier
+            .weight(1f),
+            reverseLayout = true
+
+            ) {
+            items(TermuxOutput.lines.reversed()) { line ->
                 when (line) {
                     is TerminalLine.Output -> Text(
                         text = line.outputText,
@@ -80,7 +72,7 @@ fun FermuxMainScreen(
                     )
 
                     is TerminalLine.Prompt -> Text(
-                        text = "$ ${line.userPrompt}",
+                        text = " ${line.userPrompt}",
                         color = Color(0xFF9EA55D),
                         fontFamily = JetbrainsMono,
                         modifier = Modifier.padding(horizontal = 10.dp)
@@ -98,7 +90,9 @@ fun FermuxMainScreen(
             value = userCommand,
             onValueChange = { userCommand = it },
             keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Send
+                imeAction = ImeAction.Send,
+                autoCorrect = false,
+                capitalization = KeyboardCapitalization.None
             ),
             keyboardActions = KeyboardActions(
                 onSend = {
