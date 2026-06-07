@@ -62,9 +62,9 @@ fun HomeScreen(navigationController: NavHostController) {
                     .height(120.dp)
                     .clip(RoundedCornerShape(10.dp))
                     .background(Color(0xFFebedef))
-                    .clickable { navigationController.navigate("settings") }
+                    .clickable { navigationController.navigate("converter") }
             ) {
-                Text("Settings", modifier = Modifier
+                Text("converter", modifier = Modifier
                     .padding(start = 12.dp)
                     .padding(bottom = 70.dp, top = 19.dp)
                 )
@@ -73,16 +73,15 @@ fun HomeScreen(navigationController: NavHostController) {
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Converter — small tile
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(100.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .background(Color(0xFFebedef))
-                .clickable { navigationController.navigate("converter") }
+                .clickable { navigationController.navigate("settings") }
         ) {
-            Text("converter", modifier = Modifier
+            Text("settings", modifier = Modifier
                 .padding(start = 12.dp)
                 .padding(bottom = 70.dp, top = 13.dp)
             )
