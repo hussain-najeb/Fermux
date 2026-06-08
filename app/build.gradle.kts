@@ -7,6 +7,12 @@ android {
     namespace = "org.foss.fermux"
     compileSdk = 36
 
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
+
     defaultConfig {
         applicationId = "org.foss.fermux"
         minSdk = 28
