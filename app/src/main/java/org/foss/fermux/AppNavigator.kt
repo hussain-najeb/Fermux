@@ -19,7 +19,7 @@ val navigationController = rememberNavController()
 
         composable("home") { HomeScreen(navigationController) }
         composable("terminal") { FermuxMainScreen() }
-        composable("downloader") { DownloaderScreen() }
+        composable("downloader") { DownloaderScreen(navigationController) }
         composable("converter") { ConverterScreen() }
         composable("settings") { SettingsScreen() }
 

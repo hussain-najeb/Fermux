@@ -10,11 +10,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import kotlin.collections.listOf
 
 
@@ -36,20 +33,73 @@ import kotlin.collections.listOf
 
 
 @Composable
-fun DownloaderScreen() {
+fun DownloaderScreen(navigationController: NavHostController) {
+
+
+    var currentPage by remember { mutableStateOf("download") }
+
+
+    Row(
+        modifier = Modifier
+
+        .fillMaxSize()
+
+    )
+    {
+
+        // Sidebar Column
+
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .background(Color(0xFF1a1d24))
+                .width(60.dp)
+
+
+        ) {
+
+
+
+
+
+
+        }
+
+
+// Content Column
+
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(Color(0xFF1d2026), Color(0xFF1c1f24), Color(0xFF282831))
+                    )
+                )
+
+
+        ) {
+
+            when (currentPage) {
+                "download" -> DownloadContent()
+                "Audio List" -> AudioScreen()
+                "Download List" -> DownloadList
+                "Favourite Links" -> FavouriteLinks()
+            }
+
+
+        }
+
+
+    }
+}
+
+@Composable
+fun DownloadContent() {
 
     var downloadUrl by remember { mutableStateOf("") }
 
-Column(modifier = Modifier
-    .fillMaxSize()
-    .background(
-        Brush.verticalGradient(
-        colors = listOf(Color(0xFF1d2026), Color(0xFF1c1f24), Color(0xFF282c34))
-        )
-    )
-
-
-) {
     OutlinedTextField(
         modifier = Modifier
             .offset(x = 70.dp, y = 70.dp),
@@ -64,40 +114,15 @@ Column(modifier = Modifier
 
     )
 
-    Button( modifier = Modifier
-        .padding(top = 20.dp)
-        .offset(x = 155.dp, y = 70.dp),
+    Button(
+        modifier = Modifier
+            .padding(top = 20.dp)
+            .offset(x = 155.dp, y = 70.dp),
 
         onClick = {
-        downloadUrl = ""
-    }) {
+            downloadUrl = ""
+        }) {
         Text("Download")
     }
-
-}
-
-    Row(
-        modifier = Modifier
-            .width(40.dp)
-            .fillMaxHeight()
-            .background(Color(0xFF1a1d2e))
-
-    ) {
-
-
-        Icon(imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "Placeholder!")
-
-
-
-
-
-    }
-
-
-
-
-
-
-
 
 }
