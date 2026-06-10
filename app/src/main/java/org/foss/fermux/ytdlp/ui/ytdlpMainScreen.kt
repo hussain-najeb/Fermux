@@ -1,7 +1,6 @@
 package org.foss.fermux.ytdlp.ui
 
 
-import android.content.ClipData
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,14 +16,24 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.LibraryMusic
+import androidx.compose.material.icons.filled.Movie
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.currentComposer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,7 +41,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
@@ -40,7 +48,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import org.foss.fermux.R
-import kotlin.collections.listOf
+import org.foss.fermux.settings.ui.SettingsScreen
 
 
 // Add unique Font for the Download screen
@@ -51,169 +59,223 @@ import kotlin.collections.listOf
 fun DownloaderScreen(navigationController: NavHostController) {
 
 
+
     var currentPage by remember { mutableStateOf("download") }
 
 
-    Row(
+    Box (
         modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF282c34))
+    ){
 
-        .fillMaxSize()
 
-    )
-    {
 
-        Image(painter = painterResource(R.drawable.icon_sidebar_toggle_default),
-            contentDescription = "Side bar to toggle default",
+
+
+
+
+       Image(
+            painter = painterResource(
+                R.drawable.icon_sidebar_toggle_active),
+contentDescription = "Side bar to toggle default",
+modifier = Modifier
+    .offset(x = 2.dp, y = 640.dp)
+    .padding(top = 12.dp)
+    .size(53.dp)
+    .clickable {}
+
+
+             )
+
+
+        Row(
             modifier = Modifier
-                .size(53.dp)
-                .clickable {}
-
+                .fillMaxSize()
 
         )
-        // Sidebar Column
+        {
 
-        Column(
-            modifier = Modifier
-                .padding(top = 70.dp)
-                .height(460.dp)
-                .clip(RoundedCornerShape(topEnd = 20.dp, bottomEnd  = 20.dp) )
-                .background(Color(0xFF1a1d24))
-                .width(60.dp)
-                .shadow(
-                    elevation = 3.dp,
-                    shape = RoundedCornerShape(topEnd = 20.dp, bottomEnd = 20.dp),
-                    ambientColor = Color(0xFF111420),
-                    spotColor = Color(0xFF272d45)
+            // Sidebar Column
 
-
-                )
-
-
-        ) {
+            Column(
 
 
 
-
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-
-Image( painter =
-    painterResource(if (currentPage == "download")
-        R.drawable.icon_download_active
-    else R.drawable.icon_download_default
-
-    ),
-    contentDescription = "idle download",
-    modifier = Modifier
-        .offset(x = 2.dp)
-        .size(53.dp)
-        .clickable { currentPage = "download" }
-        .clip(RoundedCornerShape(8.dp))
-        .shadow(
-            elevation = 8.dp,
-            shape = RoundedCornerShape(8.dp),
-            ambientColor = Color(0xFF171B2B),
-            spotColor = Color(0xFF272d45)
-        )
-)
-
-
-
-            Spacer(modifier = Modifier.height(14.dp))
-
-            Image(painter = painterResource(R.drawable.icon_fermux_default),
-                contentDescription = "Back Home",
                 modifier = Modifier
-                    .offset(x = 2.dp)
-                    .size(53.dp)
-                .clickable { navigationController.popBackStack() }
-                .clip(RoundedCornerShape(8.dp))
-
-                .shadow(
-                    elevation = 8.dp,
-                    shape = RoundedCornerShape(8.dp),
-                    ambientColor = Color(0xFF171B2B),
-                    spotColor = Color(0xFF272d45)
-                )
-            )
+                    .padding(top = 180.dp)
+                    .height(320.dp)
+                    .width(70.dp)
+                    .clip(RoundedCornerShape(topEnd = 20.dp, bottomEnd = 20.dp))
+                    .background(Color(0xFF1a1d24))
+                    .shadow(
+                        elevation = 3.dp,
+                        shape = RoundedCornerShape(topEnd = 20.dp, bottomEnd = 20.dp),
+                        ambientColor = Color(0xFF111420),
+                        spotColor = Color(0xFF272d45)
 
 
+                    )
 
 
+            ) {
 
-        }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+
+                ToggleButton(
+                    modifier = Modifier
+                        .offset(x = 6.dp),
+                    checked = currentPage == "download",
+                    onCheckedChange = {currentPage = "download"},
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Download,
+                        contentDescription = "Download",
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                ToggleButton(
+                    modifier = Modifier
+                    .offset(x = 6.dp),
+                    checked = currentPage == "Download List",
+                    onCheckedChange = {currentPage = "Download List"},
+                ) {
+                    Icon (
+                        imageVector = Icons.Default.Movie,
+                        contentDescription = "Download List",
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                ToggleButton(
+                    modifier = Modifier
+                        .offset(x = 6.dp),
+                    checked = currentPage == "Audio List",
+                    onCheckedChange = {currentPage = "Audio List"},
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.LibraryMusic,
+                        contentDescription = "Audio List",
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                ToggleButton(
+                    modifier = Modifier
+                    .offset(x = 6.dp),
+                    checked = currentPage == "Settings",
+                    onCheckedChange = {currentPage = "Settings"},
+                ) {
+                    Icon (
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "Settings",
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+
+               IconButton(
+                   modifier = Modifier
+                           .offset(x = 6.dp),
+                   onClick = { navigationController.popBackStack() }
+               ) {
+                   Icon(
+                       imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                       contentDescription = "Home",
+                   )
+               }
+               }
 
 
 // Content Column
 
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight()
-                .background(color = Color(0xFF282c34)
-                )
+            //Also — imePadding() and verticalScroll
+            // aren't on this Column yet,
+            // but you don't need them until the TextField actually opens a
+            // keyboard and pushes content.
+            // Tomorrow's problem.
+
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .background(Color(0xFF282c34))
 
 
-        ) {
+            ) {
 
-            when (currentPage) {
-                "download" -> DownloadContent()
-                "Audio List" -> AudioScreen()
-                "Download List" -> DownloadList()
-                "Favourite Links" -> FavouriteLinks()
+                when (currentPage) {
+                    "download" -> DownloadContent()
+                    "Audio List" -> AudioScreen()
+                    "Download List" -> DownloadList()
+                    "Favourite Links" -> FavouriteLinks()
+                    "Settings" -> SettingsScreen()
+                }
+
+
             }
 
 
         }
-
-
     }
 }
 
 @Composable
 fun DownloadContent() {
 
-    var downloadUrl by remember { mutableStateOf("") }
 
-    OutlinedTextField(
-        modifier = Modifier
-            .offset(x = 5.dp, y = 10.dp),
-        value = downloadUrl,
-        onValueChange = { txt -> downloadUrl = txt },
-        label = { Text("Type URL here") },
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Send,
-            capitalization = KeyboardCapitalization.None,
-            autoCorrect = false
-        )
+
+    var downloadUrl by remember { mutableStateOf("") }
+    Column(modifier = Modifier
+        .verticalScroll(rememberScrollState())
+        .fillMaxSize()
 
     )
-    Box(
-        modifier = Modifier
 
+        {
+
+        OutlinedTextField(
+modifier = Modifier
+        .fillMaxWidth()
+        .padding(4.dp),
+            value = downloadUrl,
+            onValueChange = { txt -> downloadUrl = txt },
+            label = { Text("Type URL here") },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Send,
+                capitalization = KeyboardCapitalization.None,
+                autoCorrect = false
+            )
 
         )
+        Box {
+            FilledTonalButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(70.dp)
+                    .padding(top = 30.dp),
 
-    {
-        Button(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(70.dp)
-                .padding(top = 30.dp),
-
-            onClick = {
-                downloadUrl = ""
-            }) {
-            Text("Download")
+                onClick = {
+                    downloadUrl = ""
+                }) {
+                Text("Download")
+            }
         }
     }
-
 }
 
 
 @Composable
 fun AudioScreen() {
+
+
 
 }
 

@@ -13,6 +13,8 @@ android {
         }
     }
 
+
+
     defaultConfig {
         applicationId = "org.foss.fermux"
         minSdk = 28
@@ -33,6 +35,14 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    kotlin {
+        compilerOptions {
+            jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
+            freeCompilerArgs.addAll("-opt-in=androidx.compose.material3.ExperimentalMaterial3ExpressiveApi")
+        }
+    }
+
     buildFeatures {
         compose = true
     }
