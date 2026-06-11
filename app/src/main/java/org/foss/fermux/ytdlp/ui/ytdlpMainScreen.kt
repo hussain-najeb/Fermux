@@ -1,6 +1,10 @@
 package org.foss.fermux.ytdlp.ui
 
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,10 +30,10 @@ import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
@@ -42,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -54,39 +59,19 @@ import org.foss.fermux.settings.ui.SettingsScreen
 // Add unique Font for the Download screen
 
 
-
 @Composable
 fun DownloaderScreen(navigationController: NavHostController) {
 
 
-
     var currentPage by remember { mutableStateOf("download") }
 
+    var isSideBarOpen by remember { mutableStateOf(false) }
 
-    Box (
-        modifier = Modifier
-            .fillMaxSize()
+
+    Box(
+        modifier = Modifier.fillMaxSize()
             .background(Color(0xFF282c34))
-    ){
-
-
-
-
-
-
-
-       Image(
-            painter = painterResource(
-                R.drawable.icon_sidebar_toggle_active),
-contentDescription = "Side bar to toggle default",
-modifier = Modifier
-    .offset(x = 2.dp, y = 640.dp)
-    .padding(top = 12.dp)
-    .size(53.dp)
-    .clickable {}
-
-
-             )
+    ) {
 
 
         Row(
@@ -96,102 +81,119 @@ modifier = Modifier
         )
         {
 
-            // Sidebar Column
-
-            Column(
-
-
-
-                modifier = Modifier
-                    .padding(top = 180.dp)
-                    .height(320.dp)
-                    .width(70.dp)
-                    .clip(RoundedCornerShape(topEnd = 20.dp, bottomEnd = 20.dp))
-                    .background(Color(0xFF1a1d24))
-                    .shadow(
-                        elevation = 3.dp,
-                        shape = RoundedCornerShape(topEnd = 20.dp, bottomEnd = 20.dp),
-                        ambientColor = Color(0xFF111420),
-                        spotColor = Color(0xFF272d45)
+            AnimatedVisibility(
+                visible = isSideBarOpen,
+                enter = slideInHorizontally(
+                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+                    initialOffsetX = { fullWidth -> -fullWidth }
+                ),
+                exit = slideOutHorizontally(
+                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+                    targetOffsetX = { fullWidth -> -fullWidth }
+                )
+            )
+            {
 
 
-                    )
+                // Sidebar Column
+
+                Column(
 
 
-            ) {
-
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-
-                ToggleButton(
                     modifier = Modifier
-                        .offset(x = 6.dp),
-                    checked = currentPage == "download",
-                    onCheckedChange = {currentPage = "download"},
+                        .padding(top = 180.dp)
+                        .height(320.dp)
+                        .width(70.dp)
+                        .clip(RoundedCornerShape(topEnd = 20.dp, bottomEnd = 20.dp))
+                        .background(Color(0xFF1a1d24))
+                        .shadow(
+                            elevation = 3.dp,
+                            shape = RoundedCornerShape(topEnd = 20.dp, bottomEnd = 20.dp),
+                            ambientColor = Color(0xFF111420),
+                            spotColor = Color(0xFF272d45)
+
+
+                        )
+
+
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Download,
-                        contentDescription = "Download",
-                    )
+
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+
+                    ToggleButton(
+                        modifier = Modifier
+                            .offset(x = 6.dp),
+                        checked = currentPage == "download",
+                        onCheckedChange = { currentPage = "download" },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Download,
+                            contentDescription = "Download",
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    ToggleButton(
+                        modifier = Modifier
+                            .offset(x = 6.dp),
+                        checked = currentPage == "Download List",
+                        onCheckedChange = { currentPage = "Download List" },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Movie,
+                            contentDescription = "Download List",
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    ToggleButton(
+                        modifier = Modifier
+                            .offset(x = 6.dp),
+                        checked = currentPage == "Audio List",
+                        onCheckedChange = { currentPage = "Audio List" },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.LibraryMusic,
+                            contentDescription = "Audio List",
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    ToggleButton(
+                        modifier = Modifier
+                            .offset(x = 6.dp),
+                        checked = currentPage == "Settings",
+                        onCheckedChange = { currentPage = "Settings" },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "Settings",
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+
+                    IconButton(
+                        modifier = Modifier
+                            .offset(x = 6.dp),
+                        onClick = { navigationController.popBackStack() }
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Home",
+                        )
+                    }
+
+
                 }
 
-                Spacer(modifier = Modifier.height(10.dp))
-
-                ToggleButton(
-                    modifier = Modifier
-                    .offset(x = 6.dp),
-                    checked = currentPage == "Download List",
-                    onCheckedChange = {currentPage = "Download List"},
-                ) {
-                    Icon (
-                        imageVector = Icons.Default.Movie,
-                        contentDescription = "Download List",
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                ToggleButton(
-                    modifier = Modifier
-                        .offset(x = 6.dp),
-                    checked = currentPage == "Audio List",
-                    onCheckedChange = {currentPage = "Audio List"},
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.LibraryMusic,
-                        contentDescription = "Audio List",
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                ToggleButton(
-                    modifier = Modifier
-                    .offset(x = 6.dp),
-                    checked = currentPage == "Settings",
-                    onCheckedChange = {currentPage = "Settings"},
-                ) {
-                    Icon (
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = "Settings",
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-
-               IconButton(
-                   modifier = Modifier
-                           .offset(x = 6.dp),
-                   onClick = { navigationController.popBackStack() }
-               ) {
-                   Icon(
-                       imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                       contentDescription = "Home",
-                   )
-               }
-               }
+            }
 
 
 // Content Column
@@ -221,30 +223,43 @@ modifier = Modifier
 
 
             }
-
-
         }
+        Image(
+            painter = painterResource(
+                R.drawable.icon_sidebar_toggle_active
+            ),
+            contentDescription = "Side bar to toggle default",
+            modifier = Modifier
+                .offset(x = 2.dp, y = 640.dp)
+                .padding(top = 12.dp)
+                .size(53.dp)
+                .clickable { isSideBarOpen = !isSideBarOpen }
+
+
+        )
     }
+
 }
+
 
 @Composable
 fun DownloadContent() {
 
 
-
     var downloadUrl by remember { mutableStateOf("") }
-    Column(modifier = Modifier
-        .verticalScroll(rememberScrollState())
-        .fillMaxSize()
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .fillMaxSize()
 
     )
 
-        {
+    {
 
         OutlinedTextField(
-modifier = Modifier
-        .fillMaxWidth()
-        .padding(4.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp),
             value = downloadUrl,
             onValueChange = { txt -> downloadUrl = txt },
             label = { Text("Type URL here") },
@@ -268,6 +283,7 @@ modifier = Modifier
                 Text("Download")
             }
         }
+
     }
 }
 
@@ -275,6 +291,25 @@ modifier = Modifier
 @Composable
 fun AudioScreen() {
 
+    var animationState by remember { mutableStateOf(true) }
+
+    val animationProgress by animateFloatAsState(
+        targetValue = if (animationState) 0f else 1f,
+        animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec()
+    )
+    Box(
+
+        modifier = Modifier
+            .size(100.dp)
+            .graphicsLayer {
+                this.scaleX = 1f + animationProgress
+                this.scaleY = 1f + animationProgress
+
+            }
+            .background(Color.Black)
+            .clickable { animationState = !animationState }
+
+    )
 
 
 }
