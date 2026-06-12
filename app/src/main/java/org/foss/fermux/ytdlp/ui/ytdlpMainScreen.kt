@@ -225,10 +225,10 @@ fun DownloaderScreen(navigationController: NavHostController) {
             ) {
 
                 when (currentPage) {
-                    Page.DownloadPage -> DownloaderScreen(navigationController)
+                    Page.DownloadPage -> DownloadContent()
                     Page.AudioListPage -> DownloadedAudioScreen()
                     Page.VideoListPage -> DownloadVideoList()
-                    Page.SettingsPage -> DownloaderScreen(navigationController)
+                    Page.SettingsPage -> SettingsScreen()
                 }
             }
         }
