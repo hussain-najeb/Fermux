@@ -59,11 +59,22 @@ import org.foss.fermux.settings.ui.SettingsScreen
 // Add unique Font for the Download screen
 
 
+enum class Page {
+
+DownloadPage,
+    AudioListPage,
+    VideoListPage,
+
+    SettingsPage,
+
+}
+
+
 @Composable
 fun DownloaderScreen(navigationController: NavHostController) {
 
 
-    var currentPage by remember { mutableStateOf("download") }
+    var currentPage by remember { mutableStateOf(Page.DownloadPage) }
 
     var isSideBarOpen by remember { mutableStateOf(false) }
 
@@ -125,8 +136,8 @@ fun DownloaderScreen(navigationController: NavHostController) {
                     ToggleButton(
                         modifier = Modifier
                             .offset(x = 6.dp),
-                        checked = currentPage == "download",
-                        onCheckedChange = { currentPage = "download" },
+                        checked = currentPage == Page.DownloadPage,
+                        onCheckedChange = { currentPage = Page.DownloadPage },
                     ) {
                         Icon(
                             imageVector = Icons.Default.Download,
@@ -139,8 +150,8 @@ fun DownloaderScreen(navigationController: NavHostController) {
                     ToggleButton(
                         modifier = Modifier
                             .offset(x = 6.dp),
-                        checked = currentPage == "Download List",
-                        onCheckedChange = { currentPage = "Download List" },
+                        checked = currentPage == Page.VideoListPage,
+                        onCheckedChange = { currentPage = Page.VideoListPage },
                     ) {
                         Icon(
                             imageVector = Icons.Default.Movie,
@@ -153,8 +164,8 @@ fun DownloaderScreen(navigationController: NavHostController) {
                     ToggleButton(
                         modifier = Modifier
                             .offset(x = 6.dp),
-                        checked = currentPage == "Audio List",
-                        onCheckedChange = { currentPage = "Audio List" },
+                        checked = currentPage == Page.AudioListPage,
+                        onCheckedChange = { currentPage = Page.AudioListPage },
                     ) {
                         Icon(
                             imageVector = Icons.Default.LibraryMusic,
@@ -167,8 +178,8 @@ fun DownloaderScreen(navigationController: NavHostController) {
                     ToggleButton(
                         modifier = Modifier
                             .offset(x = 6.dp),
-                        checked = currentPage == "Settings",
-                        onCheckedChange = { currentPage = "Settings" },
+                        checked = currentPage == Page.SettingsPage,
+                        onCheckedChange = { currentPage = Page.SettingsPage },
                     ) {
                         Icon(
                             imageVector = Icons.Default.Settings,
@@ -214,16 +225,14 @@ fun DownloaderScreen(navigationController: NavHostController) {
             ) {
 
                 when (currentPage) {
-                    "download" -> DownloadContent()
-                    "Audio List" -> AudioScreen()
-                    "Download List" -> DownloadList()
-                    "Favourite Links" -> FavouriteLinks()
-                    "Settings" -> SettingsScreen()
+                    Page.DownloadPage -> DownloaderScreen(navigationController)
+                    Page.AudioListPage -> DownloadedAudioScreen()
+                    Page.VideoListPage -> DownloadVideoList()
+                    Page.SettingsPage -> DownloaderScreen(navigationController)
                 }
-
-
             }
         }
+
         Image(
             painter = painterResource(
                 R.drawable.icon_sidebar_toggle_active
@@ -242,87 +251,11 @@ fun DownloaderScreen(navigationController: NavHostController) {
 }
 
 
-@Composable
-fun DownloadContent() {
 
 
-    var downloadUrl by remember { mutableStateOf("") }
-    Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .fillMaxSize()
-
-    )
-
-    {
-
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(4.dp),
-            value = downloadUrl,
-            onValueChange = { txt -> downloadUrl = txt },
-            label = { Text("Type URL here") },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Send,
-                capitalization = KeyboardCapitalization.None,
-                autoCorrect = false
-            )
-
-        )
-        Box {
-            FilledTonalButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(70.dp)
-                    .padding(top = 30.dp),
-
-                onClick = {
-                    downloadUrl = ""
-                }) {
-                Text("Download")
-            }
-        }
-
-    }
-}
 
 
-@Composable
-fun AudioScreen() {
 
-    var animationState by remember { mutableStateOf(true) }
-
-    val animationProgress by animateFloatAsState(
-        targetValue = if (animationState) 0f else 1f,
-        animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec()
-    )
-    Box(
-
-        modifier = Modifier
-            .size(100.dp)
-            .graphicsLayer {
-                this.scaleX = 1f + animationProgress
-                this.scaleY = 1f + animationProgress
-
-            }
-            .background(Color.Black)
-            .clickable { animationState = !animationState }
-
-    )
-
-
-}
-
-@Composable
-fun DownloadList() {
-
-}
-
-@Composable
-fun FavouriteLinks() {
-
-}
 
 
 
