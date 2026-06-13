@@ -2,7 +2,6 @@ package org.foss.fermux.ytdlp.ui
 
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
@@ -14,28 +13,21 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -46,10 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import org.foss.fermux.R
@@ -112,7 +101,7 @@ fun DownloaderScreen(navigationController: NavHostController) {
 
 
                     modifier = Modifier
-                        .padding(top = 180.dp)
+                        .padding(top = 280.dp)
                         .height(320.dp)
                         .width(70.dp)
                         .clip(RoundedCornerShape(topEnd = 20.dp, bottomEnd = 20.dp))
@@ -209,11 +198,6 @@ fun DownloaderScreen(navigationController: NavHostController) {
 
 // Content Column
 
-            //Also — imePadding() and verticalScroll
-            // aren't on this Column yet,
-            // but you don't need them until the TextField actually opens a
-            // keyboard and pushes content.
-            // Tomorrow's problem.
 
             Column(
                 modifier = Modifier
@@ -233,9 +217,11 @@ fun DownloaderScreen(navigationController: NavHostController) {
             }
         }
 
+
         Image(
-            painter = painterResource(
-                R.drawable.icon_sidebar_toggle_active
+            painter = painterResource( if (isSideBarOpen) {
+                R.drawable.icon_sidebar_toggle_active }
+                else { R.drawable.icon_sidebar_toggle_default }
             ),
             contentDescription = "Side bar to toggle default",
             modifier = Modifier
@@ -246,8 +232,8 @@ fun DownloaderScreen(navigationController: NavHostController) {
 
 
         )
-    }
 
+    }
 }
 
 
