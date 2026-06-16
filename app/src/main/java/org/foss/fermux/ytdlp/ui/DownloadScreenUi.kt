@@ -1,6 +1,8 @@
 package org.foss.fermux.ytdlp.ui
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,10 +26,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import org.foss.fermux.R
+import org.foss.fermux.ytdlp.logic.DownloadStatus
 import org.foss.fermux.ytdlp.logic.downloaderLogic
+import org.foss.fermux.ytdlp.logic.fetchingTheMetadata
 
 
 //Also — imePadding() and verticalScroll
@@ -37,8 +40,11 @@ import org.foss.fermux.ytdlp.logic.downloaderLogic
 // Tomorrow's problem.
 
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun DownloadContent() {
+
+    var state by remember {mutableStateOf<DownloadStatus>(DownloadStatus.Idle)}
 
     val context = LocalContext.current
 
@@ -68,6 +74,7 @@ fun DownloadContent() {
             )
 
         )
+        CardWhenUsage(state)
         Box {
             FilledTonalButton(
                 modifier = Modifier
@@ -77,10 +84,18 @@ fun DownloadContent() {
 
                 onClick = {
                     scope.launch {
+
+                        state = DownloadStatus.Loading
                         try {
-                            withContext(Dispatchers.IO) {
+                            val metadata = fetchingTheMetadata(downloadUrl)
+                            state = DownloadStatus.Loaded(metadata)
+                        } catch (e: Exception) {
+                            state = DownloadStatus.Error(e.message ?: "Failed to download")
+                        }
+
+                        try {
                                 downloaderLogic(context, downloadUrl)
-                            }
+
                             Log.d("fermux", "Download succeeded for $downloadUrl")
                         } catch (e: Exception) {
                             Log.e("fermux", "Download failed for $downloadUrl", e)

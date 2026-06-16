@@ -1,6 +1,8 @@
 package org.foss.fermux.ytdlp.ui
 
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
@@ -59,6 +61,7 @@ DownloadPage,
 }
 
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun DownloaderScreen(navigationController: NavHostController) {
 

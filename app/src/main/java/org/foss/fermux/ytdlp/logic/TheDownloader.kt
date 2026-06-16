@@ -24,26 +24,32 @@ suspend fun downloaderLogic(context: Context, url: String) {
 
     withContext(Dispatchers.IO) {
         val response = YoutubeDL.getInstance().execute(request)
-
         downloadDir?.listFiles()?.forEach {
-            file -> CopyToDownloadFolder(context, file)
+            file -> copyToDownloadFolder(context, file)
         }
-
-
-
-
-
-
-
-
         Log.d("fermux", "exit=${response.exitCode}")
         Log.d("fermux", "out=${response.out}")
         Log.d("fermux", "err=${response.err}")
     }
 }
 
+
+
+
+suspend fun fetchingTheMetadata(url: String): DownloadMetadata =
+    withContext(Dispatchers.IO) {
+        val info = YoutubeDL.getInstance().getInfo(url)
+        DownloadMetadata(
+            title = info.title ?: "Unknown title",
+            thumbnail = info.thumbnail ?: "",
+            duration = info.duration,
+            uploader = info.uploader
+        )
+    }
+
+
 @RequiresApi(Build.VERSION_CODES.Q)
-suspend fun CopyToDownloadFolder (context: Context, sourceFile: File) {
+suspend fun copyToDownloadFolder (context: Context, sourceFile: File) {
     withContext(Dispatchers.IO) {
         val values = ContentValues().apply {
             put(MediaStore.Downloads.DISPLAY_NAME, sourceFile.name)
@@ -53,8 +59,6 @@ suspend fun CopyToDownloadFolder (context: Context, sourceFile: File) {
         val uri = context.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values
 
         ) ?: throw Exception("Error while opening download directory")
-
-// WHY THE FUCK WOULD WE PASS TO OUTPUTSTREAM AGAIN???? WHY!!!!?
 
         context.contentResolver.openOutputStream(uri)?.use { outputStream ->
             sourceFile.inputStream().use { inputOfSourceFile ->
