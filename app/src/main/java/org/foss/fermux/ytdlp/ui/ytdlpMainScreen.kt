@@ -61,7 +61,6 @@ DownloadPage,
 }
 
 
-@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun DownloaderScreen(navigationController: NavHostController) {
 
