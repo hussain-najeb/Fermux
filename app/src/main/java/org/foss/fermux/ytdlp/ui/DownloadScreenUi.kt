@@ -48,9 +48,7 @@ fun DownloadContent() {
 
     var downloadUrl by remember { mutableStateOf("") }
 
-    WhenCards(state)
 
-    Spacer(modifier = Modifier.height(16.dp))
 
     Column(
         modifier = Modifier
@@ -60,6 +58,11 @@ fun DownloadContent() {
     )
 
     {
+
+        WhenCards(state)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
 
         OutlinedTextField(
             modifier = Modifier
@@ -89,17 +92,15 @@ fun DownloadContent() {
                         try {
                             val metadata = fetchingTheMetadata(downloadUrl)
                             state = DownloadStatus.Loaded(metadata)
-                        } catch (e: Exception) {
-                            state = DownloadStatus.Error(e.message ?: "Failed to download")
-                        }
-
-                        try {
-                                downloaderLogic(context, downloadUrl)
+                                downloaderLogic(context, downloadUrl, { progress -> state = DownloadStatus.Downloading(progress, metadata)})
+                            state = DownloadStatus.Loaded(metadata)
 
                             Log.d("fermux", "Download succeeded for $downloadUrl")
-                        } catch (e: Exception) {
+                        }catch (e: Exception) {
                             Log.e("fermux", "Download failed for $downloadUrl", e)
                         }
+
+
                     }
 
                 }) {

@@ -14,8 +14,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 
-@RequiresApi(Build.VERSION_CODES.Q)
-suspend fun downloaderLogic(context: Context, url: String) {
+suspend fun downloaderLogic(context: Context, url: String, onProgress: (Float) -> Unit  ) {
     val downloadDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
     val outputPath = "${downloadDir?.absolutePath}/%(title)s.%(ext)s"
 
@@ -23,7 +22,9 @@ suspend fun downloaderLogic(context: Context, url: String) {
     request.addOption("-o", outputPath)
 
     withContext(Dispatchers.IO) {
-        val response = YoutubeDL.getInstance().execute(request)
+        val response = YoutubeDL.getInstance().execute(request) { progress, _, _ ->
+            onProgress(progress)
+        }
         downloadDir?.listFiles()?.forEach {
             file -> copyToDownloadFolder(context, file)
         }
@@ -48,7 +49,6 @@ suspend fun fetchingTheMetadata(url: String): DownloadMetadata =
     }
 
 
-@RequiresApi(Build.VERSION_CODES.Q)
 suspend fun copyToDownloadFolder (context: Context, sourceFile: File) {
     withContext(Dispatchers.IO) {
         val values = ContentValues().apply {

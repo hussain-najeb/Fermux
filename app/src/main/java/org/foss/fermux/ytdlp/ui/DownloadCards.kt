@@ -1,19 +1,22 @@
 package org.foss.fermux.ytdlp.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.LinearWavyProgressIndicator
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -21,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import org.foss.fermux.ytdlp.logic.DownloadMetadata
 import org.foss.fermux.ytdlp.logic.DownloadStatus
-import org.foss.fermux.ytdlp.logic.VideoTime
+import org.foss.fermux.ytdlp.logic.videoTime
 
 @Composable
 fun WhenCards (state: DownloadStatus) {
@@ -32,6 +35,10 @@ fun WhenCards (state: DownloadStatus) {
             LoadingCard()
         } // while downloading the info to the card
 
+        is DownloadStatus.Downloading -> {
+            LoadedCard(state.metadata, state.downloadProgress)
+        } // just to get a damn bar to show the progress.
+
         is DownloadStatus.Loaded -> {
             LoadedCard(state.metadata)
         }
@@ -40,39 +47,50 @@ fun WhenCards (state: DownloadStatus) {
         // composable later gets to be assgined to "DownloadMetadata" to fill out the
         // info in that data class.
 
-
-        is DownloadStatus.Downloading -> {
-            ProgressIndicatorBar()
-        } // just to get a damn bar to show the progress.
-
-
-
         is DownloadStatus.Error -> { Text(
             state.errorMessage)
         } // if god forbids, an error happens, its seen here.
     }
 }
 
-@Composable
-fun ProgressIndicatorBar () {}
+
+//Box(modifier = Modifier
+//.fillMaxWidth()
+//.padding(8.dp),
+//contentAlignment = Alignment.Center
+//) {
+//    LoadingIndicator()
+//}
 
 @Composable
 fun LoadingCard() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .clip(RoundedCornerShape(4.dp)),
 
+            ) {
+            LoadingIndicator()
+        }
 
-
-
+    }
 }
-
-
 @Composable
-fun LoadedCard (metadata: DownloadMetadata) {
 
-    Column(
+fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null) {   // for the fully Loaded card to view on screen
+
+    Column( // a column to have both the surface and the card be in the same page
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        ElevatedCard(
+        ElevatedCard( // the video card with the picture of the downloaded video
             modifier = Modifier
                 .clip(RoundedCornerShape(4.dp))
                 .fillMaxWidth()
@@ -88,21 +106,45 @@ fun LoadedCard (metadata: DownloadMetadata) {
                     .aspectRatio(16f / 9f)
                     .background(Color.Gray)
             )
+            Box(contentAlignment = Alignment.BottomCenter) {
+
+                progress?.let {
+                    LinearWavyProgressIndicator(
+                        progress = { progress / 100f },
+                        color = Color(0xff999bb5),
+                        trackColor = Color(0xFF2e36aa),
+
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                }
+
+
+            }
         }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // the surface to get the damn info on screen from the video metadata
+
         Surface(
             modifier = Modifier
                 .clip(RoundedCornerShape(4.dp))
                 .background(color = Color(0xFF2b2a33))
+
         ) {
+
+            // self-explanatory shit. Code being the comment and shit like that
+            // ( terribile idea btw).
+
             Column {
                 Text(metadata.title, modifier = Modifier
-                    .background(Color.White)
                     .padding(8.dp)
                 )
-                Text(VideoTime(metadata.duration),modifier = Modifier
+                Text(videoTime(metadata.duration),modifier = Modifier
                     .padding(8.dp)
-                    .background(Color.White)
                 )
+                metadata.uploader?.let { Text(it, modifier = Modifier
+                    .padding(8.dp)) }
             }
         }
     }
