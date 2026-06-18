@@ -3,11 +3,14 @@ package org.foss.fermux.ytdlp.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
@@ -70,14 +73,18 @@ fun LoadingCard() {
             .padding(8.dp),
         contentAlignment = Alignment.Center
     ) {
-        Card(
+        Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(5.dp)
                 .clip(RoundedCornerShape(4.dp)),
 
             ) {
-            LoadingIndicator()
+            Row {
+                LoadingIndicator()
+                Spacer(modifier = Modifier.width(9.dp))
+                Text(text = "fetching video info") // TODO have it in the middle of the screen, and change the color, reference from the terminal tab.
+            }
         }
 
     }

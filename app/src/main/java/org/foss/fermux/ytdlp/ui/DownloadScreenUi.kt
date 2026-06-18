@@ -1,4 +1,5 @@
 package org.foss.fermux.ytdlp.ui
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +38,7 @@ import org.foss.fermux.ytdlp.logic.fetchingTheMetadata
 // Tomorrow's problem.
 
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun DownloadContent() {
 
@@ -78,6 +80,10 @@ fun DownloadContent() {
             )
 
         )
+
+        // https://www.youtube.com/watch?v=ZFSN40r--zk&list=PLpR23XfB8-1UM2BbVMGeLMAQs3oiO5MRt&index=6
+
+
         Box {
             FilledTonalButton(
                 modifier = Modifier
@@ -89,17 +95,20 @@ fun DownloadContent() {
                     scope.launch {
 
                         state = DownloadStatus.Loading
+
                         try {
                             val metadata = fetchingTheMetadata(downloadUrl)
                             state = DownloadStatus.Loaded(metadata)
-                                downloaderLogic(context, downloadUrl, { progress -> state = DownloadStatus.Downloading(progress, metadata)})
+                                downloaderLogic(context, downloadUrl) { progress ->
+                                    state = DownloadStatus.Downloading(progress, metadata)
+                                }
                             state = DownloadStatus.Loaded(metadata)
-
+                            Log.d("fermux", "state is set to loaded")
                             Log.d("fermux", "Download succeeded for $downloadUrl")
                         }catch (e: Exception) {
                             Log.e("fermux", "Download failed for $downloadUrl", e)
+                            Log.d("fermux", "state failed to get stop the loading bar")
                         }
-
 
                     }
 
