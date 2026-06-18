@@ -83,7 +83,7 @@ fun LoadingCard() {
             Row {
                 LoadingIndicator()
                 Spacer(modifier = Modifier.width(9.dp))
-                Text(text = "fetching video info") // TODO have it in the middle of the screen, and change the color, reference from the terminal tab.
+                Text(text = "fetching video info") // TODO have it in the middle of the card to the right more, and change the color, reference from the terminal tab.
             }
         }
 
@@ -118,8 +118,8 @@ fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null) {   // for 
                 progress?.let {
                     LinearWavyProgressIndicator(
                         progress = { progress / 100f },
-                        color = Color(0xff999bb5),
-                        trackColor = Color(0xFF2e36aa),
+                        color = Color(0xFF2e36aa),
+                        trackColor = Color(0xff999bb5),
 
                         modifier = Modifier
                             .fillMaxWidth()

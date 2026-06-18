@@ -218,26 +218,24 @@ fun DownloaderScreen(navigationController: NavHostController) {
             }
         }
     }
-Box(  contentAlignment = Alignment.BottomStart,
-    modifier = Modifier
-    .fillMaxSize()
-    .padding(14.dp)) {
-    Image(
-        painter = painterResource(
-            if (isSideBarOpen) {
-                R.drawable.icon_sidebar_toggle_active
-            } else {
-                R.drawable.icon_sidebar_toggle_default
-            }
-        ),
-        contentDescription = "Side bar to toggle default",
+    Box(
+        contentAlignment = Alignment.BottomStart,
         modifier = Modifier
-            .padding(18.dp)
-            .size(74.dp)
-            .clickable { isSideBarOpen = !isSideBarOpen }
-
-
-    )
-}
-
+            .fillMaxSize()
+            .padding(14.dp)
+    ) {
+        IconButton(
+            onClick = { isSideBarOpen = !isSideBarOpen },
+            modifier = Modifier
+                .padding(18.dp)
+                .size(74.dp)
+            , shape = RoundedCornerShape(16.dp)
+        ) {
+            Image(painterResource(
+                if (isSideBarOpen)
+            {R.drawable.icon_sidebar_toggle_active} else R.drawable.icon_sidebar_toggle_default
+            ), contentDescription = null
+            )
+        }
+    }
 }
