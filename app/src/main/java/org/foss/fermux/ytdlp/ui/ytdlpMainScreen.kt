@@ -1,8 +1,6 @@
 package org.foss.fermux.ytdlp.ui
 
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
@@ -36,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -72,7 +71,7 @@ fun DownloaderScreen(navigationController: NavHostController) {
 
     Box(
         modifier = Modifier.fillMaxSize()
-            .background(Color(0xFF282c34))
+            .background(MaterialTheme.colorScheme.background)
     ) {
 
 
@@ -205,10 +204,10 @@ fun DownloaderScreen(navigationController: NavHostController) {
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .background(Color(0xFF282c34))
+                    .background(Color(0xFF282c34)),
 
 
-            ) {
+                ) {
 
                 when (currentPage) {
                     Page.DownloadPage -> DownloadContent()
@@ -218,50 +217,27 @@ fun DownloaderScreen(navigationController: NavHostController) {
                 }
             }
         }
-
-
-        Image(
-            painter = painterResource( if (isSideBarOpen) {
-                R.drawable.icon_sidebar_toggle_active }
-                else { R.drawable.icon_sidebar_toggle_default }
-            ),
-            contentDescription = "Side bar to toggle default",
-            modifier = Modifier
-                .offset(x = 2.dp, y = 640.dp)
-                .padding(top = 12.dp)
-                .size(53.dp)
-                .clickable { isSideBarOpen = !isSideBarOpen }
-
-
-        )
-
     }
+Box(  contentAlignment = Alignment.BottomStart,
+    modifier = Modifier
+    .fillMaxSize()
+    .padding(14.dp)) {
+    Image(
+        painter = painterResource(
+            if (isSideBarOpen) {
+                R.drawable.icon_sidebar_toggle_active
+            } else {
+                R.drawable.icon_sidebar_toggle_default
+            }
+        ),
+        contentDescription = "Side bar to toggle default",
+        modifier = Modifier
+            .padding(18.dp)
+            .size(74.dp)
+            .clickable { isSideBarOpen = !isSideBarOpen }
+
+
+    )
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
