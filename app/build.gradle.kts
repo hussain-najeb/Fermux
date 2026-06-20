@@ -55,7 +55,7 @@ dependencies {
     // This now pulls from your central version catalog instead of being a hardcoded string
     implementation(libs.androidx.navigation.compose)
     implementation(libs.coil)
-
+    implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.coil.network.okhttp)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.core.ktx)
@@ -66,7 +66,6 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.compose.foundation)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

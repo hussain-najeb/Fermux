@@ -14,12 +14,29 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 
-suspend fun downloaderLogic(context: Context, url: String, onProgress: (Float) -> Unit  ) {
+suspend fun downloaderLogic(context: Context, url: String, onProgress: (Float) -> Unit,
+
+                            musicQuality: AudioQuality?, videoQuality: DownloadQuality?  )
+
+{
     val downloadDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
     val outputPath = "${downloadDir?.absolutePath}/%(title)s.%(ext)s"
-
     val request = YoutubeDLRequest(url)
+
+
+
+    musicQuality?.let {
+        request.addOption("-x")
+        request.addOption("--audio-format", "mp3")
+        request.addOption("--audio-quality", it.musicQuality)
+    }
+
+
+        videoQuality?.let {
+            request.addOption("-f", it.videoQuality)
+        }
     request.addOption("-o", outputPath)
+
 
     withContext(Dispatchers.IO) {
         val response = YoutubeDL.getInstance().execute(request) { progress, _, _ ->

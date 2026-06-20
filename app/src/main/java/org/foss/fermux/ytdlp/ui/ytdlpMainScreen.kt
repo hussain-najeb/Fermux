@@ -71,7 +71,7 @@ fun DownloaderScreen(navigationController: NavHostController) {
 
     Box(
         modifier = Modifier.fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(Color(0xFF051d37))
     ) {
 
 
@@ -204,7 +204,7 @@ fun DownloaderScreen(navigationController: NavHostController) {
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .background(Color(0xFF282c34)),
+                    .background(Color(0xFF051d37)),
 
 
                 ) {
@@ -233,7 +233,7 @@ fun DownloaderScreen(navigationController: NavHostController) {
         ) {
             Image(painterResource(
                 if (isSideBarOpen)
-            {R.drawable.icon_sidebar_toggle_active} else R.drawable.icon_sidebar_toggle_default
+            {R.drawable.rounded_add_column_left_24} else R.drawable.icon_sidebar_toggle_active // PLACEHOLDER!!
             ), contentDescription = null
             )
         }

@@ -52,21 +52,18 @@ import org.foss.fermux.ytdlp.logic.fetchingTheMetadata
 // Tomorrow's problem.
 
 
+
+
+
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun DownloadContent() {
 
     var state by remember { mutableStateOf<DownloadStatus>(DownloadStatus.Idle) }
-
     val context = LocalContext.current
-
     val scope = rememberCoroutineScope()
-
     var downloadUrl by remember { mutableStateOf("") }
-
     val clipboard = LocalClipboardManager.current
-
-
 
     Column(
         modifier = Modifier
@@ -97,7 +94,7 @@ fun DownloadContent() {
 
         )
 
-        // https://www.youtube.com/watch?v=ZFSN40r--zk&list=PLpR23XfB8-1UM2BbVMGeLMAQs3oiO5MRt&index=6 <-- testing
+
 
     }
 

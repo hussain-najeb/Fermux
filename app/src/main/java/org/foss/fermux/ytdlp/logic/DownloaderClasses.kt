@@ -13,10 +13,26 @@ sealed class DownloadStatus {
     data object Loading : DownloadStatus() // loading the damn card.
     data class Loaded(val metadata: DownloadMetadata) : DownloadStatus() // the card is successful at loading
     data class Error(val errorMessage: String) : DownloadStatus() // when something goes wrong
-    data class Downloading(val downloadProgress : Float, val metadata : DownloadMetadata) : DownloadStatus() // data for the fucking loadingIndicator
+    data class Downloading(val downloadProgress : Float, val metadata : DownloadMetadata) : DownloadStatus() // data for the fucking
+// loadingIndicator
+} // to extract the metadata. this classes job.
+
+
+enum class AudioQuality (val musicQuality: String) // audio quality class to pass for ytdlp.
+{
+    BEST("0"),
+    HIGH("192K"),
+    MEDIUM("128k")
 }
 
-// to extract the metadata.
+enum class DownloadQuality(val videoQuality: String) { // the video quality flags to add for the ytdlp flags.
+    BEST("bestvideo+bestaudio/best"),
+    HD_1080("bestvideo[height<=1080]+bestaudio/best"),
+    HD_720("bestvideo[height<=720]+bestaudio/best"),
+    SD_480("bestvideo[height<=480]+bestaudio/best")
+}
+
+
 
 
 

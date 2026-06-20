@@ -1,11 +1,13 @@
 package org.foss.fermux.ytdlp.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.material3.LoadingIndicator
@@ -23,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import org.foss.fermux.ytdlp.logic.DownloadMetadata
@@ -70,25 +74,36 @@ fun LoadingCard() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        contentAlignment = Alignment.Center
+            .padding(8.dp)
     ) {
-        Surface(
+        ElevatedCard(
             modifier = Modifier
+                .clip(RoundedCornerShape(4.dp))
                 .fillMaxWidth()
-                .padding(5.dp)
-                .clip(RoundedCornerShape(4.dp)),
-
+                .padding(19.dp)
+                .aspectRatio(16f / 9f)
+                .background(Color.Transparent)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Transparent),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-            Row {
+                Text(
+                    text = "Fetching video info"
+                ) // TODO have it in the middle of the card to the right more, and change the color, reference from the terminal tab.
+
+                Spacer(modifier = Modifier.height(40.dp))
+
                 LoadingIndicator()
-                Spacer(modifier = Modifier.width(9.dp))
-                Text(text = "fetching video info") // TODO have it in the middle of the card to the right more, and change the color, reference from the terminal tab.
             }
         }
+    }
 
     }
-}
+
 @Composable
 
 fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null) {   // for the fully Loaded card to view on screen
@@ -102,59 +117,72 @@ fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null) {   // for 
                 .clip(RoundedCornerShape(4.dp))
                 .fillMaxWidth()
                 .padding(19.dp)
-        )
+
+
+        ) // https://youtu.be/ZFSN40r--zk?si=5kWFmzzw6lWT7VI5 <-- testing
+
+
         {
-            AsyncImage(
-                model = metadata.thumbnail,
-                contentDescription = null,
+            Box {
+                AsyncImage(
+                    model = metadata.thumbnail,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
 
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16f / 9f)
-                    .background(Color.Gray)
-            )
-            Box(contentAlignment = Alignment.BottomCenter) {
-
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(16f / 9f)
+                        .background(Color.Transparent)
+                )
                 progress?.let {
-                    LinearWavyProgressIndicator(
+                    CircularWavyProgressIndicator(
                         progress = { progress / 100f },
                         color = Color(0xFF2e36aa),
                         trackColor = Color(0xff999bb5),
 
                         modifier = Modifier
-                            .fillMaxWidth()
-                    )
+                            .padding(8.dp)
+                            .align(Alignment.BottomEnd)
+                    ).also {
+                        Text(
+                            videoTime(metadata.duration),
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .align(Alignment.BottomStart)
+                        )
+
+                    }
                 }
+            }
 
 
+            // the surface to get the damn info on screen from the video metadata
+            Surface(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(color = Color(0xFF2b2a33))
+
+            ) {
+
+                // self-explanatory shit. Code being the comment and shit like that
+                // ( terribile idea btw).
+
+                Column {
+                    Text(
+                        metadata.title, modifier = Modifier
+                            .padding(8.dp)
+                    )
+                    metadata.uploader?.let {
+                        Text(
+                            it, modifier = Modifier
+                                .padding(8.dp)
+                        )
+                    }
+                }
             }
         }
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // the surface to get the damn info on screen from the video metadata
-
-        Surface(
-            modifier = Modifier
-                .clip(RoundedCornerShape(4.dp))
-                .background(color = Color(0xFF2b2a33))
-
-        ) {
-
-            // self-explanatory shit. Code being the comment and shit like that
-            // ( terribile idea btw).
-
-            Column {
-                Text(metadata.title, modifier = Modifier
-                    .padding(8.dp)
-                )
-                Text(videoTime(metadata.duration),modifier = Modifier
-                    .padding(8.dp)
-                )
-                metadata.uploader?.let { Text(it, modifier = Modifier
-                    .padding(8.dp)) }
-            }
         }
     }
-}
 
 
