@@ -37,7 +37,6 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
-import org.foss.fermux.ytdlp.logic.AudioQuality
 import org.foss.fermux.ytdlp.logic.DownloadStatus
 import org.foss.fermux.ytdlp.logic.downloaderLogic
 import org.foss.fermux.ytdlp.logic.fetchingTheMetadata
@@ -59,9 +58,35 @@ fun DownloadContent() {
 
     var state by remember { mutableStateOf<DownloadStatus>(DownloadStatus.Idle) }
     val context = LocalContext.current
+    var showFormatSheet by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     var downloadUrl by remember { mutableStateOf("") }
     val clipboard = LocalClipboardManager.current
+
+
+
+    QualitySheet(
+        showSheet = showFormatSheet,
+        onDismiss = {showFormatSheet = false},
+        onConfirm = { audio, video ->
+            showFormatSheet = false
+            scope.launch {
+                val metadata = (state as? DownloadStatus.Loaded)?.metadata
+                ?: return@launch
+                downloaderLogic(context, downloadUrl, audio, video) { progress ->
+                    state = DownloadStatus.Downloading(progress, metadata)
+
+                }
+                state = DownloadStatus.Loaded(metadata)
+            }
+        }
+    )
+
+
+
+
+
+
 
     Column(
         modifier = Modifier
@@ -138,12 +163,8 @@ Box(contentAlignment = Alignment.BottomEnd,
                         try {
                             val metadata = fetchingTheMetadata(downloadUrl)
                             state = DownloadStatus.Loaded(metadata)
-                            downloaderLogic(context, downloadUrl) { progress ->
-                                state = DownloadStatus.Downloading(progress, metadata)
-                            }
-                            state = DownloadStatus.Loaded(metadata)
-                            Log.d("fermux", "state is set to loaded")
-                            Log.d("fermux", "Download succeeded for $downloadUrl")
+                            showFormatSheet = true
+
                         } catch (e: Exception) {
                             Log.e("fermux", "Download failed for $downloadUrl", e)
                             Log.d("fermux", "state failed to get stop the loading bar")

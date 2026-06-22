@@ -67,9 +67,9 @@
             ModalBottomSheet( // the composable that does the thing
                 onDismissRequest = onDismiss,
                 sheetState = sheetState,
-                dragHandle = { BottomSheetDefaults.DragHandle(modifier = Modifier.background(Color.Cyan)) },
+                dragHandle = { BottomSheetDefaults.DragHandle() },
                 modifier = Modifier
-                    .fillMaxWidth(.70f)
+                    .fillMaxWidth(1f)
             ) {
                 var selectedPageIndex by remember { mutableIntStateOf(0) } // to get the buttons an index to work by
                 val options = listOf("Audio", "Video") // the names of the chosen options. 0 is audio, 1 is video
@@ -118,7 +118,7 @@
                         var selectedAudioIndex by remember { mutableIntStateOf(0) }
                         val audioOptions = listOf("Best", "High", "Medium")
 
-                        Column(modifier = Modifier.fillMaxSize())
+                        Column(modifier = Modifier.fillMaxWidth())
 
                         {
 
@@ -154,7 +154,7 @@
                         val videoOptions = listOf("Best", "1080p", "720p", "480p", "360p", "240p")
                         var selectedVideoIndex by remember { mutableIntStateOf(0) }
 
-                        Column(modifier = Modifier.fillMaxSize()) {
+                        Column(modifier = Modifier.fillMaxWidth()) {
 
                             Text(text = "Video Quality:")
 
@@ -194,7 +194,7 @@
 
                     Button(
                         shape = RoundedCornerShape(4.dp),
-                        onClick = { onConfirm( pickedAudio, pickedVideo )
+                        onClick = { onConfirm( pickedAudio, pickedVideo)
                                   onDismiss()
                                   },
                     ) {
@@ -214,3 +214,5 @@
             }
         }
     }
+
+
