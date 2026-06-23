@@ -26,6 +26,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextRange
@@ -40,13 +41,13 @@ import org.foss.fermux.ui.theme.JetbrainsMono
 import kotlin.collections.plus
 
 @Composable
-fun FermuxMainScreen(
+fun FermuxTerminalScreen(
 
 ) {
     val context = LocalContext.current
     var userCommand by remember { mutableStateOf(TextFieldValue("")) }
     var history by remember { mutableStateOf(listOf<String>()) }
-    var commandplace by remember { mutableStateOf(-1) }
+    var commandplace by remember { mutableIntStateOf(-1) }
 
 
 

@@ -7,22 +7,30 @@ import androidx.navigation.compose.rememberNavController
 import org.foss.fermux.ffmpeg.ui.ConverterScreen
 import org.foss.fermux.homeScreen.HomeScreen
 import org.foss.fermux.settings.ui.SettingsScreen
-import org.foss.fermux.terminal.terminal.ui.FermuxMainScreen
+import org.foss.fermux.terminal.terminal.ui.FermuxTerminalScreen
 import org.foss.fermux.ytdlp.ui.DownloaderScreen
+
+
+sealed class Screen (val route: String) {
+    object Home       :  Screen("home")
+    object Settings   :  Screen("settings")
+    object Downloader :  Screen("downloader")
+    object Converter  :  Screen("converter")
+    object Terminal   :  Screen("terminal")
+}
 
 @Composable
 fun FermuxAppMainScreen() {
-val navigationController = rememberNavController()
+    val navigationController = rememberNavController()
 
-    NavHost(navController = navigationController,
-        startDestination = "home") {
-
-        composable("home") { HomeScreen(navigationController) }
-        composable("terminal") { FermuxMainScreen() }
-        composable("downloader") { DownloaderScreen(navigationController) }
-        composable("converter") { ConverterScreen() }
-        composable("settings") { SettingsScreen() }
-
+    NavHost(
+        navController = navigationController,
+        startDestination = Screen.Home.route
+    ) {
+        composable(Screen.Home.route)           {HomeScreen(navigationController)}
+        composable(Screen.Terminal.route)       {FermuxTerminalScreen()}
+        composable(Screen.Settings.route)       {SettingsScreen()}
+        composable(Screen.Downloader.route)     {DownloaderScreen(navigationController)}
+        composable(Screen.Converter.route)      {ConverterScreen()}
+        }
     }
-
-}

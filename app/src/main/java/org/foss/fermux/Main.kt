@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import com.yausername.youtubedl_android.YoutubeDL
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
+import com.yausername.ffmpeg.FFmpeg
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.foss.fermux.ui.theme.FermuxTheme
@@ -15,6 +16,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        FFmpeg.getInstance().init(this)
         YoutubeDL.getInstance().init(this)
         lifecycleScope.launch(Dispatchers.IO) {
             try {
