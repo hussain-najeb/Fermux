@@ -5,21 +5,23 @@
     import androidx.compose.foundation.layout.Column
     import androidx.compose.foundation.layout.Row
     import androidx.compose.foundation.layout.Spacer
-    import androidx.compose.foundation.layout.fillMaxSize
     import androidx.compose.foundation.layout.fillMaxWidth
     import androidx.compose.foundation.layout.height
+    import androidx.compose.foundation.layout.padding
     import androidx.compose.foundation.layout.size
+    import androidx.compose.foundation.layout.width
     import androidx.compose.foundation.shape.RoundedCornerShape
     import androidx.compose.material.icons.Icons
     import androidx.compose.material.icons.outlined.Cancel
+    import androidx.compose.material.icons.outlined.Done
     import androidx.compose.material.icons.outlined.Download
     import androidx.compose.material3.BottomSheetDefaults
     import androidx.compose.material3.Button
     import androidx.compose.material3.ExperimentalMaterial3Api
     import androidx.compose.material3.Icon
-    import androidx.compose.material3.IconButton
     import androidx.compose.material3.MaterialTheme
     import androidx.compose.material3.ModalBottomSheet
+    import androidx.compose.material3.OutlinedButton
     import androidx.compose.material3.SegmentedButton
     import androidx.compose.material3.SegmentedButtonDefaults
     import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -33,7 +35,7 @@
     import androidx.compose.runtime.setValue
     import androidx.compose.ui.Alignment
     import androidx.compose.ui.Modifier
-    import androidx.compose.ui.graphics.Color
+    import androidx.compose.ui.text.font.FontFamily
     import androidx.compose.ui.unit.dp
     import org.foss.fermux.ytdlp.logic.AudioQuality
     import org.foss.fermux.ytdlp.logic.DownloadQuality
@@ -68,8 +70,10 @@
                 onDismissRequest = onDismiss,
                 sheetState = sheetState,
                 dragHandle = { BottomSheetDefaults.DragHandle() },
+                containerColor = MaterialTheme.colorScheme.surface,
                 modifier = Modifier
                     .fillMaxWidth(1f)
+                    ,
             ) {
                 var selectedPageIndex by remember { mutableIntStateOf(0) } // to get the buttons an index to work by
                 val options = listOf("Audio", "Video") // the names of the chosen options. 0 is audio, 1 is video
@@ -80,19 +84,28 @@
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.background)
                 ) {
+
+                    Spacer(modifier = Modifier.height(7.dp))
+
                     Icon(imageVector =  Icons.Outlined.Download, contentDescription = null, // the download icon in the middle of the thing
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
                             .size(50.dp)
                     )
 
-                    Spacer(modifier = Modifier.height(6.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
-                    Text(text = "Download format:")
+                    Text(text = "Before Downloading....", style = MaterialTheme.typography.headlineMediumEmphasized, fontFamily = FontFamily.Default
+                    , modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
 
-                    Spacer(modifier = Modifier.height(2.dp))
+                    Spacer(modifier = Modifier.height(25.dp))
 
-                    SingleChoiceSegmentedButtonRow { // the button row that looks like a pill or whatever
+                    Text(text = "Download format:", fontFamily = FontFamily.Default     , modifier = Modifier.padding(start = 19.dp))
+
+                    Spacer(modifier = Modifier.height(13.dp))
+
+                    SingleChoiceSegmentedButtonRow(modifier = Modifier.align(Alignment.CenterHorizontally)) { // the button row that looks like a pill or whatever
                         options.forEachIndexed { index, label ->
                             SegmentedButton( // the button thing I think
                                 shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size), // to get the rounded shape
@@ -110,7 +123,7 @@
                     }
                 }
 
-                Spacer(modifier = Modifier.height(5.dp))
+                Spacer(modifier = Modifier.height(15.dp))
 
 
                 when (page) {
@@ -118,15 +131,20 @@
                         var selectedAudioIndex by remember { mutableIntStateOf(0) }
                         val audioOptions = listOf("Best", "High", "Medium")
 
-                        Column(modifier = Modifier.fillMaxWidth())
+                        Column(modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.background)
+                        )
 
                         {
 
-                            Text(text = "Audio Quality:")
+                            Spacer(modifier = Modifier.height(15.dp))
 
-                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(text = "Audio Quality:", fontFamily = FontFamily.Monospace)
 
-                            SingleChoiceSegmentedButtonRow {
+                            Spacer(modifier = Modifier.height(4.dp))
+
+                            SingleChoiceSegmentedButtonRow (modifier = Modifier.align(Alignment.CenterHorizontally)) {
                                 audioOptions.forEachIndexed {
                                         index, label ->
 
@@ -154,13 +172,18 @@
                         val videoOptions = listOf("Best", "1080p", "720p", "480p", "360p", "240p")
                         var selectedVideoIndex by remember { mutableIntStateOf(0) }
 
-                        Column(modifier = Modifier.fillMaxWidth()) {
+                        Column(modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.background)
+                        ) {
+                            Spacer(modifier = Modifier.height(15.dp))
 
-                            Text(text = "Video Quality:")
+                            Text(text = "Video Quality:", fontFamily = FontFamily.Monospace)
 
-                            Spacer(modifier = Modifier.height(2.dp))
+                            Spacer(modifier = Modifier.height(4.dp))
 
-                            SingleChoiceSegmentedButtonRow {
+                            SingleChoiceSegmentedButtonRow (modifier = Modifier.align(Alignment.CenterHorizontally)
+                            ){
                                 videoOptions.forEachIndexed {
                                     index, label ->
 
@@ -187,32 +210,39 @@
                     }
                 }
 
-                Spacer(modifier = Modifier.height(5.dp))
+                Spacer(modifier = Modifier.height(15.dp))
 
                 Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth())
                 {
 
+                    OutlinedButton(
+                        shape = RoundedCornerShape(24.dp),
+                        onClick = {
+                            onDismiss()
+                        }) {
+                        Icon(imageVector = Icons.Outlined.Cancel, contentDescription = null)
+                        Spacer(modifier = Modifier.width(5.dp))
+                        Text(text = "Cancel")
+                    }
+
+                        Spacer(modifier = Modifier.width(7.dp))
+
                     Button(
-                        shape = RoundedCornerShape(4.dp),
-                        onClick = { onConfirm( pickedAudio, pickedVideo)
-                                  onDismiss()
-                                  },
+                        shape = RoundedCornerShape(24.dp),
+                        onClick = {
+                            onConfirm(pickedAudio, pickedVideo)
+                            onDismiss()
+                        },
                     ) {
-                        Icon(imageVector = Icons.Outlined.Download, contentDescription = null)
+                        Icon(imageVector = Icons.Outlined.Done, contentDescription = null)
+                        Spacer(modifier = Modifier.width(5.dp))
                         Text(text = "Download")
                     }
 
-                    Button(
-                        shape = RoundedCornerShape(4.dp),
-                        onClick = {
-                        onDismiss()
-                    }) {
-                        Icon(imageVector = Icons.Outlined.Cancel, contentDescription = null,)
-                        Text(text = "Cancel")
                     }
                 }
             }
         }
-    }
+//
 
 
