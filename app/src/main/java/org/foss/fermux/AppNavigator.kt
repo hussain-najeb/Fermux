@@ -27,10 +27,10 @@ fun FermuxAppMainScreen() {
         navController = navigationController,
         startDestination = Screen.Home.route
     ) {
-        composable(Screen.Home.route)           {HomeScreen(navigationController)}
-        composable(Screen.Terminal.route)       {FermuxTerminalScreen()}
-        composable(Screen.Settings.route)       {SettingsScreen()}
-        composable(Screen.Downloader.route)     {DownloaderScreen(navigationController)}
-        composable(Screen.Converter.route)      {ConverterScreen()}
-        }
+        composable(Screen.Home.route) { HomeScreen(navigationController) }
+        composable(Screen.Terminal.route) { FermuxTerminalScreen() }
+        composable(Screen.Settings.route) { SettingsScreen() }
+        composable(Screen.Downloader.route) { DownloaderScreen(navigationController) }
+        composable(Screen.Converter.route) { ConverterScreen() }
     }
+}

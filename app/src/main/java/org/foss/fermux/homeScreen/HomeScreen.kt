@@ -16,7 +16,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import org.foss.fermux.Screen
 
@@ -25,44 +28,83 @@ import org.foss.fermux.Screen
 @Composable
 fun HomeScreen(navigationController: NavHostController) {
 
+
+
+    val cardModifier = Modifier.fillMaxSize()
+    val boxModifier = Modifier.fillMaxSize().clip(RoundedCornerShape(10.dp))
+
+
+
     // TODO. Have the GRID composable here to revamp this shitty page.
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.onPrimary),
+            .background(MaterialTheme.colorScheme.background)
+            .padding(13.dp),
+
         contentAlignment = Alignment.Center
+
     ) {
         Grid(
             config = {
                 repeat(2) { column(1.fr) }
-                repeat(2) { row(1.fr) }
-                rowGap(10.dp)
-                columnGap(20.dp)
+                row(1.5.fr)
+                row(0.5.fr)
+                row(1.5.fr)
+
+                rowGap(15.dp)
+                columnGap(15.dp)
             }
         ) {
-            val cardModifier = Modifier.fillMaxSize()
-            val boxModifier = Modifier.fillMaxSize().clip(RoundedCornerShape(10.dp))
-                .background(Color(0xFFebedef))
 
-
-
-            ElevatedCard(modifier = cardModifier) { Box(modifier = boxModifier.clickable { navigationController.navigate(Screen.Terminal) })
+            ElevatedCard(modifier = cardModifier.gridItem(columnSpan = 2)) { Box(modifier = boxModifier
+                .clickable { navigationController.navigate(Screen.Terminal.route) })
             {
                 Text("Terminal", modifier = Modifier
-                    .padding(start = 12.dp)
-                    .padding(bottom = 70.dp, top = 25.dp)
+                    .padding(start = 12.dp, bottom = 70.dp, top = 25.dp),
+                    fontStyle  = FontStyle.Italic,
+                    fontFamily = FontFamily.Default,
+                    fontSize = 20.sp,
+                )
+                }
+            }
+
+            ElevatedCard(modifier = cardModifier.gridItem(columnSpan = 1)) { Box(modifier = boxModifier
+                .clickable { navigationController.navigate(Screen.Downloader.route) })
+
+            {
+                Text("Download", modifier = Modifier
+                    .padding(start = 12.dp, bottom = 70.dp, top = 25.dp),
+                    fontStyle  = FontStyle.Italic,
+                    fontFamily = FontFamily.Default,
+                    fontSize = 20.sp
                     )
                 }
             }
 
-            ElevatedCard(modifier = cardModifier) { Box(modifier = boxModifier)  }
-
-
-
-
-
-
+            ElevatedCard(modifier = cardModifier.gridItem(columnSpan = 1)) { Box(modifier = boxModifier
+                    .clickable { navigationController.navigate(Screen.Converter.route)} )
+                {
+                    Text("Converter", modifier = Modifier
+                    .padding(start = 12.dp, bottom = 70.dp, top = 25.dp),
+                        fontStyle  = FontStyle.Italic,
+                        fontFamily = FontFamily.Default,
+                        fontSize = 20.sp
+        )
+                }
+            }
+            ElevatedCard(modifier = cardModifier.gridItem(columnSpan = 2)) { Box(modifier = boxModifier
+                .clickable { navigationController.navigate(Screen.Settings.route) })
+            {
+                    Text("Settings", modifier = Modifier
+                    .padding(start = 12.dp, bottom = 70.dp, top = 25.dp),
+                    fontStyle  = FontStyle.Italic,
+                    fontFamily = FontFamily.Default,
+                    fontSize = 20.sp
+                    )
+                 }
+            }
         }
     }
 }
