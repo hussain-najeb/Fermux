@@ -25,13 +25,12 @@ enum class AudioQuality (val musicQuality: String) // audio quality class to pas
     MEDIUM("128k")
 }
 
-enum class DownloadQuality(val videoQuality: String) { // the video quality flags to add for the ytdlp flags.
+enum class VideoQuality(val videoQuality: String) { // the video quality flags to add for the ytdlp flags.
     BEST("bestvideo+bestaudio/best"),
     HD1080("bestvideo[height<=1080]+bestaudio/best"),
     HD720("bestvideo[height<=720]+bestaudio/best"),
     SD480("bestvideo[height<=480]+bestaudio/best"),
     Q360("bestvideo[height<=360]+bestaudio/best"),
-    Q240("bestvideo[height<=240]+bestaudio/best")
 }
 
 

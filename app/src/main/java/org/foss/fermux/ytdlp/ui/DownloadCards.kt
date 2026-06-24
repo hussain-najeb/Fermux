@@ -4,20 +4,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,6 +27,14 @@ import coil3.compose.AsyncImage
 import org.foss.fermux.ytdlp.logic.DownloadMetadata
 import org.foss.fermux.ytdlp.logic.DownloadStatus
 import org.foss.fermux.ytdlp.logic.videoTime
+
+
+// TODO. have the download circle be a check
+//  mark when the download finished so its apparent to the user the download is done
+// TODO. have the duration of the video with a black/transcperent background behind it, so it doesn't look bad
+
+
+
 
 @Composable
 fun WhenCards (state: DownloadStatus) {
@@ -93,7 +96,7 @@ fun LoadingCard() {
             ) {
                 Text(
                     text = "Fetching video info"
-                ) // TODO have it in the middle of the card to the right more, and change the color, reference from the terminal tab.
+                ) // TODO. have it in the middle of the card to the right more, and change the color, reference from the terminal tab.
 
                 Spacer(modifier = Modifier.height(40.dp))
 

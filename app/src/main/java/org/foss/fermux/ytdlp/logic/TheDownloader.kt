@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 
-suspend fun downloaderLogic(context: Context, url: String, musicQuality: AudioQuality? = null, videoQuality: DownloadQuality? = null,
+suspend fun downloaderLogic(context: Context, url: String, musicQuality: AudioQuality? = null, videoQuality: VideoQuality? = null,
                             onProgress: (Float) -> Unit,
 
                               )

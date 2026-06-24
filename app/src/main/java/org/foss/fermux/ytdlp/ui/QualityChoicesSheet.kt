@@ -38,7 +38,7 @@
     import androidx.compose.ui.text.font.FontFamily
     import androidx.compose.ui.unit.dp
     import org.foss.fermux.ytdlp.logic.AudioQuality
-    import org.foss.fermux.ytdlp.logic.DownloadQuality
+    import org.foss.fermux.ytdlp.logic.VideoQuality
 
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -47,15 +47,15 @@
      * @param showSheet is just a boolean to pop the sheet up the screen, it's off by default
      * @param onConfirm is also for calling the thing, the enum classes at
      * @see [AudioQuality]
-     * @see [DownloadQuality]
+     * @see [VideoQuality]
      */
 
     @Composable
     fun QualitySheet (showSheet: Boolean, onDismiss: () -> Unit,
-                       onConfirm: (AudioQuality?, DownloadQuality?) -> Unit) {
+                       onConfirm: (AudioQuality?, VideoQuality?) -> Unit) {
         var pickedAudio by remember { mutableStateOf<AudioQuality?>(null) } // for the string to pass to
         // the execute function in ytdlp
-        var pickedVideo by remember { mutableStateOf<DownloadQuality?>(null) } // same here for videos
+        var pickedVideo by remember { mutableStateOf<VideoQuality?>(null) } // same here for videos
 
 
 
@@ -66,14 +66,14 @@
             // selected it will go to 3 and so on
 
 
-            ModalBottomSheet( // the composable that does the thing
+            ModalBottomSheet(
+                // the composable that does the thing
                 onDismissRequest = onDismiss,
                 sheetState = sheetState,
                 dragHandle = { BottomSheetDefaults.DragHandle() },
                 containerColor = MaterialTheme.colorScheme.surface,
                 modifier = Modifier
-                    .fillMaxWidth(1f)
-                    ,
+                    .fillMaxWidth(1f),
             ) {
                 var selectedPageIndex by remember { mutableIntStateOf(0) } // to get the buttons an index to work by
                 val options = listOf("Audio", "Video") // the names of the chosen options. 0 is audio, 1 is video
@@ -87,7 +87,9 @@
 
                     Spacer(modifier = Modifier.height(7.dp))
 
-                    Icon(imageVector =  Icons.Outlined.Download, contentDescription = null, // the download icon in the middle of the thing
+                    Icon(
+                        imageVector = Icons.Outlined.Download,
+                        contentDescription = null, // the download icon in the middle of the thing
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
                             .size(50.dp)
@@ -95,23 +97,35 @@
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    Text(text = "Before Downloading....", style = MaterialTheme.typography.headlineMediumEmphasized, fontFamily = FontFamily.Default
-                    , modifier = Modifier.align(Alignment.CenterHorizontally)
-                        )
+                    Text(
+                        text = "Before Downloading....",
+                        style = MaterialTheme.typography.headlineMediumEmphasized,
+                        fontFamily = FontFamily.Default,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
 
                     Spacer(modifier = Modifier.height(25.dp))
 
-                    Text(text = "Download format:", fontFamily = FontFamily.Default     , modifier = Modifier.padding(start = 19.dp))
+                    Text(
+                        text = "Download format:",
+                        fontFamily = FontFamily.Default,
+                        modifier = Modifier.padding(start = 19.dp)
+                    )
 
                     Spacer(modifier = Modifier.height(13.dp))
 
                     SingleChoiceSegmentedButtonRow(modifier = Modifier.align(Alignment.CenterHorizontally)) { // the button row that looks like a pill or whatever
                         options.forEachIndexed { index, label ->
-                            SegmentedButton( // the button thing I think
-                                shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size), // to get the rounded shape
+                            SegmentedButton(
+                                // the button thing I think
+                                shape = SegmentedButtonDefaults.itemShape(
+                                    index = index,
+                                    count = options.size
+                                ), // to get the rounded shape
                                 // from both sizes I think, so it doesn't look like shit
-                                onClick = { selectedPageIndex = index
-                                    when (index){
+                                onClick = {
+                                    selectedPageIndex = index
+                                    when (index) {
                                         0 -> page = 2 // Audio
                                         1 -> page = 3 // Video
                                     }
@@ -131,9 +145,10 @@
                         var selectedAudioIndex by remember { mutableIntStateOf(0) }
                         val audioOptions = listOf("Best", "High", "Medium")
 
-                        Column(modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.background)
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.background)
                         )
 
                         {
@@ -144,16 +159,18 @@
 
                             Spacer(modifier = Modifier.height(4.dp))
 
-                            SingleChoiceSegmentedButtonRow (modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                                audioOptions.forEachIndexed {
-                                        index, label ->
+                            SingleChoiceSegmentedButtonRow(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                                audioOptions.forEachIndexed { index, label ->
 
                                     SegmentedButton(
-                                        shape = SegmentedButtonDefaults.itemShape(index = index, count = audioOptions.size),
-                                        onClick = {selectedAudioIndex = index
+                                        shape = SegmentedButtonDefaults.itemShape(
+                                            index = index,
+                                            count = audioOptions.size
+                                        ),
+                                        onClick = {
+                                            selectedAudioIndex = index
 
-                                            when (index)
-                                            {
+                                            when (index) {
                                                 0 -> pickedAudio = AudioQuality.BEST
                                                 1 -> pickedAudio = AudioQuality.HIGH
                                                 2 -> pickedAudio = AudioQuality.MEDIUM
@@ -169,12 +186,13 @@
 
                     3 -> {
 
-                        val videoOptions = listOf("Best", "1080p", "720p", "480p", "360p", "240p")
+                        val videoOptions = listOf("Best", "1080p", "720p", "480p", "360p")
                         var selectedVideoIndex by remember { mutableIntStateOf(0) }
 
-                        Column(modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.background)
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.background)
                         ) {
                             Spacer(modifier = Modifier.height(15.dp))
 
@@ -182,23 +200,25 @@
 
                             Spacer(modifier = Modifier.height(4.dp))
 
-                            SingleChoiceSegmentedButtonRow (modifier = Modifier.align(Alignment.CenterHorizontally)
-                            ){
-                                videoOptions.forEachIndexed {
-                                    index, label ->
+                            SingleChoiceSegmentedButtonRow(
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            ) {
+                                videoOptions.forEachIndexed { index, label ->
 
                                     SegmentedButton(
-                                        shape = SegmentedButtonDefaults.itemShape(index = index, count = videoOptions.size),
-                                        onClick = { selectedVideoIndex = index
+                                        shape = SegmentedButtonDefaults.itemShape(
+                                            index = index,
+                                            count = videoOptions.size
+                                        ),
+                                        onClick = {
+                                            selectedVideoIndex = index
 
-                                            when (index)
-                                            {
-                                                0 -> pickedVideo = DownloadQuality.BEST
-                                                1 -> pickedVideo = DownloadQuality.HD1080
-                                                2 -> pickedVideo = DownloadQuality.HD720
-                                                3 -> pickedVideo = DownloadQuality.SD480
-                                                4 -> pickedVideo = DownloadQuality.Q360
-                                                5 -> pickedVideo = DownloadQuality.Q240
+                                            when (index) {
+                                                0 -> pickedVideo = VideoQuality.BEST
+                                                1 -> pickedVideo = VideoQuality.HD1080
+                                                2 -> pickedVideo = VideoQuality.HD720
+                                                3 -> pickedVideo = VideoQuality.SD480
+                                                4 -> pickedVideo = VideoQuality.Q360
                                             }
                                         },
                                         selected = index == selectedVideoIndex,
@@ -225,7 +245,7 @@
                         Text(text = "Cancel")
                     }
 
-                        Spacer(modifier = Modifier.width(7.dp))
+                    Spacer(modifier = Modifier.width(7.dp))
 
                     Button(
                         shape = RoundedCornerShape(24.dp),
@@ -239,10 +259,9 @@
                         Text(text = "Download")
                     }
 
-                    }
                 }
             }
         }
-//
+    }
 
 
