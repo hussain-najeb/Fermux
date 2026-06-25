@@ -3,6 +3,7 @@ agp = "9.0.1"
 coil = "3.5.0"
 coilNetworkOkhttp = "3.5.0"
 coreKtx = "1.18.0"
+datastorePreferences = "1.2.1"
 junit = "4.13.2"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
@@ -14,11 +15,13 @@ composeBom = "2026.06.00"
 youtubedlAndroid = "0.18.1"
 material3 = "1.5.0-alpha18"
 foundation = "1.11.3"
+workManager = "2.11.2"
 
 [libraries]
 
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 coil = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
 ffmpeg-android = { module = "io.github.junkfood02.youtubedl-android:ffmpeg", version.ref = "youtubedlAndroid" }
@@ -40,6 +43,9 @@ androidx-compose-foundation-layout = { group = "androidx.compose.foundation", na
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 youtubedl-android = { module = "io.github.junkfood02.youtubedl-android:library", version.ref = "youtubedlAndroid" }
 androidx-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
+androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workManager"}
+
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

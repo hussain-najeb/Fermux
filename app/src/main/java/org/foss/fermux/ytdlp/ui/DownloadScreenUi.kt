@@ -2,6 +2,7 @@ package org.foss.fermux.ytdlp.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,12 +38,18 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import androidx.work.workDataOf
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.ytdlp.logic.AudioQuality
 import org.foss.fermux.ytdlp.logic.DownloadStatus
+import org.foss.fermux.ytdlp.logic.DownloadWorker
 import org.foss.fermux.ytdlp.logic.VideoQuality
-import org.foss.fermux.ytdlp.logic.downloaderLogic
 import org.foss.fermux.ytdlp.logic.fetchingTheMetadata
 
 
@@ -73,28 +80,62 @@ class DownloaderViewModel : ViewModel() {
             }
         }
     }
-    fun DownloaderViewModelLogic(context: Context, audio: AudioQuality?, video: VideoQuality? ) {
-        viewModelScope.launch {
-            try {
-                val metadata = (state as? DownloadStatus.Loaded)?.metadata
-                    ?: return@launch
-                downloaderLogic(context, downloadUrl, audio, video) { progress ->
-                    state = DownloadStatus.Downloading(progress, metadata)
+
+
+    //
+
+
+    fun startingDownload(context: Context, audio: AudioQuality?, video: VideoQuality?) {
+
+        val metadata = (state as? DownloadStatus.Loaded)?.metadata ?: return
+
+        val requestedUrls = OneTimeWorkRequestBuilder<DownloadWorker>()
+            .setInputData(
+                workDataOf(
+                    "url" to downloadUrl,
+                    "audio" to audio?.name,
+                    "video" to video?.name
+                )
+            )
+            .build()
+
+        val workManager = WorkManager
+            .getInstance(context)
+        workManager.enqueue(requestedUrls)
+        workManager.getWorkInfoByIdFlow(requestedUrls.id)
+            .onEach { workInfo ->
+                workInfo ?: return@onEach
+                when (workInfo.state) {
+                    WorkInfo.State.RUNNING -> {
+                        val progress = workInfo.progress.getFloat("progress", 0f)
+                        state = DownloadStatus.Downloading(progress, metadata)
+                    }
+
+                    WorkInfo.State.SUCCEEDED -> {
+                        state = DownloadStatus.Loaded(metadata)
+                    }
+
+                    WorkInfo.State.FAILED -> {
+                        state = DownloadStatus.Error("Failed to download")
+                    }
+
+                    else -> {}
 
                 }
-                state = DownloadStatus.Loaded(metadata)
 
-            } catch (e: Exception) {
-                Log.d("QualitySheet", "Failed to get the thing done!", e)
             }
-        }
+            .launchIn(viewModelScope)
+
+
     }
 }
 
 
-@SuppressLint("SuspiciousIndentation")
+
 @Composable
-fun DownloadContent(viewModel: DownloaderViewModel = viewModel()) {
+fun DownloadContent(
+    @SuppressLint("ContextCastToActivity") viewModel: DownloaderViewModel = viewModel(viewModelStoreOwner =
+        LocalContext.current as ComponentActivity)) {
 
     val context = LocalContext.current
     val clipboard = LocalClipboardManager.current
@@ -104,7 +145,7 @@ fun DownloadContent(viewModel: DownloaderViewModel = viewModel()) {
         onDismiss = {viewModel.showFormatSheet = false},
         onConfirm = { audio, video ->
             viewModel.showFormatSheet = false
-            viewModel.DownloaderViewModelLogic(context, audio, video)
+            viewModel.startingDownload(context, audio, video)
         }
     )
 

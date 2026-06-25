@@ -57,14 +57,10 @@
         // the execute function in ytdlp
         var pickedVideo by remember { mutableStateOf<VideoQuality?>(null) } // same here for videos
 
-
-
-
         if (showSheet) {
             val sheetState = rememberModalBottomSheetState() // for keeping the sheet on screen
             var page by remember { mutableIntStateOf(1) } // for selecting each tab in the sheet, so if video was
             // selected it will go to 3 and so on
-
 
             ModalBottomSheet(
                 // the composable that does the thing

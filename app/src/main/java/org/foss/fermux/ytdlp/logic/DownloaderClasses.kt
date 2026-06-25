@@ -1,6 +1,11 @@
 package org.foss.fermux.ytdlp.logic
 
-import android.annotation.SuppressLint
+import android.content.Context
+import android.util.Log
+import androidx.work.CoroutineWorker
+import androidx.work.WorkerParameters
+import androidx.work.workDataOf
+import kotlinx.coroutines.runBlocking
 
 data class DownloadMetadata (
     val title: String,
@@ -32,17 +37,33 @@ enum class VideoQuality(val videoQuality: String) { // the video quality flags t
     SD480("bestvideo[height<=480]+bestaudio/best"),
     Q360("bestvideo[height<=360]+bestaudio/best"),
 }
-
-
-
-
-
 // this one is to grab the "duration" from the metadata class and throws
 // an actual time format to be displayed. so instead of "195" its "3:15".
-@SuppressLint("DefaultLocale")
-fun videoTime (seconds: Int): String {
 
-    val minutes = seconds / 60
-    val second = seconds % 60
-    return String.format("%02d:%02d", minutes, second)
+
+
+
+class DownloadWorker(context: Context, params: WorkerParameters ) :
+
+    CoroutineWorker(context, params) {
+
+    override suspend fun doWork(): Result {
+
+        val url   = inputData.getString("url") ?: return Result.failure()
+        val audioName = inputData.getString("audio")
+        val videoName = inputData.getString("video")
+
+        val audio = audioName?.let { AudioQuality.valueOf(it) }
+        val video = videoName?.let { VideoQuality.valueOf(it) }
+
+        return try {
+            downloaderLogic(applicationContext, url, audio, video) { progress ->  runBlocking {
+                setProgress(workDataOf("progress" to progress)) }
+            }
+            Result.success()
+        } catch (e: Exception) {
+            Log.d("downloadWorker", "download failed", e)
+            Result.failure()
+        }
+    }
 }

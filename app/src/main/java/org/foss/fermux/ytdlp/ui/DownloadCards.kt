@@ -1,5 +1,6 @@
 package org.foss.fermux.ytdlp.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import org.foss.fermux.ytdlp.logic.DownloadMetadata
 import org.foss.fermux.ytdlp.logic.DownloadStatus
-import org.foss.fermux.ytdlp.logic.videoTime
+
 
 
 // TODO. have the download circle be a check
@@ -62,6 +63,18 @@ fun WhenCards (state: DownloadStatus) {
         } // if god forbids, an error happens, its seen here.
     }
 }
+
+
+
+@SuppressLint("DefaultLocale")
+fun videoTime (seconds: Int): String {
+
+    val minutes = seconds / 60
+    val second = seconds % 60
+    return String.format("%02d:%02d", minutes, second)
+}
+
+
 
 
 //Box(modifier = Modifier
