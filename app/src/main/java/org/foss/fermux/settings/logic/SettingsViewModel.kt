@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val settingsTab = SettingsTab(application.applicationContext)
@@ -71,6 +70,3 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch {settingsTab.setLanguage(value)}
     }
 }
-
-
-
