@@ -54,6 +54,7 @@ android {
 dependencies {
     // This now pulls from your central version catalog instead of being a hardcoded string
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.datastore.preferences)
     implementation(libs.coil)
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.coil.network.okhttp)
