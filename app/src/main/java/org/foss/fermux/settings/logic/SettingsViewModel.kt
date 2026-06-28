@@ -30,8 +30,8 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     val sponserBlock: StateFlow<Boolean> = settingsTab.sponserBlock
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
-    val ytdlpUpdater: StateFlow<String> = settingsTab.ytdlpUpdater
-        .stateIn(viewModelScope, SharingStarted.Eagerly, "")
+    val ytdlpUpdater: StateFlow<Boolean> = settingsTab.ytdlpUpdater
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     val language: StateFlow<String> = settingsTab.language
         .stateIn(viewModelScope, SharingStarted.Eagerly, "")
@@ -62,7 +62,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch {settingsTab.setSponsorBlock(value)}
     }
 
-    fun setYtdlpUpdater(value: String) {
+    fun setYtdlpUpdater(value: Boolean) {
         viewModelScope.launch {settingsTab.setYtdlpUpdater(value)}
     }
 
