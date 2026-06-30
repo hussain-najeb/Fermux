@@ -108,24 +108,13 @@ fun SettingsScreen()
 
          Spacer(Modifier.height(16.dp))
 
-         ListItem(
-             modifier = listItemModifier,
-             headlineContent = { Text("Download Notifications", fontFamily = FontFamily.Default, fontSize = 17.sp) },
-             colors = ListItemDefaults.colors(Color(0xFF1f2034)),
-             supportingContent = {
-                 Text(
-                     "Notify me of the downloaded files when complete",
-                     fontFamily = FontFamily.Default
-                 )
-             },
-             leadingContent = { Icon(Icons.Default.Notifications, contentDescription = null) },
-             trailingContent = {
-                 Switch(
-                     checked = notificationState,
-                     onCheckedChange = { settingsViewModel.setNotificationState(it) }
-                 )
-             }
-         )
+         SettingsListItemSwitches(
+             "Download Notifications",
+             "Notify me when the downloaded files finish downloading",
+             Color(0xFF1f2034),
+             (Icons.Default.Notifications),
+             true
+         ) {settingsViewModel.setNotificationState(it)}
 
          ListItem(
              modifier = listItemModifier,

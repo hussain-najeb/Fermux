@@ -57,7 +57,7 @@ import org.foss.fermux.ytdlp.logic.fetchingTheMetadata
 // aren't on this Column yet,
 // but you don't need them until the TextField actually opens a
 // keyboard and pushes content.
-// Tomorrow's problem.
+// fix it someday.
 
 
 class DownloaderViewModel : ViewModel() {
