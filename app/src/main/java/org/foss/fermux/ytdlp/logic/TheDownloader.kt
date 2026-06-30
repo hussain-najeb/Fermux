@@ -12,10 +12,9 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 
-suspend fun downloaderLogic(showDetails: Boolean,context: Context, url: String, musicQuality: AudioQuality? = null ,videoQuality: VideoQuality? = null,
-                            onProgress: (Float) -> Unit
-
-                              )
+suspend fun downloaderLogic(logText: (String) -> Unit , showDetails: Boolean, context: Context, url: String,
+                             musicQuality: AudioQuality? = null ,videoQuality: VideoQuality? =
+                                 null, onProgress: (Float) -> Unit)
 
 {
     val downloadDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
@@ -44,8 +43,9 @@ suspend fun downloaderLogic(showDetails: Boolean,context: Context, url: String, 
 
 
     withContext(Dispatchers.IO) {
-        val response = YoutubeDL.getInstance().execute(request) { progress, _, _ ->
+        val response = YoutubeDL.getInstance().execute(request) { progress, _, line ->
             onProgress(progress)
+                logText(line)
         }
         downloadDir?.listFiles()?.forEach {
             file -> copyToDownloadFolder(context, file)

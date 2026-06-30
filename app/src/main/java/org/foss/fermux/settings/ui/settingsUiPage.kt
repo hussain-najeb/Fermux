@@ -16,17 +16,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AudioFile
-import androidx.compose.material.icons.filled.Audiotrack
 import androidx.compose.material.icons.filled.Details
 import androidx.compose.material.icons.filled.Downloading
-import androidx.compose.material.icons.filled.FileDownloadDone
-import androidx.compose.material.icons.filled.FileOpen
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.MonetizationOn
-import androidx.compose.material.icons.filled.MoneyOff
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.StoreMallDirectory
 import androidx.compose.material.icons.filled.VideoFile
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -195,10 +190,6 @@ fun SettingsScreen()
              (Icons.Default.MonetizationOn),
              sponserBlock
          ) {settingsViewModel.setSponsorBlock(it)}
-
-
-
-
      }
 } // main fun
 

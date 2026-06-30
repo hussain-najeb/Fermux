@@ -1,7 +1,7 @@
+@file:Suppress("DEPRECATION")
+
 package org.foss.fermux.ytdlp.ui
 import android.annotation.SuppressLint
-import android.content.Context
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,9 +24,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -35,22 +32,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
-import androidx.work.workDataOf
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import org.foss.fermux.R
-import org.foss.fermux.ytdlp.logic.AudioQuality
-import org.foss.fermux.ytdlp.logic.DownloadStatus
-import org.foss.fermux.ytdlp.logic.DownloadWorker
-import org.foss.fermux.ytdlp.logic.VideoQuality
-import org.foss.fermux.ytdlp.logic.fetchingTheMetadata
+import org.foss.fermux.ytdlp.logic.DownloaderViewModel
 
 
 //Also — imePadding() and verticalScroll
@@ -60,75 +44,7 @@ import org.foss.fermux.ytdlp.logic.fetchingTheMetadata
 // fix it someday.
 
 
-class DownloaderViewModel : ViewModel() {
-    var state by mutableStateOf<DownloadStatus>(DownloadStatus.Idle)
-    var showFormatSheet by mutableStateOf(false)
-    var downloadUrl by mutableStateOf("")
 
-
-    fun fetchedMetadata(downloadUrl: String) {
-        viewModelScope.launch {
-            state = DownloadStatus.Loading
-            try {
-                val metadata = fetchingTheMetadata(downloadUrl)
-                state = DownloadStatus.Loaded(metadata)
-                showFormatSheet = true
-
-            } catch (e: Exception) {
-                Log.e("fermux", "Download failed for $downloadUrl", e)
-                Log.d("fermux", "state failed to get stop the loading bar")
-            }
-        }
-    }
-
-
-    //
-
-
-    fun startingDownload(context: Context, audio: AudioQuality?, video: VideoQuality?) {
-
-        val metadata = (state as? DownloadStatus.Loaded)?.metadata ?: return
-
-        val requestedUrls = OneTimeWorkRequestBuilder<DownloadWorker>()
-            .setInputData(
-                workDataOf(
-                    "url" to downloadUrl,
-                    "audio" to audio?.name,
-                    "video" to video?.name
-                )
-            )
-            .build()
-
-        val workManager = WorkManager
-            .getInstance(context)
-        workManager.enqueue(requestedUrls)
-        workManager.getWorkInfoByIdFlow(requestedUrls.id)
-            .onEach { workInfo ->
-                workInfo ?: return@onEach
-                when (workInfo.state) {
-                    WorkInfo.State.RUNNING -> {
-                        val progress = workInfo.progress.getFloat("progress", 0f)
-                        state = DownloadStatus.Downloading(progress, metadata)
-                    }
-
-                    WorkInfo.State.SUCCEEDED -> {
-                        state = DownloadStatus.Loaded(metadata)
-                    }
-
-                    WorkInfo.State.FAILED -> {
-                        state = DownloadStatus.Error("Failed to download")
-                    }
-
-                    else -> {}
-
-                }
-
-            }
-            .launchIn(viewModelScope)
-
-
-    }
-}
 
 
 
@@ -158,7 +74,7 @@ fun DownloadContent(
 
     {
 
-        WhenCards(viewModel.state)
+        WhenCards(viewModel.state, downloaderLogs = viewModel.downloaderLogs)
 
         Spacer(modifier = Modifier.height(10.dp))
 

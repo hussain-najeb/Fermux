@@ -62,9 +62,16 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
         val showDetails = settingsTab.ytdlpDetails.first()
 
         return try {
-            downloaderLogic( context = applicationContext, url = url , musicQuality = audio, videoQuality = video, showDetails = showDetails) { progress ->  runBlocking {
+            downloaderLogic( context = applicationContext,
+                url = url ,
+                musicQuality = audio,
+                videoQuality = video,
+                showDetails = showDetails,
+                onProgress = { progress ->  runBlocking {
                 setProgress(workDataOf("progress" to progress)) }
-            }
+            },
+            logText = {line -> runBlocking { setProgress(workDataOf("text" to line)) } },
+            )
             Result.success()
         } catch (e: Exception) {
             Log.d("downloadWorker", "download failed", e)

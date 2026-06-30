@@ -29,7 +29,6 @@ import org.foss.fermux.ytdlp.logic.DownloadMetadata
 import org.foss.fermux.ytdlp.logic.DownloadStatus
 
 
-
 // TODO. have the download circle be a check
 //  mark when the download finished so its apparent to the user the download is done
 // TODO. have the duration of the video with a black/transcperent background behind it, so it doesn't look bad
@@ -38,7 +37,7 @@ import org.foss.fermux.ytdlp.logic.DownloadStatus
 
 
 @Composable
-fun WhenCards (state: DownloadStatus) {
+fun WhenCards (state: DownloadStatus, downloaderLogs: String) {
     when (state) {
         is DownloadStatus.Idle -> {} // Idle state of the card
 
@@ -47,20 +46,20 @@ fun WhenCards (state: DownloadStatus) {
         } // while downloading the info to the card
 
         is DownloadStatus.Downloading -> {
-            LoadedCard(state.metadata, state.downloadProgress)
+            LoadedCard(state.metadata, state.downloadProgress, downloaderLogs = downloaderLogs )
         } // just to get a damn bar to show the progress.
 
         is DownloadStatus.Loaded -> {
-            LoadedCard(state.metadata)
+            LoadedCard(state.metadata, downloaderLogs = downloaderLogs)
         }
         // the card gets loaded to view the damn
         // content when you call state. state here is assigned to "metadata", then to the actual card
-        // composable later gets to be assgined to "DownloadMetadata" to fill out the
+        // composable later gets to be assigned to "DownloadMetadata" to fill out the
         // info in that data class.
 
         is DownloadStatus.Error -> { Text(
             state.errorMessage)
-        } // if god forbids, an error happens, its seen here.
+        } // if god forbids, an error happens; it's seen here.
     }
 }
 
@@ -77,11 +76,11 @@ fun videoTime (seconds: Int): String {
 
 
 
-//Box(modifier = Modifier
-//.fillMaxWidth()
-//.padding(8.dp),
-//contentAlignment = Alignment.Center
-//) {
+// Box (modifier = Modifier
+// .fillMaxWidth()
+// .padding(8.dp),
+// contentAlignment = Alignment.Center
+// ) {
 //    LoadingIndicator()
 //}
 
@@ -122,9 +121,9 @@ fun LoadingCard() {
 
 @Composable
 
-fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null) {   // for the fully Loaded card to view on screen
+fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null, downloaderLogs: String) {   // for the fully Loaded card to view on screen
 
-    Column( // a column to have both the surface and the card be in the same page
+    Column( // a column to have both the surface and the card be on the same page
         modifier = Modifier
             .fillMaxWidth()
     ) {
@@ -182,7 +181,7 @@ fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null) {   // for 
             ) {
 
                 // self-explanatory shit. Code being the comment and shit like that
-                // ( terribile idea btw).
+                // (terribile idea btw).
 
                 Column {
                     Text(
