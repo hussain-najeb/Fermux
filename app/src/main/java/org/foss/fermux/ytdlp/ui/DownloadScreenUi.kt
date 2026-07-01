@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
@@ -85,12 +86,12 @@ fun DownloadContent(
                 .padding(9.dp),
             value = viewModel.downloadUrl,
             onValueChange = { txt -> viewModel.downloadUrl = txt },
-            label = { Text("Type URL here") },
+            label = { Text("Type URL here", fontFamily = FontFamily.Default) },
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Send,
                 capitalization = KeyboardCapitalization.None,
                 autoCorrect = false
-            )
+            ),
         )
     }
 

@@ -60,6 +60,7 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
 
         val settingsTab = SettingsTab(applicationContext)
         val showDetails = settingsTab.ytdlpDetails.first()
+        var currentProgress = 0f
 
         return try {
             downloaderLogic( context = applicationContext,
@@ -67,10 +68,12 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
                 musicQuality = audio,
                 videoQuality = video,
                 showDetails = showDetails,
-                onProgress = { progress ->  runBlocking {
-                setProgress(workDataOf("progress" to progress)) }
+                onProgress = { progress -> currentProgress = progress
+                    runBlocking {
+                setProgress(workDataOf("progress" to currentProgress, "text" to "")) }
             },
-            logText = {line -> runBlocking { setProgress(workDataOf("text" to line)) } },
+            logText = {line ->
+                runBlocking { setProgress(workDataOf("progress" to currentProgress, "text" to line)) } },
             )
             Result.success()
         } catch (e: Exception) {
