@@ -190,8 +190,26 @@ fun SettingsScreen()
              (Icons.Default.MonetizationOn),
              sponserBlock
          ) {settingsViewModel.setSponsorBlock(it)}
+
+         Spacer(Modifier.height(10.dp))
+
+         Text("Terminal", Modifier
+             .padding(start = 6.dp, top = 6.dp),
+             fontFamily = FontFamily.Default,
+             fontSize = 20.sp,
+             color = Color(0xFF638FFC)
+             )
+
+         Spacer(Modifier.height(10.dp))
+
+
+
+
+
+
      }
-} // main fun
+
+} // main function
 
 //TODO. change the color and look of the switch later.
 
@@ -203,7 +221,8 @@ fun SettingsListItemSwitches (
     color: Color = Color(0xFF1f2034),
     image: ImageVector,
     onCheck: Boolean,
-    onChange: (Boolean) -> Unit)
+    onChange: (Boolean) -> Unit
+    )
 {
     val listItemModifier = Modifier
         .padding(5.dp)
@@ -219,11 +238,10 @@ fun SettingsListItemSwitches (
         colors = ListItemDefaults.colors(color),
         leadingContent = { Icon(image, contentDescription = null) },
         trailingContent = {
-
                 Switch(
                     checked = onCheck,
                     onCheckedChange = onChange
-                )
+                      )
         }
     )
 }

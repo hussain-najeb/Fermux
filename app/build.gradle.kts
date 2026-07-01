@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
+
 }
 
 android {
@@ -52,8 +54,8 @@ android {
 }
 
 dependencies {
-    // This now pulls from your central version catalog instead of being a hardcoded string
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.datastore.preferences)
     implementation(libs.coil)
     implementation(libs.androidx.compose.foundation.layout)
@@ -71,7 +73,6 @@ dependencies {
     implementation(libs.androidx.foundation)
     implementation(libs.androidx.work.runtime.ktx)
     testImplementation(libs.junit)
-    implementation(libs.androidx.datastore.preferences)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

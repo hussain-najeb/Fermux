@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,12 +24,10 @@ import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,7 +40,6 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
@@ -52,7 +49,7 @@ import org.foss.fermux.ui.theme.JetbrainsMono
 
 
 // TODO. have the download circle be a check
-//  mark when the download finished so its apparent to the user the download is done
+//  mark when the download finished so its apparent to the user the download is done.
 // TODO. have the duration of the video with a black/transcperent background behind it, so it doesn't look bad
 
 
@@ -85,8 +82,6 @@ fun WhenCards (state: DownloadStatus, downloaderLogs: String) {
     }
 }
 
-
-
 @SuppressLint("DefaultLocale")
 fun videoTime (seconds: Int): String {
 
@@ -95,36 +90,30 @@ fun videoTime (seconds: Int): String {
     return String.format("%02d:%02d", minutes, second)
 }
 
-
-
-
-// Box (modifier = Modifier
-// .fillMaxWidth()
-// .padding(8.dp),
-// contentAlignment = Alignment.Center
-// ) {
-//    LoadingIndicator()
-//}
-
 @Composable
 fun LoadingCard() {
+    val cardBorder = Modifier
+        .border(1.5.dp, Color(0xFF17DB6F), RoundedCornerShape(8.dp))
+        .border(1.5.dp, Color(0xFF20B161), RoundedCornerShape(8.dp))
+        .border(0.8.dp, Color(0xFF20bf6b), RoundedCornerShape(8.dp))
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
     ) {
         ElevatedCard(
-            modifier = Modifier
-                .clip(RoundedCornerShape(4.dp))
+            modifier =  cardBorder
                 .fillMaxWidth()
                 .padding(19.dp)
-                .aspectRatio(16f / 9f)
-                .background(Color.Transparent)
+                .aspectRatio(16/9f)
+                .background(Color(0xFF181825))
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Transparent),
+                    .background(Color(0xFF1f2034))
+                    .aspectRatio(16/9f),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -139,10 +128,10 @@ fun LoadingCard() {
         }
     }
 }
-
 @Composable
 
-fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null, downloaderLogs: String) {   // for the fully Loaded card to view on screen
+fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null, downloaderLogs: String) {
+    // for the fully Loaded card to view on screen
 
     var expanded by remember { mutableStateOf(false) }
     val rotation by animateFloatAsState(if (expanded) 180f else 0f)
@@ -162,7 +151,7 @@ fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null, downloaderL
                 .padding(19.dp)
 
 
-        ) // https://youtu.be/ZFSN40r--zk?si=5kWFmzzw6lWT7VI5 <-- testing
+        )
 
 
         {
@@ -203,7 +192,7 @@ fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null, downloaderL
                 modifier = Modifier
                     .fillMaxSize()
                     .clip(RoundedCornerShape(4.dp))
-                    .background(color = Color(0xFF2b2a33))
+                    .background(color = Color(0xFF181825))
 
             ) {
 
@@ -253,6 +242,3 @@ fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null, downloaderL
             }
         }
     }
-
-
-

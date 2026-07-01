@@ -1,6 +1,7 @@
 package org.foss.fermux.homeScreen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalGridApi
@@ -47,8 +48,8 @@ fun HomeScreen(navigationController: NavHostController) {
                 row(0.5.fr)
                 row(1.5.fr)
 
-                rowGap(15.dp)
-                columnGap(15.dp)
+                rowGap(12.dp)
+                columnGap(12.dp)
             }
         )
 
@@ -91,7 +92,8 @@ fun HomeScreen(navigationController: NavHostController) {
                 FontStyle.Italic,
                 FontFamily.Default,
                 20.sp,
-                navigationController
+                navigationController,
+
             )
         }
     }
@@ -107,12 +109,16 @@ fun HomeScreen(navigationController: NavHostController) {
         style: FontStyle,
         family: FontFamily,
         fontSize: TextUnit,
-        navigationController: NavHostController,
-
+        navigationController: NavHostController
 
         ) {
         val cardModifier = Modifier.fillMaxSize()
+            .border(1.5.dp, Color(0xFF17DB6F), RoundedCornerShape(8.dp))
+            .border(1.5.dp, Color(0xFF20B161), RoundedCornerShape(8.dp))
+            .border(0.8.dp, Color(0xFF20bf6b), RoundedCornerShape(8.dp))
+
         val boxModifier = Modifier.fillMaxSize().clip(RoundedCornerShape(10.dp))
+            .background(Color(0xFF1f2034))
 
         ElevatedCard(modifier = cardModifier.gridItem(columnSpan = columnWidth)) {
             Box(

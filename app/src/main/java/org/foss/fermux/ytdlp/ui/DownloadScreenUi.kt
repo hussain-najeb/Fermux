@@ -3,6 +3,7 @@
 package org.foss.fermux.ytdlp.ui
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -70,6 +72,7 @@ fun DownloadContent(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
             .fillMaxSize()
+            .background(Color(0xFF181825))
 
     )
 
@@ -121,10 +124,7 @@ Box(contentAlignment = Alignment.BottomEnd,
                 modifier = Modifier.size(30.dp)
             )
         }
-
-
-            Button(
-                modifier = Modifier
+            Button(modifier = Modifier
                     .padding(10.dp)
                     .size(74.dp),
                 contentPadding = PaddingValues(0.dp),
