@@ -55,12 +55,49 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
         val audioName = inputData.getString("audio")
         val videoName = inputData.getString("video")
 
+
+        val title = inputData.getString("url") ?: "unknown title"
+        val thumbnail = inputData.getString("thumbnail") ?: "unknown thumbnail"
+        val duration = inputData.getLong("duration", 0)
+
         val audio = audioName?.let { AudioQuality.valueOf(it) }
         val video = videoName?.let { VideoQuality.valueOf(it) }
 
         val settingsTab = SettingsTab(applicationContext)
         val showDetails = settingsTab.ytdlpDetails.first()
         var currentProgress = 0f
+
+
+
+        try {
+            if (settingsTab.audioHistory.first() && audio != null) {
+                settingsTab.setJSONAudio(
+                    JSONHistoryCards(
+                        title,
+                        thumbnail,
+                        url,
+                        duration,
+                        System.currentTimeMillis()
+
+                    )
+                )
+            }
+
+            if (settingsTab.videoHistory.first() && video != null) {
+                settingsTab.setJSONVideo(
+                    JSONHistoryCards(
+                        title,
+                        thumbnail,
+                        url,
+                        duration,
+                        System.currentTimeMillis()
+                    )
+                )
+            }
+        } catch (e: Exception) {
+            Log.d("fermux", "failed to save audio JSON", e)
+            Log.d("fermux", "failed to save video JSON", e)
+        }
 
         return try {
             downloaderLogic( context = applicationContext,
@@ -71,7 +108,7 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
                 onProgress = { progress -> currentProgress = progress
                     runBlocking {
                 setProgress(workDataOf("progress" to currentProgress, "text" to "")) }
-            },
+                             },
             logText = {line ->
                 runBlocking { setProgress(workDataOf("progress" to currentProgress, "text" to line)) } },
             )

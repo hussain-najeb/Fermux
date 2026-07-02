@@ -19,7 +19,6 @@ class DownloaderViewModel : ViewModel() {
     var state by mutableStateOf<DownloadStatus>(DownloadStatus.Idle)
     var showFormatSheet by mutableStateOf(false)
     var downloadUrl by mutableStateOf("")
-
     var downloaderLogs by mutableStateOf("")
 
 
@@ -38,10 +37,6 @@ class DownloaderViewModel : ViewModel() {
         }
     }
 
-
-    //
-
-
     fun startingDownload(context: Context, audio: AudioQuality?, video: VideoQuality?) {
 
         val metadata = (state as? DownloadStatus.Loaded)?.metadata ?: return
@@ -51,7 +46,10 @@ class DownloaderViewModel : ViewModel() {
                 workDataOf(
                     "url" to downloadUrl,
                     "audio" to audio?.name,
-                    "video" to video?.name
+                    "video" to video?.name,
+                    "title" to metadata.title,
+                    "thumbnail" to metadata.thumbnail,
+                    "duration" to metadata.duration,
                 )
             )
             .build()

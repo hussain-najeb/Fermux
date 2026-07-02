@@ -7,36 +7,41 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.foss.fermux.ytdlp.logic.JSONHistoryCards
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val settingsTab = SettingsTab(application.applicationContext)
 
-    val downloadPath: StateFlow<String> = settingsTab.downloadPath
+    val downloadPath:      StateFlow<String> = settingsTab.downloadPath
         .stateIn(viewModelScope, SharingStarted.Eagerly, "")
 
     val notificationState: StateFlow<Boolean> = settingsTab.notificationState
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
-    val audioHistory: StateFlow<Boolean> = settingsTab.audioHistory
+    val audioHistory:      StateFlow<Boolean> = settingsTab.audioHistory
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
-    val videoHistory: StateFlow<Boolean> = settingsTab.videoHistory
+    val videoHistory:      StateFlow<Boolean> = settingsTab.videoHistory
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
-    val ytdlpDetails: StateFlow<Boolean> = settingsTab.ytdlpDetails
+    val ytdlpDetails:      StateFlow<Boolean> = settingsTab.ytdlpDetails
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
-    val sponserBlock: StateFlow<Boolean> = settingsTab.sponserBlock
+    val sponserBlock:      StateFlow<Boolean> = settingsTab.sponserBlock
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
-    val ytdlpUpdater: StateFlow<Boolean> = settingsTab.ytdlpUpdater
+    val ytdlpUpdater:      StateFlow<Boolean> = settingsTab.ytdlpUpdater
         .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
-    val language: StateFlow<String> = settingsTab.language
+    val language:          StateFlow<String> = settingsTab.language
         .stateIn(viewModelScope, SharingStarted.Eagerly, "")
 
+    val audioHistoryList:  StateFlow<List<JSONHistoryCards>> = settingsTab.JSONAudioCard
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
+    val videoHistoryList:  StateFlow<List<JSONHistoryCards>> = settingsTab.JSONVideoCard
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     fun setDownloadPath(value: String) {
         viewModelScope.launch {settingsTab.setDownloadPath(value)}

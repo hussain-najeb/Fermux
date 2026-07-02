@@ -181,7 +181,7 @@ fun SettingsScreen()
              Color(0xFF1f2034),
              (Icons.Default.Details),
              ytdlpDetails
-         ) {settingsViewModel.setYtdlpDetails(it)}
+         ) {settingsViewModel.setYtdlpDetails(it)} // TODO. This doesn't work btw.
 
          SettingsListItemSwitches(
              "SponserBlock",

@@ -4,10 +4,11 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class DownloadHistoryEntry(
+data class JSONHistoryCards(
     val title: String,
     val thumbnail: String,
     val url: String,
-    val videoTime: Long
-        )
+    val videoDuration: Long,
+    val downloadTime: Long,
+    )
 
