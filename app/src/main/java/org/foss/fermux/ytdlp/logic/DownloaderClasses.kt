@@ -56,9 +56,10 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
         val videoName = inputData.getString("video")
 
 
-        val title = inputData.getString("url") ?: "unknown title"
+        val title = inputData.getString("title") ?: "unknown title"
         val thumbnail = inputData.getString("thumbnail") ?: "unknown thumbnail"
-        val duration = inputData.getLong("duration", 0)
+        val duration = inputData.getInt("duration", 0).toLong()
+        val uploader = inputData.getString("uploader")
 
         val audio = audioName?.let { AudioQuality.valueOf(it) }
         val video = videoName?.let { VideoQuality.valueOf(it) }
@@ -76,8 +77,10 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
                         title,
                         thumbnail,
                         url,
+                        uploader,
                         duration,
-                        System.currentTimeMillis()
+                        System.currentTimeMillis(),
+
 
                     )
                 )
@@ -89,6 +92,7 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
                         title,
                         thumbnail,
                         url,
+                        uploader,
                         duration,
                         System.currentTimeMillis()
                     )

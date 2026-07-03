@@ -50,6 +50,7 @@ class DownloaderViewModel : ViewModel() {
                     "title" to metadata.title,
                     "thumbnail" to metadata.thumbnail,
                     "duration" to metadata.duration,
+                    "uploader" to metadata.uploader
                 )
             )
             .build()

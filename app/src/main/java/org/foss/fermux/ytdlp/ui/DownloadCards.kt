@@ -164,7 +164,7 @@ fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null, downloaderL
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(16f / 9f)
-                        .background(Color.Transparent)
+                        .background(Color(0xFF1f2034))
                 )
                 progress?.let {
                     CircularWavyProgressIndicator(
@@ -179,7 +179,8 @@ fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null, downloaderL
                             videoTime(metadata.duration),
                             modifier = Modifier
                                 .padding(8.dp)
-                                .align(Alignment.BottomStart), fontFamily = FontFamily.Default
+                                .align(Alignment.BottomStart),
+                            fontFamily = FontFamily.Default
                         )
 
                     }
@@ -200,13 +201,17 @@ fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null, downloaderL
                 // (terribile idea btw).
 
                 Column {
-                    Text(metadata.title, modifier = Modifier
-                            .padding(8.dp), fontFamily = FontFamily.Default
+                    Text(metadata.title,
+                        modifier = Modifier
+                            .padding(8.dp),
+                        fontFamily = FontFamily.Default
                     )
                     metadata.uploader?.let {
 
-                        Text(it, modifier = Modifier
-                                .padding(8.dp), fontFamily = FontFamily.Default
+                        Text(it,
+                            modifier = Modifier
+                                .padding(8.dp),
+                            fontFamily = FontFamily.Default
                         )
                     }
                 }
