@@ -186,7 +186,6 @@ fun SideBar (navigationController: NavHostController) {
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-
                 IconButton(
                     modifier = Modifier
                         .offset(x = 6.dp),
@@ -197,41 +196,30 @@ fun SideBar (navigationController: NavHostController) {
                         contentDescription = "Home",
                     )
                 }
-
-
             }
-
-
         }
-
-
     }
-
-
-
-        Box(
-            contentAlignment = Alignment.BottomStart,
+    Box(
+        contentAlignment = Alignment.BottomStart,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(3.dp)
+    ) {
+        Button(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(3.dp)
+                .padding(10.dp)
+                .size(74.dp),
+            contentPadding = PaddingValues(0.dp),
+            shape = RoundedCornerShape(16.dp),
+            onClick = { isSideBarOpen = !isSideBarOpen }
         ) {
-
-
-            Button(
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ViewSidebar,
+                contentDescription = null,
                 modifier = Modifier
-                    .padding(10.dp)
-                    .size(74.dp),
-                contentPadding = PaddingValues(0.dp),
-                shape = RoundedCornerShape(16.dp),
-                onClick = { isSideBarOpen = !isSideBarOpen }
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ViewSidebar,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(30.dp)
-                        .rotate(rotate)
-                )
-            }
+                    .size(30.dp)
+                    .rotate(rotate)
+            )
         }
+    }
 }
