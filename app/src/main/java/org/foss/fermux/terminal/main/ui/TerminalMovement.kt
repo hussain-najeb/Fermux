@@ -1,4 +1,4 @@
-package org.foss.fermux.terminal.terminal.ui
+package org.foss.fermux.terminal.main.ui
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons

@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui
+package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 
 
 import androidx.compose.foundation.layout.Box
@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import org.foss.fermux.main.SideBar
 
 
 // TODO. Add unique Font for the Download screen

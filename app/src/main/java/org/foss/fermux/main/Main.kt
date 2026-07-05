@@ -1,4 +1,4 @@
-package org.foss.fermux
+package org.foss.fermux.main
 
 
 import android.os.Bundle

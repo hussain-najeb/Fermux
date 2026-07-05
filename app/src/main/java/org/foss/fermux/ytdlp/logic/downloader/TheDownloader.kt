@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.logic
+package org.foss.fermux.ytdlp.logic.downloader
 
 import android.content.ContentValues
 import android.content.Context
@@ -12,8 +12,8 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 
-suspend fun downloaderLogic(logText: (String) -> Unit , showDetails: Boolean, context: Context, url: String,
-                             musicQuality: AudioQuality? = null ,videoQuality: VideoQuality? =
+suspend fun downloaderLogic(logText: (String) -> Unit, showDetails: Boolean, context: Context, url: String,
+                            musicQuality: AudioQuality? = null, videoQuality: VideoQuality? =
                                  null, onProgress: (Float) -> Unit)
 
 {

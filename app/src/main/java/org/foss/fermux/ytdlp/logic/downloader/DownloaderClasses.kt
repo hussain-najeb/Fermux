@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.logic
+package org.foss.fermux.ytdlp.logic.downloader
 
 import android.content.Context
 import android.util.Log
@@ -7,7 +7,8 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import org.foss.fermux.settings.logic.SettingsTab
+import org.foss.fermux.storage.SettingsTab
+import org.foss.fermux.storage.JSONHistoryCards
 
 data class DownloadMetadata (
     val title: String,
@@ -82,7 +83,7 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
                         System.currentTimeMillis(),
 
 
-                    )
+                        )
                 )
             }
 
@@ -104,17 +105,21 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
         }
 
         return try {
-            downloaderLogic( context = applicationContext,
-                url = url ,
+            downloaderLogic(
+                context = applicationContext,
+                url = url,
                 musicQuality = audio,
                 videoQuality = video,
                 showDetails = showDetails,
-                onProgress = { progress -> currentProgress = progress
+                onProgress = { progress ->
+                    currentProgress = progress
                     runBlocking {
-                setProgress(workDataOf("progress" to currentProgress, "text" to "")) }
-                             },
-            logText = {line ->
-                runBlocking { setProgress(workDataOf("progress" to currentProgress, "text" to line)) } },
+                        setProgress(workDataOf("progress" to currentProgress, "text" to ""))
+                    }
+                },
+                logText = { line ->
+                    runBlocking { setProgress(workDataOf("progress" to currentProgress, "text" to line)) }
+                },
             )
             Result.success()
         } catch (e: Exception) {

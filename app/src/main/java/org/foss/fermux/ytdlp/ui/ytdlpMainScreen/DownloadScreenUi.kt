@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package org.foss.fermux.ytdlp.ui
+package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
@@ -61,7 +61,7 @@ fun DownloadContent(
 
     QualitySheet(
         showSheet = viewModel.showFormatSheet,
-        onDismiss = {viewModel.showFormatSheet = false},
+        onDismiss = { viewModel.showFormatSheet = false },
         onConfirm = { audio, video ->
             viewModel.showFormatSheet = false
             viewModel.startingDownload(context, audio, video)

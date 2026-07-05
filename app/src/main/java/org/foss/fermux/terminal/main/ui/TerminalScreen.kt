@@ -1,4 +1,4 @@
-package org.foss.fermux.terminal.terminal.ui
+package org.foss.fermux.terminal.main.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -34,9 +34,9 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
-import org.foss.fermux.terminal.terminal.logic.TerminalLine
-import org.foss.fermux.terminal.terminal.logic.TermuxOutput
-import org.foss.fermux.terminal.terminal.logic.myTermuxCommands
+import org.foss.fermux.terminal.main.logic.TerminalLine
+import org.foss.fermux.terminal.main.logic.TermuxOutput
+import org.foss.fermux.terminal.main.logic.myTermuxCommands
 import org.foss.fermux.ui.theme.JetbrainsMono
 import kotlin.collections.plus
 

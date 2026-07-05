@@ -47,8 +47,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import org.foss.fermux.ytdlp.logic.JSONHistoryCards
-import org.foss.fermux.ytdlp.ui.videoTime
+import org.foss.fermux.storage.JSONHistoryCards
+import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.videoTime
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

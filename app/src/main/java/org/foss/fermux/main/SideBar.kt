@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui
+package org.foss.fermux.main
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -23,7 +23,6 @@ import androidx.compose.material.icons.automirrored.filled.ViewSidebar
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.Movie
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -42,16 +41,15 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import org.foss.fermux.settings.ui.SettingsScreen
 import org.foss.fermux.ytdlp.ui.historyPage.DownloadVideoList
 import org.foss.fermux.ytdlp.ui.historyPage.DownloadedAudioScreen
+import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloadContent
 
 
 enum class Page {
     DownloadPage,
     AudioListPage,
     VideoListPage,
-    SettingsPage,
 }
 
 @Composable
@@ -86,7 +84,6 @@ fun SideBar (navigationController: NavHostController) {
                 Page.DownloadPage -> DownloadContent()
                 Page.AudioListPage -> DownloadedAudioScreen()
                 Page.VideoListPage -> DownloadVideoList()
-                Page.SettingsPage -> SettingsScreen()
             }
         }
 
@@ -164,20 +161,6 @@ fun SideBar (navigationController: NavHostController) {
                     Icon(
                         imageVector = Icons.Default.LibraryMusic,
                         contentDescription = "Audio List",
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                ToggleButton(
-                    modifier = Modifier
-                        .offset(x = 6.dp),
-                    checked = currentPage == Page.SettingsPage,
-                    onCheckedChange = { currentPage = Page.SettingsPage },
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = "Settings",
                     )
                 }
 

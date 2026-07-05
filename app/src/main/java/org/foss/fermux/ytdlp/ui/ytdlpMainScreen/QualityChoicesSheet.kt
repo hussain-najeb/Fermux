@@ -1,4 +1,4 @@
-    package org.foss.fermux.ytdlp.ui
+package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 
     import androidx.compose.foundation.background
     import androidx.compose.foundation.layout.Arrangement
@@ -37,8 +37,8 @@
     import androidx.compose.ui.Modifier
     import androidx.compose.ui.text.font.FontFamily
     import androidx.compose.ui.unit.dp
-    import org.foss.fermux.ytdlp.logic.AudioQuality
-    import org.foss.fermux.ytdlp.logic.VideoQuality
+    import org.foss.fermux.ytdlp.logic.downloader.AudioQuality
+    import org.foss.fermux.ytdlp.logic.downloader.VideoQuality
 
 
     @OptIn(ExperimentalMaterial3Api::class)

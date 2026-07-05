@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.logic
+package org.foss.fermux.storage
 
 import kotlinx.serialization.Serializable
 

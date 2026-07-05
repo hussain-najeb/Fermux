@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui
+package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
@@ -43,8 +43,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import org.foss.fermux.ytdlp.logic.DownloadMetadata
-import org.foss.fermux.ytdlp.logic.DownloadStatus
+import org.foss.fermux.ytdlp.logic.downloader.DownloadMetadata
+import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
 import org.foss.fermux.ui.theme.JetbrainsMono
 
 

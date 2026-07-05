@@ -1,14 +1,13 @@
-package org.foss.fermux
+package org.foss.fermux.main
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.foss.fermux.ffmpeg.ui.ConverterScreen
-import org.foss.fermux.homeScreen.HomeScreen
 import org.foss.fermux.settings.ui.SettingsScreen
-import org.foss.fermux.terminal.terminal.ui.FermuxTerminalScreen
-import org.foss.fermux.ytdlp.ui.DownloaderScreen
+import org.foss.fermux.terminal.main.ui.FermuxTerminalScreen
+import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloaderScreen
 
 
 sealed class Screen (val route: String) {

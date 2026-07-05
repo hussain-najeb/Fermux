@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.foss.fermux.settings.logic.SettingsViewModel
-import org.foss.fermux.ytdlp.logic.JSONHistoryCards
+import org.foss.fermux.storage.SettingsViewModel
+import org.foss.fermux.storage.JSONHistoryCards
 
 @SuppressLint("ContextCastToActivity")
 @Composable

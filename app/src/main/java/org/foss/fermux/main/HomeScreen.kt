@@ -1,4 +1,4 @@
-package org.foss.fermux.homeScreen
+package org.foss.fermux.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import org.foss.fermux.Screen
 
 
 @OptIn(ExperimentalGridApi::class)

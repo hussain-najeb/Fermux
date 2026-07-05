@@ -1,4 +1,4 @@
-package org.foss.fermux.settings.logic
+package org.foss.fermux.storage
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -10,7 +10,6 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
-import org.foss.fermux.ytdlp.logic.JSONHistoryCards
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings_tab")
 

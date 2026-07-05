@@ -14,6 +14,11 @@ import androidx.work.workDataOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import org.foss.fermux.ytdlp.logic.downloader.AudioQuality
+import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
+import org.foss.fermux.ytdlp.logic.downloader.DownloadWorker
+import org.foss.fermux.ytdlp.logic.downloader.VideoQuality
+import org.foss.fermux.ytdlp.logic.downloader.fetchingTheMetadata
 
 class DownloaderViewModel : ViewModel() {
     var state by mutableStateOf<DownloadStatus>(DownloadStatus.Idle)
