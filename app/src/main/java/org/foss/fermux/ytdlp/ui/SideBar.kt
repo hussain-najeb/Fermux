@@ -43,18 +43,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import org.foss.fermux.settings.ui.SettingsScreen
-
-
+import org.foss.fermux.ytdlp.ui.historyPage.DownloadVideoList
+import org.foss.fermux.ytdlp.ui.historyPage.DownloadedAudioScreen
 
 
 enum class Page {
-
     DownloadPage,
     AudioListPage,
     VideoListPage,
-
     SettingsPage,
-
 }
 
 @Composable
