@@ -85,12 +85,8 @@ class DownloaderViewModel : ViewModel() {
                     }
 
                     else -> {}
-
                 }
-
             }
             .launchIn(viewModelScope)
-
-
     }
 }

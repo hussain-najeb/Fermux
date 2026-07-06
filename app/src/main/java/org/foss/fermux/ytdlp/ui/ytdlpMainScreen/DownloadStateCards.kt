@@ -76,8 +76,8 @@ fun WhenCards (state: DownloadStatus, downloaderLogs: String) {
         // composable later gets to be assigned to "DownloadMetadata" to fill out the
         // info in that data class.
 
-        is DownloadStatus.Error -> { Text(
-            state.errorMessage)
+        is DownloadStatus.Error -> {
+            Text(state.errorMessage)
         } // if god forbids, an error happens; it's seen here.
     }
 }

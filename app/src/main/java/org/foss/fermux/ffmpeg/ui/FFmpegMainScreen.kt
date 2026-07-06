@@ -1,6 +1,7 @@
 package org.foss.fermux.ffmpeg.ui
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
@@ -23,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import android.net.Uri
+import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
@@ -33,16 +35,25 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import org.foss.fermux.ffmpeg.logic.FFmpegTargetFormat
+import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 
 
 @Composable
-fun ConverterScreen() {
+fun ConverterScreen(@SuppressLint("ContextCastToActivity") viewModel: FFmpegViewModel = viewModel(viewModelStoreOwner =
+    LocalContext.current as ComponentActivity)) {
+
+    val context = LocalContext.current
 
     var pickedFile by remember { mutableStateOf<Uri?>(null) }
 
     val fileLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) {uri -> pickedFile = uri }
+
+    var selectedFormat by remember { mutableStateOf(FFmpegTargetFormat.MP4) }
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -83,7 +94,11 @@ fun ConverterScreen() {
                             .padding(5.dp)
                             .size(85.dp),
 
-                            onClick = {  }
+                            onClick = {
+                                if (pickedFile != null) {
+                                    viewModel.StartingConvertion(context, pickedFile!!, selectedFormat )
+                                }
+                            }
 
                         ) {
                             Icon(imageVector = Icons.Default.Upload,
