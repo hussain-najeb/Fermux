@@ -23,10 +23,7 @@ object TermuxOutput {
 @SuppressLint("SdCardPath")
 fun myTermuxCommands(context: Context, command: String) {
 
-    // Show the command immediately in the output before Termux responds
-
     Log.d("fermux", "Sending: $command")
-
 
     val resultIntent = Intent(context, Receiver::class.java).apply {
         action = "org.foss.fermux.COMMAND_RESULT"
@@ -38,10 +35,11 @@ fun myTermuxCommands(context: Context, command: String) {
         PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_MUTABLE
     )
 
-    // The message to Termux
+
     val intent = Intent().apply {
         setClassName("com.termux", "com.termux.app.RunCommandService")
         action = "com.termux.RUN_COMMAND"
+
         putExtra("com.termux.RUN_COMMAND_PATH", "/data/data/com.termux/files/usr/bin/bash")
         putExtra("com.termux.RUN_COMMAND_ARGUMENTS", arrayOf("-c", command))
         putExtra("com.termux.RUN_COMMAND_WORKDIR", "/data/data/com.termux/files/home")

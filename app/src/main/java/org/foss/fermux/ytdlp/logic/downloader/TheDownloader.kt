@@ -75,7 +75,6 @@ suspend fun copyToDownloadFolder (context: Context, sourceFile: File) {
     withContext(Dispatchers.IO) {
         val values = ContentValues().apply {
             put(MediaStore.Downloads.DISPLAY_NAME, sourceFile.name)
-            put(MediaStore.Downloads.MIME_TYPE, "video/mp4")
             put(MediaStore.Downloads.RELATIVE_PATH, "${Environment.DIRECTORY_DOWNLOADS}/fermux")
         }
         val uri = context.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values
@@ -83,12 +82,10 @@ suspend fun copyToDownloadFolder (context: Context, sourceFile: File) {
         ) ?: throw Exception("Error while opening download directory")
 
         context.contentResolver.openOutputStream(uri)?.use { outputStream ->
-            sourceFile.inputStream().use { inputOfSourceFile ->
-                inputOfSourceFile.copyTo(outputStream)
+            sourceFile.inputStream().use { inputStream ->
+                inputStream.copyTo(outputStream)
             }
-sourceFile.delete()
+                sourceFile.delete()
         }
-
-
     }
 }
