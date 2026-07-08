@@ -24,7 +24,7 @@ fun ConverterScreen(@SuppressLint("ContextCastToActivity") viewModel: FFmpegView
         .background(Color(0xFF181825))
         .fillMaxSize()) {
 
-        FFmepgState(viewModel.state)
+        FFmepgState(viewModel.state, viewModel.FFmpegLogs)
 
 
 

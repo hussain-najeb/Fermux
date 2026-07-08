@@ -7,6 +7,10 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +36,7 @@ import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -49,30 +54,28 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import org.foss.fermux.ffmpeg.logic.FFmpegStatus
 import org.foss.fermux.ffmpeg.logic.FFmpegTargetFormat
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
+import org.foss.fermux.ui.theme.JetbrainsMono
 
 @Composable
-fun FFmepgState (state: FFmpegStatus) {
+fun FFmepgState (state: FFmpegStatus, FFmpegLogs: String) {
 
     when (state) {
         is FFmpegStatus.Idle -> {
             IdleCard()
         }
 
-        is FFmpegStatus.Loading -> {
-            LoadingFFmpegCard()
-        }
-
         is FFmpegStatus.Converting -> {
-            ConversionCard(state.progress, state.inputUri)
+            ConversionCard(state.progress, state.inputUri, FFmpegLogs)
         }
 
         is FFmpegStatus.Loaded -> {
-            ConversionCard(progress = 100f, state.inputUri)
+            ConversionCard(progress = 100f, state.inputUri, FFmpegLogs)
         }
 
         is FFmpegStatus.Error -> {
@@ -87,35 +90,40 @@ fun IdleCard(@SuppressLint("ContextCastToActivity") viewModel: FFmpegViewModel =
 LocalContext.current as ComponentActivity)) {
 
     val context = LocalContext.current
+    var expanded by remember { mutableStateOf(false) }
+    val rotation by animateFloatAsState(if (expanded) 180f else 0f)
     var pickedFile by remember { mutableStateOf<Uri?>(null) }
     val fileLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri -> pickedFile = uri }
     var selectedFormat by remember { mutableStateOf(FFmpegTargetFormat.MP4) }
 
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp)
-            .padding(10.dp)
-            .clip(RoundedCornerShape(8.dp)),
-        colors = CardColors(
-            contentColor = Color.Unspecified,
-            containerColor = Color(0xFF1f2034),
-            disabledContentColor = Color.Unspecified,
-            disabledContainerColor = Color.Unspecified
-        ),
-        border = BorderStroke(1.5.dp, Color(0xFF20bf6b)),
-        content =
-            {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color(0xFF1f2034))
-                        .aspectRatio(16 / 9f),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .padding(10.dp)
+                .clip(RoundedCornerShape(8.dp)),
+            colors = CardColors(
+                contentColor = Color.Unspecified,
+                containerColor = Color(0xFF1f2034),
+                disabledContentColor = Color.Unspecified,
+                disabledContainerColor = Color.Unspecified
+            ),
+            border = BorderStroke(1.5.dp, Color(0xFF20bf6b)),
+            content =
+                {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color(0xFF1f2034))
+                            .aspectRatio(16 / 9f),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
 
                         ElevatedButton(
                             contentPadding = PaddingValues(0.dp),
@@ -140,77 +148,39 @@ LocalContext.current as ComponentActivity)) {
                                     .size(33.dp)
                             )
                         }
-                    pickedFile?.let { uri ->
-                        ElevatedButton(
-                            onClick = {
-                                viewModel.startingConversion(context, uri, selectedFormat)
-                            },
-                            modifier = Modifier
-                                .padding(top = 8.dp)
-                        ) {
-                            Text("Convert to ${selectedFormat.descriptor}")
-                        }
                     }
                 }
-            }
         )
-}
+        pickedFile?.let { uri ->
 
-
-@Composable
-fun LoadingFFmpegCard() {
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp)
-            .padding(10.dp)
-            .clip(RoundedCornerShape(8.dp)),
-        colors = CardColors(
-            contentColor = Color.Unspecified,
-            containerColor = Color(0xFF1f2034),
-            disabledContentColor = Color.Unspecified,
-            disabledContainerColor = Color.Unspecified
-        ),
-        border = BorderStroke(1.5.dp, Color(0xFF20bf6b)),
-        content =
-            {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                AnimatedVisibility(
+                    visible = expanded,
+                    enter = expandVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeIn(),
+                    exit = shrinkVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeOut()
                 ) {
-                    Column(
+                    Surface(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(Color(0xFF1f2034))
-                            .aspectRatio(16 / 9f),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(color = Color(0xFF181825)),
                     ) {
-                        Text(
-                            text = "Starting Conversion", fontFamily = FontFamily.Default
-                        )
-
-                        Spacer(modifier = Modifier.height(40.dp))
-
-                        LoadingIndicator()
+                        // TODO. Add buttons here to specify what format the user picks
                     }
                 }
-            }
-    )
+
+        }
+    }
 }
 
 @Composable
-fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?) {
+fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: String) {
 
     var expanded by remember { mutableStateOf(false) }
     val rotation by animateFloatAsState(if (expanded) 180f else 0f)
 
-
-
-    Column(modifier = Modifier
-        .fillMaxSize()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
     ) {
         Card(
             modifier = Modifier
@@ -257,13 +227,21 @@ fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?) {
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.background(Color(0xFF2b2a33))
                         ) {
-                            TextButton({expanded = !expanded}) {
-                                Icon(Icons.Default.ExpandMore, contentDescription = null, modifier = Modifier.rotate(rotation))
-                                Text(if (expanded)"Hide details" else "Show details")
+                            TextButton({ expanded = !expanded }) {
+                                Icon(
+                                    Icons.Default.ExpandMore,
+                                    contentDescription = null,
+                                    modifier = Modifier.rotate(rotation)
+                                )
+                                Text(if (expanded) "Hide details" else "Show details")
                             }
                         }
                     }
-                    AnimatedVisibility(expanded) {
+                    AnimatedVisibility(
+                        visible = expanded,
+                        enter = expandVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeIn(),
+                        exit = shrinkVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeOut()
+                    ) {
                         Surface(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -272,7 +250,16 @@ fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?) {
                         ) {
                             Column(modifier = Modifier.fillMaxSize()) {
 
+                                Text(
+                                    text = FFmpegLogs,
+                                    modifier = Modifier
+                                        .padding(3.dp),
+                                    fontSize = 18.sp,
+                                    color = Color.White,
+                                    fontFamily = JetbrainsMono,
+                                )
                             }
+
                         }
                     }
                 }

@@ -54,45 +54,48 @@ fun HomeScreen(navigationController: NavHostController) {
 
         {
 
-            MenuCards(
+            GridCards(
                 2,
                 Screen.Terminal,
                 "Terminal",
                 FontStyle.Italic,
                 FontFamily.Default,
                 20.sp,
+                Color.White,
                 navigationController
             )
 
-            MenuCards(
+            GridCards(
                 1,
                 Screen.Downloader,
                 "Downloader",
                 FontStyle.Italic,
                 FontFamily.Default,
                 20.sp,
+                Color.White,
                 navigationController
             )
 
-            MenuCards(
+            GridCards(
                 1,
                 Screen.Converter,
                 "Converter",
                 FontStyle.Italic,
                 FontFamily.Default,
                 20.sp,
+                Color.White,
                 navigationController
             )
 
-            MenuCards(
+            GridCards(
                 2,
                 Screen.Settings,
                 "Settings",
                 FontStyle.Italic,
                 FontFamily.Default,
                 20.sp,
+                Color.White,
                 navigationController,
-
             )
         }
     }
@@ -101,34 +104,45 @@ fun HomeScreen(navigationController: NavHostController) {
 
     @OptIn(ExperimentalGridApi::class)
     @Composable
-    fun GridScope.MenuCards(
+    fun GridScope.GridCards(
         columnWidth: Int,
-        navigation: Screen,
+        screen: Screen,
         title: String,
         style: FontStyle,
         family: FontFamily,
         fontSize: TextUnit,
-        navigationController: NavHostController
+        color: Color,
+        navigationController: NavHostController,
+        onClick: (() -> Unit)? = null
 
         ) {
-        val cardModifier = Modifier.fillMaxSize()
+        val cardModifier = Modifier
+            .fillMaxSize()
             .border(1.5.dp, Color(0xFF17DB6F), RoundedCornerShape(8.dp))
             .border(1.5.dp, Color(0xFF20B161), RoundedCornerShape(8.dp))
             .border(0.8.dp, Color(0xFF20bf6b), RoundedCornerShape(8.dp))
 
-        val boxModifier = Modifier.fillMaxSize().clip(RoundedCornerShape(10.dp))
+        val boxModifier = Modifier
+            .fillMaxSize()
+            .clip(RoundedCornerShape(10.dp))
             .background(Color(0xFF1f2034))
 
         ElevatedCard(modifier = cardModifier.gridItem(columnSpan = columnWidth)) {
             Box(
                 modifier = boxModifier
-                    .clickable { navigationController.navigate(navigation.route) })
+                    .clickable {
+                        if (onClick != null) {
+                            onClick()
+                        } else { navigationController.navigate(screen.route)}
+                    }
+                )
             {
                 Text(
                     title, modifier = Modifier
                         .padding(start = 12.dp, bottom = 70.dp, top = 25.dp),
                     fontStyle = style,
                     fontFamily = family,
+                    color = color,
                     fontSize = fontSize
                 )
             }

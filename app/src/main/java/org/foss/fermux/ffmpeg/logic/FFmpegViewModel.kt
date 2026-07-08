@@ -13,36 +13,40 @@ import androidx.compose.runtime.setValue
 import androidx.work.WorkInfo
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-
+import kotlin.text.takeLast
 
 
 sealed class FFmpegStatus {
 
     data object Idle: FFmpegStatus()
-    data object Loading: FFmpegStatus()
-    data class Loaded (val filePicked: FFmpegTargetFormat, val inputUri: Uri ): FFmpegStatus()
+    data class Loaded (val filePicked: FFmpegTargetFormat, val inputUri: Uri, val FFmpegLogs: String ): FFmpegStatus()
     data class Error(val errorMessage: String) : FFmpegStatus()
-    data class Converting(val progress: Float, val duration: Long, val filePicked: FFmpegTargetFormat, val inputUri: Uri): FFmpegStatus()
+    data class Converting(val progress: Float, val duration: Long, val filePicked: FFmpegTargetFormat, val inputUri: Uri, val FFmpegLogs: String): FFmpegStatus()
 
 }
 
-enum class FFmpegTargetFormat(val workerFile: String, val descriptor: String) {
+enum class FFmpegTargetFormat(
+    val workerFile: String,
+    val isVideo: Boolean,
+    val isAudio: Boolean,
+    val isImage: Boolean,
+    val descriptor: String) {
 
-    MP4("mp4", "video(mp4)"),
-    MKV("mkv", "video(mkv)"),
-    MOV("mov", "video(mov)"),
-    AVI("avi", "video(avi)"),
-    WEBM("webm", "video(webm)"),
+    MP4("mp4",   isVideo = true, isAudio = false, isImage = false,"video(mp4)"),
+    MKV("mkv",   isVideo = true, isAudio = false, isImage = false, "video(mkv)"),
+    MOV("mov",   isVideo = true, isAudio = false, isImage = false,"video(mov)"),
+    AVI("avi",   isVideo = true, isAudio = false, isImage = false,"video(avi)"),
+    WEBM("webm", isVideo = true, isAudio = false, isImage = false,"video(webm)"),
 
-    WAV("wav", "audio(wav)"),
-    AAC("aac", "audio(aac)"),
-    M4A("m4a", "audio(m4a)"),
-    FLAC("flac", "audio(flac)"),
-    OGG("ogg", "audio(ogg)"),
+    WAV("wav",   isVideo = false, isAudio = true, isImage = false, "audio(wav)"),
+    AAC("aac",   isVideo = false, isAudio = true, isImage = false,"audio(aac)"),
+    M4A("m4a",   isVideo = false, isAudio = true, isImage = false,"audio(m4a)"),
+    FLAC("flac", isVideo = false, isAudio = true, isImage = false, "audio(flac)"),
+    OGG("ogg",   isVideo = false, isAudio = true, isImage = false,"audio(ogg)"),
 
-    GIF("gif", "animation(gif)"),
-    JPG("jpg", "image(jpeg)"),
-    PNG("png", "image(png)"),
+    GIF("gif",   isVideo = false, isAudio = false, isImage = true,"image(gif)"),
+    JPG("jpg",   isVideo = false, isAudio = false, isImage = true, "image(jpeg)"),
+    PNG("png",   isVideo = false, isAudio = false, isImage = true, "image(png)"),
 
 } // TODO. Video/Audio cutting and effects is planed here as well.
  
@@ -52,7 +56,7 @@ class FFmpegViewModel: ViewModel() {
 
     var FFmpegLogs by mutableStateOf("")
     var state by mutableStateOf<FFmpegStatus>(FFmpegStatus.Idle)
-
+    var selectedFormat by mutableStateOf(FFmpegTargetFormat.entries.first())
     fun startingConversion(context: Context, inputUri: Uri, targetFormat: FFmpegTargetFormat) {
         viewModelScope.launch {
              val inputData = workDataOf(
@@ -77,15 +81,15 @@ class FFmpegViewModel: ViewModel() {
                         val progress = workInfo.progress.getFloat("progress", 0f)
                         val duration = workInfo.progress.getLong("duration", 0)
                         val logs = workInfo.progress.getString("line")
-                        state = FFmpegStatus.Converting(progress, duration,  targetFormat, inputUri)
 
                         if (!logs.isNullOrBlank()) {
-                            FFmpegLogs += "\n$logs"
+                            FFmpegLogs = (FFmpegLogs + logs).takeLast(500)
                         }
+                        state = FFmpegStatus.Converting(progress, duration, targetFormat, inputUri, FFmpegLogs)
                     }
 
                     WorkInfo.State.SUCCEEDED -> {
-                        state = FFmpegStatus.Loaded(targetFormat, inputUri)
+                        state = FFmpegStatus.Loaded(targetFormat, inputUri, FFmpegLogs)
                     }
 
                     WorkInfo.State.FAILED -> {
