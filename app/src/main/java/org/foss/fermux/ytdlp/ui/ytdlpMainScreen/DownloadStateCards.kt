@@ -3,6 +3,10 @@ package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +29,7 @@ import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -49,8 +54,10 @@ import org.foss.fermux.ui.theme.JetbrainsMono
 
 
 // TODO. have the download circle be a check
-//  mark when the download finished so its apparent to the user the download is done.
-// TODO. have the duration of the video with a black/transcperent background behind it, so it doesn't look bad
+//  mark when the download finished so its apparent
+//  to the user the download is done.
+// TODO. have the duration of the video with a
+//  black/transcperent background behind it, so it doesn't look bad
 
 
 
@@ -118,7 +125,9 @@ fun LoadingCard() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Fetching video info", fontFamily = FontFamily.Default
+                    text = "Fetching Video Info",
+                    fontFamily = FontFamily.Default
+
                 ) // TODO. have it in the middle of the card to the right more, and change the color, reference from the terminal tab.
 
                 Spacer(modifier = Modifier.height(40.dp))
@@ -149,10 +158,7 @@ fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null, downloaderL
                 .clip(RoundedCornerShape(4.dp))
                 .fillMaxWidth()
                 .padding(19.dp)
-
-
         )
-
 
         {
             Box {
@@ -197,9 +203,6 @@ fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null, downloaderL
 
             ) {
 
-                // self-explanatory shit. Code being the comment and shit like that
-                // (terribile idea btw).
-
                 Column {
                     Text(metadata.title,
                         modifier = Modifier
@@ -219,15 +222,23 @@ fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null, downloaderL
 
 
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.background(Color(0xFF2b2a33))
                 ) {
-                    TextButton({expanded = !expanded}) {
+                    TextButton({expanded = !expanded},
+                        modifier = Modifier.clip(RoundedCornerShape(8.dp)))
+
+                    {
                         Icon(Icons.Default.ExpandMore, contentDescription = null, modifier = Modifier.rotate(rotation))
                         Text(if (expanded)"Hide details" else "Show details")
                     }
                 }
-                AnimatedVisibility(expanded) {
+                AnimatedVisibility(
+                    visible = expanded,
+                    enter = expandVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeIn(),
+                    exit = shrinkVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeOut()
+                )
+
+                {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()

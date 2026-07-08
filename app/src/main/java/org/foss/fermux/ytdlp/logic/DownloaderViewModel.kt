@@ -71,7 +71,7 @@ class DownloaderViewModel : ViewModel() {
                         val logs = workInfo.progress.getString("text")
                         val progress = workInfo.progress.getFloat("progress", 0f)
                         if (!logs.isNullOrBlank()) {
-                            downloaderLogs += "\n$logs"
+                            downloaderLogs = (downloaderLogs + logs).takeLast(200)
                         }
                         state = DownloadStatus.Downloading(progress, metadata)
                     }

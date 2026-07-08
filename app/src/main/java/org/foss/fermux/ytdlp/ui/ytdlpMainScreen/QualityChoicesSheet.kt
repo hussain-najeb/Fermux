@@ -113,12 +113,12 @@ package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
                     SingleChoiceSegmentedButtonRow(modifier = Modifier.align(Alignment.CenterHorizontally)) { // the button row that looks like a pill or whatever
                         options.forEachIndexed { index, label ->
                             SegmentedButton(
-                                // the button thing I think
+                                // the button thing, I think
                                 shape = SegmentedButtonDefaults.itemShape(
                                     index = index,
                                     count = options.size
                                 ), // to get the rounded shape
-                                // from both sizes I think, so it doesn't look like shit
+                                // from both sizes. I think, so it doesn't look like shit
                                 onClick = {
                                     selectedPageIndex = index
                                     when (index) {

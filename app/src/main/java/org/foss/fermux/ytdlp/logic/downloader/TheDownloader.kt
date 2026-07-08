@@ -48,7 +48,7 @@ suspend fun downloaderLogic(logText: (String) -> Unit, showDetails: Boolean, con
                 logText(line)
         }
         downloadDir?.listFiles()?.forEach {
-            file -> copyToDownloadFolder(context, file)
+            file -> copyFileToDownloads(context, file, file.name, "video/mp4")
         }
         Log.d("fermux", "exit=${response.exitCode}")
         Log.d("fermux", "out=${response.out}")
@@ -71,14 +71,19 @@ suspend fun fetchingTheMetadata(url: String): DownloadMetadata =
     }
 
 
-suspend fun copyToDownloadFolder (context: Context, sourceFile: File) {
+suspend fun copyFileToDownloads (
+    context: Context,
+    sourceFile: File,
+    displayName: String,
+    mimeType: String = "application/octet-stream"
+) {
     withContext(Dispatchers.IO) {
         val values = ContentValues().apply {
-            put(MediaStore.Downloads.DISPLAY_NAME, sourceFile.name)
+            put(MediaStore.Downloads.DISPLAY_NAME, displayName)
+            put(MediaStore.Downloads.MIME_TYPE, mimeType)
             put(MediaStore.Downloads.RELATIVE_PATH, "${Environment.DIRECTORY_DOWNLOADS}/fermux")
         }
         val uri = context.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values
-
         ) ?: throw Exception("Error while opening download directory")
 
         context.contentResolver.openOutputStream(uri)?.use { outputStream ->

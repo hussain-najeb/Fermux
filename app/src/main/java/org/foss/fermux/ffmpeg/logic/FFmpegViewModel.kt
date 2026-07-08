@@ -20,13 +20,13 @@ sealed class FFmpegStatus {
 
     data object Idle: FFmpegStatus()
     data object Loading: FFmpegStatus()
-    data class Loaded (val filePicked: FFmpegTargetFormat ): FFmpegStatus()
+    data class Loaded (val filePicked: FFmpegTargetFormat, val inputUri: Uri ): FFmpegStatus()
     data class Error(val errorMessage: String) : FFmpegStatus()
-    data class Converting(val progress: Float, val filePicked: FFmpegTargetFormat): FFmpegStatus()
+    data class Converting(val progress: Float, val duration: Long, val filePicked: FFmpegTargetFormat, val inputUri: Uri): FFmpegStatus()
 
 }
 
-enum class FFmpegTargetFormat(val workerFile: String, val descriptor: String  ) {
+enum class FFmpegTargetFormat(val workerFile: String, val descriptor: String) {
 
     MP4("mp4", "video(mp4)"),
     MKV("mkv", "video(mkv)"),
@@ -50,9 +50,10 @@ enum class FFmpegTargetFormat(val workerFile: String, val descriptor: String  ) 
 
 class FFmpegViewModel: ViewModel() {
 
+    var FFmpegLogs by mutableStateOf("")
     var state by mutableStateOf<FFmpegStatus>(FFmpegStatus.Idle)
 
-    fun StartingConvertion(context: Context, inputUri: Uri, targetFormat: FFmpegTargetFormat) {
+    fun startingConversion(context: Context, inputUri: Uri, targetFormat: FFmpegTargetFormat) {
         viewModelScope.launch {
              val inputData = workDataOf(
                  "FFMPEG_URI_FILE" to inputUri.toString(),
@@ -74,12 +75,17 @@ class FFmpegViewModel: ViewModel() {
                     WorkInfo.State.RUNNING -> {
 
                         val progress = workInfo.progress.getFloat("progress", 0f)
+                        val duration = workInfo.progress.getLong("duration", 0)
+                        val logs = workInfo.progress.getString("line")
+                        state = FFmpegStatus.Converting(progress, duration,  targetFormat, inputUri)
 
-                        state = FFmpegStatus.Converting(progress, targetFormat)
+                        if (!logs.isNullOrBlank()) {
+                            FFmpegLogs += "\n$logs"
+                        }
                     }
 
                     WorkInfo.State.SUCCEEDED -> {
-                        state = FFmpegStatus.Loaded(targetFormat)
+                        state = FFmpegStatus.Loaded(targetFormat, inputUri)
                     }
 
                     WorkInfo.State.FAILED -> {

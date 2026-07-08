@@ -56,7 +56,7 @@ fun DownloadedAudioScreen() {
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(end = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Top
         ) {
             if (audioHistory.isEmpty()) {
                 item {
