@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.foss.fermux.ytdlp.logic.downloader.copyFileToDownloads
 import java.io.File
+import kotlin.collections.listOf
 
 
 class FFmpegWorker(context: Context, params: WorkerParameters) :
@@ -39,9 +40,16 @@ class FFmpegWorker(context: Context, params: WorkerParameters) :
             } ?: return Result.failure()
 
 
-            val ffmpegBinary = File(applicationContext.applicationInfo.nativeLibraryDir, "libffmpeg.so")
+            val ffmpegBinary = File(applicationContext.applicationInfo.nativeLibraryDir,
+                "libffmpeg.so")
 
                 val exitCode = withContext(Dispatchers.IO) {
+
+                    val ffmpegLibDir = File(applicationContext.noBackupFilesDir,
+                        "youtubedl-android/packages/ffmpeg/usr/lib")
+
+
+
                     val ffmpegProcess =
                         ProcessBuilder(
                             ffmpegBinary.absolutePath,
@@ -49,9 +57,19 @@ class FFmpegWorker(context: Context, params: WorkerParameters) :
                             "-y", outputFile.absolutePath
                         )
                             .redirectErrorStream(true)
-                            .start()
 
-                    ffmpegProcess.inputStream.bufferedReader().useLines { lines ->
+                    val nativeFFmpegLibDir = File(applicationContext.applicationInfo.nativeLibraryDir)
+
+                    ffmpegProcess.environment()["LD_LIBRARY_PATH"] = listOf(
+                        ffmpegLibDir.absolutePath,
+                        nativeFFmpegLibDir.absolutePath,
+                        System.getenv("LD_LIBRARY_PATH").orEmpty()
+                    ).joinToString(":")
+
+
+                    val process = ffmpegProcess.start()
+
+                    process.inputStream.bufferedReader().useLines { lines ->
                         for (line in lines) {
                                 setProgress(
                                     workDataOf(
@@ -61,7 +79,7 @@ class FFmpegWorker(context: Context, params: WorkerParameters) :
                         }
                     }
 
-                    ffmpegProcess.waitFor()
+                    process.waitFor()
                 }
 
             // TODO. add a "duration" and a progress bar here later.
@@ -84,7 +102,9 @@ class FFmpegWorker(context: Context, params: WorkerParameters) :
             }
 
         } catch (e: Exception) {
+
             Log.d("fermux", "error in ffmpeg file", e)
+
         } finally {
 
             if (tempFile.exists()) tempFile.delete()
