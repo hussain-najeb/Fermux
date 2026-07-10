@@ -2,6 +2,7 @@ package org.foss.fermux.main
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -31,18 +32,20 @@ sealed class Screen (val route: String) {
 fun FermuxAppMainScreen() {
     val navigationController = rememberNavController()
 
+    val ffmpegViewModel: FFmpegViewModel = viewModel()
+
     NavHost(
         navController = navigationController,
         startDestination = Screen.Home.route
         )
     {
-        composable(Screen.VideoFormatSheet.route) { VideoFormatSheet(navigationController,FFmpegViewModel()) }
-        composable(Screen.AudioFormatSheet.route) { AudioFormatSheet(navigationController,FFmpegViewModel()) }
-        composable(Screen.ImageFormatSheet.route) { ImageFormatSheet(navigationController, FFmpegViewModel()) }
+        composable(Screen.VideoFormatSheet.route) { VideoFormatSheet(navigationController, ffmpegViewModel) }
+        composable(Screen.AudioFormatSheet.route) { AudioFormatSheet(navigationController, ffmpegViewModel) }
+        composable(Screen.ImageFormatSheet.route) { ImageFormatSheet(navigationController, ffmpegViewModel) }
         composable(Screen.Home.route) { HomeScreen(navigationController) }
         composable(Screen.Terminal.route) { FermuxTerminalScreen() }
         composable(Screen.Settings.route) { SettingsScreen() }
         composable(Screen.Downloader.route) { DownloaderScreen(navigationController) }
-        composable(Screen.Converter.route) { ConverterScreen() }
+        composable(Screen.Converter.route) { ConverterScreen(navigationController = navigationController) }
     }
 }

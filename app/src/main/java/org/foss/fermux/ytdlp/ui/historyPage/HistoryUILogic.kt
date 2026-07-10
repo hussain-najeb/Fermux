@@ -82,38 +82,40 @@ fun HistoryCards(entry: JSONHistoryCards) {
 
 
                     androidx.compose.animation.AnimatedVisibility(
-                    visible = true,
-                    enter = slideInHorizontally(
-                        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
-                    ),
-                    exit = slideOutHorizontally(
-                        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
-                    ),
-                    modifier = Modifier.align(Alignment.BottomEnd)
-                )
-                {
-                    FilledTonalButton(
-                        onClick = { expanded = !expanded },
-                        contentPadding = PaddingValues(8.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        border = BorderStroke(1.5.dp, Color(0xFF20bf6b)),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF1f2034),
-                            contentColor = Color.White
+                        visible = true,
+                        enter = slideInHorizontally(
+                            animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
                         ),
-                        modifier = Modifier.padding(4.dp)
+                        exit = slideOutHorizontally(
+                            animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                        ),
+                        modifier = Modifier.align(Alignment.BottomEnd)
                     )
                     {
-                        Icon(
-                            Icons.Default.ExpandMore,
-                            contentDescription = null,
-                            modifier = Modifier.rotate(rotation)
+                        FilledTonalButton(
+                            onClick = { expanded = !expanded },
+                            contentPadding = PaddingValues(8.dp),
+                            shape = RoundedCornerShape(8.dp),
+                            border = BorderStroke(1.5.dp, Color(0xFF20bf6b)),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF1f2034),
+                                contentColor = Color.White
+                            ),
+                            modifier = Modifier
+                                .padding(4.dp)
+                                .padding(end = 2.dp)
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        {
+                            Icon(
+                                Icons.Default.ExpandMore,
+                                contentDescription = null,
+                                modifier = Modifier.rotate(rotation)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
 
-                        Text(if (expanded) "Hide details" else "Show details")
+                            Text(if (expanded) "Hide details" else "Show details")
+                        }
                     }
-                }
                 }
 
                 AnimatedVisibility(

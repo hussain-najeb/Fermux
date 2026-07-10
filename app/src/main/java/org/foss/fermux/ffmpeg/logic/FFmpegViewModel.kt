@@ -54,6 +54,7 @@ enum class FFmpegTargetFormat(
 
 class FFmpegViewModel: ViewModel() {
 
+    var inputUri by mutableStateOf<Uri?>(null)
     var FFmpegLogs by mutableStateOf("")
     var state by mutableStateOf<FFmpegStatus>(FFmpegStatus.Idle)
     var selectedFormat by mutableStateOf(FFmpegTargetFormat.entries.first())
@@ -68,8 +69,6 @@ class FFmpegViewModel: ViewModel() {
                 .setInputData(inputData)
                 .build()
 
-
-
             val workManager = WorkManager.getInstance(context)
             workManager.enqueue(request)
 
@@ -83,7 +82,7 @@ class FFmpegViewModel: ViewModel() {
                         val logs = workInfo.progress.getString("line")
 
                         if (!logs.isNullOrBlank()) {
-                            FFmpegLogs = (FFmpegLogs + logs).takeLast(500)
+                            FFmpegLogs = (FFmpegLogs + "\n" + logs).takeLast(500)
                         }
                         state = FFmpegStatus.Converting(progress, duration, targetFormat, inputUri, FFmpegLogs)
                     }
@@ -93,7 +92,7 @@ class FFmpegViewModel: ViewModel() {
                     }
 
                     WorkInfo.State.FAILED -> {
-                        state = FFmpegStatus.Error("")
+                        state = FFmpegStatus.Error("Failed to load anything at all")
                     }
                     else -> {}
                 }

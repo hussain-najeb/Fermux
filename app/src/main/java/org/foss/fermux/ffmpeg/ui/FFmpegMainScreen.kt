@@ -11,12 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 
 
 @Composable
 fun ConverterScreen(@SuppressLint("ContextCastToActivity") viewModel: FFmpegViewModel = viewModel(viewModelStoreOwner =
-    LocalContext.current as ComponentActivity)) {
+    LocalContext.current as ComponentActivity), navigationController: NavController) {
 
     val context = LocalContext.current
 
@@ -24,7 +25,7 @@ fun ConverterScreen(@SuppressLint("ContextCastToActivity") viewModel: FFmpegView
         .background(Color(0xFF181825))
         .fillMaxSize()) {
 
-        FFmepgState(viewModel.state, viewModel.FFmpegLogs)
+        FFmepgState(viewModel.state, viewModel.FFmpegLogs, navigationController = navigationController)
 
 
 

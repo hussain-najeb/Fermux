@@ -1,5 +1,6 @@
 package org.foss.fermux.ffmpeg.ui.formatSheet
 
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalGridApi
@@ -10,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
@@ -22,8 +24,9 @@ import org.foss.fermux.main.Screen
 
 @OptIn(ExperimentalGridApi::class)
 @Composable
-fun ImageFormatSheet(navHostController: NavHostController, viewModel: FFmpegViewModel) {
+fun Screens(isSomething: (FFmpegTargetFormat) -> Boolean, navHostController: NavHostController, viewModel: FFmpegViewModel) {
 
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -47,7 +50,7 @@ fun ImageFormatSheet(navHostController: NavHostController, viewModel: FFmpegView
         )
         {
             FFmpegTargetFormat.entries
-                .filter { it.isAudio }
+                .filter { isSomething(it) }
                 .forEach { format ->
                     GridCards(
                         1,
@@ -60,6 +63,10 @@ fun ImageFormatSheet(navHostController: NavHostController, viewModel: FFmpegView
                         navHostController,
                         onClick = {
                             viewModel.selectedFormat = format
+
+                            viewModel.inputUri?.let { uri ->
+                                viewModel.startingConversion(context, uri, format)
+                            }
 
                             navHostController.popBackStack()
                         }

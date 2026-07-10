@@ -5,46 +5,17 @@ import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Upload
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
-import androidx.compose.material3.CircularWavyProgressIndicator
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LoadingIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,22 +23,22 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import org.foss.fermux.ffmpeg.logic.FFmpegStatus
-import org.foss.fermux.ffmpeg.logic.FFmpegTargetFormat
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
+import org.foss.fermux.main.Screen
 import org.foss.fermux.ui.theme.JetbrainsMono
 
 @Composable
-fun FFmepgState (state: FFmpegStatus, FFmpegLogs: String) {
+fun FFmepgState (state: FFmpegStatus, FFmpegLogs: String, navigationController: NavController) {
 
     when (state) {
         is FFmpegStatus.Idle -> {
-            IdleCard()
+            IdleCard(navigationController = navigationController)
         }
 
         is FFmpegStatus.Converting -> {
@@ -86,25 +57,25 @@ fun FFmepgState (state: FFmpegStatus, FFmpegLogs: String) {
 
 
 @Composable
-fun IdleCard(@SuppressLint("ContextCastToActivity") viewModel: FFmpegViewModel = viewModel(viewModelStoreOwner =
-LocalContext.current as ComponentActivity)) {
-
-    val context = LocalContext.current
+fun IdleCard(
+    @SuppressLint("ContextCastToActivity") viewModel: FFmpegViewModel = viewModel(
+        viewModelStoreOwner = LocalContext.current as ComponentActivity
+    ),
+    navigationController: NavController,
+) {
     var expanded by remember { mutableStateOf(false) }
     val rotation by animateFloatAsState(if (expanded) 180f else 0f)
-    var pickedFile by remember { mutableStateOf<Uri?>(null) }
+
     val fileLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
-    ) { uri -> pickedFile = uri }
-    var selectedFormat by remember { mutableStateOf(FFmpegTargetFormat.MP4) }
+    ) { uri ->
+        viewModel.inputUri = uri
+    }
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-    ) {
+    Column(modifier = Modifier.fillMaxSize()) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
                 .padding(10.dp)
                 .clip(RoundedCornerShape(8.dp)),
             colors = CardColors(
@@ -114,63 +85,102 @@ LocalContext.current as ComponentActivity)) {
                 disabledContainerColor = Color.Unspecified
             ),
             border = BorderStroke(1.5.dp, Color(0xFF20bf6b)),
-            content =
-                {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color(0xFF1f2034))
-                            .aspectRatio(16 / 9f),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
+            content = {
+                Column {
+                    Box(modifier = Modifier.fillMaxWidth().height(200.dp)) {
 
-                        ElevatedButton(
-                            contentPadding = PaddingValues(0.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = ButtonColors(
-                                contentColor = Color(0xFF1f2038),
-                                containerColor = Color(0xFF303258),
-                                disabledContentColor = Color.Unspecified,
-                                disabledContainerColor = Color.Unspecified
-                            ),
-                            border = BorderStroke(1.5.dp, Color(0xFF20bf6b)),
-                            modifier = Modifier
-                                .padding(5.dp)
-                                .size(85.dp),
-                            onClick = { fileLauncher.launch("*/*") }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Upload,
-                                tint = Color(0xFFE7E7E2),
+                        if (viewModel.inputUri == null) {
+                            Column(
+                                modifier = Modifier.fillMaxSize().background(Color(0xFF1f2034)),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                ElevatedButton(
+                                    onClick = { fileLauncher.launch("*/*") },
+                                    modifier = Modifier.size(85.dp),
+                                    shape = RoundedCornerShape(16.dp),
+                                    colors = ButtonColors(
+                                        contentColor = Color(0xFF1f2038),
+                                        containerColor = Color(0xFF303258),
+                                        disabledContentColor = Color.Unspecified,
+                                        disabledContainerColor = Color.Unspecified
+                                    ),
+                                    border = BorderStroke(1.5.dp, Color(0xFF20bf6b))
+                                ) {
+                                    Icon(Icons.Default.Upload, null, tint = Color(0xFFE7E7E2), modifier = Modifier.size(33.dp))
+                                }
+                            }
+                        } else {}
+
+                        if (viewModel.inputUri != null) {
+
+                            AsyncImage(
+                                model = viewModel.inputUri,
                                 contentDescription = null,
+                                contentScale = ContentScale.Crop,
+
                                 modifier = Modifier
-                                    .size(33.dp)
+                                    .fillMaxWidth()
+                                    .aspectRatio(16f / 9f)
+                                    .background(Color(0xFF1f2034))
                             )
+
+                            FilledTonalButton(
+                                onClick = { expanded = !expanded },
+                                contentPadding = PaddingValues(8.dp),
+                                shape = RoundedCornerShape(8.dp),
+                                border = BorderStroke(1.5.dp, Color(0xFF20bf6b)),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFF1f2034),
+                                    contentColor = Color.White
+                                ),
+                                modifier = Modifier
+                                    .padding(all = 4.dp)
+                                    .padding(end = 2.dp)
+                                    .align (alignment = Alignment.BottomEnd)
+                            ) {
+                                Icon(Icons.Default.ExpandMore, null, modifier = Modifier.rotate(rotation))
+                                Spacer(Modifier.width(8.dp))
+                                Text(if (expanded) "Hide details" else "Show details")
+                            }
+
+                        }
+                    }
+
+                    AnimatedVisibility(
+                        visible = expanded,
+                        enter = expandVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeIn(),
+                        exit = shrinkVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeOut()
+                    ) {
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(4.dp))
+                                .background(Color(0xFF181825))
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth().padding(10.dp),
+                                horizontalArrangement = Arrangement.SpaceEvenly,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                FilledTonalButton(onClick = { navigationController.navigate(Screen.AudioFormatSheet.route) }) {
+                                    Text("Audio")
+                                }
+                                FilledTonalButton(onClick = { navigationController.navigate(Screen.VideoFormatSheet.route) }) {
+                                    Text("Video")
+                                }
+                                FilledTonalButton(onClick = { navigationController.navigate(Screen.ImageFormatSheet.route) }) {
+                                    Text("Image")
+                                }
+                            }
                         }
                     }
                 }
+            }
         )
-        pickedFile?.let { uri ->
-
-                AnimatedVisibility(
-                    visible = expanded,
-                    enter = expandVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeIn(),
-                    exit = shrinkVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeOut()
-                ) {
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(color = Color(0xFF181825)),
-                    ) {
-                        // TODO. Add buttons here to specify what format the user picks
-                    }
-                }
-
-        }
     }
 }
+
 
 @Composable
 fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: String) {
@@ -184,8 +194,7 @@ fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: Str
     ) {
         Card(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
+                .fillMaxSize()
                 .padding(10.dp)
                 .clip(RoundedCornerShape(8.dp)),
             colors = CardColors(
@@ -227,7 +236,7 @@ fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: Str
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.background(Color(0xFF2b2a33))
                         ) {
-                            TextButton({ expanded = !expanded }) {
+                            FilledTonalButton({ expanded = !expanded }) {
                                 Icon(
                                     Icons.Default.ExpandMore,
                                     contentDescription = null,
@@ -259,7 +268,6 @@ fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: Str
                                     fontFamily = JetbrainsMono,
                                 )
                             }
-
                         }
                     }
                 }
