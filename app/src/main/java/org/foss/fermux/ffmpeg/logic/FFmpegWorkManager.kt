@@ -9,29 +9,22 @@ import androidx.work.workDataOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.foss.fermux.ytdlp.logic.downloader.copyFileToDownloads
+import java.io.BufferedReader
 import java.io.File
-import kotlin.collections.listOf
+import java.io.InputStreamReader
 
-
-class FFmpegWorker(context: Context, params: WorkerParameters) :
-
-    CoroutineWorker(context, params) {
+class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
-
         val tempFile = File(applicationContext.cacheDir, "input_${id}.tmp")
-
         val targetFormatName = inputData.getString("TARGET_FORMAT") ?: return Result.failure()
-
         val targetFormat = FFmpegTargetFormat.valueOf(targetFormatName)
+        val outputFile = File(applicationContext.cacheDir, "output_${id}.${targetFormat.workerFile}")
 
-        val outputFile = File(applicationContext.cacheDir,
-            "output_${id}.${targetFormat.workerFile}")
-
-        try {
+        return try {
             val fileUriInput = inputData.getString("FFMPEG_URI_FILE") ?: return Result.failure()
-
             val uriFile = Uri.parse(fileUriInput)
+
 
             applicationContext.contentResolver.openInputStream(uriFile)?.use { inputStream ->
                 tempFile.outputStream().use { outputStream ->
@@ -39,81 +32,70 @@ class FFmpegWorker(context: Context, params: WorkerParameters) :
                 }
             } ?: return Result.failure()
 
+            val nativeLibDir = applicationContext.applicationInfo.nativeLibraryDir
+            val ffmpegBinary = File(nativeLibDir, "libfermux_ffmpeg.so")
 
-            val ffmpegBinary = File(applicationContext.applicationInfo.nativeLibraryDir,
-                "libffmpeg.so")
-
-                val exitCode = withContext(Dispatchers.IO) {
-
-                    val ffmpegLibDir = File(applicationContext.noBackupFilesDir,
-                        "youtubedl-android/packages/ffmpeg/usr/lib")
-
-
-
-                    val ffmpegProcess =
-                        ProcessBuilder(
-                            ffmpegBinary.absolutePath,
-                            "-i", tempFile.absolutePath,
-                            "-y", outputFile.absolutePath
-                        )
-                            .redirectErrorStream(true)
-
-                    val nativeFFmpegLibDir = File(applicationContext.applicationInfo.nativeLibraryDir)
-
-                    ffmpegProcess.environment()["LD_LIBRARY_PATH"] = listOf(
-                        ffmpegLibDir.absolutePath,
-                        nativeFFmpegLibDir.absolutePath,
-                        System.getenv("LD_LIBRARY_PATH").orEmpty()
-                    ).joinToString(":")
-
-
-                    val process = ffmpegProcess.start()
-
-                    process.inputStream.bufferedReader().useLines { lines ->
-                        for (line in lines) {
-                                setProgress(
-                                    workDataOf(
-                                        "line" to line
-                                    )
-                                )
-                        }
-                    }
-
-                    process.waitFor()
-                }
-
-            // TODO. add a "duration" and a progress bar here later.
-
-            if (exitCode == 0) {
-                val context = applicationContext
-                copyFileToDownloads(
-                    context,
-                    outputFile,
-                    "converted_${System.currentTimeMillis()}.${targetFormat.workerFile}",
-                    "application/octet-stream"
+            if (!ffmpegBinary.exists()) {
+                Log.d("FFmpegWorkManager", "FFmpeg binary not found at: $ffmpegBinary")
+                return Result.failure(
+                    workDataOf("error" to "FFmpeg binary not found")
                 )
-
-                return Result.success()
-
-            } else {
-
-                return Result.failure()
-
             }
 
+            val process = withContext(Dispatchers.IO) {
+                val builder = ProcessBuilder(
+                    ffmpegBinary.absolutePath,
+                    "-i", tempFile.absolutePath,
+                    "-y", outputFile.absolutePath,
+                )
+
+                builder.environment()["LD_LIBRARY_PATH"] = nativeLibDir
+                builder.redirectErrorStream(true)
+                builder.start()
+            }
+
+
+            val output = StringBuilder()
+            withContext(Dispatchers.IO) {
+                BufferedReader(InputStreamReader(process.inputStream)).use { reader ->
+                    var line: String?
+                    while (reader.readLine().also { line = it } != null) {
+                        output.appendLine(line)
+                        Log.d(TAG, line!!)
+                        setProgress(workDataOf("line" to line))
+                    }
+                }
+            }
+
+            val exitCode = withContext(Dispatchers.IO) {
+                process.waitFor()
+            }
+
+
+            if (exitCode == 0) {
+                withContext(Dispatchers.IO) {
+                    copyFileToDownloads(
+                        applicationContext,
+                        outputFile,
+                        "converted_${System.currentTimeMillis()}.${targetFormat.workerFile}",
+                        "application/octet-stream"
+                    )
+                    Result.success()
+                }
+            } else {
+                val logs = output.toString()
+                Log.e("fermux", "FFmpeg failed with rc: $exitCode\n$logs")
+                Result.failure(workDataOf("error" to logs))
+            }
         } catch (e: Exception) {
-
-            Log.d("fermux", "error in ffmpeg file", e)
-
+            Log.e(TAG, "FFmpeg worker crashed", e)
+            Result.failure(workDataOf("error" to (e.message ?: "unknown error")))
         } finally {
-
             if (tempFile.exists()) tempFile.delete()
-
             if (outputFile.exists()) outputFile.delete()
-
         }
-
-        return Result.failure()
-
+    }
+    companion object {
+        private const val TAG = "fermux-ffmpeg"
     }
 }

@@ -15,8 +15,6 @@ android {
         }
     }
 
-
-
     defaultConfig {
         applicationId = "org.foss.fermux"
         minSdk = 29
@@ -54,7 +52,7 @@ android {
 }
 
 dependencies {
-    implementation(libs.ffmpeg.kit.full)
+
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.datastore.preferences)
