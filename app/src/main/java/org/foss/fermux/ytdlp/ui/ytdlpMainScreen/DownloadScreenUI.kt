@@ -112,9 +112,7 @@ Box(contentAlignment = Alignment.BottomEnd,
                 .size(74.dp),
 
             contentPadding = PaddingValues(0.dp),
-
             shape = RoundedCornerShape(16.dp),
-
             onClick = { clipboard.getText()?.text?.let { viewModel.downloadUrl = it } }
 
         ) {

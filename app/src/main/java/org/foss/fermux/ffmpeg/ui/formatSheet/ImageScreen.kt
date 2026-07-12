@@ -4,16 +4,16 @@ import androidx.compose.foundation.layout.ExperimentalGridApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
+import org.foss.fermux.ffmpeg.logic.MediaKind
 
 @OptIn(ExperimentalGridApi::class)
 @Composable
 fun ImageFormatSheet(navHostController: NavHostController, viewModel: FFmpegViewModel) {
 
     Screens(
-        isSomething = { it.isImage },
+        sheet = MediaKind.IMAGE,
         navHostController = navHostController,
         viewModel = viewModel
-
     )
 
 }

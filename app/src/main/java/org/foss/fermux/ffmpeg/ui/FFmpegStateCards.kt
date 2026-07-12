@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.Replay
 import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -23,6 +24,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -31,10 +33,11 @@ import coil3.compose.AsyncImage
 import org.foss.fermux.ffmpeg.logic.FFmpegStatus
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.main.Screen
+import org.foss.fermux.ui.theme.FermuxTheme
 import org.foss.fermux.ui.theme.JetbrainsMono
 
 @Composable
-fun FFmepgState (state: FFmpegStatus, FFmpegLogs: String, navigationController: NavController) {
+fun FFmepgState (state: FFmpegStatus, FFmpegLogs: String, navigationController: NavController, viewModel: FFmpegViewModel) {
 
     when (state) {
         is FFmpegStatus.Idle -> {
@@ -50,7 +53,7 @@ fun FFmepgState (state: FFmpegStatus, FFmpegLogs: String, navigationController: 
         }
 
         is FFmpegStatus.Error -> {
-            Text(state.errorMessage)
+            FFmpegErrorMassage(state.errorMessage, onTryAgain = { viewModel.state = FFmpegStatus.Idle })
         }
     }
 }
@@ -61,8 +64,10 @@ fun IdleCard(
     @SuppressLint("ContextCastToActivity") viewModel: FFmpegViewModel = viewModel(
         viewModelStoreOwner = LocalContext.current as ComponentActivity
     ),
-    navigationController: NavController,
+    navigationController: NavController? = null,
 ) {
+
+    val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
     val rotation by animateFloatAsState(if (expanded) 180f else 0f)
 
@@ -70,6 +75,12 @@ fun IdleCard(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
         viewModel.inputUri = uri
+        if (uri != null) {
+            viewModel.updateInputKind(context)
+            if (viewModel.inputKind == null) {
+                viewModel.fail("Could not determine input kind")
+            }
+        }
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -155,7 +166,7 @@ fun IdleCard(
                         Surface(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(4.dp))
+                                .clip(RoundedCornerShape(8.dp))
                                 .background(Color(0xFF181825))
                         ) {
                             Row(
@@ -163,13 +174,13 @@ fun IdleCard(
                                 horizontalArrangement = Arrangement.SpaceEvenly,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                FilledTonalButton(onClick = { navigationController.navigate(Screen.AudioFormatSheet.route) }) {
+                                FilledTonalButton(onClick = { navigationController?.navigate(Screen.AudioFormatSheet.route) }) {
                                     Text("Audio")
                                 }
-                                FilledTonalButton(onClick = { navigationController.navigate(Screen.VideoFormatSheet.route) }) {
+                                FilledTonalButton(onClick = { navigationController?.navigate(Screen.VideoFormatSheet.route) }) {
                                     Text("Video")
                                 }
-                                FilledTonalButton(onClick = { navigationController.navigate(Screen.ImageFormatSheet.route) }) {
+                                FilledTonalButton(onClick = { navigationController?.navigate(Screen.ImageFormatSheet.route) }) {
                                     Text("Image")
                                 }
                             }
@@ -189,9 +200,7 @@ fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: Str
     val rotation by animateFloatAsState(if (expanded) 180f else 0f)
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
+        modifier = Modifier.fillMaxSize()) {
         Card(
             modifier = Modifier
                 .fillMaxSize()
@@ -275,3 +284,65 @@ fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: Str
     }
 }
 
+
+@Composable
+fun FFmpegErrorMassage(errorMessage: String, onTryAgain: () -> Unit) {
+
+    Column(modifier = Modifier
+        .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp)
+                .clip(RoundedCornerShape(8.dp)),
+            colors = CardColors(
+                contentColor = Color.Unspecified,
+                containerColor = Color(0xFF1f2034),
+                disabledContentColor = Color.Unspecified,
+                disabledContainerColor = Color.Unspecified
+            ),
+            border = BorderStroke(1.5.dp, Color(0xFF20bf6b)),
+
+            ) {
+            Text(
+                text = errorMessage,
+                modifier = Modifier
+                    .padding(top = 30.dp, start = 16.dp),
+                fontSize = 16.sp,
+                color = Color.White,
+                fontFamily = JetbrainsMono,
+            )
+            FilledTonalButton(onClick = { onTryAgain() },
+                                shape = RoundedCornerShape(8.dp),
+                                contentPadding = PaddingValues(12.dp),
+                                colors = ButtonDefaults.filledTonalButtonColors(containerColor = Color(0xFF303258)),
+                                border = BorderStroke(1.5.dp, Color(0xFF20bf6b)),
+
+                modifier = Modifier
+                    .align (alignment = Alignment.CenterHorizontally)
+                    .padding(top = 16.dp)
+
+            ) {
+                Icon(imageVector = Icons.Default.Replay,
+                    contentDescription = "Close",
+                    modifier = Modifier
+                        .size(29.dp)
+                    )
+            }
+        }
+    }
+}
+
+
+
+
+@Preview(showBackground = true, backgroundColor = 0xFF181825, widthDp = 360, heightDp = 200)
+@Composable
+fun FFmpegErrorMassagePreview() {
+    FermuxTheme(dynamicColor = false) {
+        FFmpegErrorMassage(errorMessage = "Conversion failed in the worker", onTryAgain = {})
+    }
+}

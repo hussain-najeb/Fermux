@@ -7,6 +7,7 @@ import androidx.work.workDataOf
 import kotlinx.coroutines.launch
 import android.content.Context
 import android.net.Uri
+import android.webkit.MimeTypeMap
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -25,31 +26,32 @@ sealed class FFmpegStatus {
 
 }
 
+// Single media kind instead of three exclusive booleans (bug 1)
+enum class MediaKind { VIDEO, AUDIO, IMAGE }
+
 enum class FFmpegTargetFormat(
     val workerFile: String,
-    val isVideo: Boolean,
-    val isAudio: Boolean,
-    val isImage: Boolean,
+    val category: MediaKind,
+    val mimeType: String,
+    val ffmpegExtraArgs: List<String>,
     val descriptor: String) {
 
-    MP4("mp4",   isVideo = true, isAudio = false, isImage = false,"video(mp4)"),
-    MKV("mkv",   isVideo = true, isAudio = false, isImage = false, "video(mkv)"),
-    MOV("mov",   isVideo = true, isAudio = false, isImage = false,"video(mov)"),
-    AVI("avi",   isVideo = true, isAudio = false, isImage = false,"video(avi)"),
-    WEBM("webm", isVideo = true, isAudio = false, isImage = false,"video(webm)"),
+    MP4("mp4",   category = MediaKind.VIDEO, mimeType = "video/mp4",       ffmpegExtraArgs = listOf("-c:v", "copy", "-c:a", "copy"), descriptor = "video(mp4)"),
+    MKV("mkv",   category = MediaKind.VIDEO, mimeType = "video/x-matroska", ffmpegExtraArgs = listOf("-c:v", "copy", "-c:a", "copy"), descriptor = "video(mkv)"),
+    MOV("mov",   category = MediaKind.VIDEO, mimeType = "video/quicktime",  ffmpegExtraArgs = listOf("-c:v", "copy", "-c:a", "copy"), descriptor = "video(mov)"),
+    AVI("avi",   category = MediaKind.VIDEO, mimeType = "video/x-msvideo",  ffmpegExtraArgs = listOf("-c:v", "copy", "-c:a", "copy"), descriptor = "video(avi)"),
+    WEBM("webm", category = MediaKind.VIDEO, mimeType = "video/webm",       ffmpegExtraArgs = listOf("-c:v", "copy", "-c:a", "copy"), descriptor = "video(webm)"),
 
-    WAV("wav",   isVideo = false, isAudio = true, isImage = false, "audio(wav)"),
-    AAC("aac",   isVideo = false, isAudio = true, isImage = false,"audio(aac)"),
-    M4A("m4a",   isVideo = false, isAudio = true, isImage = false,"audio(m4a)"),
-    FLAC("flac", isVideo = false, isAudio = true, isImage = false, "audio(flac)"),
-    OGG("ogg",   isVideo = false, isAudio = true, isImage = false,"audio(ogg)"),
+    WAV("wav",   category = MediaKind.AUDIO, mimeType = "audio/wav",        ffmpegExtraArgs = listOf("-vn", "-c:a", "pcm_s16le"), descriptor = "audio(wav)"),
+    M4A("m4a",   category = MediaKind.AUDIO, mimeType = "audio/mp4",       ffmpegExtraArgs = listOf("-vn", "-c:a", "aac"),         descriptor = "audio(m4a)"),
+    FLAC("flac", category = MediaKind.AUDIO, mimeType = "audio/flac",       ffmpegExtraArgs = listOf("-vn", "-c:a", "flac"),        descriptor = "audio(flac)"),
+    OGG("ogg",   category = MediaKind.AUDIO, mimeType = "audio/ogg",       ffmpegExtraArgs = listOf("-vn", "-c:a", "libvorbis"),   descriptor = "audio(ogg)"),
 
-    GIF("gif",   isVideo = false, isAudio = false, isImage = true,"image(gif)"),
-    JPG("jpg",   isVideo = false, isAudio = false, isImage = true, "image(jpeg)"),
-    PNG("png",   isVideo = false, isAudio = false, isImage = true, "image(png)"),
+    GIF("gif",   category = MediaKind.IMAGE, mimeType = "image/gif",        ffmpegExtraArgs = emptyList(),                          descriptor = "image(gif)"),
+    JPG("jpg",   category = MediaKind.IMAGE, mimeType = "image/jpeg",       ffmpegExtraArgs = listOf("-frames:v", "1"),             descriptor = "image(jpeg)"),
+    PNG("png",   category = MediaKind.IMAGE, mimeType = "image/png",       ffmpegExtraArgs = listOf("-frames:v", "1"),             descriptor = "image(png)"),
 
 } // TODO. Video/Audio cutting and effects is planed here as well.
- 
 
 
 class FFmpegViewModel: ViewModel() {
@@ -57,12 +59,49 @@ class FFmpegViewModel: ViewModel() {
     var inputUri by mutableStateOf<Uri?>(null)
     var FFmpegLogs by mutableStateOf("")
     var state by mutableStateOf<FFmpegStatus>(FFmpegStatus.Idle)
-    var selectedFormat by mutableStateOf(FFmpegTargetFormat.entries.first())
+    // Default to audio, not MP4 (bug 5)
+    var selectedFormat by mutableStateOf(FFmpegTargetFormat.WAV)
+    // Tracks what the picked file actually is (bug 3)
+    var inputKind by mutableStateOf<MediaKind?>(null)
+
+    fun fail(message: String) {
+        state = FFmpegStatus.Error(message)
+    }
+
+    // Guesses audio/video/image from MIME or file extension
+    fun updateInputKind(context: Context) {
+        inputKind = inputUri?.let { detectInputKind(context, it) }
+    }
+
+    // Used by format sheets: right tab + allowed for this input
+    fun isSheetFormat(format: FFmpegTargetFormat, sheet: MediaKind): Boolean {
+        return format.category == sheet && isConversionAllowed(format)
+    }
+
+    private fun isConversionAllowed(target: FFmpegTargetFormat): Boolean {
+        val input = inputKind ?: return false
+        return when (input) {
+            // Audio can only become audio — blocks audio→video crashes (bug 3)
+            MediaKind.AUDIO -> target.category == MediaKind.AUDIO
+            // Video can be converted, demuxed, or frame-grabbed
+            MediaKind.VIDEO -> true
+            MediaKind.IMAGE -> target.category == MediaKind.IMAGE
+        }
+    }
+
     fun startingConversion(context: Context, inputUri: Uri, targetFormat: FFmpegTargetFormat) {
+        updateInputKind(context)
+        if (!isConversionAllowed(targetFormat)) {
+            fail("This file can't be converted to that format")
+            return
+        }
+
         viewModelScope.launch {
              val inputData = workDataOf(
                  "FFMPEG_URI_FILE" to inputUri.toString(),
-                         "TARGET_FORMAT" to targetFormat.name
+                 "TARGET_FORMAT" to targetFormat.name,
+                 "FFMPEG_EXTRA_ARGS" to targetFormat.ffmpegExtraArgs.toTypedArray(),
+                 "OUTPUT_MIME_TYPE" to targetFormat.mimeType,
              )
 
             val request = OneTimeWorkRequestBuilder<FFmpegWorker>()
@@ -92,12 +131,33 @@ class FFmpegViewModel: ViewModel() {
                     }
 
                     WorkInfo.State.FAILED -> {
-                        state = FFmpegStatus.Error("Failed to load anything at all")
+                       fail(message = "Conversion failed in the worker")
                     }
                     else -> {}
                 }
             }
                 .launchIn(viewModelScope)
         }
+    }
+}
+
+private fun detectInputKind(context: Context, uri: Uri): MediaKind? {
+    val mime = context.contentResolver.getType(uri)
+    if (mime != null) {
+        return when {
+            mime.startsWith("video/") -> MediaKind.VIDEO
+            mime.startsWith("audio/") -> MediaKind.AUDIO
+            mime.startsWith("image/") -> MediaKind.IMAGE
+            else -> null
+        }
+    }
+    // Fallback when the picker doesn't give a MIME type
+    val ext = MimeTypeMap.getFileExtensionFromUrl(uri.toString()).lowercase()
+    val guessedMime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext) ?: return null
+    return when {
+        guessedMime.startsWith("video/") -> MediaKind.VIDEO
+        guessedMime.startsWith("audio/") -> MediaKind.AUDIO
+        guessedMime.startsWith("image/") -> MediaKind.IMAGE
+        else -> null
     }
 }

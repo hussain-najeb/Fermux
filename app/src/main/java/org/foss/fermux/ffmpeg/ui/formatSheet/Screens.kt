@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Grid
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,14 +20,20 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import org.foss.fermux.ffmpeg.logic.FFmpegTargetFormat
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
+import org.foss.fermux.ffmpeg.logic.MediaKind
 import org.foss.fermux.main.GridCards
 import org.foss.fermux.main.Screen
 
 @OptIn(ExperimentalGridApi::class)
 @Composable
-fun Screens(isSomething: (FFmpegTargetFormat) -> Boolean, navHostController: NavHostController, viewModel: FFmpegViewModel) {
+fun Screens(sheet: MediaKind, navHostController: NavHostController, viewModel: FFmpegViewModel) {
 
     val context = LocalContext.current
+
+    // Shared: detect input type once for all format sheets (bug 3)
+    LaunchedEffect(viewModel.inputUri) {
+        viewModel.updateInputKind(context)
+    }
 
     Box(
         modifier = Modifier
@@ -50,7 +57,8 @@ fun Screens(isSomething: (FFmpegTargetFormat) -> Boolean, navHostController: Nav
         )
         {
             FFmpegTargetFormat.entries
-                .filter { isSomething(it) }
+                // Shared: only show formats allowed for this sheet + input file
+                .filter { viewModel.isSheetFormat(it, sheet) }
                 .forEach { format ->
                     GridCards(
                         1,

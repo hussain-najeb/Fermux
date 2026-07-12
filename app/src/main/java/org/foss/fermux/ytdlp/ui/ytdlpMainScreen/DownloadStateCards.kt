@@ -126,7 +126,8 @@ fun LoadingCard() {
             ) {
                 Text(
                     text = "Fetching Video Info",
-                    fontFamily = FontFamily.Default
+                    fontFamily = FontFamily.Default,
+                    color = Color.White
 
                 ) // TODO. have it in the middle of the card to the right more, and change the color, reference from the terminal tab.
 
@@ -144,10 +145,6 @@ fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null, downloaderL
 
     var expanded by remember { mutableStateOf(false) }
     val rotation by animateFloatAsState(if (expanded) 180f else 0f)
-
-
-
-
 
     Column( // a column to have both the surface and the card be on the same page
         modifier = Modifier

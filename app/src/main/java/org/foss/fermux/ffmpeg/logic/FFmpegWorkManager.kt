@@ -42,11 +42,19 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                 )
             }
 
+            // Per-format flags sent from ViewModel (bug 4)
+            val extraArgs = inputData.getStringArray("FFMPEG_EXTRA_ARGS")?.toList() ?: emptyList()
+
             val process = withContext(Dispatchers.IO) {
                 val builder = ProcessBuilder(
-                    ffmpegBinary.absolutePath,
-                    "-i", tempFile.absolutePath,
-                    "-y", outputFile.absolutePath,
+                    buildList {
+                        add(ffmpegBinary.absolutePath)
+                        add("-i")
+                        add(tempFile.absolutePath)
+                        addAll(extraArgs)
+                        add("-y")
+                        add(outputFile.absolutePath)
+                    }
                 )
 
                 builder.environment()["LD_LIBRARY_PATH"] = nativeLibDir
