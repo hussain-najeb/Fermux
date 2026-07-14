@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -66,6 +67,7 @@ fun Screens(sheet: MediaKind, navHostController: NavHostController, viewModel: F
                         format.descriptor,
                         FontStyle.Italic,
                         FontFamily.Default,
+                        FontWeight.W300,
                         20.sp,
                         Color.White,
                         navHostController,

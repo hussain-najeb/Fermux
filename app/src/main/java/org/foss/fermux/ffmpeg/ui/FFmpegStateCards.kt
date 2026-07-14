@@ -327,7 +327,8 @@ fun FFmpegErrorMassage(errorMessage: String, onTryAgain: () -> Unit) {
 
             ) {
                 Icon(imageVector = Icons.Default.Replay,
-                    contentDescription = "Close",
+                    tint = Color(0xFF126ED7),
+                    contentDescription = null,
                     modifier = Modifier
                         .size(29.dp)
                     )
@@ -335,8 +336,6 @@ fun FFmpegErrorMassage(errorMessage: String, onTryAgain: () -> Unit) {
         }
     }
 }
-
-
 
 
 @Preview(showBackground = true, backgroundColor = 0xFF181825, widthDp = 360, heightDp = 200)

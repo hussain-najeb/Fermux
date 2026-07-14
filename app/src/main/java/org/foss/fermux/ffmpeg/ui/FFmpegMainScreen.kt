@@ -25,10 +25,7 @@ fun ConverterScreen(@SuppressLint("ContextCastToActivity") viewModel: FFmpegView
         .background(Color(0xFF181825))
         .fillMaxSize()) {
 
-        FFmepgState(viewModel.state, viewModel.FFmpegLogs, navigationController = navigationController)
-
-
-
+        FFmepgState(viewModel.state, viewModel.FFmpegLogs, navigationController = navigationController, viewModel = viewModel)
 
     }
 }

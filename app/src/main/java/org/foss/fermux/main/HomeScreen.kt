@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,6 +61,7 @@ fun HomeScreen(navigationController: NavHostController) {
                 "Terminal",
                 FontStyle.Italic,
                 FontFamily.Default,
+                FontWeight.Bold,
                 20.sp,
                 Color.White,
                 navigationController
@@ -71,6 +73,7 @@ fun HomeScreen(navigationController: NavHostController) {
                 "Downloader",
                 FontStyle.Italic,
                 FontFamily.Default,
+                FontWeight.Bold,
                 20.sp,
                 Color.White,
                 navigationController
@@ -82,6 +85,7 @@ fun HomeScreen(navigationController: NavHostController) {
                 "Converter",
                 FontStyle.Italic,
                 FontFamily.Default,
+                FontWeight.Bold,
                 20.sp,
                 Color.White,
                 navigationController
@@ -93,6 +97,7 @@ fun HomeScreen(navigationController: NavHostController) {
                 "Settings",
                 FontStyle.Italic,
                 FontFamily.Default,
+                FontWeight.Bold,
                 20.sp,
                 Color.White,
                 navigationController,
@@ -110,6 +115,7 @@ fun HomeScreen(navigationController: NavHostController) {
         title: String,
         style: FontStyle,
         family: FontFamily,
+        fontWeight: FontWeight,
         fontSize: TextUnit,
         color: Color,
         navigationController: NavHostController,
@@ -142,6 +148,7 @@ fun HomeScreen(navigationController: NavHostController) {
                         .padding(start = 12.dp, bottom = 70.dp, top = 25.dp),
                     fontStyle = style,
                     fontFamily = family,
+                    fontWeight = fontWeight,
                     color = color,
                     fontSize = fontSize
                 )

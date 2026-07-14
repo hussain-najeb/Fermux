@@ -9,15 +9,22 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Modifier.Companion.then
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
@@ -45,26 +52,29 @@ fun DownloadedAudioScreen() {
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            "Audio History",
-            fontFamily = FontFamily.Default,
-            fontSize = 40.sp,
+            text = "Audio History",
             color = Color.White,
-            modifier = Modifier.padding(16.dp)
+            fontSize = 40.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = FontFamily.SansSerif,
+            modifier = Modifier.padding(start = 20.dp, top = 27.dp, end = 24.dp)
         )
+
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(end = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
+            verticalArrangement = Arrangement.Center
         ) {
             if (audioHistory.isEmpty()) {
                 item {
                     Text(
-                        "No Audio History",
-                        color = Color(0xFF9AA6B6),
+                        "No audio history!",
+                        color = Color(0xFF888e9a),
                         fontFamily = FontFamily.Default,
-                        fontSize = 35.sp,
+                        fontStyle = FontStyle.Italic,
+                        fontSize = 20.sp,
                     )
                 }
             } else {
@@ -86,4 +96,51 @@ fun DownloadedAudioScreen() {
 @Composable
 fun StoredCard(entry: JSONHistoryCards) {
     HistoryCards(entry = entry)
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF181825)
+@Composable
+fun EmptyAudioStatePreview() {
+
+        Column(
+            modifier = Modifier
+                .background(Color(0xFF181825))
+                .fillMaxSize()
+        ) {
+            // 1. The Header Title
+            Text(
+                text = "Audio History",
+                color = Color.White,
+                fontSize = 40.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.SansSerif,
+                modifier = Modifier.padding(start = 24.dp, top = 32.dp, end = 24.dp)
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = 10.dp),
+                thickness = 1.dp,
+                color = Color(0xFF303258)
+            )
+
+            // 2. The box that forces the empty text to sit right in the center
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f)
+                ,
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Audio tracks will appear here.",
+                    color = Color(0xFF727882), // Clean muted gray
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily.SansSerif,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 40.dp)
+                )
+            }
+        }
 }

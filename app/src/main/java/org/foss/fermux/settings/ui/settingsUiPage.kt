@@ -37,6 +37,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
@@ -44,25 +46,33 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import org.foss.fermux.storage.SettingsViewModel
 
 
+@Preview
+@Composable
+fun PreviewSettingsScreen() {
+
+    Row {
+        Text(
+            "Settings", fontFamily = FontFamily.Default,
+            fontWeight = FontWeight.W500,
+            fontSize = 40.sp,
+            color = Color.White,
+            modifier = Modifier.padding(16.dp)
+        )
+    }
+
+}
+
+
 @SuppressLint("ContextCastToActivity")
 @Composable
 fun SettingsScreen()
 
- {
+    {
     val context = LocalContext.current
     val settingsViewModel: SettingsViewModel = viewModel(
         viewModelStoreOwner = LocalContext.current as ComponentActivity, factory =
             ViewModelProvider.AndroidViewModelFactory.getInstance(context.applicationContext as Application)
-)
-
-     val listItemModifier = Modifier
-         .padding(5.dp)
-         .clip(RoundedCornerShape(8.dp))
-         .border(1.5.dp, Color(0xFF17DB6F), RoundedCornerShape(8.dp))
-         .border(1.5.dp, Color(0xFF20B161), RoundedCornerShape(8.dp))
-         .border(0.8.dp, Color(0xFF20bf6b), RoundedCornerShape(8.dp))
-
-
+    )
 
      val notificationState  by settingsViewModel.notificationState. collectAsState()
      val languageState      by settingsViewModel.language.          collectAsState()
@@ -84,7 +94,9 @@ fun SettingsScreen()
      ) {
          Row {
              Text(
-                 "Settings", fontFamily = FontFamily.Default,
+                 "Settings",
+                 fontFamily = FontFamily.Default,
+                 fontWeight = FontWeight.W500,
                  fontSize = 40.sp,
                  color = Color.White,
                  modifier = Modifier.padding(16.dp)
@@ -95,6 +107,7 @@ fun SettingsScreen()
          Text(
              "General",
              fontFamily = FontFamily.Default,
+             fontWeight = FontWeight.W500,
              fontSize = 20.sp,
              color = Color(0xFF638FFC),
              modifier = Modifier
@@ -109,29 +122,34 @@ fun SettingsScreen()
              Color(0xFF1f2034),
              (Icons.Default.Notifications),
              true
-         ) {settingsViewModel.setNotificationState(it)}
+         ) {settingsViewModel.setNotificationState(it == true)} // TODO. Needs to get wired.
 
-         ListItem(
-             modifier = listItemModifier,
-             headlineContent = { Text("Display Language", fontFamily = FontFamily.Default, fontSize = 17.sp) },
-             colors = ListItemDefaults.colors(Color(0xFF1f2034)),
-             supportingContent = {
-                 Text(
-                     "",
-                     fontFamily = FontFamily.Default
-                 )
-             }, // TODO. in seal, the chosen language is showing in the supporting content, do it.
-             leadingContent = { Icon(Icons.Default.Language, contentDescription = null) },
-             trailingContent = {
 
-             }
-         )
+
+
+
+//         ListItem(
+//             modifier = listItemModifier,
+//             headlineContent = { Text("Display Language", fontFamily = FontFamily.Default, fontSize = 17.sp) },
+//             colors = ListItemDefaults.colors(Color(0xFF1f2034)),
+//             supportingContent = {
+//                 Text(
+//                     "",
+//                     fontFamily = FontFamily.Default
+//                 )
+//             }, // TODO. in seal, the chosen language is showing in the supporting content, do it.
+//             leadingContent = { Icon(Icons.Default.Language, contentDescription = null) },
+//             trailingContent = {
+
+//             }
+//         )
 
          Spacer(Modifier.height(10.dp))
 
          Text(
              "Downloader",
              fontFamily = FontFamily.Default,
+             fontWeight = FontWeight.W500,
              fontSize = 20.sp,
              color = Color(0xFF638FFC),
              modifier = Modifier
@@ -146,18 +164,20 @@ fun SettingsScreen()
              Color(0xFF1f2034),
              (Icons.Default.Downloading),
              ytdlpUpdater
-         ) { settingsViewModel.setYtdlpUpdater(it) }
+         ) { settingsViewModel.setYtdlpUpdater(it == true) }
 
-         ListItem(
-             modifier = listItemModifier,
-             headlineContent = { Text("Set download ", fontFamily = FontFamily.Default, fontSize = 17.sp) },
-             supportingContent = {Text("Changing the download directory")},
-             colors = ListItemDefaults.colors(Color(0xFF1f2034)),
-             leadingContent = { Icon(Icons.Default.Folder, contentDescription = null) },
-             trailingContent = {
 
-             }
-         )
+
+//         ListItem(
+//             modifier = listItemModifier,
+//             headlineContent = { Text("Set download ", fontFamily = FontFamily.Default, fontSize = 17.sp) },
+//             supportingContent = {Text("Changing the download directory")},
+//             colors = ListItemDefaults.colors(Color(0xFF1f2034)),
+//             leadingContent = { Icon(Icons.Default.Folder, contentDescription = null) },
+//             trailingContent = {
+//
+//             }
+//         )
 
          SettingsListItemSwitches(
              "Audio History",
@@ -165,7 +185,7 @@ fun SettingsScreen()
              Color(0xFF1f2034),
              (Icons.Default.AudioFile),
              audioHistory
-         ) {settingsViewModel.setAudioHistory(it)}
+         ) {settingsViewModel.setAudioHistory(it == true)}
 
          SettingsListItemSwitches(
              "Video History",
@@ -173,7 +193,7 @@ fun SettingsScreen()
              Color(0xFF1f2034),
              (Icons.Default.VideoFile),
              videoHistory
-         ) {settingsViewModel.setVideoHistory(it)}
+         ) {settingsViewModel.setVideoHistory(it == true)}
 
          SettingsListItemSwitches(
              "Yt-dlp Details",
@@ -181,7 +201,7 @@ fun SettingsScreen()
              Color(0xFF1f2034),
              (Icons.Default.Details),
              ytdlpDetails
-         ) {settingsViewModel.setYtdlpDetails(it)} // TODO. This doesn't work btw.
+         ) {settingsViewModel.setYtdlpDetails(it == true)} // TODO. This doesn't work btw.
 
          SettingsListItemSwitches(
              "SponserBlock",
@@ -189,21 +209,19 @@ fun SettingsScreen()
              Color(0xFF1f2034),
              (Icons.Default.MonetizationOn),
              sponserBlock
-         ) {settingsViewModel.setSponsorBlock(it)}
+         ) {settingsViewModel.setSponsorBlock(it == true)}
 
          Spacer(Modifier.height(10.dp))
 
-         Text("Terminal", Modifier
-             .padding(start = 6.dp, top = 6.dp),
-             fontFamily = FontFamily.Default,
-             fontSize = 20.sp,
-             color = Color(0xFF638FFC)
-             )
+//         Text("Terminal", Modifier
+//             .padding(start = 6.dp, top = 6.dp),
+//             fontFamily = FontFamily.Default,
+//             fontWeight = FontWeight.W500,
+//             fontSize = 20.sp,
+//             color = Color(0xFF638FFC)
+//             )
 
          Spacer(Modifier.height(10.dp))
-
-
-
 
 
 
@@ -220,8 +238,8 @@ fun SettingsListItemSwitches (
     subtitle: String,
     color: Color = Color(0xFF1f2034),
     image: ImageVector,
-    onCheck: Boolean,
-    onChange: (Boolean) -> Unit
+    onCheck: Boolean? = null,
+    onChange: ((Boolean?) -> Unit) = {}
     )
 {
     val listItemModifier = Modifier
@@ -239,7 +257,7 @@ fun SettingsListItemSwitches (
         leadingContent = { Icon(image, contentDescription = null) },
         trailingContent = {
                 Switch(
-                    checked = onCheck,
+                    checked = onCheck ?: false,
                     onCheckedChange = onChange
                       )
         }

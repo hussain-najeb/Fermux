@@ -63,6 +63,7 @@ fun HistoryCards(entry: JSONHistoryCards) {
             .border(0.8.dp, Color(0xFF20bf6b), RoundedCornerShape(8.dp))
 
         var expanded by remember { mutableStateOf(false) }
+
         val rotation by animateFloatAsState(if (expanded) 180f else 0f)
 
         Column(verticalArrangement = Arrangement.Center) {

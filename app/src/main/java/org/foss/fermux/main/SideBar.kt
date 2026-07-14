@@ -1,10 +1,16 @@
 package org.foss.fermux.main
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,22 +18,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ViewSidebar
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.LibraryMusic
-import androidx.compose.material.icons.filled.Movie
+import androidx.compose.material.icons.filled.VideoLibrary
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,21 +39,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import org.foss.fermux.R
 import org.foss.fermux.ytdlp.ui.historyPage.DownloadVideoList
 import org.foss.fermux.ytdlp.ui.historyPage.DownloadedAudioScreen
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloadContent
+import kotlin.time.Duration
 
 
-enum class Page {
-    DownloadPage,
-    AudioListPage,
-    VideoListPage,
+enum class Page(val image: ImageVector, val descriptor: String) {
+    DownloadPage(Icons.Default.Download, "Download Page"),
+    AudioListPage(Icons.Filled.LibraryMusic, "Audio Page"),
+    VideoListPage(Icons.Filled.VideoLibrary, "Video Page"),
 }
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun SideBar (navigationController: NavHostController) {
 
@@ -59,8 +65,10 @@ fun SideBar (navigationController: NavHostController) {
 
     var currentPage by remember { mutableStateOf(Page.DownloadPage) }
 
+    val pressed by remember { mutableStateOf(false) }
+
     val rotate by animateFloatAsState(
-        if (isSideBarOpen) 90f else 0f,
+        if (isSideBarOpen) 180f else 0f,
         animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
     )
 
@@ -68,8 +76,8 @@ fun SideBar (navigationController: NavHostController) {
 
 
 
-    Box(
-        modifier = Modifier.fillMaxSize()
+    Box( contentAlignment = Alignment.CenterStart
+        ,modifier = Modifier.fillMaxSize()
             .background(Color(0xFF181825))
     ) {
 
@@ -89,117 +97,120 @@ fun SideBar (navigationController: NavHostController) {
 
 
 
-        AnimatedVisibility(
-            visible = isSideBarOpen,
-            enter = slideInHorizontally(
-                animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-                initialOffsetX = { fullWidth -> -fullWidth }
-            ),
-            exit = slideOutHorizontally(
-                animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-                targetOffsetX = { fullWidth -> -fullWidth }
-            )
+AnimatedVisibility(
+    visible = isSideBarOpen,
+    enter = slideInHorizontally(
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        initialOffsetX = { fullWidth -> -fullWidth }
+    ),
+    exit = slideOutHorizontally(
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        targetOffsetX = { fullWidth -> -fullWidth }
         )
-        {
+    )
+{
+
+    // Sidebar Column
+
+    Column(
+        modifier = Modifier
+            .padding(start = 5.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .border(4.5.dp, Color(0xFF17191F), (RoundedCornerShape(8.dp)))
+            .width(90.dp)
+            .background(Color(0xFF1a1d24))
+    ) {
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Page.entries.forEach { page ->
+            val selectedPage = currentPage == page
+
+            val buttonColors by animateColorAsState(
+                targetValue = if (selectedPage) Color(0xFFadc6ff) else Color(0xFF303258),
+                animationSpec = tween(durationMillis = 300)
+            )
 
 
-            // Sidebar Column
+            val buttonExpansion by animateDpAsState(
+                targetValue = if (selectedPage) 75.dp else 60.dp,
+                animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+            )
 
-            Column(
+                Button(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .width(buttonExpansion)
+                        .height(60.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = buttonColors,
+                        contentColor = buttonColors,
+                    ),
+                    border = BorderStroke(1.5.dp, Color(0xFF20bf6b)),
+                    contentPadding = PaddingValues(0.dp),
+                    onClick = { currentPage = page },
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Icon(
+                        imageVector = page.image,
+                        contentDescription = page.descriptor,
+                        tint = if (currentPage == page) Color(0xFF102f60) else Color(0xFF126ED7)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                     }
+                 }
+             }
+        }
+
+    val backgroundAnimatedColor by animateColorAsState(
+        targetValue = if (isSideBarOpen) Color(0xFFadc6ff) else Color(0xFF303258),
+        animationSpec = tween(durationMillis = 300))
+
+    val buttonExpansion by animateDpAsState(
+        targetValue = if (isSideBarOpen) 80.dp else 70.dp,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+    )
+
+        Box(
+            contentAlignment = Alignment.BottomStart,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(3.dp)
+        ) {
+            Button(
                 modifier = Modifier
-                    .padding(top = 280.dp)
-                    .width(70.dp)
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(Color(0xFF1a1d24))
-                    .shadow(
-                        elevation = 3.dp,
+                    .padding(10.dp)
+                    .width(buttonExpansion)
+                    .height(70.dp),
+                contentPadding = PaddingValues(0.dp),
+                border = BorderStroke(1.5.dp, Color(0xFF20bf6b)),
+                colors = ButtonDefaults.buttonColors(backgroundAnimatedColor),
 
-
-                        )
-
-
+                shape = RoundedCornerShape(16.dp),
+                onClick = { isSideBarOpen = !isSideBarOpen }
             ) {
-
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-
-                ToggleButton(
-                    modifier = Modifier
-                        .offset(x = 6.dp),
-                    checked = currentPage == Page.DownloadPage,
-                    onCheckedChange = { currentPage = Page.DownloadPage },
-                ) {
+                if (isSideBarOpen) {
                     Icon(
-                        imageVector = Icons.Default.Download,
-                        contentDescription = "Download",
+                        painter = painterResource(id = R.drawable.side_bar_icon_pressed),
+                        tint = if (isSideBarOpen) Color(0xFF102f60) else Color(0xFF727882),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .rotate(rotate)
                     )
-                }
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                ToggleButton(
-                    modifier = Modifier
-                        .offset(x = 6.dp),
-                    checked = currentPage == Page.VideoListPage,
-                    onCheckedChange = { currentPage = Page.VideoListPage },
-                ) {
+                } else {
                     Icon(
-                        imageVector = Icons.Default.Movie,
-                        contentDescription = "Download List",
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                ToggleButton(
-                    modifier = Modifier
-                        .offset(x = 6.dp),
-                    checked = currentPage == Page.AudioListPage,
-                    onCheckedChange = { currentPage = Page.AudioListPage },
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.LibraryMusic,
-                        contentDescription = "Audio List",
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                IconButton(
-                    modifier = Modifier
-                        .offset(x = 6.dp),
-                    onClick = { navigationController.popBackStack() }
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Home",
+                        painter = painterResource(id = R.drawable.side_bar_icon),
+                        tint = if (isSideBarOpen) Color(0xFF102f60) else Color(0xFF727882),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .rotate(rotate)
                     )
                 }
             }
         }
     }
-    Box(
-        contentAlignment = Alignment.BottomStart,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(3.dp)
-    ) {
-        Button(
-            modifier = Modifier
-                .padding(10.dp)
-                .size(74.dp),
-            contentPadding = PaddingValues(0.dp),
-            shape = RoundedCornerShape(16.dp),
-            onClick = { isSideBarOpen = !isSideBarOpen }
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ViewSidebar,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(30.dp)
-                    .rotate(rotate)
-            )
-        }
-    }
-}
