@@ -3,7 +3,14 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,13 +28,22 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -57,7 +73,30 @@ fun DownloadContent(
         LocalContext.current as ComponentActivity)) {
 
     val context = LocalContext.current
+
     val clipboard = LocalClipboardManager.current
+
+    val downloadInteractionSource = remember { MutableInteractionSource() }
+    val downloadIsPressed by downloadInteractionSource.collectIsPressedAsState()
+    val downloadButtonColors by animateColorAsState(
+        if (downloadIsPressed) Color(0xFFadc6ff) else Color(0xFF303258),
+        animationSpec = tween (durationMillis = 150)
+    )
+    val downloadScale by animateFloatAsState(
+        targetValue = if (downloadIsPressed) 1.15f else 1.0f,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+    )
+
+    val copyInteractionSource = remember { MutableInteractionSource() }
+    val copyIsPressed by copyInteractionSource.collectIsPressedAsState()
+    val copyButtonColors by animateColorAsState(
+        if (copyIsPressed) Color(0xFFadc6ff) else Color(0xFF303258),
+        animationSpec = tween (durationMillis = 150)
+    )
+    val copyScale by animateFloatAsState(
+        targetValue = if (copyIsPressed) 1.15f else 1.0f,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+    )
 
     QualitySheet(
         showSheet = viewModel.showFormatSheet,
@@ -82,7 +121,6 @@ fun DownloadContent(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -106,31 +144,49 @@ Box(contentAlignment = Alignment.BottomEnd,
 
     Column (verticalArrangement = Arrangement.spacedBy(7.dp)) {
 
-        Button(
+        FilledTonalButton(
             modifier = Modifier
                 .padding(10.dp)
+                .graphicsLayer {
+                    scaleX = copyScale
+                    scaleY = copyScale
+                }
                 .size(74.dp),
 
             contentPadding = PaddingValues(0.dp),
+            interactionSource = copyInteractionSource,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = copyButtonColors),
+            border = BorderStroke(1.5.dp, Color(0xFF20bf6b)),
             shape = RoundedCornerShape(16.dp),
-            onClick = { clipboard.getText()?.text?.let { viewModel.downloadUrl = it } }
+            onClick = { clipboard.getText()?.text?.let { viewModel.downloadUrl = it }  }
 
         ) {
             Icon(
                 imageVector = Icons.Default.ContentPaste,
+                tint = if (copyIsPressed) Color(0xFF102f60) else Color(0xFF727882),
                 contentDescription = null,
                 modifier = Modifier.size(30.dp)
             )
         }
-            Button(modifier = Modifier
+            FilledTonalButton(modifier = Modifier
                     .padding(10.dp)
+                .graphicsLayer {
+                    scaleX = downloadScale
+                    scaleY = downloadScale
+                }
                     .size(74.dp),
                 contentPadding = PaddingValues(0.dp),
+                interactionSource = downloadInteractionSource,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = downloadButtonColors),
+                border = BorderStroke(1.5.dp, Color(0xFF20bf6b)),
                 shape = RoundedCornerShape(16.dp),
                 onClick = { viewModel.fetchedMetadata(viewModel.downloadUrl) })
             {
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_file_download_42),
+                    tint = if (downloadIsPressed) Color(0xFF102f60) else Color(0xFF727882),
                     contentDescription = null,
                     modifier = Modifier.size(36.dp)
                 )

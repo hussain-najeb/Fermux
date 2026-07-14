@@ -57,7 +57,15 @@ fun DownloadedAudioScreen() {
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.SansSerif,
-            modifier = Modifier.padding(start = 20.dp, top = 27.dp, end = 24.dp)
+            modifier = Modifier.padding(start = 24.dp, top = 19.dp, end = 24.dp)
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 10.dp),
+            thickness = 1.dp,
+            color = Color(0xFF303258)
         )
 
 
@@ -69,13 +77,22 @@ fun DownloadedAudioScreen() {
         ) {
             if (audioHistory.isEmpty()) {
                 item {
-                    Text(
-                        "No audio history!",
-                        color = Color(0xFF888e9a),
-                        fontFamily = FontFamily.Default,
-                        fontStyle = FontStyle.Italic,
-                        fontSize = 20.sp,
-                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(1f)
+                        ,
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Audio files will appear here.",
+                            color = Color(0xFF727882),
+                            fontSize = 16.sp,
+                            fontFamily = FontFamily.SansSerif,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(horizontal = 40.dp)
+                        )
+                    }
                 }
             } else {
 
@@ -96,51 +113,4 @@ fun DownloadedAudioScreen() {
 @Composable
 fun StoredCard(entry: JSONHistoryCards) {
     HistoryCards(entry = entry)
-}
-
-@Preview(showBackground = true, backgroundColor = 0xFF181825)
-@Composable
-fun EmptyAudioStatePreview() {
-
-        Column(
-            modifier = Modifier
-                .background(Color(0xFF181825))
-                .fillMaxSize()
-        ) {
-            // 1. The Header Title
-            Text(
-                text = "Audio History",
-                color = Color.White,
-                fontSize = 40.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.SansSerif,
-                modifier = Modifier.padding(start = 24.dp, top = 32.dp, end = 24.dp)
-            )
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            HorizontalDivider(
-                modifier = Modifier.padding(horizontal = 10.dp),
-                thickness = 1.dp,
-                color = Color(0xFF303258)
-            )
-
-            // 2. The box that forces the empty text to sit right in the center
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f)
-                ,
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "Audio tracks will appear here.",
-                    color = Color(0xFF727882), // Clean muted gray
-                    fontSize = 16.sp,
-                    fontFamily = FontFamily.SansSerif,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(horizontal = 40.dp)
-                )
-            }
-        }
 }
