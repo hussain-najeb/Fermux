@@ -7,8 +7,11 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -17,6 +20,7 @@ import androidx.compose.material.icons.filled.Replay
 import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -126,7 +130,7 @@ fun IdleCard(
                         if (viewModel.inputUri != null) {
 
                             AsyncImage(
-                                model = viewModel.inputUri,
+                                model = viewModel.inputUri, //TODO. THIS DOES NOT WORK!
                                 contentDescription = null,
                                 contentScale = ContentScale.Crop,
 
@@ -142,12 +146,12 @@ fun IdleCard(
                                 shape = RoundedCornerShape(8.dp),
                                 border = BorderStroke(1.5.dp, Color(0xFF20bf6b)),
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFF1f2034),
+                                    containerColor = Color(0xFF303258),
                                     contentColor = Color.White
                                 ),
                                 modifier = Modifier
                                     .padding(all = 4.dp)
-                                    .padding(end = 2.dp)
+                                    .padding(end = 4.dp)
                                     .align (alignment = Alignment.BottomEnd)
                             ) {
                                 Icon(Icons.Default.ExpandMore, null, modifier = Modifier.rotate(rotation))
@@ -167,20 +171,25 @@ fun IdleCard(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(Color(0xFF181825))
+                                .background(Color(0xFF303258))
                         ) {
                             Row(
-                                modifier = Modifier.fillMaxWidth().padding(10.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(10.dp),
                                 horizontalArrangement = Arrangement.SpaceEvenly,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                FilledTonalButton(onClick = { navigationController?.navigate(Screen.AudioFormatSheet.route) }) {
+                                FilledTonalButton(
+                                    onClick = { navigationController?.navigate(Screen.AudioFormatSheet.route) }) {
                                     Text("Audio")
                                 }
-                                FilledTonalButton(onClick = { navigationController?.navigate(Screen.VideoFormatSheet.route) }) {
+                                FilledTonalButton(
+                                    onClick = { navigationController?.navigate(Screen.VideoFormatSheet.route) }) {
                                     Text("Video")
                                 }
-                                FilledTonalButton(onClick = { navigationController?.navigate(Screen.ImageFormatSheet.route) }) {
+                                FilledTonalButton(
+                                    onClick = { navigationController?.navigate(Screen.ImageFormatSheet.route) }) {
                                     Text("Image")
                                 }
                             }
@@ -196,11 +205,11 @@ fun IdleCard(
 @Composable
 fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: String) {
 
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(true) }
     val rotation by animateFloatAsState(if (expanded) 180f else 0f)
 
     Column(
-        modifier = Modifier.fillMaxSize()) {
+        modifier = Modifier.fillMaxWidth()) {
         Card(
             modifier = Modifier
                 .fillMaxSize()
@@ -262,9 +271,9 @@ fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: Str
                     ) {
                         Surface(
                             modifier = Modifier
-                                .fillMaxSize()
+                                .fillMaxWidth()
                                 .clip(RoundedCornerShape(4.dp))
-                                .background(color = Color(0xFF181825)),
+                                .background(color = Color(0xff303258)),
                         ) {
                             Column(modifier = Modifier.fillMaxSize()) {
 
@@ -305,7 +314,6 @@ fun FFmpegErrorMassage(errorMessage: String, onTryAgain: () -> Unit) {
                 disabledContainerColor = Color.Unspecified
             ),
             border = BorderStroke(1.5.dp, Color(0xFF20bf6b)),
-
             ) {
             Text(
                 text = errorMessage,
@@ -334,14 +342,5 @@ fun FFmpegErrorMassage(errorMessage: String, onTryAgain: () -> Unit) {
                     )
             }
         }
-    }
-}
-
-
-@Preview(showBackground = true, backgroundColor = 0xFF181825, widthDp = 360, heightDp = 200)
-@Composable
-fun FFmpegErrorMassagePreview() {
-    FermuxTheme(dynamicColor = false) {
-        FFmpegErrorMassage(errorMessage = "Conversion failed in the worker", onTryAgain = {})
     }
 }

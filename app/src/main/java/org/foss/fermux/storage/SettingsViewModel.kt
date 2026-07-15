@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
+    // TODO. In this class, eagerly is running ALL the time, so maybe have it be for only a time
 
     private val settingsTab = SettingsTab(application.applicationContext)
 
@@ -27,7 +28,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     val ytdlpDetails: StateFlow<Boolean> = settingsTab.ytdlpDetails
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
-    val sponserBlock: StateFlow<Boolean> = settingsTab.sponserBlock
+    val sponsorBlock: StateFlow<Boolean> = settingsTab.sponsorBlock
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
     val ytdlpUpdater: StateFlow<Boolean> = settingsTab.ytdlpUpdater

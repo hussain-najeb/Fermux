@@ -80,7 +80,7 @@ fun SettingsScreen()
      val audioHistory       by settingsViewModel.audioHistory.      collectAsState()
      val videoHistory       by settingsViewModel.videoHistory.      collectAsState()
      val ytdlpDetails       by settingsViewModel.ytdlpDetails.      collectAsState()
-     val sponserBlock       by settingsViewModel.sponserBlock.      collectAsState()
+     val sponsorBlock       by settingsViewModel.sponsorBlock.      collectAsState()
      val ytdlpUpdater       by settingsViewModel.ytdlpUpdater.      collectAsState()
 
 
@@ -204,11 +204,11 @@ fun SettingsScreen()
          ) {settingsViewModel.setYtdlpDetails(it == true)} // TODO. This doesn't work btw.
 
          SettingsListItemSwitches(
-             "SponserBlock",
-             "An implementation of the SponserBlock API from the browser extension",
+             "SponsorBlock",
+             "An implementation of the SponsorBlock API from the browser extension",
              Color(0xFF1f2034),
              (Icons.Default.MonetizationOn),
-             sponserBlock
+             sponsorBlock
          ) {settingsViewModel.setSponsorBlock(it == true)}
 
          Spacer(Modifier.height(10.dp))

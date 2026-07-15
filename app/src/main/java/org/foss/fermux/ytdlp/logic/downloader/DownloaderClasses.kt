@@ -20,7 +20,7 @@ sealed class DownloadStatus {
     data object Idle : DownloadStatus() // no card in view. so it's idle and won't display a thing
     data object Loading : DownloadStatus() // loading the damn card.
     data class Loaded(val metadata: DownloadMetadata) : DownloadStatus() // the card is successful at loading
-    data class Error(val errorMessage: String) : DownloadStatus() // when something goes wrong
+    data class Error(val errorMessage: String, val rawError: String) : DownloadStatus() // when something goes wrong
     data class Downloading(val downloadProgress: Float, val metadata : DownloadMetadata) : DownloadStatus()
 // data for the fucking loadingIndicator
 }

@@ -22,9 +22,7 @@ val SHOW_YTDLP_AUDIO_HISTORY = booleanPreferencesKey("audio_history")
 val SPONSOR_BLOCK_IMPLEMENTATION = booleanPreferencesKey("sponsor_block") // TODO. feature for later.
 val YTDLP_AUTO_UPDATER = booleanPreferencesKey("update_download_ytp") // TODO. feature for later as well.
 val LANGUAGE = stringPreferencesKey("language")
-
 val JSON_AUDIO_HISTORY = stringPreferencesKey("json_audio")
-
 val JSON_VIDEO_HISTORY = stringPreferencesKey("json_video")
 
 
@@ -42,7 +40,7 @@ class SettingsTab(private val context: Context) {
 
     val ytdlpDetails:      Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[DOWNLOADING_DETAILS] ?: true }
 
-    val sponserBlock:      Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] ?: true } // TODO. later.
+    val sponsorBlock:      Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] ?: true } // TODO. later.
 
     val ytdlpUpdater:      Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[YTDLP_AUTO_UPDATER] ?: false } // TODO. later.
 

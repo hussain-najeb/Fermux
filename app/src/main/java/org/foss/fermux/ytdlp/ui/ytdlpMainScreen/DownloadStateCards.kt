@@ -1,56 +1,48 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material3.CircularWavyProgressIndicator
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LoadingIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.filled.Replay
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import kotlinx.coroutines.delay
+import org.foss.fermux.ui.theme.JetbrainsMono
+import org.foss.fermux.ytdlp.logic.DownloaderViewModel
 import org.foss.fermux.ytdlp.logic.downloader.DownloadMetadata
 import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
-import org.foss.fermux.ui.theme.JetbrainsMono
+import kotlin.collections.listOf
+import kotlin.time.Duration.Companion.milliseconds
 
 
 // TODO. have the download circle be a check
@@ -63,12 +55,13 @@ import org.foss.fermux.ui.theme.JetbrainsMono
 
 
 @Composable
-fun WhenCards (state: DownloadStatus, downloaderLogs: String) {
+fun WhenCards (state: DownloadStatus, downloaderLogs: String, viewModel: DownloaderViewModel) {
+    val context = LocalContext.current
     when (state) {
         is DownloadStatus.Idle -> {} // Idle state of the card
 
         is DownloadStatus.Loading -> {
-            LoadingCard()
+            LoadingCard(state = state)
         } // while downloading the info to the card
 
         is DownloadStatus.Downloading -> {
@@ -84,7 +77,7 @@ fun WhenCards (state: DownloadStatus, downloaderLogs: String) {
         // info in that data class.
 
         is DownloadStatus.Error -> {
-            Text(state.errorMessage)
+            ErrorCard(state.errorMessage, state.rawError, onCancel = {viewModel.cancelButton(context)})
         } // if god forbids, an error happens; it's seen here.
     }
 }
@@ -98,24 +91,45 @@ fun videoTime (seconds: Int): String {
 }
 
 @Composable
-fun LoadingCard() {
-    val cardBorder = Modifier
-        .border(1.5.dp, Color(0xFF17DB6F), RoundedCornerShape(8.dp))
-        .border(1.5.dp, Color(0xFF20B161), RoundedCornerShape(8.dp))
-        .border(0.8.dp, Color(0xFF20bf6b), RoundedCornerShape(8.dp))
+fun LoadingCard(state: DownloadStatus) {
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
     ) {
         ElevatedCard(
-            modifier =  cardBorder
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(19.dp)
+                .border(1.5.dp, Color(0xFF20B161), RoundedCornerShape(8.dp))
                 .aspectRatio(16/9f)
                 .background(Color(0xFF181825))
         ) {
+            val message =
+                listOf(
+                    "Fetching Video Info",
+                    "Connecting to Server...",
+                    "Analyzing Metadata...",
+                    "Wrapping things up...",
+                    "Stuff is happening...",
+                    "Hold your breath...",
+                    "Calibrating...",
+                    "Something is doing something to another thing...",
+                )
+            var loadingMessage by remember { mutableStateOf(message.random()) }
+
+            val shuffledMessages = (message.shuffled())
+
+            var index by remember { mutableIntStateOf(0) }
+
+            LaunchedEffect(Unit) {
+                while (true) {
+                    delay(2500.milliseconds)
+                    index = (index + 1) % shuffledMessages.size
+                    loadingMessage = shuffledMessages[index]
+                }
+            }
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -124,17 +138,27 @@ fun LoadingCard() {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "Fetching Video Info",
-                    fontFamily = FontFamily.Default,
-                    color = Color.White
 
-                ) // TODO. have it in the middle of the card to the right more, and change the color, reference from the terminal tab.
+                    Text(
+                        text = loadingMessage ,
+                        fontFamily = FontFamily.SansSerif,
+                        fontStyle = FontStyle.Italic,
+                        color = Color(0xFFDAF2FC),
+                        fontSize = 18.sp,
 
-                Spacer(modifier = Modifier.height(40.dp))
+                        ) // TODO. have it in the middle of the card to the right more, and change the color, reference from the terminal tab.
 
-                LoadingIndicator()
+                    Spacer(modifier = Modifier.height(40.dp))
+
+                    LoadingIndicator()
             }
+
+            if (state is DownloadStatus.Idle) {
+
+                Icon(imageVector = Icons.Default.Close, contentDescription = null)
+
+            }
+
         }
     }
 }
@@ -255,3 +279,92 @@ fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null, downloaderL
             }
         }
     }
+
+
+@SuppressLint("SuspiciousIndentation")
+@Composable
+fun ErrorCard(errorMessage: String, rawError: String, onCancel: () -> Unit) {
+
+    var expanded by remember { mutableStateOf(false) }
+
+    val rotation by animateFloatAsState(if (expanded) 180f else 0f)
+
+    val replayInteractionSource = remember { MutableInteractionSource() }
+
+    val replayIsPressed by replayInteractionSource.collectIsPressedAsState()
+
+    val replayButtonColors by animateColorAsState(
+        if (replayIsPressed) Color(0xFFadc6ff) else Color(0xFF303258),
+        animationSpec = tween (durationMillis = 150)
+    )
+
+    val replayScale by animateFloatAsState(
+        targetValue = if (replayIsPressed) 1.15f else 1.0f,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+    )
+
+
+        Column( // a column to have both the surface and the card be on the same page
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            ElevatedCard( // the video card with the picture of the downloaded video
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(19.dp)
+                    .border(1.5.dp, Color(0xFF20B161), RoundedCornerShape(8.dp))
+                    .aspectRatio(16/9f)
+                    .background(Color(0xFF181825)),
+            ) {
+                Box(modifier = Modifier
+                    .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,)
+                    {
+                    Text(
+                        text = errorMessage,
+                        fontSize = 14.sp,
+                        fontStyle = FontStyle.Normal,
+                        fontWeight = FontWeight.SemiBold,
+                        textAlign = TextAlign.Center,
+                        fontFamily = JetbrainsMono,
+                        color = Color(0xFFadc6ff),
+                        modifier = Modifier.padding(4.dp)
+                    )
+
+
+                            FilledTonalButton(
+                                onClick = { onCancel() },
+                                shape = RoundedCornerShape(8.dp),
+                                interactionSource = replayInteractionSource,
+                                contentPadding = PaddingValues(12.dp),
+                                colors = ButtonDefaults.filledTonalButtonColors(
+                                    containerColor = replayButtonColors
+                                ),
+                                border = BorderStroke(1.5.dp, Color(0xFF20bf6b)),
+
+                                modifier = Modifier
+                                    .padding(top = 16.dp)
+                                    .graphicsLayer {
+                                        scaleX = replayScale
+                                        scaleY = replayScale
+                                    }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Replay,
+                                    tint = Color(0xFF126ED7),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(29.dp)
+                                )
+                            }
+                        }
+                }
+            }
+        }
+// TODO. add the cancel button here to reset the thing when the card fails.
+    // TODO. The actual ERROR is not shown here, add it with the animations as well.
+}
