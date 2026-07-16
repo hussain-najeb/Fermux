@@ -73,25 +73,28 @@ fun DownloadedAudioScreen() {
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(end = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Top
         ) {
             if (audioHistory.isEmpty()) {
                 item {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .weight(1f)
-                        ,
+                            .weight(1f),
+
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = "Audio files will appear here.",
-                            color = Color(0xFF727882),
-                            fontSize = 16.sp,
-                            fontFamily = FontFamily.SansSerif,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(horizontal = 40.dp)
-                        )
+
+                        Spacer(modifier = Modifier.height(700.dp))
+
+                            Text(
+                                text = "Audio files will appear here.",
+                                color = Color(0xFF727882),
+                                fontSize = 16.sp,
+                                fontFamily = FontFamily.SansSerif,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(horizontal = 40.dp)
+                            )
                     }
                 }
             } else {

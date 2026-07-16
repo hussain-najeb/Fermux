@@ -30,15 +30,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import org.foss.fermux.main.Screen
+import androidx.compose.ui.unit.sp
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -86,29 +83,41 @@ fun FermuxTheme(
         content = content
     )
 }
+
+
+
+data class FermuxColor(
+    val buttonPrimaryInActive: Color = Color(0xFF303258),
+    val buttonPrimaryActive: Color = Color(0xFFadc6ff),
+    val fermuxBorder: Color = Color(0xFF20bf6b),
+    val activeIcon: Color = Color(0xFF102f60),
+    val inActiveIcon: Color = Color(0xFF727882),
+    val fermuxColorText: Color = Color(0xFFadc6ff),
+    val fermuxBackground: Color = Color(0xFF181825),
+    val fermuxSurface: Color = Color(0xFF1f2034),
+)
+
+
+
 @Preview
 @Composable
 fun FermuxButtons(
-    size: Dp? = null,
-    shape: Dp? = null,
+    buttonSize: Dp? = null,
+    buttonShape: Dp? = null,
     icon: ImageVector? = null,
     iconSize: Dp? = null,
     text: String? = null,
-    style: FontStyle = FontStyle.Normal,
-    family: FontFamily = FontFamily.Default,
-    fontWeight: FontWeight = FontWeight.Normal,
-    fontSize: TextUnit = TextUnit.Unspecified,
-    color: Color = Color.Unspecified,
+    color: FermuxColor = FermuxColor(),
+    clickable: (() -> Unit)? = null, )
 
-    clickable: (() -> Unit)? = null,
+{
 
-    ) {
 
 // Button color
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     val buttonColors by animateColorAsState(
-        if (isPressed) Color(0xFFadc6ff) else Color(0xFF303258),
+        if (isPressed) color.buttonPrimaryActive else color.buttonPrimaryInActive,
         animationSpec = tween(durationMillis = 150)
     )
 
@@ -124,15 +133,15 @@ fun FermuxButtons(
                 scaleX = scale
                 scaleY = scale
             }
-            .size(size ?: 74.dp),
+            .size(buttonSize ?: 74.dp),
 
         contentPadding = PaddingValues(0.dp),
         interactionSource = interactionSource,
         colors = ButtonDefaults.buttonColors(
             containerColor = buttonColors
         ),
-        border = BorderStroke(1.5.dp, Color(0xFF20bf6b)),
-        shape = RoundedCornerShape(shape ?: 8.dp),
+        border = BorderStroke(1.5.dp, color.fermuxBorder),
+        shape = RoundedCornerShape(buttonShape ?: 16.dp),
 
         onClick = { clickable?.invoke() }
 
@@ -140,18 +149,18 @@ fun FermuxButtons(
         if (text != null) {
             Text(
                 text = text,
-                fontFamily = family,
-                fontStyle = style,
-                fontWeight = fontWeight,
-                fontSize = fontSize,
-                color = color,
+                fontFamily = JetbrainsMono,
+                fontStyle = FontStyle.Normal,
+                fontWeight = FontWeight.Normal,
+                fontSize = 16.sp,
+                color = color.fermuxColorText,
                 modifier =  Modifier.padding(start = if (icon != null) 10.dp else 0.dp)
             )
         }
         if (icon != null) {
             Icon(
                 imageVector = icon,
-                tint = if (isPressed) Color(0xFF102f60) else Color(0xFF727882),
+                tint = if (isPressed) color.activeIcon else color.inActiveIcon,
                 contentDescription = null,
                 modifier = Modifier.size(iconSize ?: 30.dp)
             )

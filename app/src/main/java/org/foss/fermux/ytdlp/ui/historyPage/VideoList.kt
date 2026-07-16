@@ -73,7 +73,7 @@ fun DownloadVideoList() {
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(end = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Top
                 ) {
 
             if (videoHistory.isEmpty()) {
@@ -85,6 +85,9 @@ fun DownloadVideoList() {
                         ,
                         contentAlignment = Alignment.Center
                     ) {
+
+                        Spacer(modifier = Modifier.height(700.dp))
+
                         Text(
                             text = "Video files will appear here.",
                             color = Color(0xFF727882),
