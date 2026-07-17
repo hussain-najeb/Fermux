@@ -1,22 +1,17 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.icons.filled.Replay
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
@@ -26,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
@@ -37,6 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
+import org.foss.fermux.ui.theme.FermuxButtons
+import org.foss.fermux.ui.theme.FermuxColors
+import org.foss.fermux.ui.theme.FermuxSurface
 import org.foss.fermux.ui.theme.JetbrainsMono
 import org.foss.fermux.ytdlp.logic.DownloaderViewModel
 import org.foss.fermux.ytdlp.logic.downloader.DownloadMetadata
@@ -114,7 +111,7 @@ fun LoadingCard(state: DownloadStatus) {
                     "Stuff is happening...",
                     "Hold your breath...",
                     "Calibrating...",
-                    "Something is doing something to another thing...",
+                    "Something is about to happen...",
                 )
             var loadingMessage by remember { mutableStateOf(message.random()) }
 
@@ -124,7 +121,7 @@ fun LoadingCard(state: DownloadStatus) {
 
             LaunchedEffect(Unit) {
                 while (true) {
-                    delay(2500.milliseconds)
+                    delay(4500.milliseconds)
                     index = (index + 1) % shuffledMessages.size
                     loadingMessage = shuffledMessages[index]
                 }
@@ -164,23 +161,25 @@ fun LoadingCard(state: DownloadStatus) {
 }
 @Composable
 
-fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null, downloaderLogs: String) {
-    // for the fully Loaded card to view on screen
+fun LoadedCard (
+    metadata: DownloadMetadata,
+    progress: Float? = null,
+    downloaderLogs: String)
+{
 
     var expanded by remember { mutableStateOf(false) }
     val rotation by animateFloatAsState(if (expanded) 180f else 0f)
 
-    Column( // a column to have both the surface and the card be on the same page
+    Column(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        ElevatedCard( // the video card with the picture of the downloaded video
+        ElevatedCard(
             modifier = Modifier
                 .clip(RoundedCornerShape(4.dp))
                 .fillMaxWidth()
                 .padding(19.dp)
         )
-
         {
             Box {
                 AsyncImage(
@@ -214,110 +213,91 @@ fun LoadedCard (metadata: DownloadMetadata, progress: Float? = null, downloaderL
                 }
             }
 
-
-            // the surface to get the damn info on screen from the video metadata
             Surface(
                 modifier = Modifier
                     .fillMaxSize()
                     .clip(RoundedCornerShape(4.dp))
-                    .background(color = Color(0xFF181825))
-
+                    .background(FermuxColors.fermuxSurface)
             ) {
 
                 Column {
-                    Text(metadata.title,
+                    Text(
+                        metadata.title,
                         modifier = Modifier
                             .padding(8.dp),
                         fontFamily = FontFamily.Default
                     )
                     metadata.uploader?.let {
 
-                        Text(it,
+                        Text(
+                            it,
                             modifier = Modifier
                                 .padding(8.dp),
                             fontFamily = FontFamily.Default
                         )
                     }
+
+                    // TODO. Duration, add it here.
                 }
             }
 
 
-                Row(
-                    modifier = Modifier.background(Color(0xFF2b2a33))
+            FermuxSurface(
+                expanded = expanded,
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 200.dp)
+                        .verticalScroll(rememberScrollState())
                 ) {
-                    TextButton({expanded = !expanded},
-                        modifier = Modifier.clip(RoundedCornerShape(8.dp)))
-
-                    {
-                        Icon(Icons.Default.ExpandMore, contentDescription = null, modifier = Modifier.rotate(rotation))
-                        Text(if (expanded)"Hide details" else "Show details")
-                    }
-                }
-                AnimatedVisibility(
-                    visible = expanded,
-                    enter = expandVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeIn(),
-                    exit = shrinkVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeOut()
-                )
-
-                {
-                    Box(
+                    Text(
+                        downloaderLogs,
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(max = 200.dp)
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        Text(
-                            downloaderLogs,
-                            modifier = Modifier
-                                .padding(3.dp),
-                            fontSize = 18.sp,
-                            color = Color.White,
-                            fontFamily = JetbrainsMono,
-                        )
-                    }
+                            .padding(3.dp),
+                        fontSize = 18.sp,
+                        color = Color.White,
+                        fontFamily = JetbrainsMono,
+                    )
                 }
             }
-        }
-    }
 
+        }
+
+        FermuxButtons(
+            buttonSize = 50.dp,
+            icon = Icons.Default.ExpandMore, iconModifier = Modifier.rotate(rotation),
+            iconSize = 18.dp,
+            text = if(expanded) "Hide details" else "Show details",
+            clickable = { expanded = !expanded }
+        )
+    }
+}
+
+// https://www.youtube.com/watch?v=RqJkd_ndmgY&t=1s1
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun ErrorCard(errorMessage: String, rawError: String, onCancel: () -> Unit) {
 
     var expanded by remember { mutableStateOf(false) }
-
     val rotation by animateFloatAsState(if (expanded) 180f else 0f)
 
-    val replayInteractionSource = remember { MutableInteractionSource() }
-
-    val replayIsPressed by replayInteractionSource.collectIsPressedAsState()
-
-    val replayButtonColors by animateColorAsState(
-        if (replayIsPressed) Color(0xFFadc6ff) else Color(0xFF303258),
-        animationSpec = tween (durationMillis = 150)
-    )
-
-    val replayScale by animateFloatAsState(
-        targetValue = if (replayIsPressed) 1.15f else 1.0f,
-        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
-    )
-
-
-        Column( // a column to have both the surface and the card be on the same page
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            ElevatedCard( // the video card with the picture of the downloaded video
+            ElevatedCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(19.dp)
-                    .border(1.5.dp, Color(0xFF20B161), RoundedCornerShape(8.dp))
-                    .aspectRatio(16/9f)
-                    .background(Color(0xFF181825)),
+                    .border(1.5.dp, FermuxColors.fermuxBorder, RoundedCornerShape(8.dp))
+                    .background(FermuxColors.fermuxSurface),
             ) {
                 Box(modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .aspectRatio(16/9f)
+                    .background(FermuxColors.fermuxSurface),
                     contentAlignment = Alignment.Center
                 ) {
                     Column(
@@ -331,40 +311,45 @@ fun ErrorCard(errorMessage: String, rawError: String, onCancel: () -> Unit) {
                         fontWeight = FontWeight.SemiBold,
                         textAlign = TextAlign.Center,
                         fontFamily = JetbrainsMono,
-                        color = Color(0xFFadc6ff),
+                        color = FermuxColors.fermuxTextColorInActive,
                         modifier = Modifier.padding(4.dp)
                     )
 
-
-                            FilledTonalButton(
-                                onClick = { onCancel() },
-                                shape = RoundedCornerShape(8.dp),
-                                interactionSource = replayInteractionSource,
-                                contentPadding = PaddingValues(12.dp),
-                                colors = ButtonDefaults.filledTonalButtonColors(
-                                    containerColor = replayButtonColors
-                                ),
-                                border = BorderStroke(1.5.dp, Color(0xFF20bf6b)),
-
-                                modifier = Modifier
-                                    .padding(top = 16.dp)
-                                    .graphicsLayer {
-                                        scaleX = replayScale
-                                        scaleY = replayScale
-                                    }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Replay,
-                                    tint = Color(0xFF126ED7),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(29.dp)
-                                )
-                            }
-                        }
+                        FermuxButtons(
+                            icon = Icons.Default.Cancel,
+                            iconSize = 29.dp,
+                            modifier = Modifier.padding(16.dp),
+                            clickable = { onCancel() }
+                        )
+                    }
+                }
+                FermuxSurface(
+                    expanded = expanded
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(max = 200.dp)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        Text(
+                            text = rawError,
+                            modifier = Modifier
+                                .padding(13.dp),
+                            fontSize = 18.sp,
+                            color = FermuxColors.fermuxTextError,
+                            fontFamily = JetbrainsMono,
+                        )
+                    }
                 }
             }
+
+           FermuxButtons(
+                   buttonSize = 50.dp,
+                   icon = Icons.Default.ExpandMore, iconModifier = Modifier.rotate(rotation),
+                   iconSize = 18.dp,
+                   text = if(expanded) "Hide error" else "Show error",
+                   clickable = { expanded = !expanded }
+            )
         }
-// TODO. add the cancel button here to reset the thing when the card fails.
-    // TODO. The actual ERROR is not shown here, add it with the animations as well.
 }
