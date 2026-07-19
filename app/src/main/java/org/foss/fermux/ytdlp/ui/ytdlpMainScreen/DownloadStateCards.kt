@@ -1,5 +1,6 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 
+import android.R.attr.rotation
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -10,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.*
@@ -31,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
-import org.foss.fermux.ui.theme.FermuxButtons
+import org.foss.fermux.ui.theme.FermuxButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.FermuxSurface
 import org.foss.fermux.ui.theme.JetbrainsMono
@@ -98,9 +100,9 @@ fun LoadingCard(state: DownloadStatus) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(19.dp)
-                .border(1.5.dp, Color(0xFF20B161), RoundedCornerShape(8.dp))
+                .border(1.5.dp, FermuxColors.fermuxBorder, RoundedCornerShape(8.dp))
                 .aspectRatio(16/9f)
-                .background(Color(0xFF181825))
+                .background(FermuxColors.fermuxBackground)
         ) {
             val message =
                 listOf(
@@ -113,11 +115,11 @@ fun LoadingCard(state: DownloadStatus) {
                     "Calibrating...",
                     "Something is about to happen...",
                 )
+
             var loadingMessage by remember { mutableStateOf(message.random()) }
-
             val shuffledMessages = (message.shuffled())
-
             var index by remember { mutableIntStateOf(0) }
+
 
             LaunchedEffect(Unit) {
                 while (true) {
@@ -130,7 +132,7 @@ fun LoadingCard(state: DownloadStatus) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xFF1f2034))
+                    .background(FermuxColors.fermuxSurface)
                     .aspectRatio(16/9f),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -140,7 +142,7 @@ fun LoadingCard(state: DownloadStatus) {
                         text = loadingMessage ,
                         fontFamily = FontFamily.SansSerif,
                         fontStyle = FontStyle.Italic,
-                        color = Color(0xFFDAF2FC),
+                        color = FermuxColors.fermuxTextColorInActive,
                         fontSize = 18.sp,
 
                         ) // TODO. have it in the middle of the card to the right more, and change the color, reference from the terminal tab.
@@ -190,7 +192,7 @@ fun LoadedCard (
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(16f / 9f)
-                        .background(Color(0xFF1f2034))
+                        .background(FermuxColors.fermuxSurface)
                 )
                 progress?.let {
                     CircularWavyProgressIndicator(
@@ -209,15 +211,26 @@ fun LoadedCard (
                             fontFamily = FontFamily.Default
                         )
 
+                        if (progress == 100f) {
+
+                            Icon(
+                                Icons.Default.Check,
+                                contentDescription = "Download Complete",
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .align(Alignment.BottomCenter)
+                            )
+
+                        }
                     }
                 }
             }
 
-            Surface(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(FermuxColors.fermuxSurface)
+
+            FermuxSurface ( modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(4.dp))
+                .background(FermuxColors.fermuxSurface)
             ) {
 
                 Column {
@@ -228,7 +241,6 @@ fun LoadedCard (
                         fontFamily = FontFamily.Default
                     )
                     metadata.uploader?.let {
-
                         Text(
                             it,
                             modifier = Modifier
@@ -236,7 +248,6 @@ fun LoadedCard (
                             fontFamily = FontFamily.Default
                         )
                     }
-
                     // TODO. Duration, add it here.
                 }
             }
@@ -244,13 +255,12 @@ fun LoadedCard (
 
             FermuxSurface(
                 expanded = expanded,
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(max = 200.dp)
-                        .verticalScroll(rememberScrollState())
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 200.dp)
+                    .verticalScroll(rememberScrollState())
                 ) {
+                Box {
                     Text(
                         downloaderLogs,
                         modifier = Modifier
@@ -261,10 +271,9 @@ fun LoadedCard (
                     )
                 }
             }
-
         }
 
-        FermuxButtons(
+        FermuxButton(
             buttonSize = 50.dp,
             icon = Icons.Default.ExpandMore, iconModifier = Modifier.rotate(rotation),
             iconSize = 18.dp,
@@ -278,10 +287,13 @@ fun LoadedCard (
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun ErrorCard(errorMessage: String, rawError: String, onCancel: () -> Unit) {
+fun ErrorCard(
+    errorMessage: String,
+    rawError: String,
+    onCancel: () -> Unit)
+{
 
     var expanded by remember { mutableStateOf(false) }
-    val rotation by animateFloatAsState(if (expanded) 180f else 0f)
 
         Column(
             modifier = Modifier
@@ -315,10 +327,11 @@ fun ErrorCard(errorMessage: String, rawError: String, onCancel: () -> Unit) {
                         modifier = Modifier.padding(4.dp)
                     )
 
-                        FermuxButtons(
+                        FermuxButton(
                             icon = Icons.Default.Cancel,
                             iconSize = 29.dp,
-                            modifier = Modifier.padding(16.dp),
+                            rotation = 360f,
+                            buttonPadding = 16.dp,
                             clickable = { onCancel() }
                         )
                     }
@@ -344,12 +357,14 @@ fun ErrorCard(errorMessage: String, rawError: String, onCancel: () -> Unit) {
                 }
             }
 
-           FermuxButtons(
-                   buttonSize = 50.dp,
-                   icon = Icons.Default.ExpandMore, iconModifier = Modifier.rotate(rotation),
-                   iconSize = 18.dp,
-                   text = if(expanded) "Hide error" else "Show error",
-                   clickable = { expanded = !expanded }
+           FermuxButton(
+               isExpanded = expanded,
+               buttonSize = 50.dp,
+               icon = Icons.Default.ExpandMore,
+               rotation = 180f,
+               iconSize = 18.dp,
+               text = if(expanded) "Hide error" else "Show error",
+               clickable = { expanded = !expanded }
             )
         }
 }

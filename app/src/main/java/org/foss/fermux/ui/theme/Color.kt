@@ -10,15 +10,16 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 data class FermuxColor(
-    val buttonPrimaryInActive: Color = Color(0xFF303258),
-    val buttonPrimaryActive: Color = Color(0xFFadc6ff),
-    val fermuxBorder: Color = Color(0xFF20bf6b),
-    val activeIcon: Color = Color(0xFF102f60),
-    val inActiveIcon: Color = Color(0xFF727882),
-    val fermuxTextColorInActive: Color = Color(0xFFadc6ff),
-    val fermuxTextColorActive: Color = Color(0xFF102f60),
-    val fermuxTextError: Color = Color(0xFFea5054),
-    val fermuxBackground: Color = Color(0xFF181825),
-    val fermuxSurface: Color = Color(0xFF1f2034),
+    val buttonPrimaryInActive:      Color    = Color(0xFF303258),
+    val buttonPrimaryActive:        Color    = Color(0xFFadc6ff),
+    val fermuxBorder:               Color    = Color(0xFF20bf6b),
+    val activeIcon:                 Color    = Color(0xFF102f60),
+    val inActiveIcon:               Color    = Color(0xFF727882),
+    val fermuxTextColorBackground:  Color    = Color(0xFF727882),
+    val fermuxTextColorInActive:    Color    = Color(0xFFadc6ff),
+    val fermuxTextColorActive:      Color    = Color(0xFF102f60),
+    val fermuxTextError:            Color    = Color(0xFFea5054),
+    val fermuxBackground:           Color    = Color(0xFF181825),
+    val fermuxSurface:              Color    = Color(0xFF1f2034),
 )
 val FermuxColors = FermuxColor()

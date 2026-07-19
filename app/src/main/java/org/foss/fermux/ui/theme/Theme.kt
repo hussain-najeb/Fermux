@@ -1,9 +1,10 @@
 package org.foss.fermux.ui.theme
 
-import android.graphics.Color
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
@@ -19,12 +20,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
@@ -42,8 +41,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
@@ -105,8 +106,7 @@ fun FermuxTheme(
 @Composable
 fun FermuxSurface(
     expanded: Boolean = false,
-    modifier: Modifier? = null,
-    border: androidx.compose.ui.graphics.Color = FermuxColors.fermuxBorder,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(4.dp),
     color: FermuxColor = FermuxColor(),
     padding: PaddingValues = PaddingValues(0.dp),
@@ -121,6 +121,7 @@ fun FermuxSurface(
     ) {
         Surface(
             shape = shape,
+            border = BorderStroke(1.5.dp, color.fermuxBorder),
             color = color.fermuxSurface
         ) {
            Column(
@@ -133,45 +134,78 @@ fun FermuxSurface(
 }
 
 
-
 @Composable
-fun FermuxButtons(
-    buttonSize: Dp? = null,
-    buttonShape: Dp? = null,
+fun FermuxButton(
+    // Core
+    modifier: Modifier = Modifier,
+    clickable: () -> Unit,
+    color: FermuxColor = FermuxColors,
+
+    // Button shape & size
+    buttonSize: Dp = 74.dp,
+    buttonShape: Dp = 16.dp,
+    buttonPadding: Dp = 10.dp,
     contentPadding: PaddingValues = PaddingValues(horizontal = 22.dp, vertical = 12.dp),
+
+    // Icon
     icon: ImageVector? = null,
-    iconSize: Dp? = null,
+    iconSize: Dp = 30.dp,
+    iconModifier: Modifier = Modifier,
+
+    // Image
+    image: Painter? = null,
+    imageSize: Dp = 40.dp,
+    imageModifier: Modifier = Modifier,
+
+    // Text
     text: String? = null,
-    color: FermuxColor = FermuxColor(),
-    clickable: (() -> Unit)? = null,
-    iconModifier: Modifier? = null,
-    modifier: Modifier? = null,
-    )
+    contentDescription: String? = null,
+
+    // State
+    isExpanded: Boolean = false,
+    rotation: Float? = null,
+)
 
 {
 
-// Button color
+    // For icon rotation
+    val rotate by animateFloatAsState(
+        if (isExpanded) (rotation ?: 0f) else 0f,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        label = "icon get rotate"
+    )
+
+    // // Expands button width when isExpanded is true, separate from press scaling
+    val buttonExpansion by animateDpAsState(
+        targetValue = if (isExpanded) 80.dp else 74.dp,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        label = "button get bigger"
+    )
+
+    // Button color
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     val buttonColors by animateColorAsState(
         if (isPressed) color.buttonPrimaryActive else color.buttonPrimaryInActive,
-        animationSpec = tween(durationMillis = 150)
+        animationSpec = tween(durationMillis = 150),
+        label = "button get color"
     )
 
     val scale by animateFloatAsState(
-        targetValue = if (isPressed) 1.15f else 1.0f,
-        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+        targetValue = if (isPressed) 1.12f else 1.0f,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        label = "button get bigger when press"
     )
 
     FilledTonalButton(
-        modifier = ( modifier ?: Modifier)
-            .padding(10.dp)
+        modifier = modifier
+            .padding(buttonPadding)
             .graphicsLayer {
                 scaleX = scale
                 scaleY = scale
             }
-            .heightIn(buttonSize ?: 74.dp)
-            .wrapContentWidth(),
+            .heightIn(buttonSize)
+            .widthIn(min = buttonExpansion),
 
         contentPadding = contentPadding,
         interactionSource = interactionSource,
@@ -179,9 +213,9 @@ fun FermuxButtons(
             containerColor = buttonColors
         ),
         border = BorderStroke(1.5.dp, color.fermuxBorder),
-        shape = RoundedCornerShape(buttonShape ?: 16.dp),
+        shape = RoundedCornerShape(buttonShape),
 
-        onClick = { clickable?.invoke() }
+        onClick =  clickable
 
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
@@ -189,9 +223,21 @@ fun FermuxButtons(
                 Icon(
                     imageVector = icon,
                     tint = if (isPressed) color.activeIcon else color.inActiveIcon,
-                    contentDescription = null,
-                    modifier = (iconModifier ?: Modifier)
-                        .size(iconSize ?: 30.dp)
+                    contentDescription = contentDescription,
+                    modifier = iconModifier
+                        .size(iconSize)
+                        .rotate(rotate)
+                )
+            }
+
+            if (image != null) {
+                Icon(
+                    painter = image,
+                    tint = if (isPressed) color.activeIcon else color.inActiveIcon,
+                    contentDescription = contentDescription,
+                    modifier = imageModifier
+                        .size(imageSize)
+                        .rotate(rotate)
                 )
             }
 
@@ -203,7 +249,7 @@ fun FermuxButtons(
                     fontWeight = FontWeight.Normal,
                     fontSize = 16.sp,
                     color = if (isPressed) color.fermuxTextColorActive else color.fermuxTextColorInActive,
-                    modifier = Modifier.padding(start = if (icon != null) 4.dp else 0.dp)
+                    modifier = Modifier.padding(start = if (icon != null || image != null) 4.dp else 0.dp)
                 )
             }
         }
