@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+.aider*
+SKILLS.md
+AGENTS.md

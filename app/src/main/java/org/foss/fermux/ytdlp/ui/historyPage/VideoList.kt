@@ -33,6 +33,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.foss.fermux.storage.SettingsViewModel
 import org.foss.fermux.storage.JSONHistoryCards
+import org.foss.fermux.ui.theme.FermuxColors
 
 @SuppressLint("ContextCastToActivity")
 @Composable
@@ -48,7 +49,7 @@ fun DownloadVideoList() {
 
     Column(
         modifier = Modifier
-            .background(Color(0xFF181825))
+            .background(FermuxColors.fermuxBackground)
             .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
     ) {
@@ -66,7 +67,7 @@ fun DownloadVideoList() {
         HorizontalDivider(
             modifier = Modifier.padding(horizontal = 10.dp),
             thickness = 1.dp,
-            color = Color(0xFF303258)
+            color = FermuxColors.fermuxSurface
         )
 
         LazyColumn(
@@ -90,7 +91,7 @@ fun DownloadVideoList() {
 
                         Text(
                             text = "Video files will appear here.",
-                            color = Color(0xFF727882),
+                            color = FermuxColors.fermuxTextColorBackground,
                             fontSize = 16.sp,
                             fontFamily = FontFamily.SansSerif,
                             textAlign = TextAlign.Center,

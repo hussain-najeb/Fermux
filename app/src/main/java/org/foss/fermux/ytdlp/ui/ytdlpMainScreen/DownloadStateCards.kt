@@ -1,6 +1,5 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 
-import android.R.attr.rotation
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -100,7 +99,7 @@ fun LoadingCard(state: DownloadStatus) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(19.dp)
-                .border(1.5.dp, FermuxColors.fermuxBorder, RoundedCornerShape(8.dp))
+                .border(1.5.dp, FermuxColors.fermuxSecondaryBorder, RoundedCornerShape(8.dp))
                 .aspectRatio(16/9f)
                 .background(FermuxColors.fermuxBackground)
         ) {
@@ -227,10 +226,7 @@ fun LoadedCard (
             }
 
 
-            FermuxSurface ( modifier = Modifier
-                .fillMaxSize()
-                .clip(RoundedCornerShape(4.dp))
-                .background(FermuxColors.fermuxSurface)
+            FermuxSurface (
             ) {
 
                 Column {
@@ -254,12 +250,8 @@ fun LoadedCard (
 
 
             FermuxSurface(
-                expanded = expanded,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = 200.dp)
-                    .verticalScroll(rememberScrollState())
-                ) {
+                expanded = expanded
+            ) {
                 Box {
                     Text(
                         downloaderLogs,
@@ -303,7 +295,7 @@ fun ErrorCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(19.dp)
-                    .border(1.5.dp, FermuxColors.fermuxBorder, RoundedCornerShape(8.dp))
+                    .border(1.5.dp, FermuxColors.fermuxSecondaryBorder, RoundedCornerShape(8.dp))
                     .background(FermuxColors.fermuxSurface),
             ) {
                 Box(modifier = Modifier

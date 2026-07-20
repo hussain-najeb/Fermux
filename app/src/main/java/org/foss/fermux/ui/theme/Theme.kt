@@ -1,6 +1,5 @@
 package org.foss.fermux.ui.theme
 
-import android.annotation.SuppressLint
 import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -106,11 +105,10 @@ fun FermuxTheme(
 @Composable
 fun FermuxSurface(
     expanded: Boolean = false,
-    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(4.dp),
     color: FermuxColor = FermuxColor(),
+    modifier: Modifier = Modifier,
     padding: PaddingValues = PaddingValues(0.dp),
-
     content: @Composable ColumnScope.() -> Unit
 ) {
 
@@ -120,9 +118,10 @@ fun FermuxSurface(
         exit = shrinkVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeOut()
     ) {
         Surface(
+            modifier = modifier,
             shape = shape,
-            border = BorderStroke(1.5.dp, color.fermuxBorder),
-            color = color.fermuxSurface
+            border = BorderStroke(1.5.dp, color.fermuxPrimaryBorder),
+            color = color.fermuxSurface,
         ) {
            Column(
              modifier = Modifier.padding(padding)
@@ -192,7 +191,7 @@ fun FermuxButton(
     )
 
     val scale by animateFloatAsState(
-        targetValue = if (isPressed) 1.12f else 1.0f,
+        targetValue = if (isPressed) 1.11f else 1.0f,
         animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
         label = "button get bigger when press"
     )
@@ -212,7 +211,7 @@ fun FermuxButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = buttonColors
         ),
-        border = BorderStroke(1.5.dp, color.fermuxBorder),
+        border = BorderStroke(1.5.dp, color.fermuxSecondaryBorder),
         shape = RoundedCornerShape(buttonShape),
 
         onClick =  clickable

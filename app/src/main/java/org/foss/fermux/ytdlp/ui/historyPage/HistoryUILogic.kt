@@ -1,13 +1,8 @@
 package org.foss.fermux.ytdlp.ui.historyPage
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
+
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,14 +11,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,6 +34,8 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.ui.theme.FermuxButton
+import org.foss.fermux.ui.theme.FermuxColors
+import org.foss.fermux.ui.theme.FermuxSurface
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.videoTime
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -49,18 +44,13 @@ import java.util.Locale
 @Composable
 fun HistoryCards(entry: JSONHistoryCards) {
 
-        val cardBorder = Modifier
-            .clip(RoundedCornerShape(8.dp))
-            .border(1.5.dp, Color(0xFF17DB6F), RoundedCornerShape(8.dp))
-            .border(1.5.dp, Color(0xFF20B161), RoundedCornerShape(8.dp))
-            .border(0.8.dp, Color(0xFF20bf6b), RoundedCornerShape(8.dp))
-
         var expanded by remember { mutableStateOf(false) }
 
         Column(verticalArrangement = Arrangement.Center) {
             ElevatedCard(
-                modifier = cardBorder
+                modifier = Modifier
                     .fillMaxSize()
+                    .border(1.5.dp, FermuxColors.fermuxPrimaryBorder, RoundedCornerShape(8.dp))
             ) {
                 Box {
                     AsyncImage(
@@ -97,94 +87,30 @@ fun HistoryCards(entry: JSONHistoryCards) {
                     }
                 }
 
-                AnimatedVisibility(
-                    visible = expanded,
-                    enter = expandVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeIn(),
-                    exit = shrinkVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeOut()
-                )
-                {
-                    Surface(
-                        modifier = Modifier
-                            .background(Color(0xFF1f2034))
-                            .padding(5.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(Color(0xFF1f2034))
-
-                        ) {
-                            Row {
-                                Text(
-                                    text = " Title:",
-                                    fontSize = 19.sp,
-                                    fontFamily = FontFamily.Default,
-                                    color = Color(0xFF48AF79),
-                                    modifier = Modifier.padding(3.dp)
-                                )
-                                Text(
-                                    text = entry.title,
-                                    fontSize = 16.sp,
-                                    fontFamily = FontFamily.Default,
-                                    modifier = Modifier.padding(3.dp)
-
-                                )
-                            }
-                            Row {
-                                Text(
-                                    text = "Duration:",
-                                    fontSize = 19.sp,
-                                    fontFamily = FontFamily.Default,
-                                    color = Color(0xFF546CE8),
-                                    modifier = Modifier.padding(3.dp),
-                                )
-                                Text(
-                                    text = videoTime(entry.videoDuration.toInt()),
-
-                                    fontFamily = FontFamily.Default,
-                                    fontSize = 16.sp,
-                                    color = Color.White,
-                                    modifier = Modifier.padding(3.dp)
-                                )
-                            }
-
-                            val formattedDate = remember(entry.downloadTime) {
-                                SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date(entry.downloadTime))
-                            }
-                            Row {
-                                Text(
-                                    text = "Date:",
-                                    fontSize = 19.sp,
-                                    fontFamily = FontFamily.Default,
-                                    color = Color(0xFFC96726),
-                                    modifier = Modifier.padding(3.dp)
-                                )
-                                Text(
-                                    text = formattedDate,
-                                    fontSize = 16.sp,
-                                    fontFamily = FontFamily.Default,
-                                    color = Color.White,
-                                    modifier = Modifier.padding(3.dp)
-                                )
-                            }
-                            Row {
-                                entry.uploader?.let {
-                                    Text(
-                                        text = "Uploader:",
-                                        fontSize = 19.sp,
-                                        fontFamily = FontFamily.Default,
-                                        color = Color(0xFFF34545),
-                                        modifier = Modifier.padding(3.dp)
-                                    )
-                                    Text(
-                                        text = it,
-                                        fontSize = 16.sp,
-                                        fontFamily = FontFamily.Default,
-                                        color = Color.White,
-                                        modifier = Modifier.padding(3.dp)
-                                    )
-                                }
-                            }
+                FermuxSurface(
+                    expanded = expanded,
+                    padding = PaddingValues(8.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Row {
+                        Text(text = "Title:", fontFamily = FontFamily.Default, fontSize = 19.sp, color = Color(0xFF48AF79), modifier = Modifier.padding(3.dp))
+                        Text(text = entry.title, fontFamily = FontFamily.Default, fontSize = 16.sp, modifier = Modifier.padding(3.dp))
+                    }
+                    Row {
+                        Text(text = "Duration:", fontFamily = FontFamily.Default, fontSize = 19.sp, color = Color(0xFF546CE8), modifier = Modifier.padding(3.dp))
+                        Text(text = videoTime(entry.videoDuration.toInt()), fontFamily = FontFamily.Default, fontSize = 16.sp, color = Color.White, modifier = Modifier.padding(3.dp))
+                    }
+                    val formattedDate = remember(entry.downloadTime) {
+                        SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date(entry.downloadTime))
+                    }
+                    Row {
+                        Text(text = "Date:", fontFamily = FontFamily.Default, fontSize = 19.sp, color = Color(0xFFC96726), modifier = Modifier.padding(3.dp))
+                        Text(text = formattedDate, fontFamily = FontFamily.Default, fontSize = 16.sp, color = Color.White, modifier = Modifier.padding(3.dp))
+                    }
+                    entry.uploader?.let {
+                        Row {
+                            Text(text = "Uploader:", fontFamily = FontFamily.Default, fontSize = 19.sp, color = Color(0xFFF34545), modifier = Modifier.padding(3.dp))
+                            Text(text = it, fontFamily = FontFamily.Default, fontSize = 16.sp, color = Color.White, modifier = Modifier.padding(3.dp))
                         }
                     }
                 }

@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,7 +35,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.foss.fermux.ui.theme.FermuxButton
-import org.foss.fermux.ui.theme.FermuxColor
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.DownloaderViewModel
 
@@ -53,8 +51,7 @@ fun DownloadContent(
     QualitySheet(
         showSheet = viewModel.showFormatSheet,
         onDismiss = { viewModel.showFormatSheet = false },
-        onConfirm = { audio, video ->
-            viewModel.showFormatSheet = false
+        onConfirm = { audio, video -> viewModel.showFormatSheet = false
             viewModel.startingDownload(context, audio, video)
         }
     )
@@ -89,14 +86,14 @@ fun DownloadContent(
 
                 // COLORS of the TextField
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor      = Color(0xFF20bf6b),
-                    unfocusedBorderColor    = Color(0xFF20B161),
-                    focusedLabelColor       = Color(0xFF20bf6b),
-                    unfocusedLabelColor     = Color(0xFF727882),
-                    cursorColor             = Color(0xFF20bf6b), // TODO. Have the cursor change color every second.
+                    focusedBorderColor      = FermuxColors.fermuxPrimaryBorder,
+                    unfocusedBorderColor    = FermuxColors.fermuxPrimaryBorder,
+                    focusedLabelColor       = FermuxColors.fermuxPrimaryBorder,
+                    unfocusedLabelColor     = FermuxColors.fermuxTextColorBackground,
+                    cursorColor             = FermuxColors.fermuxPrimaryBorder, // TODO. Have the cursor change color every second.
                     focusedTextColor        = Color.White,
-                    unfocusedTextColor      = Color(0xFFE7E7E2),
-                    unfocusedContainerColor = Color(0xFF303258),
+                    unfocusedTextColor      = Color.White,
+                    unfocusedContainerColor = FermuxColors.fermuxComponents,
                     focusedContainerColor   = Color(0xFF252740)
                 ),
 
@@ -107,7 +104,7 @@ fun DownloadContent(
                         text = "Type URL here",
                         fontFamily = FontFamily.Default,
                         textAlign = TextAlign.Start,
-                        color = Color(0xFF727882),
+                        color = FermuxColors.fermuxTextColorBackground,
                         modifier = Modifier.padding(start = 10.dp)
                     )
                 },
@@ -127,13 +124,11 @@ fun DownloadContent(
 
             Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
 
-
                 // ClipBoard Button
                 FermuxButton(
                     icon = Icons.Default.ContentPaste,
                     clickable = { clipboard.getText()?.text?.let { viewModel.downloadUrl = it } }
                 )
-
 
                 // DownloadButton
                 FermuxButton(
