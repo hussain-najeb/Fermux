@@ -11,10 +11,14 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -26,6 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -120,7 +125,8 @@ fun FermuxButton(
     // Button shape & size
     buttonSize: Dp = 74.dp,
     buttonShape: Dp = 16.dp,
-    buttonPadding: Dp = 15.dp   ,
+    buttonPadding: Dp = 12.dp,
+    hasMainBorder: Boolean = true,
     contentPadding: PaddingValues = PaddingValues(horizontal = 22.dp, vertical = 12.dp),
 
     // Icon
@@ -168,9 +174,9 @@ fun FermuxButton(
     )
 
     val scale by animateFloatAsState(
-        targetValue = if (isPressed) 1.11f else 1.0f,
+        targetValue = if (isPressed) 0.91f else 1.0f,
         animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-        label = "button get bigger when press"
+        label = "button get smaller when press"
     )
 
     FilledTonalButton(
@@ -188,7 +194,7 @@ fun FermuxButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = buttonColors
         ),
-        border = BorderStroke(1.5.dp, color.fermuxSecondaryBorder),
+        border = if (hasMainBorder) BorderStroke(1.dp, color.fermuxSecondaryBorder)  else BorderStroke(1.dp, color.fermuxGenericBorder),
         shape = RoundedCornerShape(buttonShape),
 
         onClick =  clickable
@@ -304,3 +310,26 @@ fun FermuxCard(
         content()
     }
 }
+
+@Preview
+@Composable
+fun preview() {
+
+    var expanded by remember { mutableStateOf(false) }
+
+    FermuxButton(
+        isExpanded = expanded,
+        rotation = 180f,
+        hasMainBorder = false,
+        buttonSize = 20.dp,
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+        icon = Icons.Default.ExpandMore,
+        text = if (expanded) "Hide details" else "Show details",
+        clickable = {expanded = !expanded},
+    )
+}
+
+
+
+
+

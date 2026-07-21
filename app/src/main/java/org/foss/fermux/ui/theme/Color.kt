@@ -16,8 +16,9 @@ data class FermuxColor(
     val buttonPrimaryActive:        Color    = Color(0xFFadc6ff),
 
     // Fermux global components
-    val fermuxSecondaryBorder:      Color    = Color(0xFF20bf6b),
+    val fermuxSecondaryBorder:      Color    = Color(0xFF67ECA2),
     val fermuxPrimaryBorder:        Color    = Color(0xFF005DFF),
+    val fermuxGenericBorder:        Color    = Color(0xFF7E7EF6),
     val fermuxComponents:           Color    = Color(0xFF3C3F68),
     val fermuxBackground:           Color    = Color(0xFF181825),
     val fermuxSurface:              Color    = Color(0xFF1f2034),

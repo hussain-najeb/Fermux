@@ -78,6 +78,7 @@ fun HistoryCards(entry: JSONHistoryCards) {
                         FermuxButton(
                             isExpanded = expanded,
                             rotation = 180f,
+                            hasMainBorder = false,
                             buttonSize = 20.dp,
                             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                             icon = Icons.Default.ExpandMore,
