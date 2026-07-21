@@ -1,18 +1,14 @@
 package org.foss.fermux.main
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import org.foss.fermux.ui.theme.FermuxCard
 import org.foss.fermux.ui.theme.FermuxColors
@@ -28,31 +24,32 @@ fun HomeScreen(navigationController: NavHostController) {
         contentAlignment = Alignment.Center
     ) {
         Column(
-            modifier = Modifier.align(Alignment.Center),
+            modifier = Modifier.align(Alignment.TopCenter),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
 
             val screens = listOf(
-                Screen.Home,
-                Screen.Settings,
+                Screen.Terminal,
                 Screen.Downloader,
                 Screen.Converter,
-                Screen.Terminal,
-                Screen.AudioFormatSheet,
-                Screen.VideoFormatSheet,
-                Screen.ImageFormatSheet
+                Screen.Settings,
             )
 
-            screens.dropLast(3).forEach { screen ->
+            screens.forEach { screen ->
                 FermuxCard(
                     cardPadding = 5.dp,
+                    modifier = Modifier.fillMaxWidth().weight(0.25f),
                     clickable = { navigationController.navigate(screen.route) }
                 ) {
-                    screen.descriptor?.let { Text(text = it) }
+                    screen.descriptor?.let { Text(text = it, color =
+                        Color.White ,
+                        fontSize = 20.sp,
+                        fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
+                        modifier = Modifier.padding(15.dp)
+                        )
+                    }
                 }
             }
-
-
         }
     }
 }
