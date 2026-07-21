@@ -322,7 +322,7 @@ fun ErrorCard(
                         FermuxButton(
                             icon = Icons.Default.Cancel,
                             iconSize = 29.dp,
-                            rotation = 360f,
+                            rotation = 320f,
                             buttonPadding = 16.dp,
                             clickable = { onCancel() }
                         )

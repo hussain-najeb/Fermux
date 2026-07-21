@@ -11,6 +11,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -19,12 +22,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -49,6 +59,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -104,10 +115,10 @@ fun FermuxTheme(
 
 @Composable
 fun FermuxSurface(
+    modifier: Modifier = Modifier,
     expanded: Boolean = false,
     shape: Shape = RoundedCornerShape(4.dp),
     color: FermuxColor = FermuxColor(),
-    modifier: Modifier = Modifier,
     padding: PaddingValues = PaddingValues(0.dp),
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -143,7 +154,7 @@ fun FermuxButton(
     // Button shape & size
     buttonSize: Dp = 74.dp,
     buttonShape: Dp = 16.dp,
-    buttonPadding: Dp = 10.dp,
+    buttonPadding: Dp = 15.dp   ,
     contentPadding: PaddingValues = PaddingValues(horizontal = 22.dp, vertical = 12.dp),
 
     // Icon
@@ -252,5 +263,78 @@ fun FermuxButton(
                 )
             }
         }
+    }
+}
+
+
+@Composable
+fun FermuxCard(
+    // Core
+    modifier: Modifier = Modifier,
+    clickable: (() -> Unit)? = null,
+    color: FermuxColor = FermuxColors,
+
+    // Card shape & size
+    cardShape: Shape = RoundedCornerShape(4.dp),
+    cardPadding: Dp,
+    cardSize: Dp,
+    isExpanded: Boolean = false,
+    aspectRatio: Float? = null,
+
+    content: @Composable ColumnScope.() -> Unit
+) {
+
+    val cardExpansion by animateDpAsState(
+        targetValue = if (isExpanded) 80.dp else 74.dp,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        label = "card get bigger"
+    )
+
+// Card color
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    val cardColors by animateColorAsState(
+        if (isPressed && clickable != null) color.fermuxComponents else color.fermuxSurface,
+        animationSpec = tween(durationMillis = 150),
+        label = "card get color"
+    )
+
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed && clickable != null && aspectRatio == null) 1.07f else 1.0f,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        label = "card get bigger when press"
+    )
+
+
+    var cardModifier = modifier
+        .padding(cardPadding)
+        .graphicsLayer {
+            scaleX = scale
+            scaleY = scale
+        }
+        cardModifier = if (aspectRatio != null) {
+            cardModifier
+                .fillMaxWidth()
+                .aspectRatio(aspectRatio)
+        } else {
+            cardModifier
+                .heightIn(cardSize)
+                .widthIn(min = cardExpansion)
+        }
+
+
+
+    Card(
+        onClick = { clickable?.invoke() },
+        shape = cardShape,
+        modifier = cardModifier,
+        colors = CardDefaults.cardColors(
+            containerColor = cardColors
+        ),
+        border = BorderStroke(1.5.dp, color.fermuxPrimaryBorder),
+        interactionSource = interactionSource,
+    ) {
+        content()
     }
 }

@@ -22,7 +22,6 @@ import androidx.navigation.NavHostController
 import org.foss.fermux.ffmpeg.logic.FFmpegTargetFormat
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.logic.MediaKind
-import org.foss.fermux.main.GridCards
 import org.foss.fermux.main.Screen
 
 @OptIn(ExperimentalGridApi::class)
