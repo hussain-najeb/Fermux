@@ -277,7 +277,7 @@ fun FermuxCard(
     // Card shape & size
     cardShape: Shape = RoundedCornerShape(4.dp),
     cardPadding: Dp,
-    cardSize: Dp,
+    cardSize: Dp? = null,
     isExpanded: Boolean = false,
     aspectRatio: Float? = null,
 
@@ -319,7 +319,7 @@ fun FermuxCard(
                 .aspectRatio(aspectRatio)
         } else {
             cardModifier
-                .heightIn(cardSize)
+                .heightIn(cardSize ?: 80.dp)
                 .widthIn(min = cardExpansion)
         }
 

@@ -25,15 +25,15 @@ import org.foss.fermux.terminal.main.ui.FermuxTerminalScreen
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloaderScreen
 
 
-sealed class Screen (val route: String) {
-    object Home            :  Screen("home")
-    object Settings        :  Screen("settings")
-    object Downloader      :  Screen("downloader")
-    object Converter       :  Screen("converter")
-    object Terminal        :  Screen("terminal")
-    object AudioFormatSheet:  Screen("audioSheet")
-    object VideoFormatSheet:  Screen("videoSheet")
-    object ImageFormatSheet:  Screen("ImageSheet")
+sealed class Screen (val route: String, val descriptor: String?) {
+    object Home            :  Screen("home","Home")
+    object Settings        :  Screen("settings","Settings")
+    object Downloader      :  Screen("downloader", "Downloader")
+    object Converter       :  Screen("converter", "Converter")
+    object Terminal        :  Screen("terminal", "Terminal")
+    object AudioFormatSheet:  Screen("audioSheet", "Audio Formats")
+    object VideoFormatSheet:  Screen("videoSheet", "Video Formats")
+    object ImageFormatSheet:  Screen("ImageSheet", "Image Formats")
 }
 
 @SuppressLint("ViewModelConstructorInComposable")
