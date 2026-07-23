@@ -3,7 +3,6 @@ package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,12 +26,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import org.foss.fermux.ui.theme.FermuxButton
+import org.foss.fermux.ui.theme.FermuxCard
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.FermuxSurface
 import org.foss.fermux.ui.theme.JetbrainsMono
@@ -95,13 +94,10 @@ fun LoadingCard(state: DownloadStatus) {
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        ElevatedCard(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(19.dp)
-                .border(1.5.dp, FermuxColors.fermuxSecondaryBorder, RoundedCornerShape(8.dp))
-                .aspectRatio(16/9f)
-                .background(FermuxColors.fermuxBackground)
+        FermuxCard(
+            cardPadding = 10.dp,
+            cardShape = RoundedCornerShape(8.dp),
+            aspectRatio = 16f/9f
         ) {
             val message =
                 listOf(
@@ -225,10 +221,7 @@ fun LoadedCard (
                 }
             }
 
-
-            FermuxSurface (
-            ) {
-
+            FermuxSurface {
                 Column {
                     Text(
                         metadata.title,
@@ -269,6 +262,7 @@ fun LoadedCard (
             buttonSize = 50.dp,
             icon = Icons.Default.ExpandMore, iconModifier = Modifier.rotate(rotation),
             iconSize = 18.dp,
+            hasMainBorder = false,
             text = if(expanded) "Hide details" else "Show details",
             clickable = { expanded = !expanded }
         )
@@ -282,81 +276,77 @@ fun LoadedCard (
 fun ErrorCard(
     errorMessage: String,
     rawError: String,
-    onCancel: () -> Unit)
-{
-
+    onCancel: () -> Unit
+) {
     var expanded by remember { mutableStateOf(false) }
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        FermuxCard(
+            modifier = Modifier.fillMaxWidth(),
+            cardPadding = 10.dp,
+            cardShape = RoundedCornerShape(8.dp),
         ) {
-            ElevatedCard(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(19.dp)
-                    .border(1.5.dp, FermuxColors.fermuxSecondaryBorder, RoundedCornerShape(8.dp))
-                    .background(FermuxColors.fermuxSurface),
-            ) {
-                Box(modifier = Modifier
                     .fillMaxSize()
-                    .aspectRatio(16/9f)
-                    .background(FermuxColors.fermuxSurface),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally,)
-                    {
-                    Text(
-                        text = errorMessage,
-                        fontSize = 14.sp,
-                        fontStyle = FontStyle.Normal,
-                        fontWeight = FontWeight.SemiBold,
-                        textAlign = TextAlign.Center,
-                        fontFamily = JetbrainsMono,
-                        color = FermuxColors.fermuxTextColorInActive,
-                        modifier = Modifier.padding(4.dp)
-                    )
+                    .aspectRatio(16 / 9f)
+                    .background(FermuxColors.fermuxSurface)
+            ) {
+                Text(
+                    text = errorMessage,
+                    fontSize = 14.sp,
+                    fontStyle = FontStyle.Normal,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = FontFamily.Default,
+                    color = FermuxColors.fermuxTextColorInActive,
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(18.dp)
+                )
 
-                        FermuxButton(
-                            icon = Icons.Default.Cancel,
-                            iconSize = 29.dp,
-                            rotation = 320f,
-                            buttonPadding = 16.dp,
-                            clickable = { onCancel() }
-                        )
-                    }
-                }
-                FermuxSurface(
-                    expanded = expanded
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(max = 200.dp)
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        Text(
-                            text = rawError,
-                            modifier = Modifier
-                                .padding(13.dp),
-                            fontSize = 18.sp,
-                            color = FermuxColors.fermuxTextError,
-                            fontFamily = JetbrainsMono,
-                        )
-                    }
-                }
+                FermuxButton(
+                    modifier = Modifier.align(Alignment.Center),
+                    icon = Icons.Default.Cancel,
+                    iconSize = 29.dp,
+                    rotation = 320f,
+                    buttonPadding = 16.dp,
+                    hasMainBorder = true,
+                    clickable = { onCancel() }
+                )
+
+                FermuxButton(
+                    modifier = Modifier.align(Alignment.BottomStart),
+                    isExpanded = expanded,
+                    buttonSize = 50.dp,
+                    icon = Icons.Default.ExpandMore,
+                    rotation = 180f,
+                    iconSize = 18.dp,
+                    hasMainBorder = false,
+                    text = if (expanded) "Hide error" else "Show error",
+                    clickable = { expanded = !expanded }
+                )
             }
 
-           FermuxButton(
-               isExpanded = expanded,
-               buttonSize = 50.dp,
-               icon = Icons.Default.ExpandMore,
-               rotation = 180f,
-               iconSize = 18.dp,
-               text = if(expanded) "Hide error" else "Show error",
-               clickable = { expanded = !expanded }
-            )
+            FermuxSurface(
+                expanded = expanded
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 200.dp)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Text(
+                        text = rawError,
+                        modifier = Modifier.padding(13.dp),
+                        fontSize = 16.sp,
+                        color = FermuxColors.fermuxTextError,
+                        fontFamily = JetbrainsMono,
+                    )
+                }
+            }
         }
+    }
 }

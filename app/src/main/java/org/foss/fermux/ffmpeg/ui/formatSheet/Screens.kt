@@ -2,12 +2,7 @@ package org.foss.fermux.ffmpeg.ui.formatSheet
 
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,7 +30,7 @@ fun Screens(sheet: MediaKind, navHostController: NavHostController, viewModel: F
 
     Box(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .background(FermuxColors.fermuxBackground)
             .padding(12.dp),
         contentAlignment = Alignment.Center
@@ -49,6 +44,7 @@ fun Screens(sheet: MediaKind, navHostController: NavHostController, viewModel: F
                 .forEach { format ->
                     FermuxCard(
                         cardPadding = 5.dp,
+                        modifier = Modifier.fillMaxWidth().weight(0.25f),
                         cardShape = RoundedCornerShape(16.dp),
                         clickable = {
                             viewModel.selectedFormat = format

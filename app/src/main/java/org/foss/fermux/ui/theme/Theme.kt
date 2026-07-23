@@ -11,29 +11,16 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -84,159 +71,10 @@ fun FermuxTheme(
 
 
 
-@Composable
-fun FermuxSurface(
-    modifier: Modifier = Modifier,
-    expanded: Boolean = false,
-    shape: Shape = RoundedCornerShape(4.dp),
-    color: FermuxColor = FermuxColor(),
-    padding: PaddingValues = PaddingValues(0.dp),
-    content: @Composable ColumnScope.() -> Unit
-) {
-
-    AnimatedVisibility(
-        visible = expanded,
-        enter = expandVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeIn(),
-        exit = shrinkVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeOut()
-    ) {
-        Surface(
-            modifier = modifier,
-            shape = shape,
-            border = BorderStroke(1.5.dp, color.fermuxPrimaryBorder),
-            color = color.fermuxSurface,
-        ) {
-           Column(
-             modifier = Modifier.padding(padding)
-           ) {
-                content()
-            }
-        }
-    }
-}
 
 
-@Composable
-fun FermuxButton(
-    // Core
-    modifier: Modifier = Modifier,
-    clickable: () -> Unit,
-    color: FermuxColor = FermuxColors,
 
-    // Button shape & size
-    buttonSize: Dp = 74.dp,
-    buttonShape: Dp = 16.dp,
-    buttonPadding: Dp = 12.dp,
-    hasMainBorder: Boolean = true,
-    contentPadding: PaddingValues = PaddingValues(horizontal = 22.dp, vertical = 12.dp),
 
-    // Icon
-    icon: ImageVector? = null,
-    iconSize: Dp = 30.dp,
-    iconModifier: Modifier = Modifier,
-
-    // Image
-    image: Painter? = null,
-    imageSize: Dp = 40.dp,
-    imageModifier: Modifier = Modifier,
-
-    // Text
-    text: String? = null,
-    contentDescription: String? = null,
-
-    // State
-    isExpanded: Boolean = false,
-    rotation: Float? = null,
-)
-
-{
-
-    // For icon rotation
-    val rotate by animateFloatAsState(
-        if (isExpanded) (rotation ?: 0f) else 0f,
-        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-        label = "icon get rotate"
-    )
-
-    // // Expands button width when isExpanded is true, separate from press scaling
-    val buttonExpansion by animateDpAsState(
-        targetValue = if (isExpanded) 80.dp else 74.dp,
-        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-        label = "button get bigger"
-    )
-
-    // Button color
-    val interactionSource = remember { MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
-    val buttonColors by animateColorAsState(
-        if (isPressed) color.buttonPrimaryActive else color.buttonPrimaryInActive,
-        animationSpec = tween(durationMillis = 150),
-        label = "button get color"
-    )
-
-    val scale by animateFloatAsState(
-        targetValue = if (isPressed) 0.91f else 1.0f,
-        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-        label = "button get smaller when press"
-    )
-
-    FilledTonalButton(
-        modifier = modifier
-            .padding(buttonPadding)
-            .graphicsLayer {
-                scaleX = scale
-                scaleY = scale
-            }
-            .heightIn(buttonSize)
-            .widthIn(min = buttonExpansion),
-
-        contentPadding = contentPadding,
-        interactionSource = interactionSource,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = buttonColors
-        ),
-        border = if (hasMainBorder) BorderStroke(1.dp, color.fermuxSecondaryBorder)  else BorderStroke(1.dp, color.fermuxGenericBorder),
-        shape = RoundedCornerShape(buttonShape),
-
-        onClick =  clickable
-
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-            if (icon != null) {
-                Icon(
-                    imageVector = icon,
-                    tint = if (isPressed) color.activeIcon else color.inActiveIcon,
-                    contentDescription = contentDescription,
-                    modifier = iconModifier
-                        .size(iconSize)
-                        .rotate(rotate)
-                )
-            }
-
-            if (image != null) {
-                Icon(
-                    painter = image,
-                    tint = if (isPressed) color.activeIcon else color.inActiveIcon,
-                    contentDescription = contentDescription,
-                    modifier = imageModifier
-                        .size(imageSize)
-                        .rotate(rotate)
-                )
-            }
-
-            if (text != null) {
-                Text(
-                    text = text,
-                    fontFamily = FontFamily.Default,
-                    fontStyle = FontStyle.Normal,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 16.sp,
-                    color = if (isPressed) color.fermuxTextColorActive else color.fermuxTextColorInActive,
-                    modifier = Modifier.padding(start = if (icon != null || image != null) 4.dp else 0.dp)
-                )
-            }
-        }
-    }
-}
 
 
 @Composable
@@ -273,7 +111,7 @@ fun FermuxCard(
     )
 
     val scale by animateFloatAsState(
-        targetValue = if (isPressed && clickable != null && aspectRatio == null) 1.07f else 1.0f,
+        targetValue = if (isPressed && clickable != null && aspectRatio == null) 0.95f else 1.0f,
         animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
         label = "card get bigger when press"
     )
@@ -309,24 +147,6 @@ fun FermuxCard(
     ) {
         content()
     }
-}
-
-@Preview
-@Composable
-fun preview() {
-
-    var expanded by remember { mutableStateOf(false) }
-
-    FermuxButton(
-        isExpanded = expanded,
-        rotation = 180f,
-        hasMainBorder = false,
-        buttonSize = 20.dp,
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-        icon = Icons.Default.ExpandMore,
-        text = if (expanded) "Hide details" else "Show details",
-        clickable = {expanded = !expanded},
-    )
 }
 
 

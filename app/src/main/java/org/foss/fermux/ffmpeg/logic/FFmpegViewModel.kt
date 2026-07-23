@@ -1,3 +1,5 @@
+@file:Suppress("PropertyName")
+
 package org.foss.fermux.ffmpeg.logic
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -121,7 +123,7 @@ class FFmpegViewModel: ViewModel() {
                         val logs = workInfo.progress.getString("line")
 
                         if (!logs.isNullOrBlank()) {
-                            FFmpegLogs = (FFmpegLogs + "\n" + logs).takeLast(500)
+                            FFmpegLogs = (FFmpegLogs + "\n" + logs).takeLast(200)
                         }
                         state = FFmpegStatus.Converting(progress, duration, targetFormat, inputUri, FFmpegLogs)
                     }

@@ -67,7 +67,7 @@ fun DownloadedAudioScreen() {
         HorizontalDivider(
             modifier = Modifier.padding(horizontal = 10.dp),
             thickness = 1.dp,
-            color = FermuxColors.fermuxSurface
+            color = FermuxColors.fermuxComponents
         )
 
 

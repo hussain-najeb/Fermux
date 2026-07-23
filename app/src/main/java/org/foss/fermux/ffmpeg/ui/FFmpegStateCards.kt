@@ -7,22 +7,27 @@ import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Replay
 import androidx.compose.material.icons.filled.Upload
-import androidx.compose.material3.*
+import androidx.compose.material3.CircularWavyProgressIndicator
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -31,10 +36,7 @@ import coil3.compose.AsyncImage
 import org.foss.fermux.ffmpeg.logic.FFmpegStatus
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.main.Screen
-import org.foss.fermux.ui.theme.FermuxButton
-import org.foss.fermux.ui.theme.FermuxColors
-import org.foss.fermux.ui.theme.FermuxSurface
-import org.foss.fermux.ui.theme.JetbrainsMono
+import org.foss.fermux.ui.theme.*
 
 @Composable
 fun FFmepgState (state: FFmpegStatus, FFmpegLogs: String, navigationController: NavController, viewModel: FFmpegViewModel) {
@@ -83,90 +85,131 @@ fun IdleCard(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp)
-                .clip(RoundedCornerShape(8.dp)),
-            colors = CardColors(
-                contentColor = Color.Unspecified,
-                containerColor = FermuxColors.fermuxBackground,
-                disabledContentColor = Color.Unspecified,
-                disabledContainerColor = Color.Unspecified
-            ),
-            border = BorderStroke(1.5.dp, FermuxColors.fermuxPrimaryBorder),
-            content = {
-                Column {
-                    Box(modifier = Modifier.fillMaxWidth().height(200.dp)) {
 
-                        if (viewModel.inputUri == null) {
-                            Column(
-                                modifier = Modifier.fillMaxSize().background(FermuxColors.fermuxSurface),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
+        FermuxCard(
+            cardPadding = 10.dp,
+            cardShape = RoundedCornerShape(8.dp),
+        ) {
+                Box(modifier = Modifier.fillMaxWidth().height(200.dp)) {
 
-                                FermuxButton(
-                                    icon = Icons.Default.Upload,
-                                    clickable = {fileLauncher.launch("*/*")}
-                                )
-                            }
+                    if (viewModel.inputUri == null) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(FermuxColors.fermuxSurface),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                           Text(text = "Upload a file to convert",
+                               fontSize = 19.sp,
+                               fontFamily = FontFamily.Monospace,
+                               fontStyle = androidx.compose.ui.text.font.FontStyle.Normal,
+                               color = FermuxColors.fermuxTextColorInActive,
+                               modifier = Modifier.padding(bottom = 8.dp)
+                               )
+
+                            FermuxButton(
+                                icon = Icons.Default.Upload,
+                                clickable = {fileLauncher.launch("*/*")}
+                            )
                         }
+                    }
 
-                        if (viewModel.inputUri != null) {
+                    if (viewModel.inputUri != null) {
 
-                            AsyncImage(
-                                model = viewModel.inputUri, //TODO. THIS DOES NOT WORK!
-                                contentDescription = null,
-                                contentScale = ContentScale.Crop,
+                        AsyncImage(
+                            model = viewModel.inputUri, //TODO. THIS DOES NOT WORK!
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
 
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .aspectRatio(16f / 9f)
                                     .background(FermuxColors.fermuxSurface)
-                            )
+                        )
 
-                            FermuxButton(
-                                isExpanded = expanded,
-                                rotation = 180f,
-                                buttonSize = 20.dp,
-                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                                icon = Icons.Default.ExpandMore,
-                                text = if (expanded) "Hide details" else "Show details",
-                                clickable = {expanded = !expanded},
+                        FermuxButton(
+                            isExpanded = expanded,
+                            rotation = 180f,
+                            buttonSize = 20.dp,
+                            hasMainBorder = false,
+                            modifier = Modifier.align(Alignment.BottomStart),
+                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                            icon = Icons.Default.ExpandMore,
+                            text = if (expanded) "Hide formats" else "Show formats",
+                            clickable = {expanded = !expanded},
                             )
                         }
                     }
                     FermuxSurface(expanded = expanded) {
-                        Row(
+                        Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(10.dp),
-                            horizontalArrangement = Arrangement.SpaceEvenly,
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalArrangement = Arrangement.SpaceEvenly,
                         ) {
-                            FermuxButton(
-                                text = "Audio",
-                                buttonSize = 40.dp,
-                                clickable = { navigationController?.navigate(Screen.AudioFormatSheet.route) },
+                            Row {
+                                FermuxButton(
+                                    text = "Audio",
+                                    buttonSize = 40.dp,
+                                    hasMainBorder = false,
+                                    clickable = { navigationController?.navigate(Screen.AudioFormatSheet.route) },
+                                )
+                                Text(":   Convert selected file to Audio",
+                                    fontSize = 16.sp,
+                                    fontFamily = FontFamily.Default,
+                                    fontStyle = androidx.compose.ui.text.font.FontStyle.Normal,
+                                    color = FermuxColors.fermuxTextColorInActive,
+                                    modifier = Modifier.padding(top = 27.dp)
+                                )
+                            }
+
+                            HorizontalDivider(
+                                thickness = 1.2.dp,
+                                color = FermuxColors.fermuxComponents
                             )
-                            FermuxButton(
-                                text = "Video",
-                                buttonSize = 40.dp,
-                                clickable = { navigationController?.navigate(Screen.VideoFormatSheet.route) },
+
+                            Row {
+                                FermuxButton(
+                                    text = "Video",
+                                    buttonSize = 40.dp,
+                                    hasMainBorder = false,
+                                    clickable = { navigationController?.navigate(Screen.VideoFormatSheet.route) },
+                                )
+                                Text(":   Convert selected file to Video",
+                                    fontSize = 16.sp,
+                                    fontFamily = FontFamily.Default,
+                                    fontStyle = androidx.compose.ui.text.font.FontStyle.Normal,
+                                    color = FermuxColors.fermuxTextColorInActive,
+                                    modifier = Modifier.padding(top = 27.dp)
+                                )
+                            }
+
+                            HorizontalDivider(
+                                thickness = 1.2.dp,
+                                color = FermuxColors.fermuxComponents
                             )
-                            FermuxButton(
-                                text = "Image",
-                                buttonSize = 40.dp,
-                                clickable = { navigationController?.navigate(Screen.ImageFormatSheet.route) },
-                            )
+
+                            Row {
+                                FermuxButton(
+                                    text = "Image",
+                                    buttonSize = 40.dp,
+                                    hasMainBorder = false,
+                                    clickable = { navigationController?.navigate(Screen.ImageFormatSheet.route) },
+                                )
+                                Text(":   Convert selected file to Image",
+                                    fontSize = 16.sp,
+                                    fontFamily = FontFamily.Default,
+                                    fontStyle = androidx.compose.ui.text.font.FontStyle.Normal,
+                                    color = FermuxColors.fermuxTextColorInActive,
+                                    modifier = Modifier.padding(top = 27.dp)
+                                )
+                            }
                         }
                     }
-                }
             }
-        )
+        }
     }
-}
 
 
 @Composable
@@ -175,115 +218,115 @@ fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: Str
     var expanded by remember { mutableStateOf(true) }
 
     Column(
-        modifier = Modifier.fillMaxWidth()) {
-        Card(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp)
-                .clip(RoundedCornerShape(8.dp)),
-            colors = CardColors(
-                contentColor = Color.Unspecified,
-                containerColor = FermuxColors.fermuxSurface,
-                disabledContentColor = Color.Unspecified,
-                disabledContainerColor = Color.Unspecified
-            ),
-            border = BorderStroke(1.5.dp, FermuxColors.fermuxPrimaryBorder),
-            content =
-                {
-                    Box(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+
+        FermuxCard(
+            cardShape = RoundedCornerShape(8.dp),
+            cardPadding = 10.dp,
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+
+                AsyncImage(
+                    model = pickedFileUri,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(16f / 9f)
+                        .background(FermuxColors.fermuxSurface)
+                )
+                progress?.let {
+                    CircularWavyProgressIndicator(
+                        progress = { progress / 100f },
+                        color = Color(0xFF2e36aa),
+                        trackColor = Color(0xff999bb5),
                         modifier = Modifier
-                            .fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
+                            .padding(8.dp)
+                            .align(Alignment.BottomEnd)
+                    ).also {
+                        if (progress == 100f) {
 
-                        AsyncImage(
-                            model = pickedFileUri,
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .aspectRatio(16f / 9f)
-                                .background(FermuxColors.fermuxSurface)
-                        )
-                        progress?.let {
-                            CircularWavyProgressIndicator(
-                                progress = { progress / 100f },
-                                color = Color(0xFF2e36aa),
-                                trackColor = Color(0xff999bb5),
+                            Icon(
+                                Icons.Default.Check,
+                                contentDescription = "Conversion Complete",
                                 modifier = Modifier
                                     .padding(8.dp)
-                                    .align(Alignment.BottomEnd)
+                                    .align(Alignment.BottomCenter)
                             )
                         }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.background(FermuxColors.fermuxSurface)
-                        ) {
-
-                            FermuxButton(
-                                icon = Icons.Default.ExpandMore,
-                                text = if (expanded) "Hide details" else "Show details",
-                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                                isExpanded = expanded,
-                                rotation = 180f,
-                                clickable = { expanded = !expanded }
-                            )
-                        }
-                    }
-
-                    FermuxSurface(expanded = expanded) {
-                        Text(
-                            text = FFmpegLogs,
-                            modifier = Modifier.padding(3.dp),
-                            fontSize = 18.sp,
-                            color = Color.White,
-                            fontFamily = JetbrainsMono,
+                        FermuxButton(
+                            icon = Icons.Default.ExpandMore,
+                            rotation = 180f,
+                            iconSize = 18.dp,
+                            hasMainBorder = false,
+                            text = if (expanded) "Hide logs" else "Show logs",
+                            modifier = Modifier.align(Alignment.BottomStart),
+                            clickable = { expanded = !expanded }
                         )
                     }
                 }
-        )
-    }
-}
+            }
 
-
-@Composable
-fun FFmpegErrorMassage(errorMessage: String, onTryAgain: () -> Unit) {
-
-    Column(modifier = Modifier
-        .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Card(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp)
-                .clip(RoundedCornerShape(8.dp)),
-            colors = CardColors(
-                contentColor = Color.Unspecified,
-                containerColor = FermuxColors.fermuxSurface,
-                disabledContentColor = Color.Unspecified,
-                disabledContainerColor = Color.Unspecified
-            ),
-            border = BorderStroke(1.5.dp, FermuxColors.fermuxPrimaryBorder),
-            ) {
-            Text(
-                text = errorMessage,
-                modifier = Modifier
-                    .padding(top = 30.dp, start = 16.dp),
-                fontSize = 16.sp,
-                color = Color.White,
-                fontFamily = JetbrainsMono,
-            )
-
-            FermuxButton(
-                modifier = Modifier
-                    .align(alignment = Alignment.CenterHorizontally)
-                    .padding(top = 16.dp),
-                icon = Icons.Default.Replay,
-                clickable = { onTryAgain() }
-            )
+            FermuxSurface(expanded = true) {
+                Text(
+                    text = FFmpegLogs,
+                    modifier = Modifier.padding(3.dp),
+                    fontSize = 18.sp,
+                    color = Color.White,
+                    fontFamily = JetbrainsMono,
+                )
+            }
         }
     }
 }
+
+        @Composable
+        fun FFmpegErrorMassage(errorMessage: String, onTryAgain: () -> Unit) {
+
+            Column(
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                FermuxCard(
+                    cardShape = RoundedCornerShape(8.dp),
+                    cardPadding = 10.dp,
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(16f / 9f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(FermuxColors.fermuxSurface),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = errorMessage,
+                                modifier = Modifier
+                                    .padding(top = 30.dp, start = 16.dp),
+                                fontSize = 16.sp,
+                                color = Color.White,
+                                fontFamily = JetbrainsMono,
+                            )
+
+                            FermuxButton(
+                                buttonSize = 20.dp,
+                                modifier = Modifier
+                                    .padding(top = 16.dp),
+                                icon = Icons.Default.Replay,
+                                clickable = { onTryAgain() }
+                            )
+                        }
+                    }
+                }
+            }
+        }

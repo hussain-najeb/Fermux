@@ -27,14 +27,12 @@ fun HomeScreen(navigationController: NavHostController) {
             modifier = Modifier.align(Alignment.TopCenter),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-
             val screens = listOf(
                 Screen.Terminal,
                 Screen.Downloader,
                 Screen.Converter,
                 Screen.Settings,
             )
-
             screens.forEach { screen ->
                 FermuxCard(
                     cardPadding = 5.dp,
@@ -43,7 +41,7 @@ fun HomeScreen(navigationController: NavHostController) {
                 ) {
                     screen.descriptor?.let { Text(text = it, color =
                         Color.White ,
-                        fontSize = 20.sp,
+                        fontSize = 22.sp,
                         fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
                         modifier = Modifier.padding(15.dp)
                         )
