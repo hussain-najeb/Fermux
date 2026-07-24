@@ -55,7 +55,7 @@ fun DownloadedAudioScreen() {
     ) {
         Text(
             text = "Audio History",
-            color = FermuxColors.fermuxTextColorInActive,
+            color = FermuxColors.fermuxInActiveTextColor,
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.SansSerif,

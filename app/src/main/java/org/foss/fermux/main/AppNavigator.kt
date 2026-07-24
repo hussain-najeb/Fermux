@@ -26,14 +26,14 @@ import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloaderScreen
 
 
 sealed class Screen (val route: String, val descriptor: String?) {
-    object Home            :  Screen("home","Home")
-    object Settings        :  Screen("settings","Settings")
+    object Home            :  Screen("home"      ,"Home")
+    object Settings        :  Screen("settings"  ,"Settings")
     object Downloader      :  Screen("downloader", "Downloader")
-    object Converter       :  Screen("converter", "Converter")
-    object Terminal        :  Screen("terminal", "Terminal")
-    object AudioFormatSheet:  Screen("audioSheet", "Audio Formats")
-    object VideoFormatSheet:  Screen("videoSheet", "Video Formats")
-    object ImageFormatSheet:  Screen("ImageSheet", "Image Formats")
+    object Converter       :  Screen("converter" , "Converter")
+    object Terminal        :  Screen("terminal"  , "Terminal")
+    object AudioFormatSheet:  Screen("audio"     , "Audio")
+    object VideoFormatSheet:  Screen("video"     , "Video")
+    object ImageFormatSheet:  Screen("Image"     , "Image")
 }
 
 @SuppressLint("ViewModelConstructorInComposable")

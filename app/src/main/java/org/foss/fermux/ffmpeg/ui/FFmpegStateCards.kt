@@ -33,6 +33,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import org.foss.fermux.fermuxComponents.FermuxMainActionButton
+import org.foss.fermux.fermuxComponents.FermuxSurface
+import org.foss.fermux.fermuxComponents.FermuxTextAndIconButton
 import org.foss.fermux.ffmpeg.logic.FFmpegStatus
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.main.Screen
@@ -104,13 +107,13 @@ fun IdleCard(
                                fontSize = 19.sp,
                                fontFamily = FontFamily.Monospace,
                                fontStyle = androidx.compose.ui.text.font.FontStyle.Normal,
-                               color = FermuxColors.fermuxTextColorInActive,
+                               color = FermuxColors.fermuxInActiveTextColor,
                                modifier = Modifier.padding(bottom = 8.dp)
                                )
 
-                            FermuxButton(
+                            FermuxMainActionButton(
                                 icon = Icons.Default.Upload,
-                                clickable = {fileLauncher.launch("*/*")}
+                                onClick = {fileLauncher.launch("*/*")}
                             )
                         }
                     }
@@ -128,83 +131,102 @@ fun IdleCard(
                                     .background(FermuxColors.fermuxSurface)
                         )
 
-                        FermuxButton(
-                            isExpanded = expanded,
-                            rotation = 180f,
-                            buttonSize = 20.dp,
-                            hasMainBorder = false,
-                            modifier = Modifier.align(Alignment.BottomStart),
-                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                        FermuxTextAndIconButton(
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .size(30.dp),
                             icon = Icons.Default.ExpandMore,
+                            iconRotation = if (expanded) 180f else 0f,
                             text = if (expanded) "Hide formats" else "Show formats",
-                            clickable = {expanded = !expanded},
-                            )
+                            onClick = { expanded = !expanded }
+                        )
+//                        FermuxButton(
+//                            isExpanded = expanded,
+//                            rotation = 180f,
+//                            buttonSize = 20.dp,
+//                            hasMainBorder = false,
+//                            modifier = Modifier.align(Alignment.BottomStart),
+//                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+//                            icon = Icons.Default.ExpandMore,
+//                            text = if (expanded) "Hide formats" else "Show formats",
+//                            clickable = {expanded = !expanded},
+//                            )
                         }
                     }
                     FermuxSurface(expanded = expanded) {
+
+                        val formats = listOf(
+                            Screen.AudioFormatSheet,
+                            Screen.VideoFormatSheet,
+                            Screen.ImageFormatSheet
+                        )
+
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(10.dp),
                             verticalArrangement = Arrangement.SpaceEvenly,
                         ) {
-                            Row {
-                                FermuxButton(
-                                    text = "Audio",
-                                    buttonSize = 40.dp,
-                                    hasMainBorder = false,
-                                    clickable = { navigationController?.navigate(Screen.AudioFormatSheet.route) },
-                                )
-                                Text(":   Convert selected file to Audio",
-                                    fontSize = 16.sp,
-                                    fontFamily = FontFamily.Default,
-                                    fontStyle = androidx.compose.ui.text.font.FontStyle.Normal,
-                                    color = FermuxColors.fermuxTextColorInActive,
-                                    modifier = Modifier.padding(top = 27.dp)
-                                )
-                            }
-
-                            HorizontalDivider(
-                                thickness = 1.2.dp,
-                                color = FermuxColors.fermuxComponents
-                            )
+                            formats.forEach { format ->
 
                             Row {
-                                FermuxButton(
-                                    text = "Video",
-                                    buttonSize = 40.dp,
-                                    hasMainBorder = false,
-                                    clickable = { navigationController?.navigate(Screen.VideoFormatSheet.route) },
+                                FermuxTextAndIconButton(
+                                    text = format.route,
+                                    modifier = Modifier.size(40.dp),
+                                    onClick = { navigationController?.navigate(format.route) },
                                 )
-                                Text(":   Convert selected file to Video",
-                                    fontSize = 16.sp,
-                                    fontFamily = FontFamily.Default,
-                                    fontStyle = androidx.compose.ui.text.font.FontStyle.Normal,
-                                    color = FermuxColors.fermuxTextColorInActive,
-                                    modifier = Modifier.padding(top = 27.dp)
-                                )
-                            }
+                                    Text(
+                                        ":   Convert selected file to ${format.descriptor}",
+                                        fontSize = 16.sp,
+                                        fontFamily = FontFamily.Default,
+                                        fontStyle = androidx.compose.ui.text.font.FontStyle.Normal,
+                                        color = FermuxColors.fermuxInActiveTextColor,
+                                        modifier = Modifier.padding(top = 27.dp)
+                                    )
 
-                            HorizontalDivider(
-                                thickness = 1.2.dp,
-                                color = FermuxColors.fermuxComponents
-                            )
 
-                            Row {
-                                FermuxButton(
-                                    text = "Image",
-                                    buttonSize = 40.dp,
-                                    hasMainBorder = false,
-                                    clickable = { navigationController?.navigate(Screen.ImageFormatSheet.route) },
-                                )
-                                Text(":   Convert selected file to Image",
-                                    fontSize = 16.sp,
-                                    fontFamily = FontFamily.Default,
-                                    fontStyle = androidx.compose.ui.text.font.FontStyle.Normal,
-                                    color = FermuxColors.fermuxTextColorInActive,
-                                    modifier = Modifier.padding(top = 27.dp)
-                                )
+                                    HorizontalDivider(
+                                        thickness = 1.2.dp,
+                                        color = FermuxColors.fermuxComponents
+                                    )
+                                }
                             }
+//                            Row {
+//                                FermuxButton(
+//                                    text = "Video",
+//                                    buttonSize = 40.dp,
+//                                    hasMainBorder = false,
+//                                    clickable = { navigationController?.navigate(Screen.VideoFormatSheet.route) },
+//                                )
+//                                Text(":   Convert selected file to Video",
+//                                    fontSize = 16.sp,
+//                                    fontFamily = FontFamily.Default,
+//                                    fontStyle = androidx.compose.ui.text.font.FontStyle.Normal,
+//                                    color = FermuxColors.fermuxTextColorInActive,
+//                                    modifier = Modifier.padding(top = 27.dp)
+//                                )
+//                            }
+//
+//                            HorizontalDivider(
+//                                thickness = 1.2.dp,
+//                                color = FermuxColors.fermuxComponents
+//                            )
+//
+//                            Row {
+//                                FermuxButton(
+//                                    text = "Image",
+//                                    buttonSize = 40.dp,
+//                                    hasMainBorder = false,
+//                                    clickable = { navigationController?.navigate(Screen.ImageFormatSheet.route) },
+//                                )
+//                                Text(":   Convert selected file to Image",
+//                                    fontSize = 16.sp,
+//                                    fontFamily = FontFamily.Default,
+//                                    fontStyle = androidx.compose.ui.text.font.FontStyle.Normal,
+//                                    color = FermuxColors.fermuxTextColorInActive,
+//                                    modifier = Modifier.padding(top = 27.dp)
+//                                )
+//                            }
                         }
                     }
             }
