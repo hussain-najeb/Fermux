@@ -33,9 +33,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import org.foss.fermux.fermuxComponents.FermuxCancelButton
 import org.foss.fermux.fermuxComponents.FermuxMainActionButton
 import org.foss.fermux.fermuxComponents.FermuxSurface
-import org.foss.fermux.fermuxComponents.FermuxTextAndIconButton
+import org.foss.fermux.fermuxComponents.FermuxTextWithIconButton
 import org.foss.fermux.ffmpeg.logic.FFmpegStatus
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.main.Screen
@@ -131,7 +132,7 @@ fun IdleCard(
                                     .background(FermuxColors.fermuxSurface)
                         )
 
-                        FermuxTextAndIconButton(
+                        FermuxTextWithIconButton(
                             modifier = Modifier
                                 .align(Alignment.BottomStart)
                                 .size(30.dp),
@@ -139,18 +140,7 @@ fun IdleCard(
                             iconRotation = if (expanded) 180f else 0f,
                             text = if (expanded) "Hide formats" else "Show formats",
                             onClick = { expanded = !expanded }
-                        )
-//                        FermuxButton(
-//                            isExpanded = expanded,
-//                            rotation = 180f,
-//                            buttonSize = 20.dp,
-//                            hasMainBorder = false,
-//                            modifier = Modifier.align(Alignment.BottomStart),
-//                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-//                            icon = Icons.Default.ExpandMore,
-//                            text = if (expanded) "Hide formats" else "Show formats",
-//                            clickable = {expanded = !expanded},
-//                            )
+                            )
                         }
                     }
                     FermuxSurface(expanded = expanded) {
@@ -170,7 +160,7 @@ fun IdleCard(
                             formats.forEach { format ->
 
                             Row {
-                                FermuxTextAndIconButton(
+                                FermuxTextWithIconButton(
                                     text = format.route,
                                     modifier = Modifier.size(40.dp),
                                     onClick = { navigationController?.navigate(format.route) },
@@ -191,42 +181,6 @@ fun IdleCard(
                                     )
                                 }
                             }
-//                            Row {
-//                                FermuxButton(
-//                                    text = "Video",
-//                                    buttonSize = 40.dp,
-//                                    hasMainBorder = false,
-//                                    clickable = { navigationController?.navigate(Screen.VideoFormatSheet.route) },
-//                                )
-//                                Text(":   Convert selected file to Video",
-//                                    fontSize = 16.sp,
-//                                    fontFamily = FontFamily.Default,
-//                                    fontStyle = androidx.compose.ui.text.font.FontStyle.Normal,
-//                                    color = FermuxColors.fermuxTextColorInActive,
-//                                    modifier = Modifier.padding(top = 27.dp)
-//                                )
-//                            }
-//
-//                            HorizontalDivider(
-//                                thickness = 1.2.dp,
-//                                color = FermuxColors.fermuxComponents
-//                            )
-//
-//                            Row {
-//                                FermuxButton(
-//                                    text = "Image",
-//                                    buttonSize = 40.dp,
-//                                    hasMainBorder = false,
-//                                    clickable = { navigationController?.navigate(Screen.ImageFormatSheet.route) },
-//                                )
-//                                Text(":   Convert selected file to Image",
-//                                    fontSize = 16.sp,
-//                                    fontFamily = FontFamily.Default,
-//                                    fontStyle = androidx.compose.ui.text.font.FontStyle.Normal,
-//                                    color = FermuxColors.fermuxTextColorInActive,
-//                                    modifier = Modifier.padding(top = 27.dp)
-//                                )
-//                            }
                         }
                     }
             }
@@ -282,14 +236,12 @@ fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: Str
                                     .align(Alignment.BottomCenter)
                             )
                         }
-                        FermuxButton(
+                        FermuxTextWithIconButton(
                             icon = Icons.Default.ExpandMore,
-                            rotation = 180f,
-                            iconSize = 18.dp,
-                            hasMainBorder = false,
+                            iconRotation = if (expanded)180f else 0f,
                             text = if (expanded) "Hide logs" else "Show logs",
                             modifier = Modifier.align(Alignment.BottomStart),
-                            clickable = { expanded = !expanded }
+                            onClick = { expanded = !expanded }
                         )
                     }
                 }
@@ -340,12 +292,10 @@ fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: Str
                                 fontFamily = JetbrainsMono,
                             )
 
-                            FermuxButton(
-                                buttonSize = 20.dp,
+                            FermuxCancelButton(
                                 modifier = Modifier
                                     .padding(top = 16.dp),
-                                icon = Icons.Default.Replay,
-                                clickable = { onTryAgain() }
+                                onClick = { onTryAgain() }
                             )
                         }
                     }

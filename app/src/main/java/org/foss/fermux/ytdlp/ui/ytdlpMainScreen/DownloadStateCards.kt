@@ -1,25 +1,20 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -30,15 +25,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
-import org.foss.fermux.ui.theme.FermuxButton
+import org.foss.fermux.fermuxComponents.FermuxCancelButton
+import org.foss.fermux.fermuxComponents.FermuxSurface
+import org.foss.fermux.fermuxComponents.FermuxTextWithIconButton
 import org.foss.fermux.ui.theme.FermuxCard
 import org.foss.fermux.ui.theme.FermuxColors
-import org.foss.fermux.ui.theme.FermuxSurface
 import org.foss.fermux.ui.theme.JetbrainsMono
 import org.foss.fermux.ytdlp.logic.DownloaderViewModel
 import org.foss.fermux.ytdlp.logic.downloader.DownloadMetadata
 import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
-import kotlin.collections.listOf
 import kotlin.time.Duration.Companion.milliseconds
 
 
@@ -137,7 +132,7 @@ fun LoadingCard(state: DownloadStatus) {
                         text = loadingMessage ,
                         fontFamily = FontFamily.SansSerif,
                         fontStyle = FontStyle.Italic,
-                        color = FermuxColors.fermuxTextColorInActive,
+                        color = FermuxColors.fermuxInActiveTextColor,
                         fontSize = 18.sp,
 
                         ) // TODO. have it in the middle of the card to the right more, and change the color, reference from the terminal tab.
@@ -165,7 +160,6 @@ fun LoadedCard (
 {
 
     var expanded by remember { mutableStateOf(false) }
-    val rotation by animateFloatAsState(if (expanded) 180f else 0f)
 
     Column(
         modifier = Modifier
@@ -258,13 +252,11 @@ fun LoadedCard (
             }
         }
 
-        FermuxButton(
-            buttonSize = 50.dp,
-            icon = Icons.Default.ExpandMore, iconModifier = Modifier.rotate(rotation),
-            iconSize = 18.dp,
-            hasMainBorder = false,
+        FermuxTextWithIconButton(
+            modifier = Modifier.size(50.dp),
+            icon = Icons.Default.ExpandMore,
             text = if(expanded) "Hide details" else "Show details",
-            clickable = { expanded = !expanded }
+            onClick = { expanded = !expanded }
         )
     }
 }
@@ -300,32 +292,23 @@ fun ErrorCard(
                     fontStyle = FontStyle.Normal,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = FontFamily.Default,
-                    color = FermuxColors.fermuxTextColorInActive,
+                    color = FermuxColors.fermuxInActiveTextColor,
                     modifier = Modifier
                         .align(Alignment.TopCenter)
                         .padding(18.dp)
                 )
-
-                FermuxButton(
+                FermuxCancelButton(
                     modifier = Modifier.align(Alignment.Center),
-                    icon = Icons.Default.Cancel,
-                    iconSize = 29.dp,
-                    rotation = 320f,
-                    buttonPadding = 16.dp,
-                    hasMainBorder = true,
-                    clickable = { onCancel() }
+                    iconRotation = if (expanded) 360f else 0f,
+                    onClick = { onCancel() }
                 )
 
-                FermuxButton(
+                FermuxTextWithIconButton(
                     modifier = Modifier.align(Alignment.BottomStart),
-                    isExpanded = expanded,
-                    buttonSize = 50.dp,
                     icon = Icons.Default.ExpandMore,
-                    rotation = 180f,
-                    iconSize = 18.dp,
-                    hasMainBorder = false,
+                    iconRotation = if (expanded) 180f else 0f,
                     text = if (expanded) "Hide error" else "Show error",
-                    clickable = { expanded = !expanded }
+                    onClick = { expanded = !expanded }
                 )
             }
 

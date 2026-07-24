@@ -33,10 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import org.foss.fermux.fermuxComponents.FermuxSurface
+import org.foss.fermux.fermuxComponents.FermuxTextWithIconButton
 import org.foss.fermux.storage.JSONHistoryCards
-import org.foss.fermux.ui.theme.FermuxButton
 import org.foss.fermux.ui.theme.FermuxColors
-import org.foss.fermux.ui.theme.FermuxSurface
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.videoTime
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -76,15 +75,11 @@ fun HistoryCards(entry: JSONHistoryCards) {
                     )
                     {
 
-                        FermuxButton(
-                            isExpanded = expanded,
-                            rotation = 180f,
-                            hasMainBorder = false,
-                            buttonSize = 20.dp,
-                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                        FermuxTextWithIconButton(
+                            iconRotation = if (expanded) 180f else 0f,
                             icon = Icons.Default.ExpandMore,
                             text = if (expanded) "Hide details" else "Show details",
-                            clickable = {expanded = !expanded},
+                            onClick = {expanded = !expanded},
                         )
                     }
                 }

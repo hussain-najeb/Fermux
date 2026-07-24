@@ -4,6 +4,8 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
@@ -19,6 +21,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -121,12 +124,13 @@ fun FermuxMainActionButton(
  */
 
 @Composable
-fun FermuxTextAndIconButton(
+fun FermuxTextWithIconButton(
     modifier: Modifier = Modifier,
     text: String? = null,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     icon: ImageVector? = null,
     buttonRoundness: Dp? = null,
+    contentDescription: String? = null,
     iconRotation: Float = 0f,
     color: FermuxColor = FermuxColors,
     enabled: Boolean = true,
@@ -142,7 +146,7 @@ fun FermuxTextAndIconButton(
             else -> color.fermuxInActiveButton
         },
         animationSpec = tween(200),
-        label = "Fermux Text Colors",
+        label = "Fermux Button Colors",
     )
 
     val contentColor by animateColorAsState(
@@ -196,7 +200,7 @@ fun FermuxTextAndIconButton(
         Row(verticalAlignment = Alignment.CenterVertically) {
             if (icon != null) {
                 Icon(
-                    imageVector = icon, contentDescription = null,
+                    imageVector = icon, contentDescription = contentDescription,
                     tint = iconColor,
                     modifier = Modifier.rotate(iconRotate)
                 )
@@ -207,6 +211,88 @@ fun FermuxTextAndIconButton(
         }
     }
 }
+
+
+
+
+@Composable
+fun FermuxImageButton(
+    modifier: Modifier = Modifier,
+    image: Painter,
+    contentDescription: String? = null,
+    iconRotation: Float = 0f,
+    color: FermuxColor = FermuxColors,
+    contentPadding: PaddingValues = PaddingValues(4.dp),
+    onClick: () -> Unit
+) {
+
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    val containerColor by animateColorAsState(
+        targetValue = when {
+            isPressed -> color.fermuxActiveButton
+            else -> color.fermuxInActiveButton
+        },
+        animationSpec = tween(200),
+        label = "Fermux Button Colors",
+    )
+
+    val contentColor by animateColorAsState(
+        targetValue = when {
+            isPressed -> color.fermuxActiveTextColor
+            else -> color.fermuxInActiveTextColor
+        },
+        animationSpec = tween(200),
+        label = "Fermux Text Colors",
+    )
+
+    val iconColor by animateColorAsState(
+        targetValue = when {
+            isPressed -> color.fermuxActiveIcon
+            else -> color.fermuxInActiveIcon
+        },
+        animationSpec = tween(durationMillis = 150),
+        label = "Fermux Icon Colors"
+    )
+
+    val buttonAnimation by animateFloatAsState(
+        targetValue = if (isPressed) 0.90f else 1.0f,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        label = "Fermux Button Animation"
+    )
+
+    val iconRotate by animateFloatAsState(
+        targetValue = iconRotation,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        label = "Fermux Icon Rotation"
+    )
+
+    ElevatedButton(
+        modifier = modifier.graphicsLayer {
+            scaleX = buttonAnimation
+            scaleY = buttonAnimation
+        }
+            .padding(5.dp),
+        shape = RoundedCornerShape(8.dp),
+        border = BorderStroke(1.dp, color = color.fermuxSecondaryBorder),
+        colors = ButtonDefaults.textButtonColors(
+            containerColor = containerColor,
+            contentColor = contentColor
+        ),
+        contentPadding = contentPadding,
+        interactionSource = interactionSource,
+         onClick = onClick
+    ) {
+        Icon(
+            painter = image,
+            tint = iconColor,
+            contentDescription = contentDescription,
+            modifier = modifier.rotate(iconRotate)
+        )
+    }
+}
+
 
 
 
@@ -279,7 +365,7 @@ fun Why() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        FermuxTextAndIconButton(
+        FermuxTextWithIconButton(
             modifier = Modifier.defaultMinSize(minWidth = 70.dp), // To decide how big the button is.
             contentPadding = PaddingValues(9.dp), // To give text and icon a room in the button.
             icon = Icons.Default.ExpandMore, // Optional icon.
@@ -292,7 +378,7 @@ fun Why() {
 
         FermuxMainActionButton(
             modifier = Modifier.size(70.dp),
-            image = painterResource(R.drawable.icon_download_active),
+            image = painterResource(R.drawable.ic_launcher_background),
             componentSize = 50.dp, // The biggest the image can get.
             iconRotation = if (pressed) 180f else 0f,
             onClick = {pressed = !pressed },
@@ -305,7 +391,6 @@ fun Why() {
             iconRotation = if (pressed) 360f else 0f,
             onClick = {pressed = !pressed },
         )
-
 
     }
 }

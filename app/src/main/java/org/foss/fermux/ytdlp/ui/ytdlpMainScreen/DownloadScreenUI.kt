@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -34,7 +35,9 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.foss.fermux.ui.theme.FermuxButton
+import org.foss.fermux.fermuxComponents.FermuxImageButton
+import org.foss.fermux.fermuxComponents.FermuxMainActionButton
+import org.foss.fermux.fermuxComponents.FermuxTextWithIconButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.DownloaderViewModel
 
@@ -125,15 +128,17 @@ fun DownloadContent(
             Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
 
                 // ClipBoard Button
-                FermuxButton(
+                FermuxMainActionButton(
                     icon = Icons.Default.ContentPaste,
-                    clickable = { clipboard.getText()?.text?.let { viewModel.downloadUrl = it } }
+                    modifier = Modifier.size(70.dp).padding(6.dp),
+                    onClick = { clipboard.getText()?.text?.let { viewModel.downloadUrl = it } }
                 )
 
                 // DownloadButton
-                FermuxButton(
+                FermuxMainActionButton(
                     icon = Icons.Default.FileDownload,
-                    clickable = { viewModel.fetchedMetadata(viewModel.downloadUrl) }
+                    modifier = Modifier.size(70.dp).padding(6.dp),
+                    onClick = { viewModel.fetchedMetadata(viewModel.downloadUrl) }
                 )
             }
         }
