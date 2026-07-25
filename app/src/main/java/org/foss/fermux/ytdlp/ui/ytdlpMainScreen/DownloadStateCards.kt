@@ -26,9 +26,9 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import org.foss.fermux.fermuxComponents.FermuxCancelButton
+import org.foss.fermux.fermuxComponents.FermuxCard
 import org.foss.fermux.fermuxComponents.FermuxSurface
 import org.foss.fermux.fermuxComponents.FermuxTextWithIconButton
-import org.foss.fermux.ui.theme.FermuxCard
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
 import org.foss.fermux.ytdlp.logic.DownloaderViewModel
@@ -90,9 +90,10 @@ fun LoadingCard(state: DownloadStatus) {
             .fillMaxWidth()
     ) {
         FermuxCard(
-            cardPadding = 10.dp,
-            cardShape = RoundedCornerShape(8.dp),
-            aspectRatio = 16f/9f
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier
+                .padding(8.dp)
+                .aspectRatio(16f/9f)
         ) {
             val message =
                 listOf(
@@ -159,18 +160,19 @@ fun LoadedCard (
     downloaderLogs: String)
 {
 
+    var cancelButton by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        ElevatedCard(
-            modifier = Modifier
-                .clip(RoundedCornerShape(4.dp))
-                .fillMaxWidth()
-                .padding(19.dp)
-        )
+        FermuxCard(
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier.fillMaxWidth()
+                .padding(8.dp),
+
+         )
         {
             Box {
                 AsyncImage(
@@ -213,10 +215,28 @@ fun LoadedCard (
                         }
                     }
                 }
+
+                FermuxCancelButton(
+                    modifier = Modifier
+                        .size(60.dp)
+                        .align(alignment = Alignment.TopStart)
+                        .padding(8.dp),
+                    iconRotation = if (cancelButton) 360f else 0f,
+                    onClick = {expanded = !expanded },
+                )
+
+                FermuxTextWithIconButton(
+                    modifier = Modifier.align(Alignment.BottomStart).padding(6.dp),
+                    icon = Icons.Default.ExpandMore,
+                    contentPadding = PaddingValues(8.dp),
+                    iconRotation = if (expanded) 180f else 0f,
+                    text = if (expanded) "Hide details" else "Show details",
+                    onClick = { expanded = !expanded }
+                )
             }
 
-            FermuxSurface {
-                Column {
+            FermuxSurface(expanded = expanded) {
+                Column(modifier = Modifier.fillMaxSize()) {
                     Text(
                         metadata.title,
                         modifier = Modifier
@@ -231,7 +251,9 @@ fun LoadedCard (
                             fontFamily = FontFamily.Default
                         )
                     }
+
                     // TODO. Duration, add it here.
+
                 }
             }
 
@@ -251,18 +273,10 @@ fun LoadedCard (
                 }
             }
         }
-
-        FermuxTextWithIconButton(
-            modifier = Modifier.size(50.dp),
-            icon = Icons.Default.ExpandMore,
-            text = if(expanded) "Hide details" else "Show details",
-            onClick = { expanded = !expanded }
-        )
     }
 }
 
-// https://www.youtube.com/watch?v=RqJkd_ndmgY&t=1s1
-
+//
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun ErrorCard(
@@ -271,14 +285,16 @@ fun ErrorCard(
     onCancel: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
+    var cancelButton by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         FermuxCard(
-            modifier = Modifier.fillMaxWidth(),
-            cardPadding = 10.dp,
-            cardShape = RoundedCornerShape(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            shape = RoundedCornerShape(8.dp),
         ) {
             Box(
                 modifier = Modifier
@@ -298,14 +314,17 @@ fun ErrorCard(
                         .padding(18.dp)
                 )
                 FermuxCancelButton(
-                    modifier = Modifier.align(Alignment.Center),
-                    iconRotation = if (expanded) 360f else 0f,
+                    modifier = Modifier.align(Alignment.Center).size(50.dp),
+                    iconRotation = if (cancelButton) 360f else 0f,
                     onClick = { onCancel() }
                 )
 
+              //  https://www.youtube.com/watch?v=qn7eWxT__Q8&t=15s
+
                 FermuxTextWithIconButton(
-                    modifier = Modifier.align(Alignment.BottomStart),
+                    modifier = Modifier.align(Alignment.BottomStart).padding(10.dp),
                     icon = Icons.Default.ExpandMore,
+                    contentPadding = PaddingValues(8.dp),
                     iconRotation = if (expanded) 180f else 0f,
                     text = if (expanded) "Hide error" else "Show error",
                     onClick = { expanded = !expanded }

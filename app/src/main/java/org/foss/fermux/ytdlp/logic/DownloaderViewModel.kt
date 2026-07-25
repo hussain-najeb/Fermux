@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +11,6 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import coil3.util.CoilUtils.result
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
@@ -38,15 +36,13 @@ class DownloaderViewModel : ViewModel() {
     var downloaderLogs by mutableStateOf("")
     private var activeProcess by mutableStateOf<UUID?>(null)
     val flavorError =
-        listOf<String>(
+        listOf(
             "Dammit, something must have went REALLY wrong",
             "Could be a connection issue, check your internet connection",
             "You guessed it, it's a network error",
             "Chuck the error log in an LLM and watch the magic happen",
             "Did you paste a URL?"
         )
-
-
 
     fun fetchedMetadata(downloadUrl: String) {
         viewModelScope.launch {
@@ -61,6 +57,7 @@ class DownloaderViewModel : ViewModel() {
                         try {
                             result = fetchingTheMetadata(downloadUrl)
                         } catch (e: UnknownHostException) {
+                            Log.e("fetching metadata function", "Error fetching URL")
                             throw e
                         } catch (e: Exception) {
                             lastError = e

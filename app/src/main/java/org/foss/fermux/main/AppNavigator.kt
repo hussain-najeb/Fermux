@@ -48,25 +48,17 @@ fun FermuxAppMainScreen() {
 
     val ytdlpUpdater by settingsViewModel.ytdlpUpdater.collectAsState()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(ytdlpUpdater) {
+        Log.d("fermuxYtdlpUpdater", "current value: $ytdlpUpdater")
         if (ytdlpUpdater) {
             try {
                 YoutubeDL.getInstance().updateYoutubeDL(context as MainActivity, YoutubeDL.UpdateChannel.STABLE)
-                Log.d("fermux", "yt-dlp updated successfully")
+                Log.d("fermuxYtdlpUpdater", "yt-dlp updated successfully")
             } catch (e: Exception) {
                 Log.e("fermux", "yt-dlp update failed", e)
             }
         }
     }
-
-
-
-
-
-
-
-
-
 
 
 

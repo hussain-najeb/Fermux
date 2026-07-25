@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import org.foss.fermux.ui.theme.FermuxCard
+import org.foss.fermux.fermuxComponents.FermuxCard
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
@@ -35,9 +35,11 @@ fun HomeScreen(navigationController: NavHostController) {
             )
             screens.forEach { screen ->
                 FermuxCard(
-                    cardPadding = 5.dp,
-                    modifier = Modifier.fillMaxWidth().weight(0.25f),
-                    clickable = { navigationController.navigate(screen.route) }
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(0.25f)
+                        .padding(8.dp),
+                    onClick = { navigationController.navigate(screen.route) }
                 ) {
                     screen.descriptor?.let { Text(text = it, color =
                         Color.White ,

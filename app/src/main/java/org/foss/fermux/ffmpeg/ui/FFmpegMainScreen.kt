@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
+import org.foss.fermux.ui.theme.FermuxColors
 
 
 @Composable
@@ -22,10 +23,12 @@ fun ConverterScreen(@SuppressLint("ContextCastToActivity") viewModel: FFmpegView
     val context = LocalContext.current
 
     Column(modifier = Modifier
-        .background(Color(0xFF181825))
+        .background(FermuxColors.fermuxBackground)
         .fillMaxSize()) {
 
-        FFmepgState(viewModel.state, viewModel.FFmpegLogs, navigationController = navigationController, viewModel = viewModel)
-
+        FFmepgState(viewModel.state,
+            viewModel.FFmpegLogs,
+            navigationController = navigationController,
+            viewModel = viewModel)
     }
 }

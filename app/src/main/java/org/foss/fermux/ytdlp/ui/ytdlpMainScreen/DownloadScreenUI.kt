@@ -2,6 +2,7 @@
 
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -35,9 +36,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.foss.fermux.fermuxComponents.FermuxImageButton
 import org.foss.fermux.fermuxComponents.FermuxMainActionButton
-import org.foss.fermux.fermuxComponents.FermuxTextWithIconButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.DownloaderViewModel
 
@@ -138,7 +137,7 @@ fun DownloadContent(
                 FermuxMainActionButton(
                     icon = Icons.Default.FileDownload,
                     modifier = Modifier.size(70.dp).padding(6.dp),
-                    onClick = { viewModel.fetchedMetadata(viewModel.downloadUrl) }
+                    onClick = { viewModel.fetchedMetadata(viewModel.downloadUrl) }  // TODO. Add a way in the fetchMetadata function a try and catch error Log.E
                 )
             }
         }

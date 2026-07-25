@@ -14,10 +14,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import org.foss.fermux.fermuxComponents.FermuxCard
 import org.foss.fermux.ffmpeg.logic.FFmpegTargetFormat
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.logic.MediaKind
-import org.foss.fermux.ui.theme.FermuxCard
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
@@ -43,10 +43,12 @@ fun Screens(sheet: MediaKind, navHostController: NavHostController, viewModel: F
                 .filter { viewModel.isSheetFormat(it, sheet) }
                 .forEach { format ->
                     FermuxCard(
-                        cardPadding = 5.dp,
-                        modifier = Modifier.fillMaxWidth().weight(0.25f),
-                        cardShape = RoundedCornerShape(16.dp),
-                        clickable = {
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(0.25f)
+                            .padding(8.dp),
+                        shape = RoundedCornerShape(12.dp),
+                        onClick = {
                             viewModel.selectedFormat = format
                             viewModel.inputUri?.let { uri ->
                                 viewModel.startingConversion(context, uri, format)

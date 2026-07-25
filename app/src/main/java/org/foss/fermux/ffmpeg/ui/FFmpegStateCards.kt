@@ -7,14 +7,12 @@ import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.icons.filled.Replay
 import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -23,7 +21,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -34,6 +31,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import org.foss.fermux.fermuxComponents.FermuxCancelButton
+import org.foss.fermux.fermuxComponents.FermuxCard
 import org.foss.fermux.fermuxComponents.FermuxMainActionButton
 import org.foss.fermux.fermuxComponents.FermuxSurface
 import org.foss.fermux.fermuxComponents.FermuxTextWithIconButton
@@ -91,8 +89,8 @@ fun IdleCard(
     Column(modifier = Modifier.fillMaxSize()) {
 
         FermuxCard(
-            cardPadding = 10.dp,
-            cardShape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier.padding(8.dp)
         ) {
                 Box(modifier = Modifier.fillMaxWidth().height(200.dp)) {
 
@@ -198,8 +196,8 @@ fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: Str
     ) {
 
         FermuxCard(
-            cardShape = RoundedCornerShape(8.dp),
-            cardPadding = 10.dp,
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier.padding(8.dp)
         ) {
             Box(
                 modifier = Modifier
@@ -267,8 +265,8 @@ fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: Str
                 modifier = Modifier.fillMaxSize(),
             ) {
                 FermuxCard(
-                    cardShape = RoundedCornerShape(8.dp),
-                    cardPadding = 10.dp,
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.padding(8.dp)
                 ) {
                     Box(
                         modifier = Modifier
