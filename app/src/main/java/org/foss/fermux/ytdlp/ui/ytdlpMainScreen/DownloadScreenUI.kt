@@ -2,7 +2,6 @@
 
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

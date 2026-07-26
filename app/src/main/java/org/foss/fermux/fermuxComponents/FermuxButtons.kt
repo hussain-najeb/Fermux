@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -293,6 +294,86 @@ fun FermuxImageButton(
 
 
 
+@Composable
+fun FermuxIconButton(
+    modifier: Modifier = Modifier,
+    color: FermuxColor = FermuxColors,
+    icon: ImageVector,
+    contentDescription: String? = null,
+    border: BorderStroke? = BorderStroke(1.5.dp, color.fermuxGenericBorder),
+    iconRotation: Float = 0f,
+    contentPadding: PaddingValues = PaddingValues(4.dp),
+    onClick: () -> Unit
+) {
+
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    val containerColor by animateColorAsState(
+        targetValue = when {
+            isPressed -> color.fermuxActiveButton
+            else -> color.fermuxInActiveButton
+        },
+        animationSpec = tween(200),
+        label = "Fermux Button Colors",
+    )
+
+    val contentColor by animateColorAsState(
+        targetValue = when {
+            isPressed -> color.fermuxActiveTextColor
+            else -> color.fermuxInActiveTextColor
+        },
+        animationSpec = tween(200),
+        label = "Fermux Text Colors",
+    )
+
+    val iconColor by animateColorAsState(
+        targetValue = when {
+            isPressed -> color.fermuxActiveIcon
+            else -> color.fermuxInActiveIcon
+        },
+        animationSpec = tween(durationMillis = 150),
+        label = "Fermux Icon Colors"
+    )
+
+    val buttonAnimation by animateFloatAsState(
+        targetValue = if (isPressed) 0.90f else 1.0f,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        label = "Fermux Button Animation"
+    )
+
+    val iconRotate by animateFloatAsState(
+        targetValue = iconRotation,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        label = "Fermux Icon Rotation"
+    )
+
+    ElevatedButton(
+        modifier = modifier.graphicsLayer {
+            scaleX = buttonAnimation
+            scaleY = buttonAnimation
+        }
+            .padding(5.dp),
+        shape = RoundedCornerShape(8.dp),
+        border = border,
+        colors = ButtonDefaults.textButtonColors(
+            containerColor = containerColor,
+            contentColor = contentColor
+        ),
+        contentPadding = contentPadding,
+        interactionSource = interactionSource,
+        onClick = onClick
+    ) {
+        Icon(
+            imageVector = icon,
+            tint = iconColor,
+            contentDescription = contentDescription,
+            modifier = modifier.rotate(iconRotate)
+        )
+    }
+}
+
+
 
 @Composable
 fun FermuxCancelButton(
@@ -390,6 +471,14 @@ fun Why() {
             modifier = Modifier.size(40.dp),
             iconRotation = if (pressed) 360f else 0f,
             onClick = {pressed = !pressed },
+        )
+
+        Spacer(Modifier.height(20.dp))
+
+        FermuxIconButton(
+            icon = Icons.Default.ContentPaste,
+            modifier = Modifier.size(50.dp),
+            onClick = {pressed = !pressed}
         )
 
     }

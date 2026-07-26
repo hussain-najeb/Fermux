@@ -14,7 +14,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -57,11 +56,11 @@ fun WhenCards (state: DownloadStatus, downloaderLogs: String, viewModel: Downloa
         } // while downloading the info to the card
 
         is DownloadStatus.Downloading -> {
-            LoadedCard(state.metadata, state.downloadProgress, downloaderLogs = downloaderLogs )
+            LoadedCard(state.metadata, state.downloadProgress, downloaderLogs = downloaderLogs, onCancel = {viewModel.cancelButton(context)})
         } // just to get a damn bar to show the progress.
 
         is DownloadStatus.Loaded -> {
-            LoadedCard(state.metadata, downloaderLogs = downloaderLogs)
+            LoadedCard(state.metadata, downloaderLogs = downloaderLogs, onCancel = {viewModel.cancelButton(context)})
         }
         // the card gets loaded to view the damn
         // content when you call state. state here is assigned to "metadata", then to the actual card
@@ -153,15 +152,17 @@ fun LoadingCard(state: DownloadStatus) {
     }
 }
 @Composable
-
 fun LoadedCard (
     metadata: DownloadMetadata,
     progress: Float? = null,
-    downloaderLogs: String)
+    downloaderLogs: String,
+onCancel: () -> Unit
+    )
 {
 
     var cancelButton by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
+    var errorLogs by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -222,7 +223,7 @@ fun LoadedCard (
                         .align(alignment = Alignment.TopStart)
                         .padding(8.dp),
                     iconRotation = if (cancelButton) 360f else 0f,
-                    onClick = {expanded = !expanded },
+                    onClick = { onCancel() },
                 )
 
                 FermuxTextWithIconButton(
@@ -230,47 +231,86 @@ fun LoadedCard (
                     icon = Icons.Default.ExpandMore,
                     contentPadding = PaddingValues(8.dp),
                     iconRotation = if (expanded) 180f else 0f,
-                    text = if (expanded) "Hide details" else "Show details",
+                    text = if (expanded) "Hide Details" else "Show Details",
                     onClick = { expanded = !expanded }
+                )
+
+                FermuxTextWithIconButton(
+                    modifier = Modifier.align(Alignment.BottomEnd).padding(6.dp),
+                    icon = Icons.Default.ExpandMore,
+                    contentPadding = PaddingValues(8.dp),
+                    iconRotation = if (errorLogs) 180f else 0f,
+                    text = if (errorLogs) "Hide Logs" else "Show Logs",
+                    onClick = { errorLogs = !errorLogs }
                 )
             }
 
             FermuxSurface(expanded = expanded) {
                 Column(modifier = Modifier.fillMaxSize()) {
-                    Text(
-                        metadata.title,
-                        modifier = Modifier
-                            .padding(8.dp),
-                        fontFamily = FontFamily.Default
+                    Row {
+                        Text(text = "Title:",
+                            fontFamily = FontFamily.Default,
+                            fontSize = 16.sp,
+                            color = Color(0xFF48AF79),
+                            modifier = Modifier
+                                .padding(7.dp)
+                        )
+
+                        Text(
+                            text = metadata.title,
+                            fontSize = 15.sp,
+                            fontFamily = FontFamily.SansSerif,
+                            color = FermuxColors.fermuxInActiveTextColor,
+                            modifier = Modifier.padding(7.dp)
+                        )
+                    }
+
+                    HorizontalDivider(
+                        thickness = 1.0.dp,
+                        color = FermuxColors.fermuxComponents
                     )
+
+                    Row {
+                        Text(text = "Uploader:",
+                            fontFamily = FontFamily.Default,
+                            fontSize = 16.sp,
+                            color = Color(0xFFF34545),
+                            modifier = Modifier
+                                .padding(7.dp)
+                        )
+
                     metadata.uploader?.let {
                         Text(
-                            it,
-                            modifier = Modifier
-                                .padding(8.dp),
-                            fontFamily = FontFamily.Default
-                        )
+                            text = it,
+                            fontSize = 15.sp,
+                            fontFamily = FontFamily.SansSerif,
+                            color = FermuxColors.fermuxInActiveTextColor,
+                            modifier = Modifier.padding(7.dp)
+                            )
+                        }
                     }
 
                     // TODO. Duration, add it here.
 
                 }
             }
+        }
 
 
-            FermuxSurface(
-                expanded = expanded
-            ) {
-                Box {
-                    Text(
-                        downloaderLogs,
-                        modifier = Modifier
-                            .padding(3.dp),
-                        fontSize = 18.sp,
-                        color = Color.White,
-                        fontFamily = JetbrainsMono,
-                    )
-                }
+
+        FermuxSurface(
+            expanded = errorLogs,
+            modifier = Modifier.fillMaxSize().padding(8.dp).height(70.dp)
+        ) {
+            Box {
+                Text(
+                    downloaderLogs,
+                    modifier = Modifier
+                        .padding(3.dp),
+                    fontSize = 18.sp,
+                    color = Color.White,
+                    fontFamily = JetbrainsMono,
+                )
             }
         }
     }

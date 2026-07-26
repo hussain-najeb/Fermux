@@ -38,7 +38,7 @@ fun HomeScreen(navigationController: NavHostController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(0.25f)
-                        .padding(8.dp),
+                        .padding(4.dp),
                     onClick = { navigationController.navigate(screen.route) }
                 ) {
                     screen.descriptor?.let { Text(text = it, color =

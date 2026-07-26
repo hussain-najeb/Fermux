@@ -102,18 +102,23 @@ fun IdleCard(
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                           Text(text = "Upload a file to convert",
-                               fontSize = 19.sp,
+                            Text(text = "Upload a file to convert",
+                               fontSize = 14.sp,
                                fontFamily = FontFamily.Monospace,
                                fontStyle = androidx.compose.ui.text.font.FontStyle.Normal,
                                color = FermuxColors.fermuxInActiveTextColor,
-                               modifier = Modifier.padding(bottom = 8.dp)
+                               modifier = Modifier.padding(8.dp)
                                )
+
+                            Spacer(modifier = Modifier.height(8.dp))
 
                             FermuxMainActionButton(
                                 icon = Icons.Default.Upload,
+                                modifier = Modifier
+                                    .defaultMinSize(minWidth = 70.dp)
+                                    .padding(8.dp),
                                 onClick = {fileLauncher.launch("*/*")}
-                            )
+                                )
                         }
                     }
 
@@ -133,14 +138,16 @@ fun IdleCard(
                         FermuxTextWithIconButton(
                             modifier = Modifier
                                 .align(Alignment.BottomStart)
-                                .size(30.dp),
+                                .padding(10.dp),
                             icon = Icons.Default.ExpandMore,
+                            contentPadding = PaddingValues(8.dp),
                             iconRotation = if (expanded) 180f else 0f,
-                            text = if (expanded) "Hide formats" else "Show formats",
+                            text = if (expanded) "Hide Error" else "Show Error",
                             onClick = { expanded = !expanded }
                             )
                         }
                     }
+
                     FermuxSurface(expanded = expanded) {
 
                         val formats = listOf(
@@ -160,7 +167,8 @@ fun IdleCard(
                             Row {
                                 FermuxTextWithIconButton(
                                     text = format.route,
-                                    modifier = Modifier.size(40.dp),
+                                    modifier = Modifier.defaultMinSize(minWidth = 50.dp),
+                                    contentPadding = PaddingValues(6.dp),
                                     onClick = { navigationController?.navigate(format.route) },
                                 )
                                     Text(

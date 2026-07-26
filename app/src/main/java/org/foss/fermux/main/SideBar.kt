@@ -82,18 +82,19 @@ AnimatedVisibility(
         modifier = Modifier
             .padding(start = 5.dp)
             .clip(RoundedCornerShape(8.dp))
-            .border(1.5.dp, FermuxColors.fermuxPrimaryBorder, (RoundedCornerShape(8.dp)))
-            .width(90.dp)
+            .border(1.0.dp, FermuxColors.fermuxSecondaryBorder, (RoundedCornerShape(8.dp)))
+            .width(70.dp)
             .background(FermuxColors.fermuxSurface)
     ) {
 
         Spacer(modifier = Modifier.height(10.dp))
 
         Page.entries.forEach { page ->
-            val selectedPage = currentPage == page
 
             FermuxTextWithIconButton(
                 modifier = Modifier
+                    .size(60.dp)
+                    .padding(3.dp)
                     .align(Alignment.CenterHorizontally),
                 icon = page.image,
                 contentDescription  = page.descriptor,

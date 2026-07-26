@@ -39,7 +39,7 @@ fun FermuxCard(
      val isPressed by interactionSource.collectIsPressedAsState()
 
      val cardExpansion by animateFloatAsState(
-          targetValue = if (isPressed) 0.92f else 1.0f,
+          targetValue = if (isPressed) 0.95f else 1.0f,
           animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
           label = "card get bigger"
      )
