@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.foss.fermux.fermuxComponents.FermuxMainActionButton
 import org.foss.fermux.ui.theme.FermuxColors
-import org.foss.fermux.ytdlp.logic.DownloaderViewModel
+import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 
 
 @Composable

@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.logic
+package org.foss.fermux.ytdlp.logic.downloader
 
 import android.content.Context
 import android.util.Log
@@ -19,12 +19,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import org.foss.fermux.storage.SettingsTab
-import org.foss.fermux.ytdlp.logic.downloader.AudioQuality
-import org.foss.fermux.ytdlp.logic.downloader.DownloadMetadata
-import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
-import org.foss.fermux.ytdlp.logic.downloader.DownloadWorker
-import org.foss.fermux.ytdlp.logic.downloader.VideoQuality
-import org.foss.fermux.ytdlp.logic.downloader.fetchingTheMetadata
 import java.net.UnknownHostException
 import java.util.UUID
 import kotlin.time.Duration.Companion.milliseconds
@@ -37,10 +31,10 @@ class DownloaderViewModel : ViewModel() {
     private var activeProcess by mutableStateOf<UUID?>(null)
     val flavorError =
         listOf(
-            "Dammit, something must have went REALLY wrong",
+            "Dammit, something must have gone wrong",
             "Could be a connection issue, check your internet connection",
             "You guessed it, it's a network error",
-            "Chuck the error log in an LLM and watch the magic happen",
+            "what does an LLM say about it?",
             "Did you paste a URL?"
         )
 
@@ -136,7 +130,8 @@ class DownloaderViewModel : ViewModel() {
                     }
 
                     WorkInfo.State.FAILED -> {
-                        state = DownloadStatus.Error(flavorError.random(), rawError = "")
+                        val error = workInfo.outputData.getString("error") ?: "Unknown Error!"
+                        state = DownloadStatus.Error(flavorError.random(), rawError = error)
                         activeProcess = null
                     }
 

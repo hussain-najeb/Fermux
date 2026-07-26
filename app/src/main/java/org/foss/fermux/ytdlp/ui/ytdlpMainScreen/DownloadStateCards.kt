@@ -30,7 +30,7 @@ import org.foss.fermux.fermuxComponents.FermuxSurface
 import org.foss.fermux.fermuxComponents.FermuxTextWithIconButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
-import org.foss.fermux.ytdlp.logic.DownloaderViewModel
+import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 import org.foss.fermux.ytdlp.logic.downloader.DownloadMetadata
 import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
 import kotlin.time.Duration.Companion.milliseconds
@@ -220,35 +220,39 @@ onCancel: () -> Unit
                 FermuxCancelButton(
                     modifier = Modifier
                         .size(60.dp)
-                        .align(alignment = Alignment.TopStart)
+                        .align(alignment = Alignment.Center)
                         .padding(8.dp),
                     iconRotation = if (cancelButton) 360f else 0f,
                     onClick = { onCancel() },
                 )
 
-                FermuxTextWithIconButton(
-                    modifier = Modifier.align(Alignment.BottomStart).padding(6.dp),
-                    icon = Icons.Default.ExpandMore,
-                    contentPadding = PaddingValues(8.dp),
-                    iconRotation = if (expanded) 180f else 0f,
-                    text = if (expanded) "Hide Details" else "Show Details",
-                    onClick = { expanded = !expanded }
-                )
+                    FermuxTextWithIconButton(
+                        modifier = Modifier.align(Alignment.BottomStart).padding(6.dp),
+                        icon = Icons.Default.ExpandMore,
+                        contentPadding = PaddingValues(8.dp),
+                        iconRotation = if (expanded) 180f else 0f,
+                        text = if (expanded) "Hide Details" else "Show Details",
+                        onClick = { expanded = !expanded }
+                    )
 
-                FermuxTextWithIconButton(
-                    modifier = Modifier.align(Alignment.BottomEnd).padding(6.dp),
-                    icon = Icons.Default.ExpandMore,
-                    contentPadding = PaddingValues(8.dp),
-                    iconRotation = if (errorLogs) 180f else 0f,
-                    text = if (errorLogs) "Hide Logs" else "Show Logs",
-                    onClick = { errorLogs = !errorLogs }
-                )
+//                    FermuxTextWithIconButton(
+//                        modifier = Modifier.align(Alignment.BottomStart).padding(6.dp),
+//                        icon = Icons.Default.ExpandMore,
+//                        contentPadding = PaddingValues(8.dp),
+//                        iconRotation = if (errorLogs) 180f else 0f,
+//                        text = if (errorLogs) "Hide Logs" else "Show Logs",
+//                        onClick = { errorLogs = !errorLogs }
+
+//                    ) TODO. link this back to the setting in the settings without the button,
+            //                     just the settings turns on the text,
+            //                     even without a surface maybe, just a wall of text
+
             }
 
             FermuxSurface(expanded = expanded) {
                 Column(modifier = Modifier.fillMaxSize()) {
-                    Row {
-                        Text(text = "Title:",
+
+                        Text(text = "Title: ${metadata.title}",
                             fontFamily = FontFamily.Default,
                             fontSize = 16.sp,
                             color = Color(0xFF48AF79),
@@ -256,39 +260,20 @@ onCancel: () -> Unit
                                 .padding(7.dp)
                         )
 
-                        Text(
-                            text = metadata.title,
-                            fontSize = 15.sp,
-                            fontFamily = FontFamily.SansSerif,
-                            color = FermuxColors.fermuxInActiveTextColor,
-                            modifier = Modifier.padding(7.dp)
-                        )
-                    }
 
                     HorizontalDivider(
                         thickness = 1.0.dp,
                         color = FermuxColors.fermuxComponents
                     )
 
-                    Row {
-                        Text(text = "Uploader:",
+
+                        Text(text = "Uploader: ${metadata.uploader}",
                             fontFamily = FontFamily.Default,
                             fontSize = 16.sp,
                             color = Color(0xFFF34545),
                             modifier = Modifier
                                 .padding(7.dp)
                         )
-
-                    metadata.uploader?.let {
-                        Text(
-                            text = it,
-                            fontSize = 15.sp,
-                            fontFamily = FontFamily.SansSerif,
-                            color = FermuxColors.fermuxInActiveTextColor,
-                            modifier = Modifier.padding(7.dp)
-                            )
-                        }
-                    }
 
                     // TODO. Duration, add it here.
 
@@ -300,7 +285,7 @@ onCancel: () -> Unit
 
         FermuxSurface(
             expanded = errorLogs,
-            modifier = Modifier.fillMaxSize().padding(8.dp).height(70.dp)
+            modifier = Modifier.fillMaxSize().padding(8.dp).height(80.dp)
         ) {
             Box {
                 Text(
@@ -359,7 +344,7 @@ fun ErrorCard(
                     onClick = { onCancel() }
                 )
 
-              //  https://www.youtube.com/watch?v=qn7eWxT__Q8&t=15s
+                // https://youtu.be/ZFSN40r--zk?si=4dAv5tCwn_Y4NZgF
 
                 FermuxTextWithIconButton(
                     modifier = Modifier.align(Alignment.BottomStart).padding(10.dp),

@@ -124,7 +124,7 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
             Result.success()
         } catch (e: Exception) {
             Log.d("downloadWorker", "download failed", e)
-            Result.failure()
+            Result.failure(workDataOf("error" to (e.message ?: e.toString())))
         }
     }
 }
