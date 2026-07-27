@@ -15,7 +15,6 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.CircularWavyProgressIndicator
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -30,11 +29,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
-import org.foss.fermux.fermuxComponents.FermuxCancelButton
-import org.foss.fermux.fermuxComponents.FermuxCard
-import org.foss.fermux.fermuxComponents.FermuxMainActionButton
-import org.foss.fermux.fermuxComponents.FermuxSurface
-import org.foss.fermux.fermuxComponents.FermuxTextWithIconButton
+import org.foss.fermux.fermuxUIComponents.FermuxCancelButton
+import org.foss.fermux.fermuxUIComponents.FermuxCard
+import org.foss.fermux.fermuxUIComponents.FermuxMainActionButton
+import org.foss.fermux.fermuxUIComponents.FermuxSurface
+import org.foss.fermux.fermuxUIComponents.FermuxTextWithIconButton
 import org.foss.fermux.ffmpeg.logic.FFmpegStatus
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.main.Screen
@@ -156,36 +155,31 @@ fun IdleCard(
                             Screen.ImageFormatSheet
                         )
 
+                        val formatNames = listOf(
+                            "Press To Convert To Video",
+                            "Press To Convert To Audio",
+                        )
+
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(10.dp),
-                            verticalArrangement = Arrangement.SpaceEvenly,
                         ) {
                             formats.forEach { format ->
 
-                            Row {
-                                FermuxTextWithIconButton(
-                                    text = format.route,
-                                    modifier = Modifier.defaultMinSize(minWidth = 50.dp),
-                                    contentPadding = PaddingValues(6.dp),
-                                    onClick = { navigationController?.navigate(format.route) },
-                                )
-                                    Text(
-                                        ":   Convert selected file to ${format.descriptor}",
-                                        fontSize = 16.sp,
-                                        fontFamily = FontFamily.Default,
-                                        fontStyle = androidx.compose.ui.text.font.FontStyle.Normal,
-                                        color = FermuxColors.fermuxInActiveTextColor,
-                                        modifier = Modifier.padding(top = 27.dp)
-                                    )
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
 
+                                        FermuxTextWithIconButton(
+                                            text = format.route,
+                                            modifier = Modifier.fillMaxWidth().height(60.dp).padding(5.dp),
+                                            contentPadding = PaddingValues(6.dp),
+                                            onClick = { navigationController?.navigate(format.route) }
+                                        )
 
-                                    HorizontalDivider(
-                                        thickness = 1.2.dp,
-                                        color = FermuxColors.fermuxComponents
-                                    )
                                 }
+
                             }
                         }
                     }

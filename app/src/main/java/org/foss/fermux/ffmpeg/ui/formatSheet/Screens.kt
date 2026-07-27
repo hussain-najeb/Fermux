@@ -14,7 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import org.foss.fermux.fermuxComponents.FermuxCard
+import org.foss.fermux.fermuxUIComponents.FermuxCard
 import org.foss.fermux.ffmpeg.logic.FFmpegTargetFormat
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.logic.MediaKind

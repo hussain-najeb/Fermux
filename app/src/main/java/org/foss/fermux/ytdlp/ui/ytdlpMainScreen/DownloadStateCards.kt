@@ -24,10 +24,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
-import org.foss.fermux.fermuxComponents.FermuxCancelButton
-import org.foss.fermux.fermuxComponents.FermuxCard
-import org.foss.fermux.fermuxComponents.FermuxSurface
-import org.foss.fermux.fermuxComponents.FermuxTextWithIconButton
+import org.foss.fermux.fermuxUIComponents.FermuxCancelButton
+import org.foss.fermux.fermuxUIComponents.FermuxCard
+import org.foss.fermux.fermuxUIComponents.FermuxSurface
+import org.foss.fermux.fermuxUIComponents.FermuxTextWithIconButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
@@ -52,7 +52,7 @@ fun WhenCards (state: DownloadStatus, downloaderLogs: String, viewModel: Downloa
         is DownloadStatus.Idle -> {} // Idle state of the card
 
         is DownloadStatus.Loading -> {
-            LoadingCard(state = state)
+            LoadingCard(state = state, onCancel = {viewModel.cancelButton(context)})
         } // while downloading the info to the card
 
         is DownloadStatus.Downloading -> {
@@ -82,9 +82,28 @@ fun videoTime (seconds: Int): String {
 }
 
 @Composable
-fun LoadingCard(state: DownloadStatus) {
+fun LoadingCard(state: DownloadStatus, onCancel: () -> Unit) {
 
-    Box(
+    val message =
+        listOf(
+            "Fetching Video Info",
+            "Connecting to Server...",
+            "Analyzing Metadata...",
+            "Wrapping things up...",
+            "Stuff is happening...",
+            "Hold your breath...",
+            "Calibrating...",
+            "Something is about to happen...",
+        )
+
+    var loadingMessage by remember { mutableStateOf(message.random()) }
+    val shuffledMessages = (message.shuffled())
+    var index by remember { mutableIntStateOf(0) }
+
+
+    var cancelButton by remember { mutableStateOf(false) }
+
+    Column(
         modifier = Modifier
             .fillMaxWidth()
     ) {
@@ -94,23 +113,6 @@ fun LoadingCard(state: DownloadStatus) {
                 .padding(8.dp)
                 .aspectRatio(16f/9f)
         ) {
-            val message =
-                listOf(
-                    "Fetching Video Info",
-                    "Connecting to Server...",
-                    "Analyzing Metadata...",
-                    "Wrapping things up...",
-                    "Stuff is happening...",
-                    "Hold your breath...",
-                    "Calibrating...",
-                    "Something is about to happen...",
-                )
-
-            var loadingMessage by remember { mutableStateOf(message.random()) }
-            val shuffledMessages = (message.shuffled())
-            var index by remember { mutableIntStateOf(0) }
-
-
             LaunchedEffect(Unit) {
                 while (true) {
                     delay(4500.milliseconds)
@@ -118,18 +120,11 @@ fun LoadingCard(state: DownloadStatus) {
                     loadingMessage = shuffledMessages[index]
                 }
             }
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(FermuxColors.fermuxSurface)
-                    .aspectRatio(16/9f),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
+                Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                     Text(
-                        text = loadingMessage ,
+                        text = loadingMessage,
                         fontFamily = FontFamily.SansSerif,
                         fontStyle = FontStyle.Italic,
                         color = FermuxColors.fermuxInActiveTextColor,
@@ -140,14 +135,20 @@ fun LoadingCard(state: DownloadStatus) {
                     Spacer(modifier = Modifier.height(40.dp))
 
                     LoadingIndicator()
-            }
-
+                }
             if (state is DownloadStatus.Idle) {
 
                 Icon(imageVector = Icons.Default.Close, contentDescription = null)
+                }
+
+                FermuxCancelButton(
+                    modifier = Modifier
+                        .align(alignment = Alignment.TopStart).padding(6.dp),
+                    iconRotation = if (cancelButton) 360f else 0f,
+                    onClick = { onCancel() },
+                )
 
             }
-
         }
     }
 }
@@ -156,7 +157,7 @@ fun LoadedCard (
     metadata: DownloadMetadata,
     progress: Float? = null,
     downloaderLogs: String,
-onCancel: () -> Unit
+    onCancel: () -> Unit
     )
 {
 
@@ -219,15 +220,14 @@ onCancel: () -> Unit
 
                 FermuxCancelButton(
                     modifier = Modifier
-                        .size(60.dp)
-                        .align(alignment = Alignment.Center)
-                        .padding(8.dp),
+                        .align(alignment = Alignment.TopStart).padding(10.dp),
                     iconRotation = if (cancelButton) 360f else 0f,
-                    onClick = { onCancel() },
+                    onClick = { onCancel() }
                 )
 
+
                     FermuxTextWithIconButton(
-                        modifier = Modifier.align(Alignment.BottomStart).padding(6.dp),
+                        modifier = Modifier.align(Alignment.BottomStart).padding(10.dp),
                         icon = Icons.Default.ExpandMore,
                         contentPadding = PaddingValues(8.dp),
                         iconRotation = if (expanded) 180f else 0f,
@@ -339,7 +339,7 @@ fun ErrorCard(
                         .padding(18.dp)
                 )
                 FermuxCancelButton(
-                    modifier = Modifier.align(Alignment.Center).size(50.dp),
+                    modifier = Modifier.align(Alignment.TopStart).padding(10.dp),
                     iconRotation = if (cancelButton) 360f else 0f,
                     onClick = { onCancel() }
                 )

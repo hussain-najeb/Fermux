@@ -17,12 +17,11 @@ data class DownloadMetadata (
     val uploader: String?, )
 
 sealed class DownloadStatus {
-    data object Idle : DownloadStatus() // no card in view. so it's idle and won't display a thing
-    data object Loading : DownloadStatus() // loading the damn card.
-    data class Loaded(val metadata: DownloadMetadata) : DownloadStatus() // the card is successful at loading
-    data class Error(val errorMessage: String, val rawError: String) : DownloadStatus() // when something goes wrong
+    data object Idle : DownloadStatus()
+    data object Loading : DownloadStatus()
+    data class Loaded(val metadata: DownloadMetadata) : DownloadStatus()
+    data class Error(val errorMessage: String, val rawError: String) : DownloadStatus()
     data class Downloading(val downloadProgress: Float, val metadata : DownloadMetadata) : DownloadStatus()
-// data for the fucking loadingIndicator
 }
 
 
@@ -33,16 +32,13 @@ enum class AudioQuality (val musicQuality: String) // audio quality class to pas
     MEDIUM("128k")
 }
 
-enum class VideoQuality(val videoQuality: String) { // the video quality flags to add for the ytdlp flags.
+enum class VideoQuality(val videoQuality: String) {
     BEST("bestvideo+bestaudio/best"),
     HD1080("bestvideo[height<=1080]+bestaudio/best"),
     HD720("bestvideo[height<=720]+bestaudio/best"),
     SD480("bestvideo[height<=480]+bestaudio/best"),
     Q360("bestvideo[height<=360]+bestaudio/best"),
 }
-// this one is to grab the "duration" from the metadata class and throws
-// an actual time format to be displayed. so instead of "195" it's "3:15".
-
 
 
 
@@ -56,7 +52,6 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
         val audioName = inputData.getString("audio")
         val videoName = inputData.getString("video")
 
-
         val title = inputData.getString("title") ?: "unknown title"
         val thumbnail = inputData.getString("thumbnail") ?: "unknown thumbnail"
         val duration = inputData.getInt("duration", 0).toLong()
@@ -68,8 +63,6 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
         val settingsTab = SettingsTab(applicationContext)
         val showDetails = settingsTab.ytdlpDetails.first()
         var currentProgress = 0f
-
-
 
         try {
             if (settingsTab.audioHistory.first() && audio != null) {

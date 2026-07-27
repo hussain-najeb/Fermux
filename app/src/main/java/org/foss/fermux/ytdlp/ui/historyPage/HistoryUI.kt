@@ -38,10 +38,10 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import org.foss.fermux.fermuxComponents.FermuxCard
-import org.foss.fermux.fermuxComponents.FermuxIconButton
-import org.foss.fermux.fermuxComponents.FermuxSurface
-import org.foss.fermux.fermuxComponents.FermuxTextWithIconButton
+import org.foss.fermux.fermuxUIComponents.FermuxCard
+import org.foss.fermux.fermuxUIComponents.FermuxIconButton
+import org.foss.fermux.fermuxUIComponents.FermuxSurface
+import org.foss.fermux.fermuxUIComponents.FermuxTextWithIconButton
 import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.videoTime

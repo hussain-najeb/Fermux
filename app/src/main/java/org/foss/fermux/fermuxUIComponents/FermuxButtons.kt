@@ -7,6 +7,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
@@ -17,7 +18,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -353,7 +353,7 @@ fun FermuxIconButton(
             scaleX = buttonAnimation
             scaleY = buttonAnimation
         }
-            .padding(5.dp),
+            .size(25.dp),
         shape = RoundedCornerShape(8.dp),
         border = border,
         colors = ButtonDefaults.textButtonColors(
@@ -418,10 +418,10 @@ fun FermuxCancelButton(
         interactionSource = interactionSource,
         contentPadding = PaddingValues(10.dp),
         border = BorderStroke(width = 1.dp, color = color.fermuxTertiaryBorder),
-        shape = RoundedCornerShape(12.dp),
+        shape = CircleShape,
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Black.copy(alpha = 0.50f)
+            containerColor = FermuxColors.fermuxComponents.copy(alpha = 0.40f)
         )
     ) {
         Icon(
@@ -468,7 +468,7 @@ fun Why() {
         Spacer(Modifier.height(20.dp))
 
         FermuxCancelButton(
-            modifier = Modifier.size(40.dp),
+            modifier = Modifier.size(45.dp),
             iconRotation = if (pressed) 360f else 0f,
             onClick = {pressed = !pressed },
         )
