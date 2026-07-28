@@ -14,6 +14,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.yausername.youtubedl_android.YoutubeDL
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.ui.ConverterScreen
 import org.foss.fermux.ffmpeg.ui.formatSheet.AudioFormatSheet
@@ -52,18 +54,15 @@ fun FermuxAppMainScreen() {
         Log.d("fermuxYtdlpUpdater", "current value: $ytdlpUpdater")
         if (ytdlpUpdater) {
             try {
-                YoutubeDL.getInstance().updateYoutubeDL(context as MainActivity, YoutubeDL.UpdateChannel.STABLE)
+                withContext(Dispatchers.IO) {
+                    YoutubeDL.getInstance().updateYoutubeDL(context, YoutubeDL.UpdateChannel.STABLE)
+                }
                 Log.d("fermuxYtdlpUpdater", "yt-dlp updated successfully")
             } catch (e: Exception) {
                 Log.e("fermux", "yt-dlp update failed", e)
             }
         }
     }
-
-
-
-
-
 
     val navigationController = rememberNavController()
 

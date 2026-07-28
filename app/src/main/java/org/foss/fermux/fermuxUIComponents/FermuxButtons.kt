@@ -1,4 +1,4 @@
-package org.foss.fermux.fermuxComponents
+package org.foss.fermux.fermuxUIComponents
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -118,12 +118,14 @@ fun FermuxMainActionButton(
  * @param color Fermux color scheme. Defaults to [FermuxColors].
  * @param enabled Whether the button is interactive. When false, the button dims and
  * blocks clicks — the caller controls when and how long this lasts.
+ * @param textModifier
  * @param onClick Called when the button is tapped.
  */
 
 @Composable
 fun FermuxTextWithIconButton(
     modifier: Modifier = Modifier,
+    textModifier: Modifier = Modifier,
     text: String? = null,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     icon: ImageVector? = null,
@@ -204,7 +206,7 @@ fun FermuxTextWithIconButton(
                 )
             }
             if (text != null) {
-                Text(text, modifier = Modifier.padding(start = if (icon != null) 5.dp else 0.dp))
+                Text(text, modifier = textModifier.padding(start = if (icon != null) 5.dp else 0.dp))
             }
         }
     }

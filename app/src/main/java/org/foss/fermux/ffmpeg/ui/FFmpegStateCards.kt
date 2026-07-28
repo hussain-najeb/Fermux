@@ -39,6 +39,15 @@ import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.main.Screen
 import org.foss.fermux.ui.theme.*
 
+
+
+private data class FormatButtonItem(
+    val format: Screen,
+    val text: String,
+    val modifier: Modifier
+)
+
+
 @Composable
 fun FFmepgState (state: FFmpegStatus, FFmpegLogs: String, navigationController: NavController, viewModel: FFmpegViewModel) {
 
@@ -123,16 +132,17 @@ fun IdleCard(
 
                     if (viewModel.inputUri != null) {
 
-                        AsyncImage(
-                            model = viewModel.inputUri, //TODO. THIS DOES NOT WORK!
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
+                       AsyncImage(
+                           model = viewModel.inputUri,
+                           contentDescription = null,
+                           contentScale = ContentScale.Crop,
+                           modifier = Modifier
+                               .fillMaxSize()
+                               .background(FermuxColors.fermuxSurface)
+                       )
 
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .aspectRatio(16f / 9f)
-                                    .background(FermuxColors.fermuxSurface)
-                        )
+
+
 
                         FermuxTextWithIconButton(
                             modifier = Modifier
@@ -141,7 +151,7 @@ fun IdleCard(
                             icon = Icons.Default.ExpandMore,
                             contentPadding = PaddingValues(8.dp),
                             iconRotation = if (expanded) 180f else 0f,
-                            text = if (expanded) "Hide Error" else "Show Error",
+                            text = if (expanded) "Hide Format" else "Show Format",
                             onClick = { expanded = !expanded }
                             )
                         }
@@ -149,15 +159,31 @@ fun IdleCard(
 
                     FermuxSurface(expanded = expanded) {
 
-                        val formats = listOf(
-                            Screen.AudioFormatSheet,
-                            Screen.VideoFormatSheet,
-                            Screen.ImageFormatSheet
-                        )
-
-                        val formatNames = listOf(
-                            "Press To Convert To Video",
-                            "Press To Convert To Audio",
+                        val formatButtons = listOf(
+                            FormatButtonItem(
+                                format = Screen.AudioFormatSheet,
+                                text = "Press To Convert To Audio",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(60.dp)
+                                    .padding(5.dp)
+                            ),
+                            FormatButtonItem(
+                                format = Screen.VideoFormatSheet,
+                                text = "Press To Convert To Video   ",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(60.dp)
+                                    .padding(5.dp)
+                            ),
+                            FormatButtonItem(
+                                format = Screen.ImageFormatSheet,
+                                text = "Press To Convert To Image",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(60.dp)
+                                    .padding(5.dp)
+                            )
                         )
 
                         Column(
@@ -165,17 +191,17 @@ fun IdleCard(
                                 .fillMaxWidth()
                                 .padding(10.dp),
                         ) {
-                            formats.forEach { format ->
+                            formatButtons.forEach { item ->
 
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
 
                                         FermuxTextWithIconButton(
-                                            text = format.route,
-                                            modifier = Modifier.fillMaxWidth().height(60.dp).padding(5.dp),
+                                            text = item.text,
+                                            modifier = item.modifier,
                                             contentPadding = PaddingValues(6.dp),
-                                            onClick = { navigationController?.navigate(format.route) }
+                                            onClick = { navigationController?.navigate(item.format.route) }
                                         )
 
                                 }
@@ -211,7 +237,6 @@ fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: Str
                     model = pickedFileUri,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(16f / 9f)

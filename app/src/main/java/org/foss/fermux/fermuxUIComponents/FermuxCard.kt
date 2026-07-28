@@ -1,4 +1,4 @@
-package org.foss.fermux.fermuxComponents
+package org.foss.fermux.fermuxUIComponents
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -41,7 +41,7 @@ fun FermuxCard(
      val cardExpansion by animateFloatAsState(
           targetValue = if (isPressed) 0.95f else 1.0f,
           animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-          label = "card get bigger"
+          label = "Card Get Bigger"
      )
 
      val cardColor by animateColorAsState(

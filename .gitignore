@@ -16,3 +16,4 @@ local.properties
 .aider*
 SKILLS.md
 AGENTS.md
+.env

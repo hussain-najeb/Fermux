@@ -97,7 +97,7 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
             Log.d("fermux", "failed to save video JSON", e)
         }
 
-        return try {
+        return try { // TODO. this should be in TheDownaloder file, not here.
             downloaderLogic(
                 context = applicationContext,
                 url = url,

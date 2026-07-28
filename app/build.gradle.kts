@@ -52,11 +52,11 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.coil)
+    implementation(libs.coil.video)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.datastore.preferences)
-    implementation(libs.coil)
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.coil.network.okhttp)
     implementation(libs.androidx.compose.material.icons.extended)
