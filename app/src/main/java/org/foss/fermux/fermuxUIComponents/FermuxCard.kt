@@ -29,25 +29,34 @@ import org.foss.fermux.ui.theme.FermuxColors
 fun FermuxCard(
      modifier: Modifier = Modifier,
      color: FermuxColor = FermuxColors,
+     situationalCardColor: Boolean? = null,
      shape: Shape = RoundedCornerShape(4.dp),
      border: BorderStroke? = BorderStroke(1.5.dp, color.fermuxPrimaryBorder),
+     pressable: Boolean? = null,
      onClick: (() -> Unit)? = null,
      content: @Composable ColumnScope.() -> Unit
 ) {
+     val isCardPressable = pressable == true
 
      val interactionSource = remember { MutableInteractionSource() }
      val isPressed by interactionSource.collectIsPressedAsState()
 
      val cardExpansion by animateFloatAsState(
-          targetValue = if (isPressed) 0.95f else 1.0f,
+          targetValue = if (isPressed && isCardPressable) 0.97f else 1.0f,
           animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
           label = "Card Get Bigger"
      )
 
+     val targetColor = if (situationalCardColor == true || isPressed) {
+          color.fermuxComponents
+     } else {
+          color.fermuxSurface
+     }
+
      val cardColor by animateColorAsState(
-          targetValue = if (isPressed) color.fermuxComponents else color.fermuxSurface,
+          targetValue = targetColor,
           animationSpec = tween(150),
-          label = "Fermux Icon Color"
+          label = "Fermux Card Color"
      )
 
      Card(
@@ -62,8 +71,8 @@ fun FermuxCard(
           ),
           shape = shape,
           border = border,
-          onClick = { onClick?.invoke() }
+          onClick = { if (isCardPressable) onClick?.invoke() }
      ) {
-       content()
+          content()
      }
 }

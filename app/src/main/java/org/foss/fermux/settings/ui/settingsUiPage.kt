@@ -4,21 +4,18 @@ import android.annotation.SuppressLint
 import android.app.Application
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -27,7 +24,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.foss.fermux.storage.SettingsViewModel
+import org.foss.fermux.fermuxUIComponents.FermuxDivider
+import org.foss.fermux.fermuxUIComponents.FermuxSettingsSwitch
+import org.foss.fermux.settings.logic.SettingsViewModel
+import org.foss.fermux.ui.theme.FermuxColors
 
 
 @Preview
@@ -65,7 +65,6 @@ fun SettingsScreen()
      val videoHistory       by settingsViewModel.videoHistory.      collectAsState()
      val ytdlpDetails       by settingsViewModel.ytdlpDetails.      collectAsState()
      val sponsorBlock       by settingsViewModel.sponsorBlock.      collectAsState()
-     val ytdlpUpdater       by settingsViewModel.ytdlpUpdater.      collectAsState()
 
 
 
@@ -86,47 +85,33 @@ fun SettingsScreen()
                  modifier = Modifier.padding(16.dp)
              )
          }
-         Spacer(Modifier.height(16.dp))
+
+         Spacer(Modifier.height(14.dp))
+
+         FermuxDivider()
 
          Text(
              "General",
              fontFamily = FontFamily.Default,
              fontWeight = FontWeight.W500,
              fontSize = 20.sp,
-             color = Color(0xFF638FFC),
+             color = FermuxColors.fermuxInActiveTextColor,
              modifier = Modifier
-                 .padding(start = 6.dp, top = 6.dp)
+                 .padding(6.dp)
          )
 
-         Spacer(Modifier.height(16.dp))
+         Spacer(Modifier.height(14.dp))
 
-         SettingsListItemSwitches(
-             "Download Notifications",
-             "Notify me when the downloaded files finish downloading",
-             Color(0xFF1f2034),
-             (Icons.Default.Notifications),
-             true
-         ) {settingsViewModel.setNotificationState(it == true)} // TODO. Needs to get wired.
+         FermuxDivider()
 
-
-
-
-
-//         ListItem(
-//             modifier = listItemModifier,
-//             headlineContent = { Text("Display Language", fontFamily = FontFamily.Default, fontSize = 17.sp) },
-//             colors = ListItemDefaults.colors(Color(0xFF1f2034)),
-//             supportingContent = {
-//                 Text(
-//                     "",
-//                     fontFamily = FontFamily.Default
-//                 )
-//             }, // TODO. in seal, the chosen language is showing in the supporting content, do it.
-//             leadingContent = { Icon(Icons.Default.Language, contentDescription = null) },
-//             trailingContent = {
-
-//             }
-//         )
+         FermuxSettingsSwitch(
+             modifier = Modifier.align(Alignment.CenterHorizontally),
+             settingIcon = (Icons.Default.Notifications),
+             settingTitle = "Download Notifications",
+             settingDescription = "Notify me when the downloaded files finish downloading",
+             onChecked = notificationState,
+             onCheckedChange = {settingsViewModel.setNotificationState(it)}
+         )  // TODO. Needs to get wired.
 
          Spacer(Modifier.height(10.dp))
 
@@ -135,65 +120,58 @@ fun SettingsScreen()
              fontFamily = FontFamily.Default,
              fontWeight = FontWeight.W500,
              fontSize = 20.sp,
-             color = Color(0xFF638FFC),
+             color = FermuxColors.fermuxInActiveTextColor,
              modifier = Modifier
-                 .padding(start = 6.dp, top = 6.dp)
+                 .padding(6.dp)
          )
 
          Spacer(Modifier.height(10.dp))
 
-         SettingsListItemSwitches(
-             "Auto Update Yt-dlp",
-             "Auto update the ty-dlp API for better compatibility",
-             Color(0xFF1f2034),
-             (Icons.Default.Downloading),
-             ytdlpUpdater
-         ) { settingsViewModel.setYtdlpUpdater(it == true) }
+         FermuxDivider()
+
+         FermuxSettingsSwitch(
+             modifier = Modifier.align(Alignment.CenterHorizontally),
+             settingIcon = (Icons.Default.AudioFile),
+             settingTitle = "Audio History",
+             settingDescription = "Enable/Disable audio history",
+             onChecked = audioHistory,
+             onCheckedChange = {settingsViewModel.setAudioHistory(it)}
+         )
+
+         FermuxSettingsSwitch(
+             modifier = Modifier.align(Alignment.CenterHorizontally),
+             settingIcon = (Icons.Default.VideoFile),
+             settingTitle = "Video History",
+             settingDescription = "Enable/Disable video history",
+             onChecked = videoHistory,
+             onCheckedChange = {settingsViewModel.setVideoHistory(it)}
+         )
+
+         FermuxSettingsSwitch(
+             modifier = Modifier.align(Alignment.CenterHorizontally),
+             settingIcon = (Icons.Default.Details),
+             settingTitle = "Yt-dlp Details",
+             settingDescription = "More details to watch the download a bit closer and with more info",
+             onChecked = ytdlpDetails,
+             onCheckedChange = {settingsViewModel.setYtdlpDetails(it)}
+         )  // TODO. This doesn't work btw, needs to be linked to the actual ytdlp details in the surface back at the DownloaderStateCard
 
 
-
-//         ListItem(
-//             modifier = listItemModifier,
-//             headlineContent = { Text("Set download ", fontFamily = FontFamily.Default, fontSize = 17.sp) },
-//             supportingContent = {Text("Changing the download directory")},
-//             colors = ListItemDefaults.colors(Color(0xFF1f2034)),
-//             leadingContent = { Icon(Icons.Default.Folder, contentDescription = null) },
-//             trailingContent = {
-//
-//             }
-//         )
-
-         SettingsListItemSwitches(
-             "Audio History",
-             "Enable/Disable audio history",
-             Color(0xFF1f2034),
-             (Icons.Default.AudioFile),
-             audioHistory
-         ) {settingsViewModel.setAudioHistory(it == true)}
-
-         SettingsListItemSwitches(
-             "Video History",
-             "Enable/Disable video history",
-             Color(0xFF1f2034),
-             (Icons.Default.VideoFile),
-             videoHistory
-         ) {settingsViewModel.setVideoHistory(it == true)}
-
-         SettingsListItemSwitches(
-             "Yt-dlp Details",
-             "More details to watch the download a bit closer and with more info",
-             Color(0xFF1f2034),
-             (Icons.Default.Details),
-             ytdlpDetails
-         ) {settingsViewModel.setYtdlpDetails(it == true)} // TODO. This doesn't work btw.
-
-         SettingsListItemSwitches(
-             "SponsorBlock",
-             "An implementation of the SponsorBlock API from the browser extension",
-             Color(0xFF1f2034),
-             (Icons.Default.MonetizationOn),
-             sponsorBlock
-         ) {settingsViewModel.setSponsorBlock(it == true)}
+         FermuxSettingsSwitch(
+             modifier = Modifier.align(Alignment.CenterHorizontally),
+             settingIcon = Icons.Default.MonetizationOn,
+             settingTitle = "SponsorBlock",
+             settingDescription = "An implementation of the SponsorBlock API from the browser extension",
+            onChecked = sponsorBlock,
+             onCheckedChange = {settingsViewModel.setSponsorBlock(it)},
+         )
+//         SettingsListItemSwitches(
+//             "SponsorBlock",
+//             "An implementation of the SponsorBlock API from the browser extension",
+//             Color(0xFF1f2034),
+//             (Icons.Default.MonetizationOn),
+//             sponsorBlock
+//         ) {settingsViewModel.setSponsorBlock(it == true)}
 
          Spacer(Modifier.height(10.dp))
 
@@ -207,43 +185,7 @@ fun SettingsScreen()
 
          Spacer(Modifier.height(10.dp))
 
-
-
      }
 
 } // main function
 
-//TODO. change the color and look of the switch later.
-
-
-@Composable
-fun SettingsListItemSwitches (
-    title: String,
-    subtitle: String,
-    color: Color = Color(0xFF1f2034),
-    image: ImageVector,
-    onCheck: Boolean? = null,
-    onChange: ((Boolean?) -> Unit) = {}
-    )
-{
-    val listItemModifier = Modifier
-        .padding(5.dp)
-        .clip(RoundedCornerShape(8.dp))
-        .border(1.5.dp, Color(0xFF17DB6F), RoundedCornerShape(8.dp))
-        .border(1.5.dp, Color(0xFF20B161), RoundedCornerShape(8.dp))
-        .border(0.8.dp, Color(0xFF20bf6b), RoundedCornerShape(8.dp))
-
-    ListItem(
-        modifier = listItemModifier,
-        headlineContent = { Text(title, fontFamily = FontFamily.Default, fontSize = 17.sp) },
-        supportingContent = { Text(subtitle, fontFamily = FontFamily.Default) },
-        colors = ListItemDefaults.colors(color),
-        leadingContent = { Icon(image, contentDescription = null) },
-        trailingContent = {
-                Switch(
-                    checked = onCheck ?: false,
-                    onCheckedChange = onChange
-                      )
-        }
-    )
-}

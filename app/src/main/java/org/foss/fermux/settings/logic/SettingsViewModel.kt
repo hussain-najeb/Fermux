@@ -1,4 +1,4 @@
-package org.foss.fermux.storage
+package org.foss.fermux.settings.logic
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.foss.fermux.storage.JSONHistoryCards
+import org.foss.fermux.storage.SettingsTab
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
     // TODO. In this class, eagerly is running ALL the time, so maybe have it be for only a time
@@ -30,9 +32,6 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     val sponsorBlock: StateFlow<Boolean> = settingsTab.sponsorBlock
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
-
-    val ytdlpUpdater: StateFlow<Boolean> = settingsTab.ytdlpUpdater
-        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     val language: StateFlow<String> = settingsTab.language
         .stateIn(viewModelScope, SharingStarted.Eagerly, "")
@@ -65,10 +64,6 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     fun setSponsorBlock(value: Boolean) {
         viewModelScope.launch {settingsTab.setSponsorBlock(value)}
-    }
-
-    fun setYtdlpUpdater(value: Boolean) {
-        viewModelScope.launch {settingsTab.setYtdlpUpdater(value)}
     }
 
     fun setLanguage(value: String) {

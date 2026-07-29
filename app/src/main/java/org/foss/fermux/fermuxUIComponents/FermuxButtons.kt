@@ -118,7 +118,7 @@ fun FermuxMainActionButton(
  * @param color Fermux color scheme. Defaults to [FermuxColors].
  * @param enabled Whether the button is interactive. When false, the button dims and
  * blocks clicks — the caller controls when and how long this lasts.
- * @param textModifier
+ * @param textModifier A modifier for the text inside the button
  * @param onClick Called when the button is tapped.
  */
 
@@ -127,7 +127,7 @@ fun FermuxTextWithIconButton(
     modifier: Modifier = Modifier,
     textModifier: Modifier = Modifier,
     text: String? = null,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    contentPadding: PaddingValues = PaddingValues(8.dp),
     icon: ImageVector? = null,
     buttonRoundness: Dp? = null,
     contentDescription: String? = null,

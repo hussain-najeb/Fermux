@@ -95,7 +95,6 @@ fun IdleCard(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-
         FermuxCard(
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier.padding(8.dp)
@@ -140,9 +139,6 @@ fun IdleCard(
                                .fillMaxSize()
                                .background(FermuxColors.fermuxSurface)
                        )
-
-
-
 
                         FermuxTextWithIconButton(
                             modifier = Modifier
@@ -200,7 +196,7 @@ fun IdleCard(
                                         FermuxTextWithIconButton(
                                             text = item.text,
                                             modifier = item.modifier,
-                                            contentPadding = PaddingValues(6.dp),
+                                            contentPadding = PaddingValues(8.dp),
                                             onClick = { navigationController?.navigate(item.format.route) }
                                         )
 
@@ -251,7 +247,7 @@ fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: Str
                             .padding(8.dp)
                             .align(Alignment.BottomEnd)
                     ).also {
-                        if (progress == 100f) {
+                        if (progress == 100f) { // TODO. Doesnt work fully for some reason.
 
                             Icon(
                                 Icons.Default.Check,
@@ -263,6 +259,7 @@ fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: Str
                         }
                         FermuxTextWithIconButton(
                             icon = Icons.Default.ExpandMore,
+                            contentPadding = PaddingValues(8.dp),
                             iconRotation = if (expanded)180f else 0f,
                             text = if (expanded) "Hide logs" else "Show logs",
                             modifier = Modifier.align(Alignment.BottomStart),
