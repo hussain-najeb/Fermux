@@ -16,35 +16,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.foss.fermux.fermuxUIComponents.FermuxDivider
-import org.foss.fermux.fermuxUIComponents.FermuxSettingsSwitch
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxDivider
+import org.foss.fermux.fermuxUIComponents.settingsComponents.FermuxSettingsSwitch
 import org.foss.fermux.settings.logic.SettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 
 
-@Preview
-@Composable
-fun PreviewSettingsScreen() {
+private data class SettingListInfo(
+    val settingTitle: String,
+    val settingDescription: String,
+    val settingIcon: ImageVector,
+    val checked: Boolean,
+    val onCheckedChange: (Boolean) -> Unit
+)
 
-    Row {
-        Text(
-            "Settings", fontFamily = FontFamily.Default,
-            fontWeight = FontWeight.W500,
-            fontSize = 40.sp,
-            color = Color.White,
-            modifier = Modifier.padding(16.dp)
-        )
-    }
-
-}
 
 
 @SuppressLint("ContextCastToActivity")
@@ -54,8 +47,8 @@ fun SettingsScreen()
     {
     val context = LocalContext.current
     val settingsViewModel: SettingsViewModel = viewModel(
-        viewModelStoreOwner = LocalContext.current as ComponentActivity, factory =
-            ViewModelProvider.AndroidViewModelFactory.getInstance(context.applicationContext as Application)
+        viewModelStoreOwner = LocalContext.current as ComponentActivity,
+        factory = ViewModelProvider.AndroidViewModelFactory.getInstance(context.applicationContext as Application)
     )
 
      val notificationState  by settingsViewModel.notificationState. collectAsState()
@@ -67,51 +60,68 @@ fun SettingsScreen()
      val sponsorBlock       by settingsViewModel.sponsorBlock.      collectAsState()
 
 
+     val  settingLists = listOf(
+         SettingListInfo(
+             settingTitle = "Download Notifications",
+             settingDescription = "Notify me when the downloaded files finish downloading",
+             settingIcon = Icons.Default.Notifications,
+             checked = notificationState,
+             onCheckedChange = {settingsViewModel.setNotificationState(it)}
+         ),
+
+         SettingListInfo(
+             settingTitle = "Audio History",
+             settingDescription = "Enable/Disable audio history",
+             settingIcon = Icons.Default.AudioFile,
+             checked = audioHistory,
+             onCheckedChange = {settingsViewModel.setAudioHistory(it)}
+         ),
+
+         SettingListInfo(
+             settingTitle = "Video History",
+             settingDescription = "Enable/Disable video history",
+             settingIcon = Icons.Default.VideoFile,
+             checked = videoHistory,
+             onCheckedChange = {settingsViewModel.setVideoHistory(it)}
+         ),
+
+         SettingListInfo(
+             settingTitle = "Yt-dlp Details",
+             settingDescription = "Enable to get visual feedback on the download state of the downloaded media",
+             settingIcon = Icons.Default.Info,
+             checked = ytdlpDetails,
+             onCheckedChange = {settingsViewModel.setYtdlpDetails(it)}
+         ),
+
+         SettingListInfo(
+             settingTitle = "SponsorBlock API",
+             settingDescription = "Enable to use the SponserBlock API to cut ads off of downloaded media",
+             settingIcon = Icons.Default.MonetizationOn,
+             checked = sponsorBlock,
+             onCheckedChange = {settingsViewModel.setSponsorBlock(it)}
+         )
+
+     )
 
 
      Column(modifier = Modifier
          .fillMaxSize()
-         .background(Color(0xFF181825))
+         .background(FermuxColors.fermuxBackground)
          .verticalScroll(rememberScrollState())
 
      ) {
-         Row {
-             Text(
-                 "Settings",
-                 fontFamily = FontFamily.Default,
-                 fontWeight = FontWeight.W500,
-                 fontSize = 40.sp,
-                 color = Color.White,
-                 modifier = Modifier.padding(16.dp)
-             )
-         }
-
-         Spacer(Modifier.height(14.dp))
-
-         FermuxDivider()
-
          Text(
-             "General",
+             "Settings",
              fontFamily = FontFamily.Default,
              fontWeight = FontWeight.W500,
-             fontSize = 20.sp,
-             color = FermuxColors.fermuxInActiveTextColor,
-             modifier = Modifier
-                 .padding(6.dp)
+             fontSize = 35.sp,
+             color = Color.White,
+             modifier = Modifier.padding(10.dp)
          )
 
-         Spacer(Modifier.height(14.dp))
+         Spacer(Modifier.height(10.dp))
 
          FermuxDivider()
-
-         FermuxSettingsSwitch(
-             modifier = Modifier.align(Alignment.CenterHorizontally),
-             settingIcon = (Icons.Default.Notifications),
-             settingTitle = "Download Notifications",
-             settingDescription = "Notify me when the downloaded files finish downloading",
-             onChecked = notificationState,
-             onCheckedChange = {settingsViewModel.setNotificationState(it)}
-         )  // TODO. Needs to get wired.
 
          Spacer(Modifier.height(10.dp))
 
@@ -127,53 +137,18 @@ fun SettingsScreen()
 
          Spacer(Modifier.height(10.dp))
 
-         FermuxDivider()
-
-         FermuxSettingsSwitch(
-             modifier = Modifier.align(Alignment.CenterHorizontally),
-             settingIcon = (Icons.Default.AudioFile),
-             settingTitle = "Audio History",
-             settingDescription = "Enable/Disable audio history",
-             onChecked = audioHistory,
-             onCheckedChange = {settingsViewModel.setAudioHistory(it)}
-         )
-
-         FermuxSettingsSwitch(
-             modifier = Modifier.align(Alignment.CenterHorizontally),
-             settingIcon = (Icons.Default.VideoFile),
-             settingTitle = "Video History",
-             settingDescription = "Enable/Disable video history",
-             onChecked = videoHistory,
-             onCheckedChange = {settingsViewModel.setVideoHistory(it)}
-         )
-
-         FermuxSettingsSwitch(
-             modifier = Modifier.align(Alignment.CenterHorizontally),
-             settingIcon = (Icons.Default.Details),
-             settingTitle = "Yt-dlp Details",
-             settingDescription = "More details to watch the download a bit closer and with more info",
-             onChecked = ytdlpDetails,
-             onCheckedChange = {settingsViewModel.setYtdlpDetails(it)}
-         )  // TODO. This doesn't work btw, needs to be linked to the actual ytdlp details in the surface back at the DownloaderStateCard
+         settingLists.forEach{ lists ->
+             FermuxSettingsSwitch(
+                 modifier = Modifier.align(Alignment.CenterHorizontally),
+                 settingTitle = lists.settingTitle,
+                 settingDescription = lists.settingDescription,
+                 settingIcon = lists.settingIcon,
+                 onChecked = lists.checked,
+                 onCheckedChange = lists.onCheckedChange
+             )
+         }
 
 
-         FermuxSettingsSwitch(
-             modifier = Modifier.align(Alignment.CenterHorizontally),
-             settingIcon = Icons.Default.MonetizationOn,
-             settingTitle = "SponsorBlock",
-             settingDescription = "An implementation of the SponsorBlock API from the browser extension",
-            onChecked = sponsorBlock,
-             onCheckedChange = {settingsViewModel.setSponsorBlock(it)},
-         )
-//         SettingsListItemSwitches(
-//             "SponsorBlock",
-//             "An implementation of the SponsorBlock API from the browser extension",
-//             Color(0xFF1f2034),
-//             (Icons.Default.MonetizationOn),
-//             sponsorBlock
-//         ) {settingsViewModel.setSponsorBlock(it == true)}
-
-         Spacer(Modifier.height(10.dp))
 
 //         Text("Terminal", Modifier
 //             .padding(start = 6.dp, top = 6.dp),
@@ -185,7 +160,52 @@ fun SettingsScreen()
 
          Spacer(Modifier.height(10.dp))
 
+         FermuxDivider()
+
+         Spacer(Modifier.height(10.dp))
+
+         Text(
+             "About",
+             fontFamily = FontFamily.Default,
+             fontWeight = FontWeight.W500,
+             fontSize = 20.sp,
+             color = FermuxColors.fermuxInActiveTextColor,
+             modifier = Modifier
+                 .padding(6.dp)
+         )
+
+         Spacer(Modifier.height(10.dp))
+
+
      }
 
-} // main function
+}
+
+
+
+
+
+
+// TODO. This is the implementation for the button to update ytdlp.
+
+// private val isUpdatingYtdlp = AtomicBoolean(false)
+//
+//private val _ytdlpUpdateStatus = MutableStateFlow<String?>(null)
+//val ytdlpUpdateStatus: StateFlow<String?> = _ytdlpUpdateStatus
+//
+//fun checkYtdlpUpdate(context: Context) {
+//    if (!isUpdatingYtdlp.compareAndSet(false, true)) return
+//    viewModelScope.launch(Dispatchers.IO) {
+//        _ytdlpUpdateStatus.value = "Checking for update..."
+//        try {
+//            YoutubeDL.getInstance().updateYoutubeDL(context, YoutubeDL.UpdateChannel.STABLE)
+//            _ytdlpUpdateStatus.value = "yt-dlp is up to date"
+//        } catch (e: Exception) {
+//            Log.e("fermuxYtdlpUpdater", "yt-dlp update failed", e)
+//            _ytdlpUpdateStatus.value = "Update check failed"
+//        } finally {
+//            isUpdatingYtdlp.set(false)
+//        }
+//    }
+//}
 

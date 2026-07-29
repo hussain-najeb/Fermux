@@ -1,6 +1,7 @@
 package org.foss.fermux.ytdlp.ui.historyPage
 
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Arrangement
@@ -38,10 +39,10 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import org.foss.fermux.fermuxUIComponents.FermuxCard
-import org.foss.fermux.fermuxUIComponents.FermuxIconButton
-import org.foss.fermux.fermuxUIComponents.FermuxSurface
-import org.foss.fermux.fermuxUIComponents.FermuxTextWithIconButton
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxCard
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxIconButton
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxSurface
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxTextWithIconButton
 import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.videoTime
@@ -73,7 +74,7 @@ fun HistoryCards(entry: JSONHistoryCards) {
                     )
 
 
-                    androidx.compose.animation.AnimatedVisibility(
+                    this@Column.AnimatedVisibility(
                         visible = true,
                         enter = slideInHorizontally(
                             animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
@@ -82,19 +83,17 @@ fun HistoryCards(entry: JSONHistoryCards) {
                             animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
                         ),
                         modifier = Modifier.align(Alignment.BottomStart)
-                    )
-                    {
-
+                    ) {
                         FermuxTextWithIconButton(
                             modifier = Modifier
                                 .defaultMinSize(minWidth = 70.dp)
-                                .align(Alignment.BottomStart)
+                                // Note: inside the AnimatedVisibility scope, alignment is handled by outer Box/Column layout
                                 .padding(6.dp),
                             contentPadding = PaddingValues(8.dp),
                             iconRotation = if (expanded) 180f else 0f,
                             icon = Icons.Default.ExpandMore,
                             text = if (expanded) "Hide details" else "Show details",
-                            onClick = {expanded = !expanded},
+                            onClick = { expanded = !expanded },
                         )
                     }
 

@@ -1,4 +1,4 @@
-package org.foss.fermux.fermuxUIComponents
+package org.foss.fermux.fermuxUIComponents.generalComponents
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider

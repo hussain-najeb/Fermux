@@ -24,16 +24,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
-import org.foss.fermux.fermuxUIComponents.FermuxCancelButton
-import org.foss.fermux.fermuxUIComponents.FermuxCard
-import org.foss.fermux.fermuxUIComponents.FermuxMainActionButton
-import org.foss.fermux.fermuxUIComponents.FermuxSurface
-import org.foss.fermux.fermuxUIComponents.FermuxTextWithIconButton
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxCancelButton
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxCard
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxMainActionButton
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxSurface
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxTextWithIconButton
 import org.foss.fermux.ffmpeg.logic.FFmpegStatus
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.main.Screen
@@ -43,8 +44,7 @@ import org.foss.fermux.ui.theme.*
 
 private data class FormatButtonItem(
     val format: Screen,
-    val text: String,
-    val modifier: Modifier
+    val text: String
 )
 
 
@@ -99,115 +99,102 @@ fun IdleCard(
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier.padding(8.dp)
         ) {
-                Box(modifier = Modifier.fillMaxWidth().height(200.dp)) {
+            Box(modifier = Modifier.fillMaxWidth().height(200.dp)) {
 
-                    if (viewModel.inputUri == null) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(FermuxColors.fermuxSurface),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(text = "Upload a file to convert",
-                               fontSize = 14.sp,
-                               fontFamily = FontFamily.Monospace,
-                               fontStyle = androidx.compose.ui.text.font.FontStyle.Normal,
-                               color = FermuxColors.fermuxInActiveTextColor,
-                               modifier = Modifier.padding(8.dp)
-                               )
-
-                            Spacer(modifier = Modifier.height(8.dp))
-
-                            FermuxMainActionButton(
-                                icon = Icons.Default.Upload,
-                                modifier = Modifier
-                                    .defaultMinSize(minWidth = 70.dp)
-                                    .padding(8.dp),
-                                onClick = {fileLauncher.launch("*/*")}
-                                )
-                        }
-                    }
-
-                    if (viewModel.inputUri != null) {
-
-                       AsyncImage(
-                           model = viewModel.inputUri,
-                           contentDescription = null,
-                           contentScale = ContentScale.Crop,
-                           modifier = Modifier
-                               .fillMaxSize()
-                               .background(FermuxColors.fermuxSurface)
-                       )
-
-                        FermuxTextWithIconButton(
-                            modifier = Modifier
-                                .align(Alignment.BottomStart)
-                                .padding(10.dp),
-                            icon = Icons.Default.ExpandMore,
-                            contentPadding = PaddingValues(8.dp),
-                            iconRotation = if (expanded) 180f else 0f,
-                            text = if (expanded) "Hide Format" else "Show Format",
-                            onClick = { expanded = !expanded }
-                            )
-                        }
-                    }
-
-                    FermuxSurface(expanded = expanded) {
-
-                        val formatButtons = listOf(
-                            FormatButtonItem(
-                                format = Screen.AudioFormatSheet,
-                                text = "Press To Convert To Audio",
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(60.dp)
-                                    .padding(5.dp)
-                            ),
-                            FormatButtonItem(
-                                format = Screen.VideoFormatSheet,
-                                text = "Press To Convert To Video   ",
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(60.dp)
-                                    .padding(5.dp)
-                            ),
-                            FormatButtonItem(
-                                format = Screen.ImageFormatSheet,
-                                text = "Press To Convert To Image",
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(60.dp)
-                                    .padding(5.dp)
-                            )
+                if (viewModel.inputUri == null) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(FermuxColors.fermuxSurface),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(text = "Upload a file to convert",
+                            fontSize = 14.sp,
+                            fontFamily = FontFamily.Monospace,
+                            fontStyle = FontStyle.Normal,
+                            color = FermuxColors.fermuxInActiveTextColor,
+                            modifier = Modifier.padding(8.dp)
                         )
 
-                        Column(
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        FermuxMainActionButton(
+                            icon = Icons.Default.Upload,
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(10.dp),
+                                .defaultMinSize(minWidth = 70.dp)
+                                .padding(8.dp),
+                            onClick = {fileLauncher.launch("*/*")}
+                        )
+                    }
+                }
+
+                if (viewModel.inputUri != null) {
+
+                    AsyncImage(
+                        model = viewModel.inputUri,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(FermuxColors.fermuxSurface)
+                    )
+
+                    FermuxTextWithIconButton(
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(10.dp),
+                        icon = Icons.Default.ExpandMore,
+                        contentPadding = PaddingValues(8.dp),
+                        iconRotation = if (expanded) 180f else 0f,
+                        text = if (expanded) "Hide Format" else "Show Format",
+                        onClick = { expanded = !expanded }
+                    )
+                }
+            }
+
+            FermuxSurface(expanded = expanded) {
+
+                val formatButtons = listOf(
+                    FormatButtonItem(
+                        format = Screen.AudioFormatSheet,
+                        text = "Press To Convert To Audio"
+                    ),
+                    FormatButtonItem(
+                        format = Screen.VideoFormatSheet,
+                        text = "Press To Convert To Video"
+                    ),
+                    FormatButtonItem(
+                        format = Screen.ImageFormatSheet,
+                        text = "Press To Convert To Image"
+                    )
+                )
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    ) {
+                    formatButtons.forEach { item ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            formatButtons.forEach { item ->
-
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-
-                                        FermuxTextWithIconButton(
-                                            text = item.text,
-                                            modifier = item.modifier,
-                                            contentPadding = PaddingValues(8.dp),
-                                            onClick = { navigationController?.navigate(item.format.route) }
-                                        )
-
-                                }
-
-                            }
+                            FermuxTextWithIconButton(
+                                text = item.text,
+                                contentPadding = PaddingValues(8.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(60.dp)
+                                    .padding(5.dp),
+                                onClick = { navigationController?.navigate(item.format.route) }
+                            )
                         }
                     }
+                }
             }
         }
     }
+}
 
 
 @Composable

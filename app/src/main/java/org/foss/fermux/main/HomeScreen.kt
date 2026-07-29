@@ -7,10 +7,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import org.foss.fermux.fermuxUIComponents.FermuxCard
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxCard
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
@@ -39,12 +40,13 @@ fun HomeScreen(navigationController: NavHostController) {
                         .fillMaxWidth()
                         .weight(0.25f)
                         .padding(4.dp),
+                    pressable = true,
                     onClick = { navigationController.navigate(screen.route) }
                 ) {
                     screen.descriptor?.let { Text(text = it, color =
                         Color.White ,
                         fontSize = 22.sp,
-                        fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
+                        fontStyle = FontStyle.Italic,
                         modifier = Modifier.padding(15.dp)
                         )
                     }

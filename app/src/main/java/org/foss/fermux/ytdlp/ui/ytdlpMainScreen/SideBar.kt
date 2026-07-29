@@ -22,8 +22,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.FermuxImageButton
-import org.foss.fermux.fermuxUIComponents.FermuxTextWithIconButton
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxImageButton
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxTextWithIconButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.ui.historyPage.DownloadVideoList
 import org.foss.fermux.ytdlp.ui.historyPage.DownloadedAudioScreen

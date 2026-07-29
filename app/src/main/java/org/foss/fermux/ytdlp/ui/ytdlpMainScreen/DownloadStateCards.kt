@@ -24,10 +24,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
-import org.foss.fermux.fermuxUIComponents.FermuxCancelButton
-import org.foss.fermux.fermuxUIComponents.FermuxCard
-import org.foss.fermux.fermuxUIComponents.FermuxSurface
-import org.foss.fermux.fermuxUIComponents.FermuxTextWithIconButton
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxCancelButton
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxCard
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxSurface
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxTextWithIconButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel

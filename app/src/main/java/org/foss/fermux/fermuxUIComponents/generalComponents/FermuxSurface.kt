@@ -1,4 +1,4 @@
-package org.foss.fermux.fermuxUIComponents
+package org.foss.fermux.fermuxUIComponents.generalComponents
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
