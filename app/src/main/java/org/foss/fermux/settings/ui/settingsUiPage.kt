@@ -2,6 +2,7 @@ package org.foss.fermux.settings.ui
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -26,14 +27,17 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.foss.fermux.R
+import org.foss.fermux.fermuxUIComponents.buttons.FermuxIconButton
 import org.foss.fermux.fermuxUIComponents.buttons.FermuxImageButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxDivider
 import org.foss.fermux.fermuxUIComponents.settingsComponents.FermuxSettingsSwitch
 import org.foss.fermux.settings.logic.SettingsViewModel
+import org.foss.fermux.ui.theme.FermuxColor
 import org.foss.fermux.ui.theme.FermuxColors
 
 
@@ -43,7 +47,8 @@ private data class SettingListInfo(
     val settingIcon: ImageVector? = null,
     val settingImage: Painter? = null,
     val checked: Boolean? = null,
-    val onCheckedChange: ((Boolean) -> Unit)? = null
+    val onCheckedChange: ((Boolean) -> Unit)? = null,
+    val content: @Composable (() -> Unit)? = null
 )
 
 
@@ -71,7 +76,23 @@ fun SettingsScreen() {
      val ytdlpUpdateStatus  by settingsViewModel.ytdlpUpdateStatus. collectAsStateWithLifecycle()
 
 
-     val  settingLists = listOf(
+     val  downloaderSettingLists = listOf(
+         SettingListInfo(
+             settingTitle = "Update Downloader",
+             settingDescription = "Press the update button to update your current version of ytdlp. Current version is ${settingsViewModel.currentVersionName}",
+             settingIcon = Icons.Default.Update,
+             content = {
+                 FermuxImageButton(
+                     modifier = Modifier.size(60.dp),
+                     contentPadding = PaddingValues(9.dp),
+                     iconRotation = if (isPressed) 180f else 0f,
+                     image = painterResource(R.drawable.update_icon),
+                     enabled = ytdlpUpdateStatus != "Checking for update...",
+                     onClick = { settingsViewModel.checkYtdlpUpdate().also { isPressed = !isPressed } },
+                 )
+             }
+         ),
+
          SettingListInfo(
              settingTitle = "Download Notifications",
              settingDescription = "Notify me when the downloaded files finish downloading",
@@ -99,30 +120,47 @@ fun SettingsScreen() {
          SettingListInfo(
              settingTitle = "Yt-dlp Details",
              settingDescription = "Enable to get visual feedback on the download state of the downloaded media",
-             settingIcon = Icons.Default.Info,
+             settingIcon = Icons.Default.Terminal,
              checked = ytdlpDetails,
              onCheckedChange = {settingsViewModel.setYtdlpDetails(it)}
          ),
 
-         SettingListInfo(
-             settingTitle = "SponsorBlock API",
-             settingDescription = "Enable to use the SponserBlock API to cut ads off of downloaded media",
-             settingIcon = Icons.Default.MonetizationOn,
-             checked = sponsorBlock,
-             onCheckedChange = {settingsViewModel.setSponsorBlock(it)}
-         ),
-
-         SettingListInfo(
-             settingTitle = "Github Page",
-             settingDescription = "The Github page of this project"
-         )
+//         SettingListInfo(
+//             settingTitle = "SponsorBlock API",
+//             settingDescription = "Enable to use the SponserBlock API to cut ads off of downloaded media",
+//             settingIcon = Icons.Default.MonetizationOn,
+//             checked = sponsorBlock,
+//             onCheckedChange = {settingsViewModel.setSponsorBlock(it)}
+//         ),
 
      )
 
+    val aboutSettingLists = listOf(
+        SettingListInfo(
+            settingTitle = "Github Page",
+            settingDescription = "Check the Github Repository for more information",
+            settingIcon = Icons.Default.FilePresent,
+            content = {
+                FermuxIconButton(
+                    modifier = Modifier.size(50.dp),
+                    contentPadding = PaddingValues(5.dp),
+                    icon = Icons.Default.Info,
+                    onClick  = {
+                        val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            "https://github.com/hussain-najeb/Fermux".toUri()
+                        )
+                        context.startActivity(intent)
+                    }
+                )
+            }
+        )
+    )
+// ADD app version, github page, an app updater for the app itself.
 
      Column(modifier = Modifier
          .fillMaxSize()
-         .background(FermuxColor().fermuxBackground)
+         .background(FermuxColors.fermuxBackground)
          .verticalScroll(rememberScrollState())
 
      ) {
@@ -151,32 +189,17 @@ fun SettingsScreen() {
                  .padding(6.dp)
          )
 
-         FermuxSettingsSwitch(
-             modifier = Modifier.align(Alignment.CenterHorizontally),
-             settingTitle = "Update Downloader",
-             settingDescription = "Press the update button to update your current version of ytdlp. Current version is ${settingsViewModel.currentVersionName}",
-             settingIcon = Icons.Default.Update,
-         ) {
-                 FermuxImageButton(
-                     modifier = Modifier.size(53.dp),
-                     contentPadding = PaddingValues(9.dp),
-                     iconRotation = if (isPressed) 180f else 0f,
-                     image = painterResource(R.drawable.update_icon),
-                     enabled = ytdlpUpdateStatus != "Checking for update...",
-                     onClick = { settingsViewModel.checkYtdlpUpdate().also { isPressed = !isPressed } },
-                 )
-         }
-
              Spacer(Modifier.height(10.dp))
 
-         settingLists.forEach{ lists ->
+         downloaderSettingLists.forEach{ lists ->
              FermuxSettingsSwitch(
                  modifier = Modifier.align(Alignment.CenterHorizontally),
                  settingTitle = lists.settingTitle,
                  settingDescription = lists.settingDescription,
                  settingIcon = lists.settingIcon,
                  onChecked = lists.checked,
-                 onCheckedChange = lists.onCheckedChange
+                 onCheckedChange = lists.onCheckedChange,
+                 content = lists.content
              )
          }
 
@@ -203,6 +226,19 @@ fun SettingsScreen() {
              modifier = Modifier
                  .padding(6.dp)
          )
+
+         aboutSettingLists.forEach{ lists ->
+             FermuxSettingsSwitch(
+                 modifier = Modifier.align(Alignment.CenterHorizontally),
+                 settingTitle = lists.settingTitle,
+                 settingDescription = lists.settingDescription,
+                 settingIcon = lists.settingIcon,
+                 onChecked = lists.checked,
+                 onCheckedChange = lists.onCheckedChange,
+                 content = lists.content
+             )
+         }
+
 
          Spacer(Modifier.height(10.dp))
 

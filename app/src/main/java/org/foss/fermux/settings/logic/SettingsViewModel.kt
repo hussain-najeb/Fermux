@@ -78,8 +78,6 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     private val _ytdlpUpdateStatus = MutableStateFlow<String?>(null)
     val ytdlpUpdateStatus: StateFlow<String?> = _ytdlpUpdateStatus
 
-    val currentVersion = YoutubeDL.getInstance().version(getApplication())
-
     val currentVersionName = YoutubeDL.getInstance().versionName(getApplication())
 
     fun checkYtdlpUpdate() {
