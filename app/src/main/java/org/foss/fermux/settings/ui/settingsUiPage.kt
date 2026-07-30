@@ -2,7 +2,6 @@ package org.foss.fermux.settings.ui
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -11,23 +10,20 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -37,6 +33,7 @@ import org.foss.fermux.fermuxUIComponents.buttons.FermuxImageButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxDivider
 import org.foss.fermux.fermuxUIComponents.settingsComponents.FermuxSettingsSwitch
 import org.foss.fermux.settings.logic.SettingsViewModel
+import org.foss.fermux.settings.logic.getAppVersionName
 import org.foss.fermux.ui.theme.FermuxColor
 import org.foss.fermux.ui.theme.FermuxColors
 
@@ -62,6 +59,12 @@ fun SettingsScreen() {
         factory = ViewModelProvider.AndroidViewModelFactory.getInstance(context.applicationContext as Application)
     )
 
+    val uriHandler = LocalUriHandler.current
+    fun openUrl(url: String) {
+        uriHandler.openUri(url)
+    }
+
+    val versionName = remember { context.getAppVersionName() }
 
     var isPressed by remember { mutableStateOf(false) }
 
@@ -137,25 +140,28 @@ fun SettingsScreen() {
 
     val aboutSettingLists = listOf(
         SettingListInfo(
-            settingTitle = "Github Page",
+            settingTitle = "README Page",
             settingDescription = "Check the Github Repository for more information",
-            settingIcon = Icons.Default.FilePresent,
+            settingIcon = Icons.Default.Description,
             content = {
                 FermuxIconButton(
                     modifier = Modifier.size(50.dp),
                     contentPadding = PaddingValues(5.dp),
-                    icon = Icons.Default.Info,
+                    icon = Icons.Default.Link,
                     onClick  = {
-                        val intent = Intent(
-                            Intent.ACTION_VIEW,
-                            "https://github.com/hussain-najeb/Fermux".toUri()
-                        )
-                        context.startActivity(intent)
+                    openUrl("https://github.com/hussain-najeb/Fermux")
                     }
                 )
             }
+        ),
+
+        SettingListInfo(
+            settingTitle = "App Version",
+            settingDescription = versionName,
+            settingIcon = Icons.Default.Android,
         )
     )
+
 // ADD app version, github page, an app updater for the app itself.
 
      Column(modifier = Modifier
@@ -244,4 +250,49 @@ fun SettingsScreen() {
 
      }
 
+}
+
+
+
+@Preview (widthDp = 320, heightDp = 720)
+@Composable
+fun Preview() {
+    Column {
+        val aboutSettingLists = listOf(
+            SettingListInfo(
+                settingTitle = "Github Page",
+                settingDescription = "Check the Github Repository for more information",
+                settingIcon = Icons.Default.Description,
+                content = {
+                    FermuxIconButton(
+                        modifier = Modifier.size(50.dp),
+                        contentPadding = PaddingValues(5.dp),
+                        icon = Icons.Default.Link,
+                        onClick = {
+
+                        }
+                    )
+                }
+            ),
+
+            SettingListInfo(
+                settingTitle = "App Version",
+                settingDescription = "",
+                settingIcon = Icons.Default.Android,
+            )
+        )
+
+
+        aboutSettingLists.forEach { lists ->
+            FermuxSettingsSwitch(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                settingTitle = lists.settingTitle,
+                settingDescription = lists.settingDescription,
+                settingIcon = lists.settingIcon,
+                onChecked = lists.checked,
+                onCheckedChange = lists.onCheckedChange,
+                content = lists.content
+            )
+        }
+    }
 }

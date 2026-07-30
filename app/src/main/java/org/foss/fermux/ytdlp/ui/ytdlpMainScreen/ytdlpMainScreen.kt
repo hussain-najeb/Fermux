@@ -13,10 +13,10 @@ import androidx.navigation.NavHostController
 
 
 @Composable
-fun DownloaderScreen(navigationController: NavHostController) {
+fun DownloaderScreen() {
 
     Box(Modifier.fillMaxSize()) {
-        SideBar(navigationController)
+        SideBar()
 
     }
 }

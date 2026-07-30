@@ -35,7 +35,7 @@ enum class Page(val image: ImageVector, val descriptor: String) {
 }
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun SideBar (navigationController: NavHostController) {
+fun SideBar () {
 
     var isSideBarOpen by remember { mutableStateOf(false) }
 
@@ -117,6 +117,7 @@ AnimatedVisibility(
             FermuxImageButton(
                 iconRotation = if (isSideBarOpen) 180f else 0f,
                 modifier = Modifier.size(70.dp),
+                imageModifier = Modifier.size(40.dp),
                 image = if (isSideBarOpen) painterResource(id = R.drawable.sidebar_opened) else painterResource(id = R.drawable.sidebar_closed),
                 onClick = { isSideBarOpen = !isSideBarOpen },
             )
