@@ -11,20 +11,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxDivider
+import org.foss.fermux.fermuxUIComponents.buttons.FermuxMainActionButton
 import org.foss.fermux.fermuxUIComponents.settingsComponents.FermuxSettingsSwitch
 import org.foss.fermux.settings.logic.SettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
@@ -33,9 +37,10 @@ import org.foss.fermux.ui.theme.FermuxColors
 private data class SettingListInfo(
     val settingTitle: String,
     val settingDescription: String,
-    val settingIcon: ImageVector,
-    val checked: Boolean,
-    val onCheckedChange: (Boolean) -> Unit
+    val settingIcon: ImageVector? = null,
+    val settingImage: Painter? = null,
+    val checked: Boolean? = null,
+    val onCheckedChange: ((Boolean) -> Unit)? = null
 )
 
 
@@ -51,13 +56,14 @@ fun SettingsScreen()
         factory = ViewModelProvider.AndroidViewModelFactory.getInstance(context.applicationContext as Application)
     )
 
-     val notificationState  by settingsViewModel.notificationState. collectAsState()
-     val languageState      by settingsViewModel.language.          collectAsState()
-     val downloadPath       by settingsViewModel.downloadPath.      collectAsState()
-     val audioHistory       by settingsViewModel.audioHistory.      collectAsState()
-     val videoHistory       by settingsViewModel.videoHistory.      collectAsState()
-     val ytdlpDetails       by settingsViewModel.ytdlpDetails.      collectAsState()
-     val sponsorBlock       by settingsViewModel.sponsorBlock.      collectAsState()
+     val notificationState  by settingsViewModel.notificationState. collectAsStateWithLifecycle()
+     val languageState      by settingsViewModel.language.          collectAsStateWithLifecycle()
+     val downloadPath       by settingsViewModel.downloadPath.      collectAsStateWithLifecycle()
+     val audioHistory       by settingsViewModel.audioHistory.      collectAsStateWithLifecycle()
+     val videoHistory       by settingsViewModel.videoHistory.      collectAsStateWithLifecycle()
+     val ytdlpDetails       by settingsViewModel.ytdlpDetails.      collectAsStateWithLifecycle()
+     val sponsorBlock       by settingsViewModel.sponsorBlock.      collectAsStateWithLifecycle()
+     val ytdlpUpdateStatus  by settingsViewModel.ytdlpUpdateStatus. collectAsStateWithLifecycle()
 
 
      val  settingLists = listOf(
@@ -135,6 +141,23 @@ fun SettingsScreen()
                  .padding(6.dp)
          )
 
+         FermuxSettingsSwitch(
+             modifier = Modifier.align(Alignment.CenterHorizontally),
+             settingTitle = "Update Downloader",
+             settingDescription = "Press the update button to update your current version of ytdlp. Current version is ${settingsViewModel.currentVersion} ${settingsViewModel.currentVersionName}",
+             settingImage = painterResource(id = R.drawable.icon_download_active),
+             imageModifier = Modifier.size(35.dp)
+         ) {
+             Column {
+                 FermuxMainActionButton(
+                     modifier = Modifier.padding(5.dp),
+                     icon = Icons.Default.CloudDownload,
+                     onClick = { settingsViewModel.checkYtdlpUpdate() },
+                     enabled = ytdlpUpdateStatus != "Checking for update..."
+                 )
+             }
+         }
+
          Spacer(Modifier.height(10.dp))
 
          settingLists.forEach{ lists ->
@@ -147,8 +170,6 @@ fun SettingsScreen()
                  onCheckedChange = lists.onCheckedChange
              )
          }
-
-
 
 //         Text("Terminal", Modifier
 //             .padding(start = 6.dp, top = 6.dp),
@@ -176,36 +197,6 @@ fun SettingsScreen()
 
          Spacer(Modifier.height(10.dp))
 
-
      }
 
 }
-
-
-
-
-
-
-// TODO. This is the implementation for the button to update ytdlp.
-
-// private val isUpdatingYtdlp = AtomicBoolean(false)
-//
-//private val _ytdlpUpdateStatus = MutableStateFlow<String?>(null)
-//val ytdlpUpdateStatus: StateFlow<String?> = _ytdlpUpdateStatus
-//
-//fun checkYtdlpUpdate(context: Context) {
-//    if (!isUpdatingYtdlp.compareAndSet(false, true)) return
-//    viewModelScope.launch(Dispatchers.IO) {
-//        _ytdlpUpdateStatus.value = "Checking for update..."
-//        try {
-//            YoutubeDL.getInstance().updateYoutubeDL(context, YoutubeDL.UpdateChannel.STABLE)
-//            _ytdlpUpdateStatus.value = "yt-dlp is up to date"
-//        } catch (e: Exception) {
-//            Log.e("fermuxYtdlpUpdater", "yt-dlp update failed", e)
-//            _ytdlpUpdateStatus.value = "Update check failed"
-//        } finally {
-//            isUpdatingYtdlp.set(false)
-//        }
-//    }
-//}
-

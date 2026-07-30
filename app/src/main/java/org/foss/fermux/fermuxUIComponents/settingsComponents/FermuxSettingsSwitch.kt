@@ -21,14 +21,16 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun FermuxSettingsSwitch(
-     modifier: Modifier,
-     settingIcon: ImageVector,
+     modifier: Modifier= Modifier,
+     imageModifier: Modifier = Modifier,
+     settingIcon: ImageVector? = null,
      settingTitle: String,
      settingDescription: String,
      settingImage: Painter? = null,
      color: FermuxColor = FermuxColors,
-     onChecked: Boolean,
-     onCheckedChange: (Boolean) -> Unit
+     onChecked: Boolean? = null,
+     onCheckedChange: ((Boolean) -> Unit)? = null,
+     content: @Composable (() -> Unit)? = null
 ) {
      ListItem(
           modifier = modifier
@@ -38,13 +40,16 @@ fun FermuxSettingsSwitch(
                if (settingImage != null) {
                     Image(
                          painter = settingImage,
-                         contentDescription = null
+                         contentDescription = null,
+                         modifier = imageModifier
                     )
                } else {
-                    Icon(
-                         imageVector = settingIcon,
-                         contentDescription = null
-                    )
+                    if (settingIcon != null) {
+                         Icon(
+                              imageVector = settingIcon,
+                              contentDescription = null
+                         )
+                    }
                }
           },
           supportingContent = {
@@ -54,11 +59,10 @@ fun FermuxSettingsSwitch(
                     color = color.fermuxSettingsTextColor
                )
           },
-          trailingContent = {
+          trailingContent = { if (onChecked != null && onCheckedChange != null)
                Switch(
                     checked = onChecked,
-                    onCheckedChange = onCheckedChange
-               )
+                    onCheckedChange = onCheckedChange) else content?.invoke()
           },
           colors = ListItemDefaults.colors(
                containerColor = color.fermuxSaturatedComponents

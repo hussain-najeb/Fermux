@@ -30,16 +30,16 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
-import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxCancelButton
+import org.foss.fermux.fermuxUIComponents.buttons.FermuxCancelButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxCard
-import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxMainActionButton
+import org.foss.fermux.fermuxUIComponents.buttons.FermuxMainActionButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxSurface
-import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxTextWithIconButton
+import org.foss.fermux.fermuxUIComponents.buttons.FermuxTextWithIconButton
 import org.foss.fermux.ffmpeg.logic.FFmpegStatus
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.main.Screen
-import org.foss.fermux.ui.theme.*
-
+import org.foss.fermux.ui.theme.FermuxColors
+import org.foss.fermux.ui.theme.JetbrainsMono
 
 
 private data class FormatButtonItem(

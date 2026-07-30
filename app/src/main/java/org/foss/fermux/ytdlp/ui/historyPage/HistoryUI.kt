@@ -40,9 +40,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxCard
-import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxIconButton
+import org.foss.fermux.fermuxUIComponents.buttons.FermuxIconButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxSurface
-import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxTextWithIconButton
+import org.foss.fermux.fermuxUIComponents.buttons.FermuxTextWithIconButton
 import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.videoTime

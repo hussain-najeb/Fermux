@@ -3,12 +3,16 @@ package org.foss.fermux.settings.logic
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.yausername.youtubedl_android.YoutubeDL
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.storage.SettingsTab
+import java.util.concurrent.atomic.AtomicBoolean
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
     // TODO. In this class, eagerly is running ALL the time, so maybe have it be for only a time
@@ -69,4 +73,32 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     fun setLanguage(value: String) {
         viewModelScope.launch {settingsTab.setLanguage(value)}
     }
+
+    private val isUpdatingYtdlp = AtomicBoolean(false)
+    private val _ytdlpUpdateStatus = MutableStateFlow<String?>(null)
+    val ytdlpUpdateStatus: StateFlow<String?> = _ytdlpUpdateStatus
+
+    val currentVersion = YoutubeDL.getInstance().version(getApplication())
+
+    val currentVersionName = YoutubeDL.getInstance().versionName(getApplication())
+
+    fun checkYtdlpUpdate() {
+        if (!isUpdatingYtdlp.compareAndSet(false, true)) return
+        viewModelScope.launch(Dispatchers.IO) {
+            _ytdlpUpdateStatus.value = "Checking for update..."
+            try {
+                YoutubeDL.getInstance().updateYoutubeDL(
+                    appContext = getApplication(),
+                    updateChannel = YoutubeDL.UpdateChannel.STABLE
+                )
+                _ytdlpUpdateStatus.value = "yt-dlp is up to date"
+            } catch (e: Exception) {
+                android.util.Log.e("fermuxYtdlpUpdater", "yt-dlp update failed", e)
+                _ytdlpUpdateStatus.value = "Update check failed"
+            } finally {
+                isUpdatingYtdlp.set(false)
+            }
+        }
+    }
+
 }

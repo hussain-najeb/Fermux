@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.webkit.MimeTypeMap
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLRequest
 import kotlinx.coroutines.Dispatchers
@@ -12,9 +13,15 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 
-suspend fun downloaderLogic(logText: (String) -> Unit, showDetails: Boolean, context: Context, url: String,
-                            musicQuality: AudioQuality? = null, videoQuality: VideoQuality? =
-                                 null, onProgress: (Float) -> Unit) {
+suspend fun downloaderLogic(
+    logText: (String) -> Unit,
+    showDetails: Boolean,
+    context: Context,
+    url: String,
+    musicQuality: AudioQuality? = null,
+    videoQuality: VideoQuality? = null,
+    onProgress: (Float) -> Unit) {
+
     val downloadDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
 
     val outputPath = "${downloadDir?.absolutePath}/%(title)s.%(ext)s"
@@ -25,23 +32,18 @@ suspend fun downloaderLogic(logText: (String) -> Unit, showDetails: Boolean, con
         request.addOption("-v")
     }
 
-
-
     musicQuality?.let {
         request.addOption("-x")
         request.addOption("--audio-format", "mp3")
         request.addOption("--audio-quality", it.musicQuality)
     }
 
-
     videoQuality?.let {
         request.addOption("-f", it.videoQuality)
     }
     request.addOption("-o", outputPath)
 
-
     withContext(Dispatchers.IO) {
-        // Capture what's already there before yt-dlp runs
         val existingFiles = downloadDir
             ?.listFiles()
             ?.map { it.absolutePath }
@@ -53,12 +55,11 @@ suspend fun downloaderLogic(logText: (String) -> Unit, showDetails: Boolean, con
             logText(line)
         }
 
-        // Only copy files that weren't there before
         downloadDir
             ?.listFiles()
             ?.filter { it.absolutePath !in existingFiles }
             ?.forEach { file ->
-                copyFileToDownloads(context, file, file.name, "video/mp4")
+                copyFileToDownloads(context, file, file.name)
             }
 
         Log.d("fermux", "exit=${response.exitCode}")
@@ -80,17 +81,22 @@ suspend fun downloaderLogic(logText: (String) -> Unit, showDetails: Boolean, con
             )
         }
 
-
     suspend fun copyFileToDownloads(
         context: Context,
         sourceFile: File,
         displayName: String,
-        mimeType: String = "application/octet-stream"
     ) {
         withContext(Dispatchers.IO) {
+
+            fun getMimeTypeFromFile(file: File): String {
+                val extension = file.extension.lowercase()
+                return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+                    ?: "application/octet-stream"
+            }
+
             val values = ContentValues().apply {
                 put(MediaStore.Downloads.DISPLAY_NAME, displayName)
-                put(MediaStore.Downloads.MIME_TYPE, mimeType)
+                put(MediaStore.Downloads.MIME_TYPE, getMimeTypeFromFile(file = sourceFile))
                 put(MediaStore.Downloads.RELATIVE_PATH, "${Environment.DIRECTORY_DOWNLOADS}/fermux")
             }
             val uri = context.contentResolver.insert(
@@ -101,10 +107,10 @@ suspend fun downloaderLogic(logText: (String) -> Unit, showDetails: Boolean, con
                 sourceFile.inputStream().use { inputStream ->
                     inputStream.copyTo(outputStream)
                 }
-                sourceFile.delete()
 
                 val deleted = sourceFile.delete()
-                if (!deleted) {
+                Log.d("fermux", "success at deleting $deleted")
+                if (!deleted && sourceFile.exists()) {
                     Log.w("fermux", "Failed to delete file: ${sourceFile.absolutePath}")
                 }
             }

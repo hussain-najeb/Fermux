@@ -1,5 +1,6 @@
 package org.foss.fermux.ffmpeg.logic
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.util.Log
@@ -15,6 +16,7 @@ import java.io.InputStreamReader
 
 class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
+    @SuppressLint("UseKtx")
     override suspend fun doWork(): Result {
         val tempFile = File(applicationContext.cacheDir, "input_${id}.tmp")
         val targetFormatName = inputData.getString("TARGET_FORMAT") ?: return Result.failure()
@@ -69,7 +71,7 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                     var line: String?
                     while (reader.readLine().also { line = it } != null) {
                         output.appendLine(line)
-                        Log.d(TAG, line!!)
+                        Log.d("FermuxFFmpeg", line!!)
                         setProgress(workDataOf("line" to line))
                     }
                 }
@@ -85,8 +87,7 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                     copyFileToDownloads(
                         applicationContext,
                         outputFile,
-                        "converted_${System.currentTimeMillis()}.${targetFormat.workerFile}",
-                        "application/octet-stream"
+                        "converted_to${targetFormat.workerFile}"
                     )
                     Result.success()
                 }
@@ -96,14 +97,11 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                 Result.failure(workDataOf("error" to logs))
             }
         } catch (e: Exception) {
-            Log.e(TAG, "FFmpeg worker crashed", e)
+            Log.e("fermuxFFmpeg","FFmpeg worker crashed", e)
             Result.failure(workDataOf("error" to (e.message ?: "unknown error")))
         } finally {
             if (tempFile.exists()) tempFile.delete()
             if (outputFile.exists()) outputFile.delete()
         }
-    }
-    companion object {
-        private const val TAG = "fermux-ffmpeg"
     }
 }
