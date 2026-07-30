@@ -12,6 +12,9 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,8 +30,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.foss.fermux.R
+import org.foss.fermux.fermuxUIComponents.buttons.FermuxImageButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxDivider
-import org.foss.fermux.fermuxUIComponents.buttons.FermuxMainActionButton
 import org.foss.fermux.fermuxUIComponents.settingsComponents.FermuxSettingsSwitch
 import org.foss.fermux.settings.logic.SettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
@@ -47,14 +50,16 @@ private data class SettingListInfo(
 
 @SuppressLint("ContextCastToActivity")
 @Composable
-fun SettingsScreen()
-
-    {
+fun SettingsScreen() {
     val context = LocalContext.current
     val settingsViewModel: SettingsViewModel = viewModel(
         viewModelStoreOwner = LocalContext.current as ComponentActivity,
         factory = ViewModelProvider.AndroidViewModelFactory.getInstance(context.applicationContext as Application)
     )
+
+
+    var isPressed by remember { mutableStateOf(false) }
+
 
      val notificationState  by settingsViewModel.notificationState. collectAsStateWithLifecycle()
      val languageState      by settingsViewModel.language.          collectAsStateWithLifecycle()
@@ -105,6 +110,11 @@ fun SettingsScreen()
              settingIcon = Icons.Default.MonetizationOn,
              checked = sponsorBlock,
              onCheckedChange = {settingsViewModel.setSponsorBlock(it)}
+         ),
+
+         SettingListInfo(
+             settingTitle = "Github Page",
+             settingDescription = "The Github page of this project"
          )
 
      )
@@ -112,7 +122,7 @@ fun SettingsScreen()
 
      Column(modifier = Modifier
          .fillMaxSize()
-         .background(FermuxColors.fermuxBackground)
+         .background(FermuxColor().fermuxBackground)
          .verticalScroll(rememberScrollState())
 
      ) {
@@ -136,7 +146,7 @@ fun SettingsScreen()
              fontFamily = FontFamily.Default,
              fontWeight = FontWeight.W500,
              fontSize = 20.sp,
-             color = FermuxColors.fermuxInActiveTextColor,
+             color = FermuxColor().fermuxInActiveTextColor,
              modifier = Modifier
                  .padding(6.dp)
          )
@@ -144,21 +154,20 @@ fun SettingsScreen()
          FermuxSettingsSwitch(
              modifier = Modifier.align(Alignment.CenterHorizontally),
              settingTitle = "Update Downloader",
-             settingDescription = "Press the update button to update your current version of ytdlp. Current version is ${settingsViewModel.currentVersion} ${settingsViewModel.currentVersionName}",
-             settingImage = painterResource(id = R.drawable.icon_download_active),
-             imageModifier = Modifier.size(35.dp)
+             settingDescription = "Press the update button to update your current version of ytdlp. Current version is ${settingsViewModel.currentVersionName}",
+             settingIcon = Icons.Default.Update,
          ) {
-             Column {
-                 FermuxMainActionButton(
-                     modifier = Modifier.padding(5.dp),
-                     icon = Icons.Default.CloudDownload,
-                     onClick = { settingsViewModel.checkYtdlpUpdate() },
-                     enabled = ytdlpUpdateStatus != "Checking for update..."
+                 FermuxImageButton(
+                     modifier = Modifier.size(53.dp),
+                     contentPadding = PaddingValues(9.dp),
+                     iconRotation = if (isPressed) 180f else 0f,
+                     image = painterResource(R.drawable.update_icon),
+                     enabled = ytdlpUpdateStatus != "Checking for update...",
+                     onClick = { settingsViewModel.checkYtdlpUpdate().also { isPressed = !isPressed } },
                  )
-             }
          }
 
-         Spacer(Modifier.height(10.dp))
+             Spacer(Modifier.height(10.dp))
 
          settingLists.forEach{ lists ->
              FermuxSettingsSwitch(
@@ -190,7 +199,7 @@ fun SettingsScreen()
              fontFamily = FontFamily.Default,
              fontWeight = FontWeight.W500,
              fontSize = 20.sp,
-             color = FermuxColors.fermuxInActiveTextColor,
+             color = FermuxColor().fermuxInActiveTextColor,
              modifier = Modifier
                  .padding(6.dp)
          )

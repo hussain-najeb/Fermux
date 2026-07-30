@@ -8,6 +8,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchColors
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,11 +25,12 @@ import org.foss.fermux.ui.theme.FermuxColors
 fun FermuxSettingsSwitch(
      modifier: Modifier= Modifier,
      imageModifier: Modifier = Modifier,
+     iconModifier: Modifier = Modifier,
      settingIcon: ImageVector? = null,
      settingTitle: String,
      settingDescription: String,
      settingImage: Painter? = null,
-     color: FermuxColor = FermuxColors,
+     color: FermuxColor = FermuxColor(),
      onChecked: Boolean? = null,
      onCheckedChange: ((Boolean) -> Unit)? = null,
      content: @Composable (() -> Unit)? = null
@@ -38,16 +41,19 @@ fun FermuxSettingsSwitch(
                .border(1.dp, color.fermuxSecondaryBorder, shape = RoundedCornerShape(8.dp)),
           leadingContent = {
                if (settingImage != null) {
-                    Image(
+                    Icon(
                          painter = settingImage,
                          contentDescription = null,
+                         tint = FermuxColor().fermuxSettingsTextColor,
                          modifier = imageModifier
                     )
                } else {
                     if (settingIcon != null) {
                          Icon(
                               imageVector = settingIcon,
-                              contentDescription = null
+                              contentDescription = null,
+                              tint = FermuxColors.fermuxSettingsTextColor,
+                              modifier = iconModifier
                          )
                     }
                }
@@ -61,6 +67,12 @@ fun FermuxSettingsSwitch(
           },
           trailingContent = { if (onChecked != null && onCheckedChange != null)
                Switch(
+                    colors = SwitchDefaults.colors(
+                         checkedThumbColor = color.fermuxThumbOn,
+                         uncheckedThumbColor = color.fermuxThumbOff,
+                         checkedTrackColor = color.fermuxTrackOn,
+                         uncheckedTrackColor = color.fermuxTrackOff,
+                    ),
                     checked = onChecked,
                     onCheckedChange = onCheckedChange) else content?.invoke()
           },

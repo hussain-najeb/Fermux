@@ -32,7 +32,8 @@ fun FermuxImageButton(
      contentDescription: String? = null,
      iconRotation: Float = 0f,
      enabled: Boolean = true,
-     color: FermuxColor = FermuxColors,
+     color: FermuxColor = FermuxColor(),
+     border: BorderStroke? = BorderStroke(1.dp, color.fermuxGenericBorder),
      contentPadding: PaddingValues = PaddingValues(4.dp),
      onClick: () -> Unit
 ) {
@@ -86,7 +87,7 @@ fun FermuxImageButton(
           }
                .padding(5.dp),
           shape = RoundedCornerShape(8.dp),
-          border = BorderStroke(1.dp, color = color.fermuxSecondaryBorder),
+          border = border,
           colors = ButtonDefaults.textButtonColors(
                containerColor = containerColor,
                contentColor = contentColor
