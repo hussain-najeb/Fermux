@@ -48,6 +48,11 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
 
     override suspend fun doWork(): Result {
 
+        val settingsTab = SettingsTab(applicationContext)
+
+        val sponsorBlock = settingsTab.sponsorBlock.first()
+        val sponsorBlockCategories = settingsTab.sponsorBlockCategories.first()
+
         val url   = inputData.getString("url") ?: return Result.failure()
         val audioName = inputData.getString("audio")
         val videoName = inputData.getString("video")
@@ -60,7 +65,7 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
         val audio = audioName?.let { AudioQuality.valueOf(it) }
         val video = videoName?.let { VideoQuality.valueOf(it) }
 
-        val settingsTab = SettingsTab(applicationContext)
+
         val showDetails = settingsTab.ytdlpDetails.first()
         var currentProgress = 0f
 
@@ -74,11 +79,9 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
                         uploader,
                         duration,
                         System.currentTimeMillis(),
-
-
                         )
-                )
-            }
+                    )
+                 }
 
             if (settingsTab.videoHistory.first() && video != null) {
                 settingsTab.setJSONVideo(
@@ -97,13 +100,15 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
             Log.d("fermux", "failed to save video JSON", e)
         }
 
-        return try { // TODO. this should be in TheDownaloder file, not here.
+        return try { // TODO. this should be in TheDownloader file, not here.
             downloaderLogic(
                 context = applicationContext,
                 url = url,
                 musicQuality = audio,
                 videoQuality = video,
                 showDetails = showDetails,
+                sponsorBlock = sponsorBlock,
+                sponsorBlockCategories = sponsorBlockCategories,
                 onProgress = { progress ->
                     currentProgress = progress
                     runBlocking {

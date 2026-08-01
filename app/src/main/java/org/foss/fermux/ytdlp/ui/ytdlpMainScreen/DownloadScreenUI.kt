@@ -35,6 +35,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.withContext
 import org.foss.fermux.fermuxUIComponents.buttons.FermuxMainActionButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
@@ -52,7 +53,7 @@ fun DownloadContent(
     QualitySheet(
         showSheet = viewModel.showFormatSheet,
         onDismiss = { viewModel.showFormatSheet = false },
-        onConfirm = { audio, video -> viewModel.showFormatSheet = false
+        onConfirm = { audio, video ->  viewModel.showFormatSheet = false
             viewModel.startingDownload(context, audio, video)
         }
     )

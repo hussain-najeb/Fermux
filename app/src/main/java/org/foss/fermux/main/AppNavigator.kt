@@ -44,7 +44,7 @@ fun FermuxAppMainScreen() {
         composable(Screen.ImageFormatSheet.route) { ImageFormatSheet(navigationController, ffmpegViewModel) }
         composable(Screen.Home.route) { HomeScreen(navigationController) }
         composable(Screen.Terminal.route) { FermuxTerminalScreen() }
-        composable(Screen.Settings.route) { SettingsScreen() }
+        composable(Screen.Settings.route) { SettingsScreen(navController = {navigationController.popBackStack()}) }
         composable(Screen.Downloader.route) { DownloaderScreen() }
         composable(Screen.Converter.route) { ConverterScreen(navigationController = navigationController) }
     }

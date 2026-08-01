@@ -14,6 +14,7 @@ data class FermuxColor(
     // Fermux button colors
     val fermuxInActiveButton:      Color    = Color(0xFF303258),
     val fermuxActiveButton:        Color    = Color(0xFFadc6ff),
+    val fermuxInActiveBackButton:    Color    = Color(0xFF252638),
 
     // Fermux Borders
     val fermuxPrimaryBorder:        Color    = Color(0xFF005DFF),
@@ -35,7 +36,7 @@ data class FermuxColor(
 
     // Fermux icon components
     val fermuxActiveIcon:           Color    = Color(0xFF102f60),
-    val fermuxInActiveIcon:         Color    = Color(0xFF727882),
+    val fermuxInActiveIcon:         Color    = Color(0xFF9FAAB6),
 
     // Fermux text
     val fermuxTextColorBackground:  Color    = Color(0xFF727882),

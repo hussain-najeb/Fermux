@@ -1,5 +1,6 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 
+import android.R
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -46,21 +47,32 @@ import kotlin.time.Duration.Companion.milliseconds
 
 
 @Composable
-fun WhenCards (state: DownloadStatus, downloaderLogs: String, viewModel: DownloaderViewModel) {
+fun WhenCards (state: DownloadStatus,
+               downloaderLogs: String,
+               viewModel: DownloaderViewModel) {
+
     val context = LocalContext.current
     when (state) {
         is DownloadStatus.Idle -> {} // Idle state of the card
 
         is DownloadStatus.Loading -> {
-            LoadingCard(state = state, onCancel = {viewModel.cancelButton(context)})
+            LoadingCard(state = state,
+                onCancel = {viewModel.cancelButton(context)})
         } // while downloading the info to the card
 
         is DownloadStatus.Downloading -> {
-            LoadedCard(state.metadata, state.downloadProgress, downloaderLogs = downloaderLogs, onCancel = {viewModel.cancelButton(context)})
+            LoadedCard(state.metadata,
+                state.downloadProgress,
+                downloaderLogs = downloaderLogs,
+                showYtdlpDetails = viewModel.showYtdlpDetails,
+                onCancel = {viewModel.cancelButton(context)})
         } // just to get a damn bar to show the progress.
 
         is DownloadStatus.Loaded -> {
-            LoadedCard(state.metadata, downloaderLogs = downloaderLogs, onCancel = {viewModel.cancelButton(context)})
+            LoadedCard(state.metadata,
+                downloaderLogs = downloaderLogs,
+                showYtdlpDetails = viewModel.showYtdlpDetails,
+                onCancel = {viewModel.cancelButton(context)})
         }
         // the card gets loaded to view the damn
         // content when you call state. state here is assigned to "metadata", then to the actual card
@@ -108,9 +120,9 @@ fun LoadingCard(state: DownloadStatus, onCancel: () -> Unit) {
             .fillMaxWidth()
     ) {
         FermuxCard(
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(12.dp),
             modifier = Modifier
-                .padding(8.dp)
+                .padding(16.dp)
                 .aspectRatio(16f/9f)
         ) {
             LaunchedEffect(Unit) {
@@ -125,16 +137,15 @@ fun LoadingCard(state: DownloadStatus, onCancel: () -> Unit) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                     Text(
                         text = loadingMessage,
-                        fontFamily = FontFamily.SansSerif,
+                        fontFamily = FontFamily.Default,
                         fontStyle = FontStyle.Italic,
                         color = FermuxColors.fermuxInActiveTextColor,
-                        fontSize = 18.sp,
-
-                        ) // TODO. have it in the middle of the card to the right more, and change the color, reference from the terminal tab.
+                        fontSize = 15.sp,
+                    )
 
                     Spacer(modifier = Modifier.height(40.dp))
 
-                    LoadingIndicator()
+                    LoadingIndicator(color = FermuxColors.fermuxGenericBorder)
                 }
             if (state is DownloadStatus.Idle) {
 
@@ -156,6 +167,7 @@ fun LoadingCard(state: DownloadStatus, onCancel: () -> Unit) {
 fun LoadedCard (
     metadata: DownloadMetadata,
     progress: Float? = null,
+    showYtdlpDetails: Boolean = false,
     downloaderLogs: String,
     onCancel: () -> Unit
     )
@@ -170,11 +182,12 @@ fun LoadedCard (
             .fillMaxWidth()
     ) {
         FermuxCard(
-            shape = RoundedCornerShape(8.dp),
-            modifier = Modifier.fillMaxWidth()
-                .padding(8.dp),
+            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
 
-         )
+            )
         {
             Box {
                 AsyncImage(
@@ -226,39 +239,40 @@ fun LoadedCard (
                 )
 
 
+                FermuxTextWithIconButton(
+                    modifier = Modifier.align(Alignment.BottomStart).padding(10.dp),
+                    icon = Icons.Default.ExpandMore,
+                    contentPadding = PaddingValues(8.dp),
+                    iconRotation = if (expanded) 180f else 0f,
+                    text = if (expanded) "Hide Details" else "Show Details",
+                    onClick = { expanded = !expanded }
+                )
+
+                if (showYtdlpDetails) {
                     FermuxTextWithIconButton(
-                        modifier = Modifier.align(Alignment.BottomStart).padding(10.dp),
+                        modifier = Modifier.align(Alignment.BottomStart).padding(6.dp),
                         icon = Icons.Default.ExpandMore,
                         contentPadding = PaddingValues(8.dp),
-                        iconRotation = if (expanded) 180f else 0f,
-                        text = if (expanded) "Hide Details" else "Show Details",
-                        onClick = { expanded = !expanded }
+                        iconRotation = if (errorLogs) 180f else 0f,
+                        text = if (errorLogs) "Hide Logs" else "Show Logs",
+                        onClick = { errorLogs = !errorLogs }
+
                     )
-
-//                    FermuxTextWithIconButton(
-//                        modifier = Modifier.align(Alignment.BottomStart).padding(6.dp),
-//                        icon = Icons.Default.ExpandMore,
-//                        contentPadding = PaddingValues(8.dp),
-//                        iconRotation = if (errorLogs) 180f else 0f,
-//                        text = if (errorLogs) "Hide Logs" else "Show Logs",
-//                        onClick = { errorLogs = !errorLogs }
-
-//                    ) TODO. link this back to the setting in the settings without the button,
-            //                     just the settings turns on the text,
-            //                     even without a surface maybe, just a wall of text
+                }
 
             }
 
             FermuxSurface(expanded = expanded) {
                 Column(modifier = Modifier.fillMaxSize()) {
 
-                        Text(text = "Title: ${metadata.title}",
-                            fontFamily = FontFamily.Default,
-                            fontSize = 16.sp,
-                            color = Color(0xFF48AF79),
-                            modifier = Modifier
-                                .padding(7.dp)
-                        )
+                    Text(
+                        text = "Title: ${metadata.title}",
+                        fontFamily = FontFamily.Default,
+                        fontSize = 16.sp,
+                        color = Color(0xFF48AF79),
+                        modifier = Modifier
+                            .padding(7.dp)
+                    )
 
 
                     HorizontalDivider(
@@ -267,13 +281,14 @@ fun LoadedCard (
                     )
 
 
-                        Text(text = "Uploader: ${metadata.uploader}",
-                            fontFamily = FontFamily.Default,
-                            fontSize = 16.sp,
-                            color = Color(0xFFF34545),
-                            modifier = Modifier
-                                .padding(7.dp)
-                        )
+                    Text(
+                        text = "Uploader: ${metadata.uploader}",
+                        fontFamily = FontFamily.Default,
+                        fontSize = 16.sp,
+                        color = Color(0xFFF34545),
+                        modifier = Modifier
+                            .padding(7.dp)
+                    )
 
                     // TODO. Duration, add it here.
 
@@ -282,20 +297,21 @@ fun LoadedCard (
         }
 
 
-
-        FermuxSurface(
-            expanded = errorLogs,
-            modifier = Modifier.fillMaxSize().padding(8.dp).height(80.dp)
-        ) {
-            Box {
-                Text(
-                    downloaderLogs,
-                    modifier = Modifier
-                        .padding(3.dp),
-                    fontSize = 18.sp,
-                    color = Color.White,
-                    fontFamily = JetbrainsMono,
-                )
+        if (showYtdlpDetails) {
+            FermuxSurface(
+                expanded = errorLogs,
+                modifier = Modifier.fillMaxSize().padding(8.dp).height(80.dp)
+            ) {
+                Box {
+                    Text(
+                        downloaderLogs,
+                        modifier = Modifier
+                            .padding(3.dp),
+                        fontSize = 18.sp,
+                        color = Color.White,
+                        fontFamily = JetbrainsMono,
+                    )
+                }
             }
         }
     }
@@ -318,8 +334,8 @@ fun ErrorCard(
         FermuxCard(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
-            shape = RoundedCornerShape(8.dp),
+                .padding(16.dp),
+            shape = RoundedCornerShape(12.dp),
         ) {
             Box(
                 modifier = Modifier
@@ -339,7 +355,7 @@ fun ErrorCard(
                         .padding(18.dp)
                 )
                 FermuxCancelButton(
-                    modifier = Modifier.align(Alignment.TopStart).padding(10.dp),
+                    modifier = Modifier.align(Alignment.Center).padding(10.dp),
                     iconRotation = if (cancelButton) 360f else 0f,
                     onClick = { onCancel() }
                 )

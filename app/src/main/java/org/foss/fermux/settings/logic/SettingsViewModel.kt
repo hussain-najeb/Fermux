@@ -15,40 +15,34 @@ import org.foss.fermux.storage.SettingsTab
 import java.util.concurrent.atomic.AtomicBoolean
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
-    // TODO. In this class, eagerly is running ALL the time, so maybe have it be for only a time
-
     private val settingsTab = SettingsTab(application.applicationContext)
 
     val downloadPath: StateFlow<String> = settingsTab.downloadPath
-        .stateIn(viewModelScope, SharingStarted.Eagerly, "")
+        .stateIn(viewModelScope, SharingStarted.Lazily, "")
 
     val notificationState: StateFlow<Boolean> = settingsTab.notificationState
-        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+        .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
     val audioHistory: StateFlow<Boolean> = settingsTab.audioHistory
-        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+        .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
     val videoHistory: StateFlow<Boolean> = settingsTab.videoHistory
-        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+        .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
     val ytdlpDetails: StateFlow<Boolean> = settingsTab.ytdlpDetails
-        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+        .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
     val sponsorBlock: StateFlow<Boolean> = settingsTab.sponsorBlock
-        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+        .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
-    val language: StateFlow<String> = settingsTab.language
-        .stateIn(viewModelScope, SharingStarted.Eagerly, "")
+    val sponsorBlockCategories: StateFlow<Set<String>> = settingsTab.sponsorBlockCategories
+        .stateIn(viewModelScope, SharingStarted.Lazily, setOf("sponsor", "selfpromo", "interaction"))
 
     val audioHistoryList: StateFlow<List<JSONHistoryCards>> = settingsTab.JSONAudioCard
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     val videoHistoryList: StateFlow<List<JSONHistoryCards>> = settingsTab.JSONVideoCard
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-
-    fun setDownloadPath(value: String) {
-        viewModelScope.launch {settingsTab.setDownloadPath(value)}
-    }
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     fun setNotificationState(value: Boolean) {
         viewModelScope.launch {settingsTab.setNotificationState(value)}
@@ -70,8 +64,12 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch {settingsTab.setSponsorBlock(value)}
     }
 
-    fun setLanguage(value: String) {
-        viewModelScope.launch {settingsTab.setLanguage(value)}
+    fun setSponsorBlockCategories(value: Set<String>) {
+        viewModelScope.launch {settingsTab.setSponsorBlockCategories(value)}
+    }
+
+    fun setDownloadPath(value: String) {
+        viewModelScope.launch {settingsTab.setDownloadPath(value)}
     }
 
     private val isUpdatingYtdlp = AtomicBoolean(false)

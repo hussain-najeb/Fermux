@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -15,26 +16,44 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings_
 
 // ytdlp downloader tab.
 val DOWNLOAD_PATH = stringPreferencesKey("download_path")
+
 val DOWNLOAD_PROGRESS_NOTIFICATION = booleanPreferencesKey("download_progress_notification")
+
 val DOWNLOADING_DETAILS = booleanPreferencesKey("download_details")
+
 val SHOW_YTDLP_VIDEO_HISTORY = booleanPreferencesKey("video_history")
+
 val SHOW_YTDLP_AUDIO_HISTORY = booleanPreferencesKey("audio_history")
-val SPONSOR_BLOCK_IMPLEMENTATION = booleanPreferencesKey("sponsor_block") // TODO. feature for later.
+
+val SPONSOR_BLOCK_IMPLEMENTATION = booleanPreferencesKey("sponsor_block")
+
+val DEFAULT_SPONSOR_BLOCK_CATEGORIES = setOf("sponsor", "selfpromo", "interaction")
+
+val SPONSOR_BLOCK_CATEGORIES = stringSetPreferencesKey("sponsor_block_categories")
+
 val LANGUAGE = stringPreferencesKey("language")
+
 val JSON_AUDIO_HISTORY = stringPreferencesKey("json_audio")
+
 val JSON_VIDEO_HISTORY = stringPreferencesKey("json_video")
 
 
-
-//
+@Suppress("PropertyName")
 class SettingsTab(private val context: Context) {
 
     val downloadPath:      Flow<String> = context.dataStore.data.map { preferences -> preferences[DOWNLOAD_PATH] ?: "" }
+
     val notificationState: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[DOWNLOAD_PROGRESS_NOTIFICATION] ?: true }
+
     val audioHistory:      Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[SHOW_YTDLP_AUDIO_HISTORY] ?: true }
+
     val videoHistory:      Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[SHOW_YTDLP_VIDEO_HISTORY] ?: true }
+
     val ytdlpDetails:      Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[DOWNLOADING_DETAILS] ?: true }
-    val sponsorBlock:      Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] ?: true } // TODO. later.
+
+    val sponsorBlock:      Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] ?: false }
+
+    val sponsorBlockCategories: Flow<Set<String>> =  context.dataStore.data.map { preferences -> preferences[SPONSOR_BLOCK_CATEGORIES] ?: DEFAULT_SPONSOR_BLOCK_CATEGORIES }
 
     val language:          Flow<String> = context.dataStore.data.map { preferences -> preferences[LANGUAGE] ?: "" }
 
@@ -68,6 +87,10 @@ class SettingsTab(private val context: Context) {
 
     suspend fun setSponsorBlock(value: Boolean) {
         context.dataStore.edit { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] = value }
+    }
+
+    suspend fun setSponsorBlockCategories(value: Set<String>) {
+       context.dataStore.edit { preferences -> preferences[SPONSOR_BLOCK_CATEGORIES] = value }
     }
 
     suspend fun setLanguage(value: String) {

@@ -29,6 +29,8 @@ class DownloaderViewModel : ViewModel() {
     var downloadUrl by mutableStateOf("")
     var downloaderLogs by mutableStateOf("")
     private var activeProcess by mutableStateOf<UUID?>(null)
+
+    var showYtdlpDetails by mutableStateOf(false)
     val flavorError =
         listOf(
             "Dammit, something must have gone wrong",
@@ -84,7 +86,9 @@ class DownloaderViewModel : ViewModel() {
 
         val settingsTab = SettingsTab(context.applicationContext)
 
-            val metadata = (state as? DownloadStatus.Loaded)?.metadata ?: return
+        val metadata = (state as? DownloadStatus.Loaded)?.metadata ?: return
+
+        viewModelScope.launch { showYtdlpDetails = settingsTab.ytdlpDetails.first() }
 
         val requestedUrls = OneTimeWorkRequestBuilder<DownloadWorker>()
             .setInputData(

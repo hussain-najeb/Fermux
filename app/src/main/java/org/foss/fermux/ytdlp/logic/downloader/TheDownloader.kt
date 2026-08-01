@@ -20,13 +20,18 @@ suspend fun downloaderLogic(
     url: String,
     musicQuality: AudioQuality? = null,
     videoQuality: VideoQuality? = null,
+    sponsorBlock: Boolean = false,
+    sponsorBlockCategories: Set<String> = emptySet(),
     onProgress: (Float) -> Unit) {
 
+
     val downloadDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-
     val outputPath = "${downloadDir?.absolutePath}/%(title)s.%(ext)s"
-
     val request = YoutubeDLRequest(url)
+
+    if (sponsorBlock && sponsorBlockCategories.isNotEmpty()) {
+        request.addOption("--sponsorblock-remove", sponsorBlockCategories.joinToString(","))
+    }
 
     if (showDetails) {
         request.addOption("-v")
