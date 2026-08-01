@@ -1,17 +1,14 @@
 package org.foss.fermux.fermuxUIComponents.settingsComponents
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchColors
-import androidx.compose.material3.SwitchDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -30,7 +27,8 @@ fun FermuxSettingsSwitch(
      settingTitle: String,
      settingDescription: String,
      settingImage: Painter? = null,
-     color: FermuxColor = FermuxColor(),
+     color: FermuxColor = FermuxColors,
+     border: BorderStroke? = BorderStroke(1.dp, color.fermuxSecondaryBorder),
      onChecked: Boolean? = null,
      onCheckedChange: ((Boolean) -> Unit)? = null,
      content: @Composable (() -> Unit)? = null
@@ -38,7 +36,7 @@ fun FermuxSettingsSwitch(
      ListItem(
           modifier = modifier
                .padding(9.dp)
-               .border(1.dp, color.fermuxSecondaryBorder, shape = RoundedCornerShape(8.dp)),
+               .border(border ?: BorderStroke(1.dp, color.fermuxGenericBorder), shape = RoundedCornerShape(8.dp)),
           leadingContent = {
                if (settingImage != null) {
                     Icon(
@@ -65,16 +63,25 @@ fun FermuxSettingsSwitch(
                     color = color.fermuxSettingsTextColor
                )
           },
-          trailingContent = { if (onChecked != null && onCheckedChange != null)
-               Switch(
-                    colors = SwitchDefaults.colors(
-                         checkedThumbColor = color.fermuxThumbOn,
-                         uncheckedThumbColor = color.fermuxThumbOff,
-                         checkedTrackColor = color.fermuxTrackOn,
-                         uncheckedTrackColor = color.fermuxTrackOff,
-                    ),
-                    checked = onChecked,
-                    onCheckedChange = onCheckedChange) else content?.invoke()
+          trailingContent = {
+               Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+               ) {
+                    if (onChecked != null && onCheckedChange != null) {
+                         Switch(
+                              colors = SwitchDefaults.colors(
+                                   checkedThumbColor = color.fermuxThumbOn,
+                                   uncheckedThumbColor = color.fermuxThumbOff,
+                                   checkedTrackColor = color.fermuxTrackOn,
+                                   uncheckedTrackColor = color.fermuxTrackOff,
+                              ),
+                              checked = onChecked,
+                              onCheckedChange = onCheckedChange
+                         )
+                    }
+                    content?.invoke()
+               }
           },
           colors = ListItemDefaults.colors(
                containerColor = color.fermuxSaturatedComponents

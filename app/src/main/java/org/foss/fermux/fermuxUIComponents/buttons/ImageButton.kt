@@ -28,9 +28,9 @@ import org.foss.fermux.ui.theme.FermuxColors
 fun FermuxImageButton(
      modifier: Modifier = Modifier,
      imageModifier: Modifier = Modifier,
-     image: Painter,
+     image: Painter? = null,
      contentDescription: String? = null,
-     iconRotation: Float = 0f,
+     imageRotation: Float = 0f,
      enabled: Boolean = true,
      color: FermuxColor = FermuxColors,
      border: BorderStroke? = BorderStroke(1.dp, color.fermuxGenericBorder),
@@ -75,7 +75,7 @@ fun FermuxImageButton(
      )
 
      val iconRotate by animateFloatAsState(
-          targetValue = iconRotation,
+          targetValue = imageRotation,
           animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
           label = "Fermux Icon Rotation"
      )
@@ -97,11 +97,13 @@ fun FermuxImageButton(
           interactionSource = interactionSource,
           onClick = onClick
      ) {
-          Icon(
-               painter = image,
-               tint = iconColor,
-               contentDescription = contentDescription,
-               modifier = imageModifier.rotate(iconRotate)
-          )
+          if (image != null) {
+               Icon(
+                    painter = image,
+                    tint = iconColor,
+                    contentDescription = contentDescription,
+                    modifier = imageModifier.rotate(iconRotate)
+               )
+          }
      }
 }

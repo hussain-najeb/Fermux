@@ -74,10 +74,10 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     private val isUpdatingYtdlp = AtomicBoolean(false)
     private val _ytdlpUpdateStatus = MutableStateFlow<String?>(null)
+    private val _upToDate = MutableStateFlow<Boolean?>(null)
+    val upToDate: StateFlow<Boolean?> = _upToDate
     val ytdlpUpdateStatus: StateFlow<String?> = _ytdlpUpdateStatus
-
     val currentVersionName = YoutubeDL.getInstance().versionName(getApplication())
-
     fun checkYtdlpUpdate() {
         if (!isUpdatingYtdlp.compareAndSet(false, true)) return
         viewModelScope.launch(Dispatchers.IO) {
@@ -88,9 +88,11 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                     updateChannel = YoutubeDL.UpdateChannel.STABLE
                 )
                 _ytdlpUpdateStatus.value = "yt-dlp is up to date"
+                _upToDate.value = true
             } catch (e: Exception) {
                 android.util.Log.e("fermuxYtdlpUpdater", "yt-dlp update failed", e)
                 _ytdlpUpdateStatus.value = "Update check failed"
+                _upToDate.value = false
             } finally {
                 isUpdatingYtdlp.set(false)
             }

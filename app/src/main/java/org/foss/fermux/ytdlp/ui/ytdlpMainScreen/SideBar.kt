@@ -20,7 +20,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.FermuxImageButton
 import org.foss.fermux.fermuxUIComponents.buttons.FermuxTextWithIconButton
@@ -115,9 +114,9 @@ AnimatedVisibility(
         ) {
 
             FermuxImageButton(
-                iconRotation = if (isSideBarOpen) 180f else 0f,
                 modifier = Modifier.size(70.dp),
                 imageModifier = Modifier.size(40.dp),
+                imageRotation = if (isSideBarOpen) 180f else 0f,
                 image = if (isSideBarOpen) painterResource(id = R.drawable.sidebar_opened) else painterResource(id = R.drawable.sidebar_closed),
                 onClick = { isSideBarOpen = !isSideBarOpen },
             )

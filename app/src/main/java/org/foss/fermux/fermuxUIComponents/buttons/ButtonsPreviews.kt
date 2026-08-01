@@ -83,7 +83,7 @@ fun Why() {
                     FermuxImageButton(
                         modifier = Modifier.size(53.dp),
                         contentPadding = PaddingValues(9.dp),
-                        iconRotation = if (pressed) 180f else 0f,
+                        imageRotation = if (pressed) 180f else 0f,
                         image = painterResource(R.drawable.update_icon),
                         onClick = { pressed = !pressed  },
                     )

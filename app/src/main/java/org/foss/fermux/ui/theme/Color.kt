@@ -31,7 +31,7 @@ data class FermuxColor(
     // Fermux switch Colors
     val fermuxThumbOn:              Color    = Color(0xFF40407F),
     val fermuxThumbOff:             Color    = Color(0xFF848489),
-    val fermuxTrackOn:              Color    = Color(0xFF9393EA),
+    val fermuxTrackOn:              Color    = Color(0xFFB9B9FA),
     val fermuxTrackOff:             Color    = Color(0xFF393636),
 
     // Fermux icon components

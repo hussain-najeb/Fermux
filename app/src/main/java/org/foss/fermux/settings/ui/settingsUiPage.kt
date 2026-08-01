@@ -1,41 +1,27 @@
 package org.foss.fermux.settings.ui
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Android
-import androidx.compose.material.icons.filled.AudioFile
-import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.filled.Link
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Terminal
-import androidx.compose.material.icons.filled.Update
-import androidx.compose.material.icons.filled.VideoFile
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -61,22 +47,21 @@ private data class SettingListInfo(
     val settingDescription: String,
     val settingIcon: ImageVector? = null,
     val settingImage: Painter? = null,
+    val border: BorderStroke? = BorderStroke(1.dp, FermuxColors.fermuxGenericBorder),
     val checked: Boolean? = null,
     val onCheckedChange: ((Boolean) -> Unit)? = null,
     val content: @Composable (() -> Unit)? = null
 )
+
+enum class UpdateState {
+    IDLE, UPDATING, SUCCESS, FAILED
+}
 
 @Composable
 fun SettingsScreen(
     navController: () -> Unit,
     settingsViewModel: SettingsViewModel = viewModel()
 ) {
-
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-        rememberTopAppBarState(),
-        canScroll = { true }
-    )
-
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
     val versionName = remember { context.getAppVersionName() }
@@ -86,18 +71,52 @@ fun SettingsScreen(
     val videoHistory by settingsViewModel.videoHistory.collectAsStateWithLifecycle()
     val ytdlpDetails by settingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
     val ytdlpUpdateStatus by settingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
+    val sponsorBlock by settingsViewModel.sponsorBlock.collectAsStateWithLifecycle()
+    val updateChecker by settingsViewModel.upToDate.collectAsStateWithLifecycle()
+
+    val updateState = when {
+        ytdlpUpdateStatus == "Checking for update..." -> UpdateState.UPDATING
+        updateChecker == true -> UpdateState.SUCCESS
+        updateChecker == false -> UpdateState.FAILED
+        else -> UpdateState.IDLE
+    }
+
+    val infiniteTransition = rememberInfiniteTransition(label = "update_transition")
+    val rotation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "update_rotation"
+    )
+
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
+        rememberTopAppBarState(),
+        canScroll = { true }
+    )
 
     val downloaderSettingLists = listOf(
         SettingListInfo(
             settingTitle = "Update Downloader",
+            border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxSecondaryBorder),
             settingDescription = "Press the update button to update your current version of ytdlp. Current version is ${settingsViewModel.currentVersionName}",
             settingIcon = Icons.Default.Update,
             content = {
+
+                val updatingIcon = when (updateState) {
+                    UpdateState.IDLE, UpdateState.UPDATING -> painterResource(id = R.drawable.update_icon)
+                    UpdateState.SUCCESS -> painterResource(id = R.drawable.check)
+                    UpdateState.FAILED -> rememberVectorPainter(image = Icons.Default.Close)
+                }
+
                 FermuxImageButton(
-                    modifier = Modifier.size(60.dp),
+                    modifier = Modifier.size(50.dp),
+                    imageRotation = if (updateState == UpdateState.UPDATING) rotation else 0f,
                     contentPadding = PaddingValues(9.dp),
-                    image = painterResource(R.drawable.update_icon),
-                    enabled = ytdlpUpdateStatus != "Checking for update...",
+                    image = updatingIcon,
+                    enabled = updateState != UpdateState.UPDATING,
                     onClick = { settingsViewModel.checkYtdlpUpdate() }
                 )
             }
@@ -105,7 +124,8 @@ fun SettingsScreen(
         SettingListInfo(
             settingTitle = "Download Notifications",
             settingDescription = "Notify me when the downloaded files finish downloading",
-            settingIcon = Icons.Default.Notifications,
+            settingImage = if (notificationState) painterResource(R.drawable.bell_on) else painterResource(R.drawable.bell_off) ,
+            border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxGenericBorder),
             checked = notificationState,
             onCheckedChange = { settingsViewModel.setNotificationState(it) }
         ),
@@ -113,6 +133,7 @@ fun SettingsScreen(
             settingTitle = "Audio History",
             settingDescription = "Enable/Disable audio history",
             settingIcon = Icons.Default.AudioFile,
+            border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxGenericBorder),
             checked = audioHistory,
             onCheckedChange = { settingsViewModel.setAudioHistory(it) }
         ),
@@ -120,18 +141,37 @@ fun SettingsScreen(
             settingTitle = "Video History",
             settingDescription = "Enable/Disable video history",
             settingIcon = Icons.Default.VideoFile,
+            border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxGenericBorder),
             checked = videoHistory,
             onCheckedChange = { settingsViewModel.setVideoHistory(it) }
         ),
         SettingListInfo(
             settingTitle = "Yt-dlp Details",
             settingDescription = "Enable to get feedback on the download state of the downloaded media",
-            settingIcon = Icons.Default.Terminal,
+            settingImage = painterResource(R.drawable.logs_icon),
+            border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxGenericBorder),
             checked = ytdlpDetails,
             onCheckedChange = { settingsViewModel.setYtdlpDetails(it) }
         ),
-
-
+        SettingListInfo(
+            settingTitle = "SponsorBlock API",
+            settingDescription = "Use the SponsorBlock API to cut Sponsor segments in videos (*Note: Works best with YouTube)",
+            settingImage = painterResource(R.drawable.sponsorblock),
+            border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxSecondaryBorder),
+            checked = sponsorBlock,
+            onCheckedChange = { settingsViewModel.setSponsorBlock(it) },
+            content = {
+                Box(modifier = Modifier.padding(top = 10.dp)) {
+                    FermuxIconButton(
+                        modifier = Modifier.size(40.dp),
+                        border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxTertiaryBorder),
+                        contentPadding = PaddingValues(9.dp),
+                        icon = Icons.Default.Settings,
+                        onClick = { }
+                    )
+                }
+            }
+        ),
     )
 
     val aboutSettingLists = listOf(
@@ -139,21 +179,25 @@ fun SettingsScreen(
             settingTitle = "README Page",
             settingDescription = "Check the Github Repository for more information",
             settingIcon = Icons.Default.Description,
+            border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxGenericBorder),
             content = {
-                FermuxIconButton(
-                    modifier = Modifier.size(50.dp),
-                    contentPadding = PaddingValues(5.dp),
-                    icon = Icons.Default.Link,
-                    onClick = {
-                        uriHandler.openUri("https://github.com/hussain-najeb/Fermux")
-                    }
-                )
+                Box(modifier = Modifier.padding(top = 12.dp)) {
+                    FermuxIconButton(
+                        modifier = Modifier.size(40.dp),
+                        contentPadding = PaddingValues(5.dp),
+                        icon = Icons.Default.Link,
+                        onClick = {
+                            uriHandler.openUri("https://github.com/hussain-najeb/Fermux")
+                        }
+                    )
+                }
             }
         ),
         SettingListInfo(
             settingTitle = "App Version",
             settingDescription = "Current app version is $versionName",
-            settingIcon = Icons.Default.Android
+            settingIcon = Icons.Default.Android,
+            border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxTertiaryBorder)
         )
     )
 
@@ -218,9 +262,12 @@ fun SettingsScreen(
             downloaderSettingLists.forEach { lists ->
                 FermuxSettingsSwitch(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
+                    imageModifier = Modifier.size(20.dp),
                     settingTitle = lists.settingTitle,
                     settingDescription = lists.settingDescription,
                     settingIcon = lists.settingIcon,
+                    settingImage = lists.settingImage,
+                    border = lists.border,
                     onChecked = lists.checked,
                     onCheckedChange = lists.onCheckedChange,
                     content = lists.content
@@ -246,6 +293,7 @@ fun SettingsScreen(
                     settingTitle = lists.settingTitle,
                     settingDescription = lists.settingDescription,
                     settingIcon = lists.settingIcon,
+                    border = lists.border,
                     onChecked = lists.checked,
                     onCheckedChange = lists.onCheckedChange,
                     content = lists.content
