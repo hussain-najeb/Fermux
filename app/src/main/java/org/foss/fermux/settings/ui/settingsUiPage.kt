@@ -32,15 +32,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.FermuxBackButton
 import org.foss.fermux.fermuxUIComponents.buttons.FermuxIconButton
 import org.foss.fermux.fermuxUIComponents.buttons.FermuxImageButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxDivider
 import org.foss.fermux.fermuxUIComponents.settingsComponents.FermuxSettingsSwitch
+import org.foss.fermux.main.Screen
 import org.foss.fermux.settings.logic.SettingsViewModel
 import org.foss.fermux.settings.logic.getAppVersionName
 import org.foss.fermux.ui.theme.FermuxColors
+import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.YtdlpDetailsPage
 
 private data class SettingListInfo(
     val settingTitle: String,
@@ -59,17 +62,17 @@ enum class UpdateState {
 
 @Composable
 fun SettingsScreen(
-    navController: () -> Unit,
+    navController: NavHostController,
     settingsViewModel: SettingsViewModel = viewModel()
 ) {
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
     val versionName = remember { context.getAppVersionName() }
 
+    val ytdlpDetails by settingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
     val notificationState by settingsViewModel.notificationState.collectAsStateWithLifecycle()
     val audioHistory by settingsViewModel.audioHistory.collectAsStateWithLifecycle()
     val videoHistory by settingsViewModel.videoHistory.collectAsStateWithLifecycle()
-    val ytdlpDetails by settingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
     val ytdlpUpdateStatus by settingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
     val sponsorBlock by settingsViewModel.sponsorBlock.collectAsStateWithLifecycle()
     val updateChecker by settingsViewModel.upToDate.collectAsStateWithLifecycle()
@@ -148,7 +151,7 @@ fun SettingsScreen(
         SettingListInfo(
             settingTitle = "Yt-dlp Details",
             settingDescription = "Enable to get feedback on the download state of the downloaded media",
-            settingImage = painterResource(R.drawable.logs_icon),
+            settingImage = if (ytdlpDetails) painterResource(R.drawable.logs_icon) else painterResource(R.drawable.logs_off),
             border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxGenericBorder),
             checked = ytdlpDetails,
             onCheckedChange = { settingsViewModel.setYtdlpDetails(it) }
@@ -167,7 +170,7 @@ fun SettingsScreen(
                         border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxTertiaryBorder),
                         contentPadding = PaddingValues(9.dp),
                         icon = Icons.Default.Settings,
-                        onClick = { }
+                        onClick = { navController.navigate(Screen.YtdlpDetailsPage.route) } // TODO. Add an AlertDialog to configure the flags for the SponsorBlock API.
                     )
                 }
             }
@@ -231,7 +234,7 @@ fun SettingsScreen(
                         icon = Icons.AutoMirrored.Filled.ArrowBack,
                         modifier = Modifier.padding(10.dp).size(44.dp),
                         contentPadding = PaddingValues(3.dp),
-                        onClick = {navController.invoke()}
+                        onClick = {navController.popBackStack()}
                     )
                 }
             )

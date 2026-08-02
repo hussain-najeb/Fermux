@@ -1,6 +1,5 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 
-import android.R
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -26,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import org.foss.fermux.fermuxUIComponents.buttons.FermuxCancelButton
+import org.foss.fermux.fermuxUIComponents.buttons.FermuxIconButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxCard
 import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxSurface
 import org.foss.fermux.fermuxUIComponents.buttons.FermuxTextWithIconButton
@@ -203,31 +203,20 @@ fun LoadedCard (
                 progress?.let {
                     CircularWavyProgressIndicator(
                         progress = { progress / 100f },
-                        color = Color(0xFF2e36aa),
-                        trackColor = Color(0xff999bb5),
+                        color = FermuxColors.fermuxGenericBorder,
+                        trackColor = FermuxColors.fermuxTertiaryBorder,
                         modifier = Modifier
                             .padding(8.dp)
                             .align(Alignment.BottomEnd)
-                    ).also {
-                        Text(
-                            videoTime(metadata.duration),
+                    )
+                    if (progress == 100f) {
+                        Icon(
+                            Icons.Default.Check,
+                            contentDescription = "Download Complete",
                             modifier = Modifier
                                 .padding(8.dp)
-                                .align(Alignment.BottomStart),
-                            fontFamily = FontFamily.Default
+                                .align(Alignment.BottomCenter)
                         )
-
-                        if (progress == 100f) {
-
-                            Icon(
-                                Icons.Default.Check,
-                                contentDescription = "Download Complete",
-                                modifier = Modifier
-                                    .padding(8.dp)
-                                    .align(Alignment.BottomCenter)
-                            )
-
-                        }
                     }
                 }
 
@@ -237,87 +226,89 @@ fun LoadedCard (
                     iconRotation = if (cancelButton) 360f else 0f,
                     onClick = { onCancel() }
                 )
+                Box(contentAlignment = Alignment.BottomStart, modifier = Modifier.matchParentSize()) { //TODO. This is two buttons in right buttom, should be left buttom and the time of the video needs to be in the fermux card
+                    Column {
+                        if (showYtdlpDetails) {
+                            FermuxTextWithIconButton(
+                                modifier = Modifier.padding(1.dp),
+                                icon = Icons.Default.ExpandMore,
+                                contentPadding = PaddingValues(8.dp),
+                                iconRotation = if (errorLogs) 180f else 0f,
+                                text = if (errorLogs) "Hide Logs" else "Show Logs",
+                                onClick = { errorLogs = !errorLogs }
 
-
-                FermuxTextWithIconButton(
-                    modifier = Modifier.align(Alignment.BottomStart).padding(10.dp),
-                    icon = Icons.Default.ExpandMore,
-                    contentPadding = PaddingValues(8.dp),
-                    iconRotation = if (expanded) 180f else 0f,
-                    text = if (expanded) "Hide Details" else "Show Details",
-                    onClick = { expanded = !expanded }
-                )
-
-                if (showYtdlpDetails) {
-                    FermuxTextWithIconButton(
-                        modifier = Modifier.align(Alignment.BottomStart).padding(6.dp),
-                        icon = Icons.Default.ExpandMore,
-                        contentPadding = PaddingValues(8.dp),
-                        iconRotation = if (errorLogs) 180f else 0f,
-                        text = if (errorLogs) "Hide Logs" else "Show Logs",
-                        onClick = { errorLogs = !errorLogs }
-
-                    )
+                            )
+                            FermuxIconButton(
+                                modifier = Modifier.padding(1.dp),
+                                icon = Icons.Default.ExpandMore,
+                                contentPadding = PaddingValues(8.dp),
+                                onClick = {  }
+                            )
+                        }
+                    }
                 }
-
             }
 
             FermuxSurface(expanded = expanded) {
                 Column(modifier = Modifier.fillMaxSize()) {
-
                     Text(
-                        text = "Title: ${metadata.title}",
+                        text = metadata.title,
                         fontFamily = FontFamily.Default,
                         fontSize = 16.sp,
-                        color = Color(0xFF48AF79),
+                        color = Color.White,
                         modifier = Modifier
                             .padding(7.dp)
                     )
-
-
                     HorizontalDivider(
                         thickness = 1.0.dp,
                         color = FermuxColors.fermuxComponents
                     )
-
-
-                    Text(
-                        text = "Uploader: ${metadata.uploader}",
-                        fontFamily = FontFamily.Default,
-                        fontSize = 16.sp,
-                        color = Color(0xFFF34545),
-                        modifier = Modifier
-                            .padding(7.dp)
-                    )
-
-                    // TODO. Duration, add it here.
-
+                     metadata.uploader?.let {
+                          Text(
+                               text = it,
+                               fontFamily = FontFamily.Default,
+                               fontSize = 12.sp,
+                               color = FermuxColors.fermuxTextColorBackground,
+                               modifier = Modifier
+                                    .padding(7.dp)
+                          )
+                         HorizontalDivider(
+                             thickness = 1.0.dp,
+                             color = FermuxColors.fermuxComponents
+                         )
+                         Text(
+                             videoTime(metadata.duration),
+                             fontFamily = FontFamily.Default,
+                             color = FermuxColors.fermuxTextColorBackground,
+                             modifier = Modifier
+                                 .padding(8.dp),
+                         )
+                     }
                 }
             }
         }
 
 
-        if (showYtdlpDetails) {
-            FermuxSurface(
-                expanded = errorLogs,
-                modifier = Modifier.fillMaxSize().padding(8.dp).height(80.dp)
-            ) {
-                Box {
-                    Text(
-                        downloaderLogs,
-                        modifier = Modifier
-                            .padding(3.dp),
-                        fontSize = 18.sp,
-                        color = Color.White,
-                        fontFamily = JetbrainsMono,
-                    )
-                }
-            }
-        }
+//        if (showYtdlpDetails) {
+//            FermuxSurface(
+//                expanded = errorLogs,
+//                modifier = Modifier.fillMaxSize().padding(8.dp).height(150.dp)
+//            ) {
+//                Box {
+//                    Text(
+//                        downloaderLogs,
+//                        modifier = Modifier
+//                            .padding(7.dp),
+//                        fontSize = 16.sp,
+//                        color = Color.White,
+//                        fontFamily = JetbrainsMono,
+//                    )
+//                }
+//            }
+//        }
     }
 }
 
-//
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun ErrorCard(

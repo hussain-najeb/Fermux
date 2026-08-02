@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.FermuxImageButton
 import org.foss.fermux.fermuxUIComponents.buttons.FermuxTextWithIconButton
@@ -122,3 +123,14 @@ AnimatedVisibility(
             )
         }
     }
+@Composable
+fun DownloaderScreen(navController: NavHostController) {
+    FermuxLargeTopBarScaffold(
+        title = "Downloader",
+        onBack = { navController.popBackStack() }
+    ) {
+        Box(Modifier.fillMaxSize()) {
+            SideBar()
+        }
+    }
+}
