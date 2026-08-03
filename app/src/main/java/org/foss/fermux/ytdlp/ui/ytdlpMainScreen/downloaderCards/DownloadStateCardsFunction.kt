@@ -1,26 +1,12 @@
-package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
+package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderCards
 
-import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
-import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderCards.ErrorCard
-import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderCards.FinishedCard
-import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderCards.LoadingCard
-
-
-// TODO. have the download circle be a check
-//  mark when the download finished so its apparent
-//  to the user the download is done.
-// TODO. have the duration of the video with a
-//  black/transcperent background behind it, so it doesn't look bad
-
-
-
 
 @Composable
-fun WhenCards (state: DownloadStatus, downloaderViewModel: DownloaderViewModel) {
+fun DownloaderCards (state: DownloadStatus, downloaderViewModel: DownloaderViewModel) {
 
     val context = LocalContext.current
     when (state) {

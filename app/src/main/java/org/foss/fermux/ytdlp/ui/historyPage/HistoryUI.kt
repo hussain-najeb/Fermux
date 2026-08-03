@@ -45,7 +45,7 @@ import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxSurface
 import org.foss.fermux.fermuxUIComponents.buttons.FermuxTextWithIconButton
 import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.ui.theme.FermuxColors
-import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.videoTime
+import org.foss.fermux.ytdlp.logic.downloader.videoTime
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
