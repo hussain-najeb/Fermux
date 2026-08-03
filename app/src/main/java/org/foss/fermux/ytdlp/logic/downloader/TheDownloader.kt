@@ -18,6 +18,7 @@ suspend fun downloaderLogic(
     showDetails: Boolean,
     context: Context,
     url: String,
+    taskId: String,
     musicQuality: AudioQuality? = null,
     videoQuality: VideoQuality? = null,
     sponsorBlock: Boolean = false,
@@ -55,7 +56,7 @@ suspend fun downloaderLogic(
             ?.toSet()
             ?: emptySet()
 
-        val response = YoutubeDL.getInstance().execute(request) { progress, _, line ->
+        val response = YoutubeDL.getInstance().execute(request, taskId) { progress, _, line ->
             onProgress(progress)
             logText(line)
         }

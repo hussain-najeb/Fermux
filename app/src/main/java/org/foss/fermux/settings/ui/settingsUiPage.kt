@@ -13,9 +13,22 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Android
+import androidx.compose.material.icons.filled.AudioFile
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Link
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Update
+import androidx.compose.material.icons.filled.VideoFile
+import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,7 +56,6 @@ import org.foss.fermux.main.Screen
 import org.foss.fermux.settings.logic.SettingsViewModel
 import org.foss.fermux.settings.logic.getAppVersionName
 import org.foss.fermux.ui.theme.FermuxColors
-import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.YtdlpDetailsPage
 
 private data class SettingListInfo(
     val settingTitle: String,
@@ -84,7 +96,7 @@ fun SettingsScreen(
         else -> UpdateState.IDLE
     }
 
-    val infiniteTransition = rememberInfiniteTransition(label = "update_transition")
+    val infiniteTransition = rememberInfiniteTransition(label = "update_transition") // TODO. Fix it, it doesnt look clean
     val rotation by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 360f,

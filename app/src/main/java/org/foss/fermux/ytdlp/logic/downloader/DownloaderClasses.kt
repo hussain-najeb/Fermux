@@ -1,15 +1,5 @@
 package org.foss.fermux.ytdlp.logic.downloader
 
-import android.content.Context
-import android.util.Log
-import androidx.work.CoroutineWorker
-import androidx.work.WorkerParameters
-import androidx.work.workDataOf
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
-import org.foss.fermux.storage.SettingsTab
-import org.foss.fermux.storage.JSONHistoryCards
-
 data class DownloadMetadata (
     val title: String,
     val thumbnail: String,
@@ -38,91 +28,4 @@ enum class VideoQuality(val videoQuality: String) {
     HD720("bestvideo[height<=720]+bestaudio/best"),
     SD480("bestvideo[height<=480]+bestaudio/best"),
     Q360("bestvideo[height<=360]+bestaudio/best"),
-}
-
-
-
-class DownloadWorker(context: Context, params: WorkerParameters ) :
-
-    CoroutineWorker(context, params) {
-
-    override suspend fun doWork(): Result {
-
-        val settingsTab = SettingsTab(applicationContext)
-
-        val sponsorBlock = settingsTab.sponsorBlock.first()
-        val sponsorBlockCategories = settingsTab.sponsorBlockCategories.first()
-
-        val url   = inputData.getString("url") ?: return Result.failure()
-        val audioName = inputData.getString("audio")
-        val videoName = inputData.getString("video")
-
-        val title = inputData.getString("title") ?: "unknown title"
-        val thumbnail = inputData.getString("thumbnail") ?: "unknown thumbnail"
-        val duration = inputData.getInt("duration", 0).toLong()
-        val uploader = inputData.getString("uploader")
-
-        val audio = audioName?.let { AudioQuality.valueOf(it) }
-        val video = videoName?.let { VideoQuality.valueOf(it) }
-
-
-        val showDetails = settingsTab.ytdlpDetails.first()
-        var currentProgress = 0f
-
-        try {
-            if (settingsTab.audioHistory.first() && audio != null) {
-                settingsTab.setJSONAudio(
-                    JSONHistoryCards(
-                        title,
-                        thumbnail,
-                        url,
-                        uploader,
-                        duration,
-                        System.currentTimeMillis(),
-                        )
-                    )
-                 }
-
-            if (settingsTab.videoHistory.first() && video != null) {
-                settingsTab.setJSONVideo(
-                    JSONHistoryCards(
-                        title,
-                        thumbnail,
-                        url,
-                        uploader,
-                        duration,
-                        System.currentTimeMillis()
-                    )
-                )
-            }
-        } catch (e: Exception) {
-            Log.d("fermux", "failed to save audio JSON", e)
-            Log.d("fermux", "failed to save video JSON", e)
-        }
-
-        return try { // TODO. this should be in TheDownloader file, not here.
-            downloaderLogic(
-                context = applicationContext,
-                url = url,
-                musicQuality = audio,
-                videoQuality = video,
-                showDetails = showDetails,
-                sponsorBlock = sponsorBlock,
-                sponsorBlockCategories = sponsorBlockCategories,
-                onProgress = { progress ->
-                    currentProgress = progress
-                    runBlocking {
-                        setProgress(workDataOf("progress" to currentProgress, "text" to ""))
-                    }
-                },
-                logText = { line ->
-                    runBlocking { setProgress(workDataOf("progress" to currentProgress, "text" to line)) }
-                },
-            )
-            Result.success()
-        } catch (e: Exception) {
-            Log.d("downloadWorker", "download failed", e)
-            Result.failure(workDataOf("error" to (e.message ?: e.toString())))
-        }
-    }
 }
