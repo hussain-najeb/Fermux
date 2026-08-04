@@ -21,13 +21,14 @@ fun DownloaderCards(state: DownloadStatus, downloaderViewModel: DownloaderViewMo
         targetState = state,
         transitionSpec = {
             (slideInVertically(
-                animationSpec = spatialSpec.fastSpatialSpec(),
+                animationSpec = spatialSpec.slowSpatialSpec(),
                 initialOffsetY = { -it }
-            ) + fadeIn()).togetherWith(
+            ) + fadeIn(initialAlpha = 0.1f))
+                .togetherWith(
                 slideOutVertically(
-                    animationSpec = spatialSpec.fastSpatialSpec(),
+                    animationSpec = spatialSpec.slowSpatialSpec(),
                     targetOffsetY = { -it }
-                ) + fadeOut()
+                ) + fadeOut(targetAlpha = 0.1f)
             )
         },
         label = "DownloaderCardTransition"
