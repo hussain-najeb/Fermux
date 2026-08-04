@@ -1,42 +1,66 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderCards
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 
 @Composable
-fun DownloaderCards (state: DownloadStatus, downloaderViewModel: DownloaderViewModel) {
-
+fun DownloaderCards(state: DownloadStatus, downloaderViewModel: DownloaderViewModel) {
     val context = LocalContext.current
-    when (state) {
-        is DownloadStatus.Idle -> {} // Idle state of the card
+    val spatialSpec = MaterialTheme.motionScheme
 
-        is DownloadStatus.Loading -> {
-            LoadingCard(state = state,
-                onCancel = {downloaderViewModel.cancelButton(context)})
-        } // while downloading the info to the card
-
-        is DownloadStatus.Downloading -> {
-            FinishedCard(state.metadata,
-                state.downloadProgress,
-//                downloaderLogs = downloaderLogs,
-//                showYtdlpDetails = viewModel.showYtdlpDetails,
-                onCancel = {downloaderViewModel.cancelButton(context)})
-        } // just to get a damn bar to show the progress.
-
-        is DownloadStatus.Loaded -> {
-            FinishedCard(state.metadata,
-                onCancel = {downloaderViewModel.cancelButton(context)})
+    AnimatedContent(
+        targetState = state,
+        transitionSpec = {
+            (slideInVertically(
+                animationSpec = spatialSpec.fastSpatialSpec(),
+                initialOffsetY = { -it }
+            ) + fadeIn()).togetherWith(
+                slideOutVertically(
+                    animationSpec = spatialSpec.fastSpatialSpec(),
+                    targetOffsetY = { -it }
+                ) + fadeOut()
+            )
+        },
+        label = "DownloaderCardTransition"
+    ) { targetState ->
+        when (targetState) {
+            is DownloadStatus.Idle -> {}
+            is DownloadStatus.Loading -> {
+                LoadingCard(
+                    state = targetState,
+                    onCancel = { downloaderViewModel.cancelButton(context) }
+                )
+            }
+            is DownloadStatus.Downloading -> {
+                FinishedCard(
+                    targetState.metadata,
+                    targetState.downloadProgress,
+                    onCancel = { downloaderViewModel.cancelButton(context) }
+                )
+            }
+            is DownloadStatus.Loaded -> {
+                FinishedCard(
+                    targetState.metadata,
+                    onCancel = { downloaderViewModel.cancelButton(context) }
+                )
+            }
+            is DownloadStatus.Error -> {
+                ErrorCard(
+                    errorMessage = targetState.errorMessage,
+                    rawError = targetState.rawError,
+                    onCancel = { downloaderViewModel.cancelButton(context) }
+                )
+            }
         }
-        // the card gets loaded to view the damn
-        // content when you call state. state here is assigned to "metadata", then to the actual card
-        // composable later gets to be assigned to "DownloadMetadata" to fill out the
-        // info in that data class.
-
-        is DownloadStatus.Error -> {
-            ErrorCard(state.errorMessage, state.rawError, onCancel = {downloaderViewModel.cancelButton(context)})
-        } // if god forbids, an error happens; it's seen here.
     }
 }
 
