@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -68,7 +69,7 @@ fun FermuxCancelButton(
 
           interactionSource = interactionSource,
           contentPadding = PaddingValues(10.dp),
-          border = BorderStroke(width = 1.dp, color = color.fermuxTertiaryBorder),
+          border = BorderStroke(width = 1.dp, color = Color.Transparent),
           shape = CircleShape,
           onClick = onClick,
           colors = ButtonDefaults.buttonColors(

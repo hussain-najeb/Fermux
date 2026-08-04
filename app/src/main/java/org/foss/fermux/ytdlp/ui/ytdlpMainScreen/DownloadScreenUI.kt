@@ -34,13 +34,11 @@ import org.foss.fermux.ytdlp.ui.historyPage.DownloadedAudioScreen
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderCards.DownloaderCards
 
 
-
 enum class Page(val image: ImageVector, val descriptor: String) {
     DownloadPage(Icons.Default.Download, "Download Page"),
     AudioListPage(Icons.Filled.LibraryMusic, "Audio Page"),
     VideoListPage(Icons.Filled.VideoLibrary, "Video Page"),
 }
-
 
 /**
  * The download tab's content: URL input, download/clipboard actions, and the

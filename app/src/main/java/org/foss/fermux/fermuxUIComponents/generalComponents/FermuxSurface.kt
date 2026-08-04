@@ -17,14 +17,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
-import org.foss.fermux.ui.theme.FermuxColor
+import androidx.compose.ui.graphics.Color
+import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun FermuxSurface(
      modifier: Modifier = Modifier,
-     expanded: Boolean = false,
      shape: Shape = RoundedCornerShape(4.dp),
-     color: FermuxColor = FermuxColor(),
+     expanded: Boolean = false,
+     color: Color = FermuxColors.fermuxSurface,
+     border: BorderStroke? = BorderStroke(1.5.dp, FermuxColors.fermuxPrimaryBorder),
      padding: PaddingValues = PaddingValues(0.dp),
      content: @Composable ColumnScope.() -> Unit
 ) {
@@ -37,8 +39,8 @@ fun FermuxSurface(
           Surface(
                modifier = modifier,
                shape = shape,
-               border = BorderStroke(1.5.dp, color.fermuxPrimaryBorder),
-               color = color.fermuxSurface,
+               border = border,
+               color = color,
           ) {
                Column(
                     modifier = Modifier.padding(padding)

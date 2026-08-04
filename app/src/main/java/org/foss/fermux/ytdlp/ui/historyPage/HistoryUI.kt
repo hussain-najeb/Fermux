@@ -53,8 +53,8 @@ import java.util.Locale
 @Composable
 fun HistoryCards(entry: JSONHistoryCards) {
 
-        var expanded by remember { mutableStateOf(false) }
-        @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
+    var expanded by remember { mutableStateOf(false) }
+    @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
 
         Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
             FermuxCard(

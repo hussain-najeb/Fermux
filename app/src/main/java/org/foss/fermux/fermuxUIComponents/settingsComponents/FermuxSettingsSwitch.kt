@@ -42,7 +42,7 @@ fun FermuxSettingsSwitch(
                     Icon(
                          painter = settingImage,
                          contentDescription = null,
-                         tint = FermuxColor().fermuxSettingsTextColor,
+                         tint = FermuxColor().fermuxOffWhiteTextColor,
                          modifier = imageModifier
                     )
                } else {
@@ -50,7 +50,7 @@ fun FermuxSettingsSwitch(
                          Icon(
                               imageVector = settingIcon,
                               contentDescription = null,
-                              tint = FermuxColors.fermuxSettingsTextColor,
+                              tint = FermuxColors.fermuxOffWhiteTextColor,
                               modifier = iconModifier
                          )
                     }
@@ -60,7 +60,7 @@ fun FermuxSettingsSwitch(
                Text(
                     text = settingDescription,
                     fontFamily = FontFamily.Default,
-                    color = color.fermuxSettingsTextColor
+                    color = color.fermuxOffWhiteTextColor
                )
           },
           trailingContent = {
