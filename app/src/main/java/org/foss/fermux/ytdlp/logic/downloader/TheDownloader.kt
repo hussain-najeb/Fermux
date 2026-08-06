@@ -7,7 +7,6 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.webkit.MimeTypeMap
-import android.webkit.WebSettings
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLRequest
 import kotlinx.coroutines.Dispatchers
@@ -16,21 +15,25 @@ import java.io.File
 
 
 suspend fun downloaderLogic(
-    logText: (String) -> Unit,
-    showDetails: Boolean,
     context: Context,
-    url: String,
-    taskId: String,
-    musicQuality: AudioQuality? = null,
-    videoQuality: VideoQuality? = null,
-    sponsorBlock: Boolean = false,
-    sponsorBlockCategories: Set<String> = emptySet(),
-    onProgress: (Float) -> Unit) {
+     logText: (String) -> Unit,
+     showDetails: Boolean,
+     url: String,
+     taskId: String,
+     aria2c: Boolean = true,
+     aria2cHLSWithDASHCase: Boolean = false,
+     sleepRequest: Int? = null,
+     musicQuality: AudioQuality? = null,
+     videoQuality: VideoQuality? = null,
+     sponsorBlock: Boolean = false,
+     sponsorBlockCategories: Set<String> = emptySet(),
+     onProgress: (Float) -> Unit) {
 
     /**
      * Problem:
-     * YouTube has been rolling out PO Token (Proof of Origin Token) requirements more aggressively — this is Google's newer anti-bot layer, separate from Pornhub-style TLS fingerprinting and separate from Instagram's session checks. It specifically requires either:
-     *
+     * YouTube has been rolling out PO Token (Proof of Origin Token) requirements more aggressively
+     * this is Google's newer anti-bot layer, separate from TLS fingerprinting and separate from
+     * something like Instagram-like session checks. It specifically requires either:
      * A valid PO token (generated via a JS challenge, which yt-dlp gets through a plugin), or
      * Cookies from a real logged-in session as a fallback
      *
@@ -54,23 +57,39 @@ suspend fun downloaderLogic(
     val outputPath = "${downloadDir?.absolutePath}/%(title)s.%(ext)s"
     val request = YoutubeDLRequest(url)
 
+
+
+    if (aria2cHLSWithDASHCase && videoQuality != VideoQuality.BEST) {
+        request.addOption("--downloader", "libaria2c.so")
+        request.addOption("--external-downloader-args", "aria2c:--summary-interval=1")
+    }
+    if (aria2c) {
+        request.addOption("--downloader", "libaria2c.so")
+        request.addOption("--external-downloader-args", "aria2c:--summary-interval=1")
+
+    }
+
+    if (sleepRequest != null) {
+        request.addOption("--sleep-requests", sleepRequest)
+    }
+
     if (sponsorBlock && sponsorBlockCategories.isNotEmpty()) {
         request.addOption("--sponsorblock-remove", sponsorBlockCategories.joinToString(","))
     }
-
     if (showDetails) {
         request.addOption("-v")
     }
+
 
     musicQuality?.let {
         request.addOption("-x")
         request.addOption("--audio-format", it.musicQuality)
         request.addOption("--audio-quality", it.musicQuality)
     }
-
     videoQuality?.let {
         request.addOption("-f", it.videoQuality)
     }
+
     request.addOption("-o", outputPath)
 
     withContext(Dispatchers.IO) {
@@ -91,7 +110,6 @@ suspend fun downloaderLogic(
             ?.forEach { file ->
                 copyFileToDownloads(context, file, file.name)
             }
-
         Log.d("fermux", "exit=${response.exitCode}")
         Log.d("fermux", "out=${response.out}")
         Log.d("fermux", "err=${response.err}")

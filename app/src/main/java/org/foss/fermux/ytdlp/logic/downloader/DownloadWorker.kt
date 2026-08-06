@@ -13,9 +13,13 @@ import org.foss.fermux.storage.SettingsTab
 class DownloadWorker(context: Context, params: WorkerParameters ) :
      CoroutineWorker(context, params) {
      override suspend fun doWork(): Result {
+
           val settingsTab = SettingsTab(applicationContext)
           val sponsorBlock = settingsTab.sponsorBlock.first()
           val sponsorBlockCategories = settingsTab.sponsorBlockCategories.first()
+          val aria2c = settingsTab.aria2c.first()
+          val aria2cHLSWithDASHCase = settingsTab.aria2cHLSWithDASHCase.first()
+          val sleepRequest = settingsTab.sleepRequest.first()
 
           val audioName = inputData.getString("audio")
           val videoName = inputData.getString("video")
@@ -72,6 +76,9 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
                     showDetails = showDetails,
                     sponsorBlock = sponsorBlock,
                     sponsorBlockCategories = sponsorBlockCategories,
+                    aria2c = aria2c,
+                    aria2cHLSWithDASHCase = aria2cHLSWithDASHCase,
+                    sleepRequest = sleepRequest,
                     onProgress = { progress ->
                          currentProgress = progress
                          runBlocking {
@@ -79,7 +86,8 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
                          }
                     },
                     logText = { line ->
-                         runBlocking { setProgress(workDataOf("progress" to currentProgress, "text" to line)) }
+                         runBlocking {
+                              setProgress(workDataOf("progress" to currentProgress, "text" to line)) }
                     },
                )
                Result.success()

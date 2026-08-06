@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import coil3.ImageLoader
 import coil3.compose.setSingletonImageLoaderFactory
 import coil3.video.VideoFrameDecoder
+import com.yausername.aria2c.Aria2c
 import com.yausername.ffmpeg.FFmpeg.getInstance
 import com.yausername.youtubedl_android.YoutubeDL
 import org.foss.fermux.ui.theme.FermuxTheme
@@ -16,7 +17,7 @@ class MainActivity : ComponentActivity() {
 
         getInstance().init(this)
         YoutubeDL.getInstance().init(this)
-
+        Aria2c.getInstance().init(this)
 
         setContent {
             FermuxTheme {
