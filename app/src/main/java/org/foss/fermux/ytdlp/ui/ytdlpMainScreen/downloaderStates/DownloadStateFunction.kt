@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderCards
+package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
@@ -31,7 +31,8 @@ fun DownloaderCards(state: DownloadStatus, downloaderViewModel: DownloaderViewMo
                 ) + fadeOut(targetAlpha = 0.1f)
             )
         },
-        label = "DownloaderCardTransition"
+        label = "DownloaderCardTransition",
+        contentKey = { it::class }
     ) { targetState ->
         when (targetState) {
             is DownloadStatus.Idle -> {}
@@ -54,14 +55,19 @@ fun DownloaderCards(state: DownloadStatus, downloaderViewModel: DownloaderViewMo
                     onCancel = { downloaderViewModel.cancelButton(context) }
                 )
             }
+            is DownloadStatus.Completed -> {
+                FinishedCard(
+                    targetState.metadata,
+                    progress = 100f,
+                    onCancel = { downloaderViewModel.cancelButton(context) }
+                )
+            }
             is DownloadStatus.Error -> {
                 ErrorCard(
                     errorMessage = targetState.errorMessage,
-                    rawError = targetState.rawError,
-                    onCancel = { downloaderViewModel.cancelButton(context) }
+                    rawError = targetState.rawError
                 )
             }
         }
     }
 }
-

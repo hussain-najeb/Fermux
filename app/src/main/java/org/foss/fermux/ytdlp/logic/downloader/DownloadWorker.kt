@@ -34,6 +34,7 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
 
           val showDetails = settingsTab.ytdlpDetails.first()
           var currentProgress = 0f
+          var lastProgressUpdateAt = 0L
 
           try {
                if (settingsTab.audioHistory.first() && audio != null) {
@@ -79,15 +80,23 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
                     aria2c = aria2c,
                     aria2cHLSWithDASHCase = aria2cHLSWithDASHCase,
                     sleepRequest = sleepRequest,
-                    onProgress = { progress ->
-                         currentProgress = progress
-                         runBlocking {
-                              setProgress(workDataOf("progress" to currentProgress, "text" to ""))
+                    onUpdate = { progress, line ->
+                         val now = System.currentTimeMillis()
+                         currentProgress = progress.coerceIn(0f, 100f)
+
+                         // WorkManager progress is persisted in its database. Do not write
+                         // once for the progress callback and again for the log callback.
+                         if (now - lastProgressUpdateAt >= 500L) {
+                              lastProgressUpdateAt = now
+                              runBlocking {
+                                   setProgress(
+                                        workDataOf(
+                                             "progress" to currentProgress,
+                                             "text" to line
+                                        )
+                                   )
+                              }
                          }
-                    },
-                    logText = { line ->
-                         runBlocking {
-                              setProgress(workDataOf("progress" to currentProgress, "text" to line)) }
                     },
                )
                Result.success()

@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderCards
+package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
@@ -29,7 +29,6 @@ import org.foss.fermux.ui.theme.JetbrainsMono
 fun ErrorCard(
      errorMessage: String,
      rawError: String,
-     onCancel: () -> Unit
 ) {
      @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
      val scrollState = rememberScrollState()

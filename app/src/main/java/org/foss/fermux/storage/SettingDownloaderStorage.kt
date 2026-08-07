@@ -2,6 +2,7 @@
 
 package org.foss.fermux.storage
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -39,7 +40,7 @@ class SettingsTab(private val context: Context) {
 
     val notificationState: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[DOWNLOAD_PROGRESS_NOTIFICATION] ?: true }
 
-    val sleepRequest: Flow<Int?> = context.dataStore.data.map { preferences -> preferences[SLEEP_REQUEST_KEY] ?: 2}
+    val sleepRequest: Flow<Int?> = context.dataStore.data.map { preferences -> preferences[SLEEP_REQUEST_KEY] ?: 1}
     val aria2c: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[ARIA2C_KEY] ?: true }
 
     val aria2cHLSWithDASHCase: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[ARIA2C_EDGE_CASE] ?: false }
@@ -69,9 +70,10 @@ class SettingsTab(private val context: Context) {
         context.dataStore.edit { preferences -> preferences[DOWNLOAD_PROGRESS_NOTIFICATION] = value }
     }
 
+    @SuppressLint("SuspiciousIndentation")
     suspend fun sleepRequest (value: Int?) {
         if (value != null)
-        context.dataStore.edit { preferences -> preferences[SLEEP_REQUEST_KEY] ?: 2 }
+        context.dataStore.edit { preferences -> preferences[SLEEP_REQUEST_KEY] ?: 1 }
     }
 
     suspend fun aria2cImpl (value: Boolean) {

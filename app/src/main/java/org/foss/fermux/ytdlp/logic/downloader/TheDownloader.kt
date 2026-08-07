@@ -16,7 +16,6 @@ import java.io.File
 
 suspend fun downloaderLogic(
     context: Context,
-     logText: (String) -> Unit,
      showDetails: Boolean,
      url: String,
      taskId: String,
@@ -27,7 +26,7 @@ suspend fun downloaderLogic(
      videoQuality: VideoQuality? = null,
      sponsorBlock: Boolean = false,
      sponsorBlockCategories: Set<String> = emptySet(),
-     onProgress: (Float) -> Unit) {
+     onUpdate: (Float, String) -> Unit) {
 
     /**
      * Problem:
@@ -83,7 +82,7 @@ suspend fun downloaderLogic(
 
     musicQuality?.let {
         request.addOption("-x")
-        request.addOption("--audio-format", it.musicQuality)
+        request.addOption("--audio-format", "mp3")
         request.addOption("--audio-quality", it.musicQuality)
     }
     videoQuality?.let {
@@ -100,8 +99,7 @@ suspend fun downloaderLogic(
             ?: emptySet()
 
         val response = YoutubeDL.getInstance().execute(request, taskId) { progress, _, line ->
-            onProgress(progress)
-            logText(line)
+            onUpdate(progress, line)
         }
 
         downloadDir

@@ -2,6 +2,7 @@
 
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 import android.annotation.SuppressLint
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -31,7 +32,7 @@ import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 import org.foss.fermux.ytdlp.ui.historyPage.DownloadVideoList
 import org.foss.fermux.ytdlp.ui.historyPage.DownloadedAudioScreen
-import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderCards.DownloaderCards
+import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates.DownloaderCards
 
 
 enum class Page(val image: ImageVector, val descriptor: String) {
@@ -48,7 +49,7 @@ enum class Page(val image: ImageVector, val descriptor: String) {
  */
 @Composable
 fun DownloadContent(
-    @SuppressLint("ContextCastToActivity") viewModel: DownloaderViewModel = viewModel()) {
+    @SuppressLint("ContextCastToActivity") viewModel: DownloaderViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)) {
     val context = LocalContext.current
     val clipboard = LocalClipboardManager.current
 
@@ -85,7 +86,7 @@ fun DownloadContent(
                     unfocusedBorderColor    = FermuxColors.fermuxPrimaryBorder,
                     focusedLabelColor       = FermuxColors.fermuxPrimaryBorder,
                     unfocusedLabelColor     = FermuxColors.fermuxTextColorBackground,
-                    cursorColor             = FermuxColors.fermuxPrimaryBorder, // TODO. Have the cursor change color every second.
+                    cursorColor             = FermuxColors.fermuxGenericBorder, // TODO. Have the cursor change color every second.
                     focusedTextColor        = Color.White,
                     unfocusedTextColor      = Color.White,
                     unfocusedContainerColor = FermuxColors.fermuxComponents,

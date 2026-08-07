@@ -62,9 +62,7 @@ class FFmpegViewModel: ViewModel() {
     var inputUri by mutableStateOf<Uri?>(null)
     var FFmpegLogs by mutableStateOf("")
     var state by mutableStateOf<FFmpegStatus>(FFmpegStatus.Idle)
-    // Default to audio, not MP4 (bug 5)
     var selectedFormat by mutableStateOf(FFmpegTargetFormat.WAV)
-    // Tracks what the picked file actually is (bug 3)
     var inputKind by mutableStateOf<MediaKind?>(null)
 
     fun fail(message: String) {
@@ -84,7 +82,6 @@ class FFmpegViewModel: ViewModel() {
     private fun isConversionAllowed(target: FFmpegTargetFormat): Boolean {
         val input = inputKind ?: return false
         return when (input) {
-            // Audio can only become audio — blocks audio→video crashes (bug 3)
             MediaKind.AUDIO -> target.category == MediaKind.AUDIO
             // Video can be converted, demuxed, or frame-grabbed
             MediaKind.VIDEO -> true

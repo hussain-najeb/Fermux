@@ -1,5 +1,7 @@
 package org.foss.fermux.settings.ui
 
+import android.annotation.SuppressLint
+import androidx.activity.ComponentActivity
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -74,8 +76,8 @@ enum class UpdateState {
 
 @Composable
 fun SettingsScreen(
-    navController: NavHostController,
-    settingsViewModel: SettingsViewModel = viewModel()
+     navController: NavHostController,
+     @SuppressLint("ContextCastToActivity") settingsViewModel: SettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
 ) {
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current

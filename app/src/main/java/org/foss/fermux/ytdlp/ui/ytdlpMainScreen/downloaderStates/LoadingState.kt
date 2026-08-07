@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderCards
+package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

@@ -10,7 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 
 @Composable
-fun YtdlpDetailsPage() {
+fun SponsorBlockPage() {
 
      var showSponsorBlockDialog by remember { mutableStateOf(false) }
 

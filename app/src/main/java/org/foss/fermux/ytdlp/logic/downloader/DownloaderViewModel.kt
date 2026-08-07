@@ -92,6 +92,7 @@ class DownloaderViewModel : ViewModel() {
             .build()
 
         activeProcess = requestedUrls.id
+        state = DownloadStatus.Downloading(0f, metadata)
 
         val workManager = WorkManager
             .getInstance(context)
@@ -110,11 +111,12 @@ class DownloaderViewModel : ViewModel() {
                         }
                     }
                         val progress = workInfo.progress.getFloat("progress", 0f)
+                            .coerceIn(0f, 100f)
 
                         state = DownloadStatus.Downloading(progress, metadata)
                     }
                     WorkInfo.State.SUCCEEDED -> {
-                        state = DownloadStatus.Loaded(metadata)
+                        state = DownloadStatus.Completed(metadata)
                         activeProcess = null
                     }
                     WorkInfo.State.FAILED -> {

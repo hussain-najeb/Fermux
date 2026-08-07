@@ -9,7 +9,8 @@ data class DownloadMetadata (
 sealed class DownloadStatus {
     data object Idle : DownloadStatus()
     data object Loading : DownloadStatus()
-    data class Loaded(val metadata: DownloadMetadata) : DownloadStatus()
+    data class Loaded(val metadata: DownloadMetadata) : DownloadStatus() // Takes the loaded metadata first and lay it for the user
+    data class Completed(val metadata: DownloadMetadata) : DownloadStatus()
     data class Error(val errorMessage: String, val rawError: String) : DownloadStatus()
     data class Downloading(val downloadProgress: Float, val metadata : DownloadMetadata) : DownloadStatus()
 }
@@ -21,6 +22,12 @@ enum class AudioQuality (val musicQuality: String) // audio quality class to pas
     HIGH("192K"),
     MEDIUM("128k")
 }
+
+
+// TODO. Add format supoprt for the downloader tab dialog
+//enum class AudioFormat (val musicFormat: String) {
+//    MP3()
+//}
 
 enum class VideoQuality(val videoQuality: String) {
     BEST("bestvideo+bestaudio/best"),
