@@ -100,7 +100,7 @@ fun FermuxIconButton(
                imageVector = icon,
                tint = iconColor,
                contentDescription = contentDescription,
-               modifier = modifier.rotate(iconRotate)
+               modifier = Modifier.rotate(iconRotate)
           )
      }
 }

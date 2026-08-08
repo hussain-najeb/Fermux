@@ -14,7 +14,6 @@ import org.foss.fermux.ffmpeg.ui.formatSheet.VideoFormatSheet
 import org.foss.fermux.settings.ui.SettingsScreen
 import org.foss.fermux.terminal.main.ui.FermuxTerminalScreen
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloaderScreen
-import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.SponsorBlockPage
 
 
 sealed class Screen (val route: String, val descriptor: String?) {
@@ -26,7 +25,6 @@ sealed class Screen (val route: String, val descriptor: String?) {
     object AudioFormatSheet:  Screen("audio"     , "Audio")
     object VideoFormatSheet:  Screen("video"     , "Video")
     object ImageFormatSheet:  Screen("Image"     , "Image")
-    object YtdlpDetailsPage:  Screen("Details"   , "Ytdlp details for the settings")
 }
 
 @SuppressLint("ViewModelConstructorInComposable")
@@ -49,6 +47,5 @@ fun FermuxAppMainScreen() {
         composable(Screen.Settings.route) { SettingsScreen(navController = navigationController) }
         composable(Screen.Downloader.route) { DownloaderScreen(navController = navigationController) }
         composable(Screen.Converter.route) { ConverterScreen(navigationController = navigationController) }
-        composable(Screen.YtdlpDetailsPage.route) { SponsorBlockPage() }
     }
 }

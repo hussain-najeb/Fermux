@@ -30,7 +30,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -54,10 +56,10 @@ import org.foss.fermux.fermuxUIComponents.buttons.FermuxIconButton
 import org.foss.fermux.fermuxUIComponents.buttons.FermuxImageButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxDivider
 import org.foss.fermux.fermuxUIComponents.settingsComponents.FermuxSettingsSwitch
-import org.foss.fermux.main.Screen
 import org.foss.fermux.settings.logic.SettingsViewModel
 import org.foss.fermux.settings.logic.getAppVersionName
 import org.foss.fermux.ui.theme.FermuxColors
+import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.SponsorBlockOptions
 
 private data class SettingListInfo(
     val settingTitle: String,
@@ -108,11 +110,12 @@ fun SettingsScreen(
         ),
         label = "update_rotation"
     )
-
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState(),
         canScroll = { true }
     )
+
+    var showSponsorDialog by remember { mutableStateOf(false) }
 
     val downloaderSettingLists = listOf(
         SettingListInfo(
@@ -184,7 +187,7 @@ fun SettingsScreen(
                         border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxTertiaryBorder),
                         contentPadding = PaddingValues(9.dp),
                         icon = Icons.Default.Settings,
-                        onClick = { navController.navigate(Screen.YtdlpDetailsPage.route) } // TODO. Add an AlertDialog to configure the flags for the SponsorBlock API.
+                        onClick = { showSponsorDialog = true } // TODO. Add an AlertDialog to configure the flags for the SponsorBlock API.
                     )
                 }
             }
@@ -254,6 +257,11 @@ fun SettingsScreen(
             )
         }
     ) { paddingValues ->
+
+        if (showSponsorDialog) {
+            SponsorBlockOptions(onDismissRequest = { showSponsorDialog = false })
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
