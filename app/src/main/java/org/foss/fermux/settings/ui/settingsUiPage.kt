@@ -61,7 +61,7 @@ import org.foss.fermux.settings.logic.getAppVersionName
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.SponsorBlockOptions
 
-private data class SettingListInfo(
+data class SettingListInfo(
     val settingTitle: String,
     val settingDescription: String,
     val settingIcon: ImageVector? = null,
@@ -89,23 +89,22 @@ fun SettingsScreen(
     val notificationState by settingsViewModel.notificationState.collectAsStateWithLifecycle()
     val audioHistory by settingsViewModel.audioHistory.collectAsStateWithLifecycle()
     val videoHistory by settingsViewModel.videoHistory.collectAsStateWithLifecycle()
-    val ytdlpUpdateStatus by settingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
     val sponsorBlock by settingsViewModel.sponsorBlock.collectAsStateWithLifecycle()
+    val isCheckingForUpdate by settingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
     val updateChecker by settingsViewModel.upToDate.collectAsStateWithLifecycle()
-
     val updateState = when {
-        ytdlpUpdateStatus == "Checking for update..." -> UpdateState.UPDATING
+        isCheckingForUpdate  -> UpdateState.UPDATING
         updateChecker == true -> UpdateState.SUCCESS
         updateChecker == false -> UpdateState.FAILED
-        else -> UpdateState.IDLE
+         else -> UpdateState.IDLE
     }
 
     val infiniteTransition = rememberInfiniteTransition(label = "update_transition") // TODO. Fix it, it doesnt look clean
     val rotation by infiniteTransition.animateFloat(
         initialValue = 0f,
-        targetValue = 360f,
+        targetValue = 1800f,
         animationSpec = infiniteRepeatable(
-            animation = tween(1000, easing = LinearEasing),
+            animation = tween(10000, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         ),
         label = "update_rotation"
@@ -120,16 +119,12 @@ fun SettingsScreen(
     val downloaderSettingLists = listOf(
         SettingListInfo(
             settingTitle = "Update Downloader",
-            border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxSecondaryBorder),
             settingDescription = "Press the update button to update your current version of ytdlp. Current version is ${settingsViewModel.currentVersionName}",
+            border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxSecondaryBorder),
             settingIcon = Icons.Default.Update,
             content = {
 
-                val updatingIcon = when (updateState) {
-                    UpdateState.IDLE, UpdateState.UPDATING -> painterResource(id = R.drawable.update_icon)
-                    UpdateState.SUCCESS -> painterResource(id = R.drawable.check)
-                    UpdateState.FAILED -> rememberVectorPainter(image = Icons.Default.Close)
-                }
+                val updatingIcon = updateIconPainter(updateState)
 
                 FermuxImageButton(
                     modifier = Modifier.size(50.dp),
@@ -145,7 +140,6 @@ fun SettingsScreen(
             settingTitle = "Download Notifications",
             settingDescription = "Notify me when the downloaded files finish downloading",
             settingImage = if (notificationState) painterResource(R.drawable.bell_on) else painterResource(R.drawable.bell_off) ,
-            border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxGenericBorder),
             checked = notificationState,
             onCheckedChange = { settingsViewModel.setNotificationState(it) }
         ),
@@ -153,7 +147,6 @@ fun SettingsScreen(
             settingTitle = "Audio History",
             settingDescription = "Enable/Disable audio history",
             settingIcon = Icons.Default.AudioFile,
-            border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxGenericBorder),
             checked = audioHistory,
             onCheckedChange = { settingsViewModel.setAudioHistory(it) }
         ),
@@ -161,7 +154,6 @@ fun SettingsScreen(
             settingTitle = "Video History",
             settingDescription = "Enable/Disable video history",
             settingIcon = Icons.Default.VideoFile,
-            border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxGenericBorder),
             checked = videoHistory,
             onCheckedChange = { settingsViewModel.setVideoHistory(it) }
         ),
@@ -169,7 +161,6 @@ fun SettingsScreen(
             settingTitle = "Yt-dlp Details",
             settingDescription = "Enable to get feedback on the download state of the downloaded media",
             settingImage = if (ytdlpDetails) painterResource(R.drawable.logs_icon) else painterResource(R.drawable.logs_off),
-            border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxGenericBorder),
             checked = ytdlpDetails,
             onCheckedChange = { settingsViewModel.setYtdlpDetails(it) }
         ),
@@ -187,7 +178,7 @@ fun SettingsScreen(
                         border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxTertiaryBorder),
                         contentPadding = PaddingValues(9.dp),
                         icon = Icons.Default.Settings,
-                        onClick = { showSponsorDialog = true } // TODO. Add an AlertDialog to configure the flags for the SponsorBlock API.
+                        onClick = { showSponsorDialog = true }
                     )
                 }
             }
@@ -199,7 +190,6 @@ fun SettingsScreen(
             settingTitle = "README Page",
             settingDescription = "Check the Github Repository for more information",
             settingIcon = Icons.Default.Description,
-            border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxGenericBorder),
             content = {
                 Box(modifier = Modifier.padding(top = 12.dp)) {
                     FermuxIconButton(
@@ -327,5 +317,14 @@ fun SettingsScreen(
 
             Spacer(Modifier.height(10.dp))
         }
+    }
+}
+
+@Composable
+private fun updateIconPainter(updateState: UpdateState): Painter {
+   return when (updateState) {
+        UpdateState.IDLE, UpdateState.UPDATING -> painterResource(id = R.drawable.update_icon)
+        UpdateState.SUCCESS -> painterResource(id = R.drawable.check)
+        UpdateState.FAILED -> rememberVectorPainter(image = Icons.Default.Close)
     }
 }

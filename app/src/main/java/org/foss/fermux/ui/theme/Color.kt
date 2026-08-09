@@ -24,7 +24,7 @@ data class FermuxColor(
 
     // Fermux global components
     val fermuxComponents:           Color    = Color(0xFF3C3F68),
-    val fermuxSaturatedComponents:  Color    = Color(0xFF1f2034),
+    val fermuxSaturatedComponents:  Color    = Color(0xFF22243E),
     val fermuxBackground:           Color    = Color(0xFF181825),
     val fermuxSurface:              Color    = Color(0xFF1f2034),
     val fermuxErrorCardColor:       Color    = Color(0xFF8c1d18),
@@ -40,6 +40,7 @@ data class FermuxColor(
     val fermuxInActiveIcon:         Color    = Color(0xFF9FAAB6),
 
     // Fermux text
+    val fermuxWhiteColor:           Color    = Color.White,
     val fermuxTextColorBackground:  Color    = Color(0xFF727882),
     val fermuxOffWhiteTextColor:    Color    = Color(0xFFA8ADB4),
     val fermuxLightErrorTextColor:  Color    = Color(0xFFf2b8b5),

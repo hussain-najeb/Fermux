@@ -34,8 +34,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
-import org.foss.fermux.fermuxUIComponents.FermuxDownloadDescription
-import org.foss.fermux.fermuxUIComponents.FermuxFinishedDownloadCard
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.FermuxDownloadDescription
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.FermuxFinishedDownloadCard
 import org.foss.fermux.fermuxUIComponents.buttons.FermuxCancelButton
 import org.foss.fermux.fermuxUIComponents.buttons.FermuxIconButton
 import org.foss.fermux.settings.logic.SettingsViewModel

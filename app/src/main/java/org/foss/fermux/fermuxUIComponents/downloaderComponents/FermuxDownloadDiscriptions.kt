@@ -1,4 +1,4 @@
-package org.foss.fermux.fermuxUIComponents
+package org.foss.fermux.fermuxUIComponents.downloaderComponents
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
