@@ -40,7 +40,8 @@ class SettingsTab(private val context: Context) {
 
     val notificationState: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[DOWNLOAD_PROGRESS_NOTIFICATION] ?: true }
 
-    val sleepRequest: Flow<Int?> = context.dataStore.data.map { preferences -> preferences[SLEEP_REQUEST_KEY] ?: 1}
+    val sleepRequest: Flow<Int> = context.dataStore.data.map { preferences -> preferences[SLEEP_REQUEST_KEY] ?: 0}
+
     val aria2c: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[ARIA2C_KEY] ?: true }
 
     val aria2cHLSWithDASHCase: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[ARIA2C_EDGE_CASE] ?: false }
@@ -71,16 +72,15 @@ class SettingsTab(private val context: Context) {
     }
 
     @SuppressLint("SuspiciousIndentation")
-    suspend fun sleepRequest (value: Int?) {
-        if (value != null)
-        context.dataStore.edit { preferences -> preferences[SLEEP_REQUEST_KEY] ?: value }
+    suspend fun setSleepRequest (value: Int) {
+         context.dataStore.edit { preferences -> preferences[SLEEP_REQUEST_KEY] ?: value }
     }
 
-    suspend fun aria2cImpl (value: Boolean) {
+    suspend fun setAria2cImpl (value: Boolean) {
         context.dataStore.edit { preferences -> preferences[ARIA2C_KEY] = value }
     }
 
-    suspend fun aria2cImplEdgeCase (value: Boolean) {
+    suspend fun setAria2cEdgeCase (value: Boolean) {
         context.dataStore.edit { preferences -> preferences[ARIA2C_EDGE_CASE] = value }
     }
 

@@ -43,7 +43,7 @@ fun FermuxAppMainScreen() {
         composable(Screen.AudioFormatSheet.route) { AudioFormatSheet(navigationController, ffmpegViewModel) }
         composable(Screen.ImageFormatSheet.route) { ImageFormatSheet(navigationController, ffmpegViewModel) }
         composable(Screen.Home.route) { HomeScreen(navigationController) }
-        composable(Screen.Terminal.route) { FermuxTerminalScreen() }
+        composable(Screen.Terminal.route) { FermuxTerminalScreen(navigationController) }
         composable(Screen.Settings.route) { SettingsScreen(navController = navigationController) }
         composable(Screen.Downloader.route) { DownloaderScreen(navController = navigationController) }
         composable(Screen.Converter.route) { ConverterScreen(navigationController = navigationController) }

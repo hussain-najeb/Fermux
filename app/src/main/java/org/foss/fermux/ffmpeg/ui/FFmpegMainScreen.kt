@@ -7,12 +7,14 @@ import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxLargeTopBarScaffold
 import org.foss.fermux.ui.theme.FermuxColors
 
 
@@ -22,13 +24,22 @@ fun ConverterScreen(@SuppressLint("ContextCastToActivity") viewModel: FFmpegView
 
     val context = LocalContext.current
 
-    Column(modifier = Modifier
-        .background(FermuxColors.fermuxBackground)
-        .fillMaxSize()) {
-
-        FFmepgState(viewModel.state,
-            viewModel.FFmpegLogs,
-            navigationController = navigationController,
-            viewModel = viewModel)
+    FermuxLargeTopBarScaffold(
+        title = "Converter",
+        onBack = { navigationController.popBackStack() }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .background(FermuxColors.fermuxBackground)
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            FFmepgState(
+                viewModel.state,
+                viewModel.FFmpegLogs,
+                navigationController = navigationController,
+                viewModel = viewModel
+            )
+        }
     }
 }

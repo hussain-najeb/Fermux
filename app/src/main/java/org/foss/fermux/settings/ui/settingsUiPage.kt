@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.AudioFile
 import androidx.compose.material.icons.filled.Close
@@ -23,11 +22,7 @@ import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.filled.VideoFile
-import androidx.compose.material3.LargeTopAppBar
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,11 +30,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
@@ -51,10 +44,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.buttons.FermuxBackButton
 import org.foss.fermux.fermuxUIComponents.buttons.FermuxIconButton
 import org.foss.fermux.fermuxUIComponents.buttons.FermuxImageButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxDivider
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxLargeTopBarScaffold
 import org.foss.fermux.fermuxUIComponents.settingsComponents.FermuxSettingsSwitch
 import org.foss.fermux.settings.logic.SettingsViewModel
 import org.foss.fermux.settings.logic.getAppVersionName
@@ -65,7 +58,8 @@ data class SettingListInfo(
     val settingDescription: String,
     val settingIcon: ImageVector? = null,
     val settingImage: Painter? = null,
-    val border: BorderStroke? = BorderStroke(1.dp, FermuxColors.fermuxGenericBorder),
+    val borderBoolean: Boolean = false,
+    val border: BorderStroke? = if (borderBoolean) BorderStroke(1.dp, FermuxColors.fermuxSecondaryBorder) else BorderStroke(1.dp, FermuxColors.fermuxGenericBorder),
     val checked: Boolean? = null,
     val onCheckedChange: ((Boolean) -> Unit)? = null,
     val content: @Composable (() -> Unit)? = null
@@ -83,9 +77,16 @@ fun SettingsScreen(
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
     val versionName = remember { context.getAppVersionName() }
+    var showSponsorDialog by remember { mutableStateOf(false) }
+    var showAria2cDialog by remember { mutableStateOf(false) }
+
+
 
     val ytdlpDetails by settingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
     val notificationState by settingsViewModel.notificationState.collectAsStateWithLifecycle()
+    val sleepRequest by settingsViewModel.sleepRequest.collectAsStateWithLifecycle()
+    val aria2c by settingsViewModel.aria2c.collectAsStateWithLifecycle()
+    val aria2cEdgeCase by settingsViewModel.aria2cEdgeCase.collectAsStateWithLifecycle()
     val audioHistory by settingsViewModel.audioHistory.collectAsStateWithLifecycle()
     val videoHistory by settingsViewModel.videoHistory.collectAsStateWithLifecycle()
     val isCheckingForUpdate by settingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
@@ -97,8 +98,9 @@ fun SettingsScreen(
         else -> UpdateState.IDLE
     }
 
+
     val infiniteTransition =
-        rememberInfiniteTransition(label = "update_transition")
+        rememberInfiniteTransition(label = "update transition")
     val rotation by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 1800f,
@@ -106,14 +108,8 @@ fun SettingsScreen(
             animation = tween(10000, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         ),
-        label = "update_rotation"
+        label = "update rotation"
     )
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-        rememberTopAppBarState(),
-        canScroll = { true }
-    )
-
-    var showSponsorDialog by remember { mutableStateOf(false) }
 
     val downloaderSettingLists = listOf(
         SettingListInfo(
@@ -163,18 +159,32 @@ fun SettingsScreen(
             onCheckedChange = { settingsViewModel.setYtdlpDetails(it) }
         ),
         SettingListInfo(
-            settingTitle = "SponsorBlock API",
+            settingTitle = "Aria2C Implementation",
+            settingDescription = "Aria2c is a way to make downloads faster via segmentation, works better with longer media",
+            settingImage = painterResource(id = R.drawable.layers),
+            borderBoolean = true,
+            content = { Box(modifier = Modifier.padding(top = 15.dp)) {
+                FermuxIconButton(
+                    modifier = Modifier.size(40.dp),
+                    contentPadding = PaddingValues(9.dp),
+                    icon = Icons.Default.Settings,
+                    onClick = { showAria2cDialog = true } // TODO. Add animation ot the dialog
+                    )
+                }
+            }
+        ),
+        SettingListInfo(
+            settingTitle = "SponsorBlock Implementation",
             settingDescription = "Use the SponsorBlock API to cut Sponsor segments in videos (*Note: Works best with YouTube)",
             settingImage = painterResource(R.drawable.sponsorblock),
-            border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxSecondaryBorder),
+            borderBoolean = true,
             content = {
-                Box(modifier = Modifier.padding(top = 10.dp)) {
+                Box(modifier = Modifier.padding(top = 15.dp)) {
                     FermuxIconButton(
                         modifier = Modifier.size(40.dp),
-                        border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxTertiaryBorder),
                         contentPadding = PaddingValues(9.dp),
                         icon = Icons.Default.Settings,
-                        onClick = { showSponsorDialog = true }
+                        onClick = { showSponsorDialog = true } // TODO. Add animation ot the dialog
                     )
                 }
             }
@@ -208,41 +218,10 @@ fun SettingsScreen(
         )
     )
 
-    Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
-        containerColor = FermuxColors.fermuxBackground,
-        topBar = {
-            LargeTopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = FermuxColors.fermuxBackground,
-                    scrolledContainerColor = FermuxColors.fermuxBackground,
-                    navigationIconContentColor = Color.Unspecified,
-                    titleContentColor = Color.Unspecified,
-                    actionIconContentColor = Color.Unspecified
-                ),
-                scrollBehavior = scrollBehavior,
-                title = {
-                    Text(
-                        "Settings",
-                        fontFamily = FontFamily.Default,
-                        fontWeight = FontWeight.W500,
-                        fontSize = 35.sp,
-                        color = Color.White,
-                        modifier = Modifier.padding(10.dp)
-                    )
-                },
-                navigationIcon = {
-                    FermuxBackButton(
-                        icon = Icons.AutoMirrored.Filled.ArrowBack,
-                        modifier = Modifier.padding(10.dp).size(44.dp),
-                        contentPadding = PaddingValues(3.dp),
-                        onClick = { navController.popBackStack() }
-                    )
-                }
-            )
-        }
+
+    FermuxLargeTopBarScaffold(
+        title = "Settings",
+        onBack = { navController.popBackStack() }
     ) { paddingValues ->
 
         Box(modifier = Modifier.fillMaxSize()) {
@@ -254,8 +233,6 @@ fun SettingsScreen(
                     .verticalScroll(rememberScrollState())
                     .padding(paddingValues)
             ) {
-                Spacer(Modifier.height(10.dp))
-                FermuxDivider()
                 Spacer(Modifier.height(10.dp))
 
                 Text(
@@ -312,17 +289,25 @@ fun SettingsScreen(
 
                 Spacer(Modifier.height(10.dp))
             }
+
+
             if (showSponsorDialog) {
                 SponsorBlockOptions(
                     onDismissRequest = {
-                        showSponsorDialog = false //TODO. this conflicts with the scaffold
+                        showSponsorDialog = false
+                    }
+                )
+            }
+            if (showAria2cDialog) {
+                Aria2cOptions(
+                    onDismissRequest = {
+                        showAria2cDialog = false
                     }
                 )
             }
         }
     }
 }
-
 @Composable
 private fun updateIconPainter(updateState: UpdateState): Painter {
    return when (updateState) {

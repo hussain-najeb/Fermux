@@ -24,6 +24,15 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     val notificationState: StateFlow<Boolean> = settingsTab.notificationState
         .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
+    val sleepRequest: StateFlow<Int> = settingsTab.sleepRequest
+        .stateIn(viewModelScope, SharingStarted.Lazily, 0)
+
+    val aria2c: StateFlow<Boolean> = settingsTab.aria2c
+        .stateIn(viewModelScope, SharingStarted.Lazily, true)
+
+    val aria2cEdgeCase: StateFlow<Boolean> = settingsTab.aria2cHLSWithDASHCase
+        .stateIn(viewModelScope, SharingStarted.Lazily, false)
+
     val audioHistory: StateFlow<Boolean> = settingsTab.audioHistory
         .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
@@ -46,31 +55,43 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     fun setNotificationState(value: Boolean) {
-        viewModelScope.launch {settingsTab.setNotificationState(value)}
+        viewModelScope.launch { settingsTab.setNotificationState(value) }
+    }
+
+    fun setSleepRequest(value: Int) {
+        viewModelScope.launch { settingsTab.setSleepRequest(value) }
+    }
+
+    fun setAria2cImpl(value: Boolean) {
+        viewModelScope.launch { settingsTab.setAria2cImpl(value) }
+    }
+
+    fun setAria2cEdgeCase(value: Boolean) {
+        viewModelScope.launch { settingsTab.setAria2cEdgeCase(value) }
     }
 
     fun setAudioHistory(value: Boolean) {
-        viewModelScope.launch {settingsTab.setAudioHistory(value)}
+        viewModelScope.launch { settingsTab.setAudioHistory(value) }
     }
 
     fun setVideoHistory(value: Boolean) {
-        viewModelScope.launch {settingsTab.setVideoHistory(value)}
+        viewModelScope.launch { settingsTab.setVideoHistory(value) }
     }
 
     fun setYtdlpDetails(value: Boolean) {
-        viewModelScope.launch {settingsTab.setYtdlpDetails(value)}
+        viewModelScope.launch { settingsTab.setYtdlpDetails(value) }
     }
 
     fun setSponsorBlock(value: Boolean) {
-        viewModelScope.launch {settingsTab.setSponsorBlock(value)}
+        viewModelScope.launch { settingsTab.setSponsorBlock(value) }
     }
 
     fun setSponsorBlockCategories(value: Set<String>) {
-        viewModelScope.launch {settingsTab.setSponsorBlockCategories(value)}
+        viewModelScope.launch { settingsTab.setSponsorBlockCategories(value) }
     }
 
     fun setDownloadPath(value: String) {
-        viewModelScope.launch {settingsTab.setDownloadPath(value)}
+        viewModelScope.launch { settingsTab.setDownloadPath(value) }
     }
 
     private val isUpdatingYtdlp = AtomicBoolean(false)

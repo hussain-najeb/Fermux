@@ -1,6 +1,7 @@
-package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
+package org.foss.fermux.fermuxUIComponents.generalComponents
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -26,8 +27,7 @@ import org.foss.fermux.ui.theme.FermuxColors
  * The standard Fermux page shell: a collapsing [LargeTopAppBar] with a back
  * button, wired up to a [Scaffold] with the app's background color and
  * nested-scroll behavior already configured.
- *
- * Use this for any top-level page that needs the large collapsing title +
+ * Use this for any top-level page that needs the large collapsing title
  * back button pattern (Settings, History, etc.) instead of re-wiring
  * Scaffold/LargeTopAppBar/scrollBehavior by hand each time.
  */
@@ -49,34 +49,37 @@ fun FermuxLargeTopBarScaffold(
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         containerColor = FermuxColors.fermuxBackground,
         topBar = {
-            LargeTopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = FermuxColors.fermuxBackground,
-                    scrolledContainerColor = FermuxColors.fermuxBackground,
-                    navigationIconContentColor = Color.Unspecified,
-                    titleContentColor = Color.Unspecified,
-                    actionIconContentColor = Color.Unspecified
-                ),
-                scrollBehavior = scrollBehavior,
-                title = {
-                    Text(
-                        title,
-                        fontFamily = FontFamily.Default,
-                        fontWeight = FontWeight.W500,
-                        fontSize = 35.sp,
-                        color = Color.White,
-                        modifier = Modifier.padding(10.dp)
-                    )
-                },
-                navigationIcon = {
-                    FermuxBackButton(
-                        icon = Icons.AutoMirrored.Filled.ArrowBack,
-                        modifier = Modifier.padding(10.dp).size(44.dp),
-                        contentPadding = PaddingValues(3.dp),
-                        onClick = onBack
-                    )
-                }
-            )
+            Column {
+                LargeTopAppBar(
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = FermuxColors.fermuxBackground,
+                        scrolledContainerColor = FermuxColors.fermuxBackground,
+                        navigationIconContentColor = Color.Unspecified,
+                        titleContentColor = Color.Unspecified,
+                        actionIconContentColor = Color.Unspecified
+                    ),
+                    scrollBehavior = scrollBehavior,
+                    title = {
+                        Text(
+                            title,
+                            fontFamily = FontFamily.Default,
+                            fontWeight = FontWeight.W500,
+                            fontSize = 35.sp,
+                            color = Color.White,
+                            modifier = Modifier.padding(10.dp)
+                        )
+                    },
+                    navigationIcon = {
+                        FermuxBackButton(
+                            icon = Icons.AutoMirrored.Filled.ArrowBack,
+                            modifier = Modifier.padding(10.dp).size(44.dp),
+                            contentPadding = PaddingValues(3.dp),
+                            onClick = onBack
+                        )
+                  }
+                )
+                FermuxDivider()
+            }
         },
         content = content
     )

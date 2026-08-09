@@ -91,7 +91,7 @@ fun SideBar(
                modifier = Modifier.size(70.dp).align(Alignment.BottomStart),
                imageModifier = Modifier.size(40.dp),
                imageRotation = if (isSideBarOpen) 180f else 0f,
-               image = if (isSideBarOpen) painterResource(id = R.drawable.sidebar_opened) else painterResource(id = R.drawable.sidebar_closed),
+               image = if (isSideBarOpen) painterResource(id = R.drawable.sidebar_hide) else painterResource(id = R.drawable.sidebar_show),
                onClick = { isSideBarOpen = !isSideBarOpen },
           )
      }

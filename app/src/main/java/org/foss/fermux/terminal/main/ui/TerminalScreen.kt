@@ -34,41 +34,43 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import org.foss.fermux.terminal.main.logic.TerminalLine
 import org.foss.fermux.terminal.main.logic.TermuxOutput
 import org.foss.fermux.terminal.main.logic.myTermuxCommands
 import org.foss.fermux.ui.theme.JetbrainsMono
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxLargeTopBarScaffold
 import kotlin.collections.plus
 
 @Composable
 fun FermuxTerminalScreen(
-
+    navigationController: NavHostController
 ) {
     val context = LocalContext.current
     var userCommand by remember { mutableStateOf(TextFieldValue("")) }
     var history by remember { mutableStateOf(listOf<String>()) }
-    var commandplace by remember { mutableIntStateOf(-1) }
+    var commandPlace by remember { mutableIntStateOf(-1) }
 
 
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .imePadding()
-            .systemBarsPadding()
-            .background(
-                Color(0xFF282C34)
-            )
-    )
-    {
+    FermuxLargeTopBarScaffold(
+        title = "Terminal",
+        onBack = { navigationController.popBackStack() }
+    ) { paddingValues ->
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .systemBarsPadding()
+                .imePadding()
+                .background(Color(0xFF282C34))
+        ) {
 
 
         LazyColumn(modifier = Modifier
-            .weight(1f),
-            reverseLayout = true
-
+            .weight(1f)
             ) {
-            items(TermuxOutput.lines.reversed()) { line ->
+            items(TermuxOutput.lines) { line ->
                 when (line) {
                     is TerminalLine.Output -> Text(
                         text = line.outputText,
@@ -123,7 +125,7 @@ fun FermuxTerminalScreen(
                             myTermuxCommands(context, cancelCommand)
                         }
                         history = history + cancelCommand
-                        commandplace = -1
+                         commandPlace = -1
                         userCommand = TextFieldValue("")
                     }
                 }
@@ -181,38 +183,31 @@ fun FermuxTerminalScreen(
 
             })
 
-
-
-
-
-
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Arrow key toolbar for cursor movement inside the text field.
-        // Sits above the keyboard when the text field is focused.
         ArrowKeyMovement(
             userCommand = userCommand,
             onCommandChange = { userCommand = it },
             onHistoryUp = {
                 if (history.isNotEmpty()) {
-                    commandplace = (commandplace + 1).coerceAtMost(history.size - 1)
-                    val command = history[history.size - 1 - commandplace]
+                     commandPlace = (commandPlace + 1).coerceAtMost(history.size - 1)
+                    val command = history[history.size - 1 - commandPlace]
                     userCommand = TextFieldValue(command, TextRange(command.length))
                 }
             },
             onHistoryDown = {
-                commandplace = (commandplace - 1).coerceAtLeast(-1)
-                if (commandplace == -1) {
+                 commandPlace = (commandPlace - 1).coerceAtLeast(-1)
+                if (commandPlace == -1) {
                     userCommand = TextFieldValue("")
                 } else {
-                    val command = history[history.size - 1 - commandplace]
+                    val command = history[history.size - 1 - commandPlace]
                     userCommand = TextFieldValue(command, TextRange(command.length))
                 }
             }
         )
+        }
     }
 }
-
 
 
 

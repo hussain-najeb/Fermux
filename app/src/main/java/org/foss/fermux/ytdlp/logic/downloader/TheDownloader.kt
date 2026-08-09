@@ -21,7 +21,7 @@ suspend fun downloaderLogic(
      taskId: String,
      aria2c: Boolean = true,
      aria2cHLSWithDASHCase: Boolean = false,
-     sleepRequest: Int? = null,
+     sleepRequest: Int = 0,
      musicQuality: AudioQuality? = null,
      videoQuality: VideoQuality? = null,
      sponsorBlock: Boolean = false,
@@ -68,7 +68,7 @@ suspend fun downloaderLogic(
 
     }
 
-    if (sleepRequest != null) {
+    if (sleepRequest > 0) {
         request.addOption("--sleep-requests", sleepRequest)
     }
 
