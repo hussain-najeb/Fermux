@@ -59,7 +59,6 @@ import org.foss.fermux.fermuxUIComponents.settingsComponents.FermuxSettingsSwitc
 import org.foss.fermux.settings.logic.SettingsViewModel
 import org.foss.fermux.settings.logic.getAppVersionName
 import org.foss.fermux.ui.theme.FermuxColors
-import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.SponsorBlockOptions
 
 data class SettingListInfo(
     val settingTitle: String,
@@ -89,17 +88,17 @@ fun SettingsScreen(
     val notificationState by settingsViewModel.notificationState.collectAsStateWithLifecycle()
     val audioHistory by settingsViewModel.audioHistory.collectAsStateWithLifecycle()
     val videoHistory by settingsViewModel.videoHistory.collectAsStateWithLifecycle()
-    val sponsorBlock by settingsViewModel.sponsorBlock.collectAsStateWithLifecycle()
     val isCheckingForUpdate by settingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
     val updateChecker by settingsViewModel.upToDate.collectAsStateWithLifecycle()
     val updateState = when {
-        isCheckingForUpdate  -> UpdateState.UPDATING
+        isCheckingForUpdate -> UpdateState.UPDATING
         updateChecker == true -> UpdateState.SUCCESS
         updateChecker == false -> UpdateState.FAILED
-         else -> UpdateState.IDLE
+        else -> UpdateState.IDLE
     }
 
-    val infiniteTransition = rememberInfiniteTransition(label = "update_transition") // TODO. Fix it, it doesnt look clean
+    val infiniteTransition =
+        rememberInfiniteTransition(label = "update_transition")
     val rotation by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 1800f,
@@ -120,7 +119,6 @@ fun SettingsScreen(
         SettingListInfo(
             settingTitle = "Update Downloader",
             settingDescription = "Press the update button to update your current version of ytdlp. Current version is ${settingsViewModel.currentVersionName}",
-            border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxSecondaryBorder),
             settingIcon = Icons.Default.Update,
             content = {
 
@@ -139,7 +137,7 @@ fun SettingsScreen(
         SettingListInfo(
             settingTitle = "Download Notifications",
             settingDescription = "Notify me when the downloaded files finish downloading",
-            settingImage = if (notificationState) painterResource(R.drawable.bell_on) else painterResource(R.drawable.bell_off) ,
+            settingImage = if (notificationState) painterResource(R.drawable.bell_on) else painterResource(R.drawable.bell_off),
             checked = notificationState,
             onCheckedChange = { settingsViewModel.setNotificationState(it) }
         ),
@@ -169,8 +167,6 @@ fun SettingsScreen(
             settingDescription = "Use the SponsorBlock API to cut Sponsor segments in videos (*Note: Works best with YouTube)",
             settingImage = painterResource(R.drawable.sponsorblock),
             border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxSecondaryBorder),
-            checked = sponsorBlock,
-            onCheckedChange = { settingsViewModel.setSponsorBlock(it) },
             content = {
                 Box(modifier = Modifier.padding(top = 10.dp)) {
                     FermuxIconButton(
@@ -183,6 +179,7 @@ fun SettingsScreen(
                 }
             }
         ),
+
     )
 
     val aboutSettingLists = listOf(
@@ -241,81 +238,87 @@ fun SettingsScreen(
                         icon = Icons.AutoMirrored.Filled.ArrowBack,
                         modifier = Modifier.padding(10.dp).size(44.dp),
                         contentPadding = PaddingValues(3.dp),
-                        onClick = {navController.popBackStack()}
+                        onClick = { navController.popBackStack() }
                     )
                 }
             )
         }
     ) { paddingValues ->
 
-        if (showSponsorDialog) {
-            SponsorBlockOptions(onDismissRequest = { showSponsorDialog = false })
-        }
+        Box(modifier = Modifier.fillMaxSize()) {
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(FermuxColors.fermuxBackground)
-                .verticalScroll(rememberScrollState())
-                .padding(paddingValues)
-        ) {
-            Spacer(Modifier.height(10.dp))
-            FermuxDivider()
-            Spacer(Modifier.height(10.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(FermuxColors.fermuxBackground)
+                    .verticalScroll(rememberScrollState())
+                    .padding(paddingValues)
+            ) {
+                Spacer(Modifier.height(10.dp))
+                FermuxDivider()
+                Spacer(Modifier.height(10.dp))
 
-            Text(
-                "Downloader",
-                fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.W500,
-                fontSize = 20.sp,
-                color = FermuxColors.fermuxInActiveTextColor,
-                modifier = Modifier.padding(6.dp)
-            )
+                Text(
+                    "Downloader",
+                    fontFamily = FontFamily.Default,
+                    fontWeight = FontWeight.W500,
+                    fontSize = 20.sp,
+                    color = FermuxColors.fermuxInActiveTextColor,
+                    modifier = Modifier.padding(6.dp)
+                )
 
-            Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.height(10.dp))
 
-            downloaderSettingLists.forEach { lists ->
-                FermuxSettingsSwitch(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    imageModifier = Modifier.size(20.dp),
-                    settingTitle = lists.settingTitle,
-                    settingDescription = lists.settingDescription,
-                    settingIcon = lists.settingIcon,
-                    settingImage = lists.settingImage,
-                    border = lists.border,
-                    onChecked = lists.checked,
-                    onCheckedChange = lists.onCheckedChange,
-                    content = lists.content
+                downloaderSettingLists.forEach { lists ->
+                    FermuxSettingsSwitch(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        imageModifier = Modifier.size(20.dp),
+                        settingTitle = lists.settingTitle,
+                        settingDescription = lists.settingDescription,
+                        settingIcon = lists.settingIcon,
+                        settingImage = lists.settingImage,
+                        border = lists.border,
+                        onChecked = lists.checked,
+                        onCheckedChange = lists.onCheckedChange,
+                        content = lists.content
+                    )
+                }
+
+                Spacer(Modifier.height(10.dp))
+                FermuxDivider()
+                Spacer(Modifier.height(10.dp))
+
+                Text(
+                    "About",
+                    fontFamily = FontFamily.Default,
+                    fontWeight = FontWeight.W500,
+                    fontSize = 20.sp,
+                    color = FermuxColors.fermuxInActiveTextColor,
+                    modifier = Modifier.padding(6.dp)
+                )
+
+                aboutSettingLists.forEach { lists ->
+                    FermuxSettingsSwitch(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        settingTitle = lists.settingTitle,
+                        settingDescription = lists.settingDescription,
+                        settingIcon = lists.settingIcon,
+                        border = lists.border,
+                        onChecked = lists.checked,
+                        onCheckedChange = lists.onCheckedChange,
+                        content = lists.content
+                    )
+                }
+
+                Spacer(Modifier.height(10.dp))
+            }
+            if (showSponsorDialog) {
+                SponsorBlockOptions(
+                    onDismissRequest = {
+                        showSponsorDialog = false //TODO. this conflicts with the scaffold
+                    }
                 )
             }
-
-            Spacer(Modifier.height(10.dp))
-            FermuxDivider()
-            Spacer(Modifier.height(10.dp))
-
-            Text(
-                "About",
-                fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.W500,
-                fontSize = 20.sp,
-                color = FermuxColors.fermuxInActiveTextColor,
-                modifier = Modifier.padding(6.dp)
-            )
-
-            aboutSettingLists.forEach { lists ->
-                FermuxSettingsSwitch(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    settingTitle = lists.settingTitle,
-                    settingDescription = lists.settingDescription,
-                    settingIcon = lists.settingIcon,
-                    border = lists.border,
-                    onChecked = lists.checked,
-                    onCheckedChange = lists.onCheckedChange,
-                    content = lists.content
-                )
-            }
-
-            Spacer(Modifier.height(10.dp))
         }
     }
 }

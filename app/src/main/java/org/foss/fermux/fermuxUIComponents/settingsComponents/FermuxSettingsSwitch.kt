@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontFamily
@@ -28,6 +29,7 @@ fun FermuxSettingsSwitch(
      settingDescription: String,
      settingImage: Painter? = null,
      color: FermuxColor = FermuxColors,
+     iconTint: Color = FermuxColor().fermuxOffWhiteTextColor,
      border: BorderStroke? = BorderStroke(1.dp, color.fermuxSecondaryBorder),
      onChecked: Boolean? = null,
      onCheckedChange: ((Boolean) -> Unit)? = null,
@@ -42,7 +44,7 @@ fun FermuxSettingsSwitch(
                     Icon(
                          painter = settingImage,
                          contentDescription = null,
-                         tint = FermuxColor().fermuxOffWhiteTextColor,
+                         tint = iconTint,
                          modifier = imageModifier
                     )
                } else {
