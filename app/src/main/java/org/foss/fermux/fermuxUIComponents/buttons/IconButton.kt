@@ -37,23 +37,19 @@ fun FermuxIconButton(
      onClick: () -> Unit
 ) {
 
+     // TODO. Replace the Whens
+
      val interactionSource = remember { MutableInteractionSource() }
      val isPressed by interactionSource.collectIsPressedAsState()
 
      val containerColor by animateColorAsState(
-          targetValue = when {
-               isPressed -> color.fermuxActiveButton
-               else -> color.fermuxInActiveButton
-          },
+          targetValue = if (isPressed) color.fermuxActiveButton else color.fermuxInActiveButton,
           animationSpec = tween(200),
           label = "Fermux Button Colors",
      )
 
      val contentColor by animateColorAsState(
-          targetValue = when {
-               isPressed -> color.fermuxActiveTextColor
-               else -> color.fermuxInActiveTextColor
-          },
+          targetValue = if (isPressed) color.fermuxActiveTextColor else color.fermuxInActiveTextColor,
           animationSpec = tween(200),
           label = "Fermux Text Colors",
      )
@@ -63,7 +59,7 @@ fun FermuxIconButton(
                isPressed -> color.fermuxActiveIcon
                else -> color.fermuxInActiveIcon
           },
-          animationSpec = tween(durationMillis = 150),
+          animationSpec = tween(durationMillis = 200),
           label = "Fermux Icon Colors"
      )
 
