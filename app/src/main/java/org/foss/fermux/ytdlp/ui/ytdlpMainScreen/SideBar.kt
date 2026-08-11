@@ -1,6 +1,8 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
@@ -55,11 +57,11 @@ fun SideBar(
                enter = slideInHorizontally(
                     animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
                     initialOffsetX = { fullWidth -> -fullWidth },
-               ),
+               ) + fadeIn(),
                exit = slideOutHorizontally(
                     animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
                     targetOffsetX = { fullWidth -> -fullWidth },
-               ),
+               ) + fadeOut(),
                modifier = Modifier.align(Alignment.BottomStart).padding(bottom = 80.dp),
           ) {
                Column(

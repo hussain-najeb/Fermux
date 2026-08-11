@@ -25,7 +25,7 @@ fun DownloaderCards(state: DownloadStatus, downloaderViewModel: DownloaderViewMo
                 initialOffsetY = { -it }
             ) + fadeIn(initialAlpha = 0.1f))
                 .togetherWith(
-                slideOutVertically(
+                exit = slideOutVertically(
                     animationSpec = spatialSpec.slowSpatialSpec(),
                     targetOffsetY = { -it }
                 ) + fadeOut(targetAlpha = 0.1f)

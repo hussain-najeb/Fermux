@@ -1,11 +1,10 @@
-package org.foss.fermux.settings.ui.downloader.downlaoderComponents
+package org.foss.fermux.settings.ui.downloader.downloaderComponents
 
 
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -36,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.foss.fermux.R
+import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingLists
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
 import org.foss.fermux.settings.logic.SettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
@@ -84,6 +83,7 @@ fun SponsorBlockOptions(onDismissRequest: () -> Unit) {
           "preview" to Color(0xFF008FD6),
           "music_offtopic" to Color(0xFFFF9900),
      )
+     // TODO. Replace this garbage with a Box that has is a square and give it color, that's it, create a list with the colors and assign it, so it looks less like a mess.
 
      Box(
           modifier = Modifier
@@ -135,18 +135,25 @@ fun SponsorBlockOptions(onDismissRequest: () -> Unit) {
                                    verticalAlignment = Alignment.CenterVertically,
                                    horizontalArrangement = Arrangement.SpaceEvenly
                               ) {
-                                   SettingsSwitch(
-                                        settingTitle = label,
-                                        settingDescription = sponsorDescriptions[index],
-                                        settingImage = sponsorBlockColors[flag],
-                                        iconTint = sponsorBlockTintColors[flag] ?: Color.Gray,
-                                        onChecked = isChecked,
-                                        onCheckedChange = { checked ->
-                                             val updated = if (checked) sponsorBlockCategories + flag
-                                             else sponsorBlockCategories - flag
+                                   SettingLists(
+                                        title = label,
+                                        description = sponsorDescriptions[index],
+                                        image = sponsorBlockColors[flag],
+                                        onClick = {
+                                             val updated = if (isChecked) sponsorBlockCategories - flag
+                                             else sponsorBlockCategories + flag
                                              settingsViewModel.setSponsorBlockCategories(updated)
-                                        }
-
+                                        },
+                                        content = {
+                                             SettingsSwitch(
+                                                  checked = isChecked,
+                                                  onCheckedChange = { checked ->
+                                                       val updated = if (checked) sponsorBlockCategories + flag
+                                                       else sponsorBlockCategories - flag
+                                                       settingsViewModel.setSponsorBlockCategories(updated)
+                                                  }
+                                             )
+                                        },
                                    )
                               }
                          }

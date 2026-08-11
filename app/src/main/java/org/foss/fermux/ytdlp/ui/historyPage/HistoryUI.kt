@@ -1,6 +1,7 @@
 package org.foss.fermux.ytdlp.ui.historyPage
 
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
@@ -50,6 +51,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun HistoryCards(entry: JSONHistoryCards) {
 

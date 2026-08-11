@@ -10,5 +10,6 @@ data class SettingListInfo(
      val icon: ImageVector? = null,
      val image: Painter? = null,
      val route: String? = null,
-     val content: @Composable (() -> Unit)? = null
+     val content: @Composable (() -> Unit)? = null,
+     val trailingContent: @Composable (() -> Unit)? = null
 )

@@ -75,39 +75,9 @@ fun Why() {
             ) {
 
                 SettingsSwitch(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    settingTitle = "Update Downloader",
-                    settingDescription = "Press the update button to update your current version of ytdlp. Current version is",
-                    settingIcon = Icons.Default.Update,
-                ) {
-                    ImageButton(
-                        modifier = Modifier.size(53.dp),
-                        contentPadding = PaddingValues(9.dp),
-                        imageRotation = if (pressed) 180f else 0f,
-                        image = painterResource(R.drawable.update_icon),
-                        onClick = { pressed = !pressed  },
-                    )
-                }
-
-                SettingsSwitch(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    settingTitle = "SponsorBlock API",
-                    settingDescription = "Enable to use the SponserBlock API to cut ads off of downloaded media",
-                    settingIcon = Icons.Default.MonetizationOn,
-                    onChecked = true,
+                    checked = pressed,
                     onCheckedChange = {}
                 )
-
-                SettingsSwitch(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    settingTitle = "SponsorBlock API",
-                    settingDescription = "Enable to use the SponserBlock API to cut ads off of downloaded media",
-                    settingIcon = Icons.Default.MonetizationOn,
-                    onChecked = false,
-                    onCheckedChange = {}
-                )
-
-
 
             }
         }

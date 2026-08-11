@@ -3,6 +3,7 @@ package org.foss.fermux.main
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -12,6 +13,7 @@ import org.foss.fermux.ffmpeg.ui.formatSheet.AudioFormatSheet
 import org.foss.fermux.ffmpeg.ui.formatSheet.ImageFormatSheet
 import org.foss.fermux.ffmpeg.ui.formatSheet.VideoFormatSheet
 import org.foss.fermux.settings.ui.SettingsScreen
+import org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage
 import org.foss.fermux.terminal.main.ui.FermuxTerminalScreen
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloaderScreen
 
@@ -62,7 +64,7 @@ fun FermuxAppMainScreen() {
         composable(MainScreens.Converter.route) { ConverterScreen(navigationController = navigationController) }
 
         // Settings Screens
-        composable(SettingsScreens.SimpleDownloader.route) {  }
+        composable(SettingsScreens.SimpleDownloader.route) { SimpleDownloaderPage(navController = navigationController) }
         composable(SettingsScreens.AdvancedDownloader.route) {  }
         composable(SettingsScreens.SimpleFFmpeg.route) {  }
         composable(SettingsScreens.AdvancedFFmpeg.route) {  }

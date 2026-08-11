@@ -8,12 +8,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Brush
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
@@ -27,8 +24,7 @@ import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingLists
 import org.foss.fermux.main.SettingsScreens
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.SettingsViewModel
-import org.foss.fermux.settings.logic.getAppVersionName
-import org.foss.fermux.settings.ui.downloader.downlaoderComponents.SponsorBlockOptions
+import org.foss.fermux.settings.ui.downloader.downloaderComponents.SponsorBlockOptions
 import org.foss.fermux.ui.theme.FermuxColors
 
 

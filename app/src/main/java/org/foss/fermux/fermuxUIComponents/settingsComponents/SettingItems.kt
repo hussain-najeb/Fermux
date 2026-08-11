@@ -5,14 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Update
@@ -41,7 +34,8 @@ fun SettingLists(
      icon: ImageVector? = null,
      image: Painter? = null,
      onClick: () -> Unit,
-     content: @Composable (() -> Unit)? = null
+     content: @Composable (() -> Unit)? = null,
+     trailingContent: @Composable (() -> Unit)? = null
 ) {
 
      val interactionSource = remember { MutableInteractionSource() }
@@ -60,61 +54,66 @@ fun SettingLists(
           targetValue = if (isPressed) FermuxColors.fermuxActiveIcon else FermuxColors.fermuxGenericBorder
      )
 
-     Surface(
-          modifier = Modifier.padding(7.dp),
-          shape = RoundedCornerShape(8.dp),
-          contentColor = contentColor,
-          border = BorderStroke(width = 1.5.dp, color = borderColor),
-          interactionSource = interactionSource,
-          onClick = onClick,
-          color = surfaceColor
-     ) {
-          Row(
-               modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 20.dp),
-               verticalAlignment = Alignment.CenterVertically,
-          ) {
-               icon?.let {
-                    Icon(
-                         imageVector = icon,
-                         contentDescription = null,
-                         modifier = Modifier
-                              .padding(end = 16.dp)
-                              .size(28.dp)
-                    )
-               }
 
-               if (image != null) {
-                    Icon(
-                         painter = image,
-                         contentDescription = null,
-                         modifier = Modifier
-                              .padding(end = 16.dp)
-                              .size(28.dp)
-                    )
-               }
-               Column(
+     Column(modifier = Modifier.fillMaxSize()
+     ) {
+          Surface(
+               modifier = Modifier.padding(7.dp),
+               shape = RoundedCornerShape(8.dp),
+               contentColor = contentColor,
+               border = BorderStroke(width = 1.5.dp, color = borderColor),
+               interactionSource = interactionSource,
+               onClick = onClick,
+               color = surfaceColor
+          ) {
+               Row(
                     modifier = Modifier
-                         .weight(1f)
-                         .padding(start = if (icon == null) 12.dp else 0.dp)
+                         .fillMaxWidth()
+                         .padding(horizontal = 16.dp, vertical = 20.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                ) {
-                    Text(
-                         text = title,
-                         maxLines = 1,
-                         style = MaterialTheme.typography.titleLarge,
-                         overflow = TextOverflow.Ellipsis,
-                    )
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                         text = description,
-                         maxLines = 2,
-                         style = MaterialTheme.typography.bodyMedium,
-                         overflow = TextOverflow.Ellipsis,
-                    )
+                    icon?.let {
+                         Icon(
+                              imageVector = icon,
+                              contentDescription = null,
+                              modifier = Modifier
+                                   .padding(end = 16.dp)
+                                   .size(28.dp)
+                         )
+                    }
+
+                    if (image != null) {
+                         Icon(
+                              painter = image,
+                              contentDescription = null,
+                              modifier = Modifier
+                                   .padding(end = 16.dp)
+                                   .size(28.dp)
+                         )
+                    }
+                    Column(
+                         modifier = Modifier
+                              .weight(1f)
+                              .padding(start = if (icon == null) 12.dp else 0.dp)
+                    ) {
+                         Text(
+                              text = title,
+                              maxLines = 1,
+                              style = MaterialTheme.typography.titleLarge,
+                              overflow = TextOverflow.Ellipsis,
+                         )
+                         Spacer(modifier = Modifier.height(2.dp))
+                         Text(
+                              text = description,
+                              maxLines = 2,
+                              style = MaterialTheme.typography.bodyMedium,
+                              overflow = TextOverflow.Ellipsis,
+                         )
+                    }
+                    content?.invoke()
                }
-               content?.invoke()
           }
+          trailingContent?.invoke()
      }
 }
 
@@ -127,11 +126,7 @@ fun Previews() {
                "espikfjosieng",
                icon = Icons.Outlined.Start,
                onClick = {},
-               content = {
-                    Box {
-                        Icon(Icons.Default.Update, contentDescription = null)
-                    }
-               }
+
           )
      }
 }

@@ -8,17 +8,26 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AudioFile
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.filled.VideoFile
 import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -29,21 +38,23 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import org.foss.fermux.R
+import org.foss.fermux.fermuxUIComponents.buttons.AppIconButton
 import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
+import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
+import org.foss.fermux.fermuxUIComponents.settingsComponents.RequestTimeSlider
+import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingLists
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.SettingsViewModel
 import org.foss.fermux.settings.logic.getAppVersionName
 import org.foss.fermux.settings.ui.UpdateState
+import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun SimpleDownloaderPage(
      navController: NavHostController,
      @SuppressLint("ContextCastToActivity") settingsViewModel: SettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
 ) {
-
-     val context = LocalContext.current
-     val versionName = remember { context.getAppVersionName() }
 
      val ytdlpDetails by settingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
      val sleepRequest by settingsViewModel.sleepRequest.collectAsStateWithLifecycle()
@@ -70,6 +81,7 @@ fun SimpleDownloaderPage(
           ),
           label = "update rotation"
      )
+     var expanded by remember { mutableStateOf(false) }
 
      val simpleDownloaderSettings = listOf(
           SettingListInfo(
@@ -114,10 +126,10 @@ fun SimpleDownloaderPage(
                title = "Video History",
                description = "Enable/Disable video history",
                icon = Icons.Default.VideoFile,
-               content ={
+               content = {
                     SettingsSwitch(
                          checked = videoHistory,
-                         onCheckedChange = {settingsViewModel.setVideoHistory(it)}
+                         onCheckedChange = { settingsViewModel.setVideoHistory(it) }
                     )
                },
           ),
@@ -126,18 +138,58 @@ fun SimpleDownloaderPage(
                description = "Sleep Request is a ytdlp flag for delayed download between each request",
                icon = Icons.Outlined.Terminal,
                content = {
-
+                    AppIconButton(
+                         modifier = Modifier.size(50.dp),
+                         icon = Icons.Default.ExpandMore,
+                         iconRotation = if (expanded) 180f else 0f ,
+                         onClick = {
+                              expanded = !expanded
+                         }
+                    )
+               },
+               trailingContent = {
+                    RequestTimeSlider(
+                         expanded = expanded
+                    )
                }
           )
      )
 
 
+     LargeTopBarScaffold(
+          title = "Settings",
+          onBack = { navController.popBackStack() }
+     ) { paddingValues ->
+
+          Column(
+               modifier = Modifier
+                    .fillMaxSize()
+                    .background(FermuxColors.fermuxBackground)
+                    .verticalScroll(rememberScrollState())
+                    .padding(paddingValues)
+          ) {
+
+
+               simpleDownloaderSettings.forEach { setting ->
+                    SettingLists(
+                         title = setting.title,
+                         description = setting.description,
+                         icon = setting.icon,
+                         image = setting.image,
+                         content = setting.content,
+                         trailingContent = setting.trailingContent,
+                         onClick = {
+                              setting.route?.let { navController.navigate(it) }
+                         },
+                    )
+               }
 
 
 
 
 
-
+          }
+     }
 }
 
 

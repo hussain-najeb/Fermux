@@ -21,6 +21,7 @@ data class FermuxColor(
     val fermuxSecondaryBorder:      Color    = Color(0xFF67ECA2),
     val fermuxGenericBorder:        Color    = Color(0xFF7E7EF6),
     val fermuxTertiaryBorder:       Color    = Color(0xFF3B3B40),
+    val fermuxHelperBorder:         Color    = Color(0xFF54549A),
 
     // Fermux global components
     val fermuxComponents:           Color    = Color(0xFF3C3F68),
@@ -38,6 +39,12 @@ data class FermuxColor(
     // Fermux icon components
     val fermuxActiveIcon:           Color    = Color(0xFF102f60),
     val fermuxInActiveIcon:         Color    = Color(0xFF9FAAB6),
+
+    // Fermux slider
+    val activeSliderColor:          Color    = Color(0xFF4D7DE5),
+    val inActiveSliderColor:        Color    = Color(0xFFB5C1E8),
+
+
 
     // Fermux text
     val fermuxWhiteColor:           Color    = Color.White, // IDK why

@@ -73,7 +73,7 @@ class SettingsTab(private val context: Context) {
 
     @SuppressLint("SuspiciousIndentation")
     suspend fun setSleepRequest (value: Int) {
-         context.dataStore.edit { preferences -> preferences[SLEEP_REQUEST_KEY] ?: value }
+         context.dataStore.edit { preferences -> preferences[SLEEP_REQUEST_KEY] = value }
     }
 
     suspend fun setAria2cImpl (value: Boolean) {
