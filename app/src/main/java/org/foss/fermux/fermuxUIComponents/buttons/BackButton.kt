@@ -26,7 +26,7 @@ import org.foss.fermux.ui.theme.FermuxColor
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
-fun FermuxBackButton(
+fun BackButton(
      modifier: Modifier = Modifier,
      color: FermuxColor = FermuxColors,
      icon: ImageVector,

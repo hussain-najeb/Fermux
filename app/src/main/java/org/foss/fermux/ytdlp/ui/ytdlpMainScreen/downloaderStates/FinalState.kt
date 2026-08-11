@@ -35,9 +35,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.FermuxDownloadDescription
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.FermuxFinishedDownloadCard
-import org.foss.fermux.fermuxUIComponents.buttons.FermuxCancelButton
-import org.foss.fermux.fermuxUIComponents.buttons.FermuxIconButton
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.FinishedDownloadCard
+import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
+import org.foss.fermux.fermuxUIComponents.buttons.AppIconButton
 import org.foss.fermux.settings.logic.SettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.DownloadMetadata
@@ -66,7 +66,7 @@ fun FinishedCard (
           modifier = Modifier
                .fillMaxWidth()
      ) {
-          FermuxFinishedDownloadCard {
+          FinishedDownloadCard {
 
                Box(modifier = Modifier.clip(RoundedCornerShape(bottomStart = 4.dp, bottomEnd = 4.dp ))) {
                     AsyncImage(
@@ -113,13 +113,13 @@ fun FinishedCard (
                               null -> Unit
                          }
                     }
-                    FermuxCancelButton(
+                    CancelButton(
                          modifier = Modifier
                               .align(alignment = Alignment.TopStart).padding(10.dp),
                          onClick = { onCancel() }
                     )
                     if (showYtdlpDetails) {
-                         FermuxIconButton(
+                         AppIconButton(
                               modifier = Modifier
                                    .padding(1.dp)
                                    .align(alignment = Alignment.BottomStart),
@@ -164,7 +164,7 @@ fun CardDownload() {
           modifier = Modifier
                .fillMaxWidth()
      ) {
-          FermuxFinishedDownloadCard {
+          FinishedDownloadCard {
 
                Box(modifier = Modifier.clip(RoundedCornerShape(bottomStart = 4.dp, bottomEnd = 4.dp ))) {
                     AsyncImage(
@@ -178,7 +178,7 @@ fun CardDownload() {
                               .background(FermuxColors.fermuxSurface)
                     )
 
-                    FermuxCancelButton(
+                    CancelButton(
                          modifier = Modifier
                               .align(alignment = Alignment.TopStart).padding(10.dp),
                          onClick = { }
@@ -210,5 +210,3 @@ fun CardDownload() {
           }
      }
 }
-
-

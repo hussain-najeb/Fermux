@@ -25,7 +25,7 @@ import org.foss.fermux.ui.theme.FermuxColor
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
-fun FermuxIconButton(
+fun AppIconButton(
      modifier: Modifier = Modifier,
      color: FermuxColor = FermuxColors,
      icon: ImageVector,

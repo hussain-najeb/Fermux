@@ -14,7 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
-import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxLargeTopBarScaffold
+import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.ui.theme.FermuxColors
 
 
@@ -24,7 +24,7 @@ fun ConverterScreen(@SuppressLint("ContextCastToActivity") viewModel: FFmpegView
 
     val context = LocalContext.current
 
-    FermuxLargeTopBarScaffold(
+    LargeTopBarScaffold(
         title = "Converter",
         onBack = { navigationController.popBackStack() }
     ) { paddingValues ->

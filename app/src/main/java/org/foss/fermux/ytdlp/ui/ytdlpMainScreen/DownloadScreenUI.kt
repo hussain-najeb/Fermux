@@ -27,8 +27,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import org.foss.fermux.fermuxUIComponents.buttons.FermuxMainActionButton
-import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxLargeTopBarScaffold
+import org.foss.fermux.fermuxUIComponents.buttons.MainActionButton
+import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 import org.foss.fermux.ytdlp.ui.historyPage.DownloadVideoList
@@ -47,6 +47,9 @@ enum class Page(val image: ImageVector, val descriptor: String) {
  * status cards. This is plain content — it fills whatever [Box] the caller
  * (e.g. [DownloaderScreen]) gives it, and does not draw its own background
  * or manage scaffold/sidebar concerns.
+ *
+ * TODO. make the download button ATOMIC.
+ * TODO. Add a Delete button for the typed url in the textField
  */
 @Composable
 fun DownloadContent(
@@ -119,13 +122,13 @@ fun DownloadContent(
 
             Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
                 // ClipBoard Button
-                FermuxMainActionButton(
+                MainActionButton(
                     icon = Icons.Default.ContentPaste,
                     modifier = Modifier.size(70.dp).padding(6.dp),
                     onClick = { clipboard.getText()?.text?.let { viewModel.downloadUrl = it } }
                 )
                 // DownloadButton
-                FermuxMainActionButton(
+                MainActionButton(
                     icon = Icons.Default.FileDownload,
                     modifier = Modifier.size(70.dp).padding(6.dp),
                     onClick = { viewModel.fetchedMetadata(viewModel.downloadUrl) }  // TODO. Add a way in the fetchMetadata function a try and catch error Log.E
@@ -139,7 +142,7 @@ fun DownloadContent(
 fun DownloaderScreen(navController: NavHostController) {
     var currentPage by remember { mutableStateOf(Page.DownloadPage) }
 
-    FermuxLargeTopBarScaffold(
+    LargeTopBarScaffold(
         title = "Downloader",
         onBack = { navController.popBackStack() },
     ) { innerPadding ->

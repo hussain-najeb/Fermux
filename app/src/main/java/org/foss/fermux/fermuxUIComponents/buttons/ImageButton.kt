@@ -25,7 +25,7 @@ import org.foss.fermux.ui.theme.FermuxColor
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
-fun FermuxImageButton(
+fun ImageButton(
      modifier: Modifier = Modifier,
      imageModifier: Modifier = Modifier,
      image: Painter? = null,

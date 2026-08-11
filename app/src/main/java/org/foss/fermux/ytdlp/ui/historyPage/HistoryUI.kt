@@ -39,10 +39,10 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxCard
-import org.foss.fermux.fermuxUIComponents.buttons.FermuxIconButton
-import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxSurface
-import org.foss.fermux.fermuxUIComponents.buttons.FermuxTextWithIconButton
+import org.foss.fermux.fermuxUIComponents.generalComponents.AppCard
+import org.foss.fermux.fermuxUIComponents.buttons.AppIconButton
+import org.foss.fermux.fermuxUIComponents.generalComponents.AppSurface
+import org.foss.fermux.fermuxUIComponents.buttons.TextWithIconButton
 import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.videoTime
@@ -57,7 +57,7 @@ fun HistoryCards(entry: JSONHistoryCards) {
     @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
 
         Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-            FermuxCard(
+            AppCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
@@ -84,7 +84,7 @@ fun HistoryCards(entry: JSONHistoryCards) {
                         ),
                         modifier = Modifier.align(Alignment.BottomStart)
                     ) {
-                        FermuxTextWithIconButton(
+                        TextWithIconButton(
                             modifier = Modifier
                                 .defaultMinSize(minWidth = 70.dp)
                                 // Note: inside the AnimatedVisibility scope, alignment is handled by outer Box/Column layout
@@ -97,7 +97,7 @@ fun HistoryCards(entry: JSONHistoryCards) {
                         )
                     }
 
-                    FermuxIconButton(
+                    AppIconButton(
                         icon = Icons.Default.ContentCopy,
                         modifier = Modifier.size(60.dp).padding(6.dp).align(Alignment.BottomEnd),
                         onClick = { clipboard.setText(AnnotatedString(entry.url)) }
@@ -105,7 +105,7 @@ fun HistoryCards(entry: JSONHistoryCards) {
 
                 }
 
-                FermuxSurface(
+                AppSurface(
                     expanded = expanded,
                     padding = PaddingValues(8.dp),
                     modifier = Modifier.fillMaxSize()

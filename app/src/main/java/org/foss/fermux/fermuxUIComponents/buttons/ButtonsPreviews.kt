@@ -16,7 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.settingsComponents.FermuxSettingsSwitch
+import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
 import org.foss.fermux.ui.theme.FermuxColors
 
 
@@ -32,7 +32,7 @@ fun Why() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        FermuxTextWithIconButton(
+        TextWithIconButton(
             modifier = Modifier.defaultMinSize(minWidth = 70.dp), // To decide how big the button is.
             contentPadding = PaddingValues(9.dp), // To give text and icon a room in the button.
             icon = Icons.Default.ExpandMore, // Optional icon.
@@ -43,7 +43,7 @@ fun Why() {
 
         Spacer(Modifier.height(20.dp))
 
-        FermuxMainActionButton(
+        MainActionButton(
             modifier = Modifier.size(70.dp),
             image = painterResource(R.drawable.ic_launcher_background),
             componentSize = 50.dp, // The biggest the image can get.
@@ -53,7 +53,7 @@ fun Why() {
 
         Spacer(Modifier.height(20.dp))
 
-        FermuxCancelButton(
+        CancelButton(
             modifier = Modifier.size(45.dp),
             iconRotation = if (pressed) 360f else 0f,
             onClick = {pressed = !pressed },
@@ -61,7 +61,7 @@ fun Why() {
 
         Spacer(Modifier.height(20.dp))
 
-        FermuxIconButton(
+        AppIconButton(
             icon = Icons.Default.ContentPaste,
             modifier = Modifier.size(50.dp),
             onClick = {pressed = !pressed}
@@ -74,13 +74,13 @@ fun Why() {
 
             ) {
 
-                FermuxSettingsSwitch(
+                SettingsSwitch(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     settingTitle = "Update Downloader",
                     settingDescription = "Press the update button to update your current version of ytdlp. Current version is",
                     settingIcon = Icons.Default.Update,
                 ) {
-                    FermuxImageButton(
+                    ImageButton(
                         modifier = Modifier.size(53.dp),
                         contentPadding = PaddingValues(9.dp),
                         imageRotation = if (pressed) 180f else 0f,
@@ -89,7 +89,7 @@ fun Why() {
                     )
                 }
 
-                FermuxSettingsSwitch(
+                SettingsSwitch(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     settingTitle = "SponsorBlock API",
                     settingDescription = "Enable to use the SponserBlock API to cut ads off of downloaded media",
@@ -98,7 +98,7 @@ fun Why() {
                     onCheckedChange = {}
                 )
 
-                FermuxSettingsSwitch(
+                SettingsSwitch(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     settingTitle = "SponsorBlock API",
                     settingDescription = "Enable to use the SponserBlock API to cut ads off of downloaded media",

@@ -29,7 +29,7 @@ import org.foss.fermux.ui.theme.FermuxColor
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
-fun FermuxCancelButton(
+fun CancelButton(
      modifier: Modifier = Modifier,
      iconRotation: Float = 0f,
      componentSize: Dp = 32.dp,

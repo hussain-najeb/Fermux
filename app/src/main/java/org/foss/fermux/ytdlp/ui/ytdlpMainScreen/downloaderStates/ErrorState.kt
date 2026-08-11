@@ -19,8 +19,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.foss.fermux.fermuxUIComponents.buttons.FermuxErrorCopyButton
-import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxSurface
+import org.foss.fermux.fermuxUIComponents.buttons.ErrorCopyButton
+import org.foss.fermux.fermuxUIComponents.generalComponents.AppSurface
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
 
@@ -34,7 +34,7 @@ fun ErrorCard(
      val scrollState = rememberScrollState()
 
 
-     FermuxSurface(
+     AppSurface(
           expanded = true,
           shape = RoundedCornerShape(8.dp),
           border = BorderStroke(1.dp, FermuxColors.fermuxOffWhiteTextColor),
@@ -81,7 +81,7 @@ fun ErrorCard(
                          modifier = Modifier.padding(top = 20.dp, start = 12.dp)
                     )
                }
-               FermuxErrorCopyButton(
+               ErrorCopyButton(
                     modifier = Modifier.align(Alignment.BottomEnd),
                     onClick = { clipboard.setText(AnnotatedString(rawError)) }
                )

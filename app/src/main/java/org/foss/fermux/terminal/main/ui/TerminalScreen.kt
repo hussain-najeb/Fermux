@@ -39,7 +39,7 @@ import org.foss.fermux.terminal.main.logic.TerminalLine
 import org.foss.fermux.terminal.main.logic.TermuxOutput
 import org.foss.fermux.terminal.main.logic.myTermuxCommands
 import org.foss.fermux.ui.theme.JetbrainsMono
-import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxLargeTopBarScaffold
+import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import kotlin.collections.plus
 
 @Composable
@@ -53,7 +53,7 @@ fun FermuxTerminalScreen(
 
 
 
-    FermuxLargeTopBarScaffold(
+    LargeTopBarScaffold(
         title = "Terminal",
         onBack = { navigationController.popBackStack() }
     ) { paddingValues ->
@@ -208,6 +208,5 @@ fun FermuxTerminalScreen(
         }
     }
 }
-
 
 

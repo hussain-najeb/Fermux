@@ -1,4 +1,4 @@
-package org.foss.fermux.settings.ui
+package org.foss.fermux.settings.ui.downloader.downlaoderComponents
 
 
 import android.annotation.SuppressLint
@@ -30,14 +30,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.settingsComponents.FermuxSettingsSwitch
+import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
 import org.foss.fermux.settings.logic.SettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 
@@ -97,7 +96,6 @@ fun SponsorBlockOptions(onDismissRequest: () -> Unit) {
                     modifier = Modifier
                          .fillMaxWidth(0.9f)
                          .clickable { }
-                         .border(1.dp, FermuxColors.fermuxGenericBorder, RoundedCornerShape(14.dp))
                          .wrapContentHeight(),
                     shape = MaterialTheme.shapes.large,
                     tonalElevation = 2.dp,
@@ -137,7 +135,7 @@ fun SponsorBlockOptions(onDismissRequest: () -> Unit) {
                                    verticalAlignment = Alignment.CenterVertically,
                                    horizontalArrangement = Arrangement.SpaceEvenly
                               ) {
-                                   FermuxSettingsSwitch(
+                                   SettingsSwitch(
                                         settingTitle = label,
                                         settingDescription = sponsorDescriptions[index],
                                         settingImage = sponsorBlockColors[flag],
@@ -152,8 +150,6 @@ fun SponsorBlockOptions(onDismissRequest: () -> Unit) {
                                    )
                               }
                          }
-
-
                     }
                }
           }

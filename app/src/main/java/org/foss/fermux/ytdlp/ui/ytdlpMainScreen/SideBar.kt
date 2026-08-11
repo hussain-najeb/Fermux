@@ -26,8 +26,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.buttons.FermuxImageButton
-import org.foss.fermux.fermuxUIComponents.buttons.FermuxTextWithIconButton
+import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
+import org.foss.fermux.fermuxUIComponents.buttons.TextWithIconButton
 import org.foss.fermux.ui.theme.FermuxColors
 
 /**
@@ -73,7 +73,7 @@ fun SideBar(
                     Spacer(modifier = Modifier.height(10.dp))
 
                     Page.entries.forEach { page ->
-                         FermuxTextWithIconButton(
+                         TextWithIconButton(
                               modifier = Modifier
                                    .size(60.dp)
                                    .padding(3.dp)
@@ -87,9 +87,9 @@ fun SideBar(
                }
           }
 
-          FermuxImageButton(
+          ImageButton(
                modifier = Modifier.size(70.dp).align(Alignment.BottomStart),
-               imageModifier = Modifier.size(40.dp),
+               imageModifier = Modifier.size(32.dp),
                imageRotation = if (isSideBarOpen) 180f else 0f,
                image = if (isSideBarOpen) painterResource(id = R.drawable.sidebar_hide) else painterResource(id = R.drawable.sidebar_show),
                onClick = { isSideBarOpen = !isSideBarOpen },

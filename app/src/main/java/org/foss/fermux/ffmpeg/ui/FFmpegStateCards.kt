@@ -30,20 +30,20 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
-import org.foss.fermux.fermuxUIComponents.buttons.FermuxCancelButton
-import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxCard
-import org.foss.fermux.fermuxUIComponents.buttons.FermuxMainActionButton
-import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxSurface
-import org.foss.fermux.fermuxUIComponents.buttons.FermuxTextWithIconButton
+import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
+import org.foss.fermux.fermuxUIComponents.generalComponents.AppCard
+import org.foss.fermux.fermuxUIComponents.buttons.MainActionButton
+import org.foss.fermux.fermuxUIComponents.generalComponents.AppSurface
+import org.foss.fermux.fermuxUIComponents.buttons.TextWithIconButton
 import org.foss.fermux.ffmpeg.logic.FFmpegStatus
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
-import org.foss.fermux.main.Screen
+import org.foss.fermux.main.MainScreens
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
 
 
 private data class FormatButtonItem(
-    val format: Screen,
+    val format: MainScreens,
     val text: String
 )
 
@@ -95,7 +95,7 @@ fun IdleCard(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        FermuxCard(
+        AppCard(
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier.padding(8.dp)
         ) {
@@ -119,7 +119,7 @@ fun IdleCard(
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        FermuxMainActionButton(
+                        MainActionButton(
                             icon = Icons.Default.Upload,
                             modifier = Modifier
                                 .defaultMinSize(minWidth = 70.dp)
@@ -140,7 +140,7 @@ fun IdleCard(
                             .background(FermuxColors.fermuxSurface)
                     )
 
-                    FermuxTextWithIconButton(
+                    TextWithIconButton(
                         modifier = Modifier
                             .align(Alignment.BottomStart)
                             .padding(10.dp),
@@ -153,19 +153,19 @@ fun IdleCard(
                 }
             }
 
-            FermuxSurface(expanded = expanded) {
+            AppSurface(expanded = expanded) {
 
                 val formatButtons = listOf(
                     FormatButtonItem(
-                        format = Screen.AudioFormatSheet,
+                        format = MainScreens.AudioFormatSheet,
                         text = "Press To Convert To Audio"
                     ),
                     FormatButtonItem(
-                        format = Screen.VideoFormatSheet,
+                        format = MainScreens.VideoFormatSheet,
                         text = "Press To Convert To Video"
                     ),
                     FormatButtonItem(
-                        format = Screen.ImageFormatSheet,
+                        format = MainScreens.ImageFormatSheet,
                         text = "Press To Convert To Image"
                     )
                 )
@@ -179,7 +179,7 @@ fun IdleCard(
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            FermuxTextWithIconButton(
+                            TextWithIconButton(
                                 text = item.text,
                                 contentPadding = PaddingValues(8.dp),
                                 modifier = Modifier
@@ -206,7 +206,7 @@ fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: Str
         modifier = Modifier.fillMaxWidth()
     ) {
 
-        FermuxCard(
+        AppCard(
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier.padding(8.dp)
         ) {
@@ -244,7 +244,7 @@ fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: Str
                                     .align(Alignment.BottomCenter)
                             )
                         }
-                        FermuxTextWithIconButton(
+                        TextWithIconButton(
                             icon = Icons.Default.ExpandMore,
                             contentPadding = PaddingValues(8.dp),
                             iconRotation = if (expanded)180f else 0f,
@@ -256,7 +256,7 @@ fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: Str
                 }
             }
 
-            FermuxSurface(expanded = true) {
+            AppSurface(expanded = true) {
                 Text(
                     text = FFmpegLogs,
                     modifier = Modifier.padding(3.dp),
@@ -275,7 +275,7 @@ fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: Str
             Column(
                 modifier = Modifier.fillMaxSize(),
             ) {
-                FermuxCard(
+                AppCard(
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.padding(8.dp)
                 ) {
@@ -301,7 +301,7 @@ fun ConversionCard(progress: Float? = null, pickedFileUri: Uri?, FFmpegLogs: Str
                                 fontFamily = JetbrainsMono,
                             )
 
-                            FermuxCancelButton(
+                            CancelButton(
                                 modifier = Modifier
                                     .padding(top = 16.dp),
                                 onClick = { onTryAgain() }

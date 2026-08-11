@@ -11,7 +11,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxCard
+import org.foss.fermux.fermuxUIComponents.generalComponents.AppCard
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
@@ -29,13 +29,13 @@ fun HomeScreen(navigationController: NavHostController) {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             val screens = listOf(
-                Screen.Terminal,
-                Screen.Downloader,
-                Screen.Converter,
-                Screen.Settings,
+                MainScreens.Terminal,
+                MainScreens.Downloader,
+                MainScreens.Converter,
+                MainScreens.Settings,
             )
             screens.forEach { screen ->
-                FermuxCard(
+                AppCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(0.25f)

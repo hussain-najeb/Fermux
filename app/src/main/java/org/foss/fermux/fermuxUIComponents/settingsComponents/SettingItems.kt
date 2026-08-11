@@ -5,7 +5,14 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Update
@@ -19,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,7 +38,8 @@ import org.foss.fermux.ui.theme.FermuxColors
 fun SettingLists(
      title: String,
      description: String,
-     icon: ImageVector?,
+     icon: ImageVector? = null,
+     image: Painter? = null,
      onClick: () -> Unit,
      content: @Composable (() -> Unit)? = null
 ) {
@@ -52,13 +61,13 @@ fun SettingLists(
      )
 
      Surface(
+          modifier = Modifier.padding(7.dp),
           shape = RoundedCornerShape(8.dp),
           contentColor = contentColor,
           border = BorderStroke(width = 1.5.dp, color = borderColor),
           interactionSource = interactionSource,
           onClick = onClick,
           color = surfaceColor
-
      ) {
           Row(
                modifier = Modifier
@@ -70,7 +79,19 @@ fun SettingLists(
                     Icon(
                          imageVector = icon,
                          contentDescription = null,
-                         modifier = Modifier.padding(end = 16.dp).size(24.dp),
+                         modifier = Modifier
+                              .padding(end = 16.dp)
+                              .size(28.dp)
+                    )
+               }
+
+               if (image != null) {
+                    Icon(
+                         painter = image,
+                         contentDescription = null,
+                         modifier = Modifier
+                              .padding(end = 16.dp)
+                              .size(28.dp)
                     )
                }
                Column(

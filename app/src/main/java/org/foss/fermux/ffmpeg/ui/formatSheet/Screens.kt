@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxCard
+import org.foss.fermux.fermuxUIComponents.generalComponents.AppCard
 import org.foss.fermux.ffmpeg.logic.FFmpegTargetFormat
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.logic.MediaKind
@@ -43,7 +43,7 @@ fun Screens(sheet: MediaKind, navHostController: NavHostController, viewModel: F
             FFmpegTargetFormat.entries
                 .filter { viewModel.isSheetFormat(it, sheet) }
                 .forEach { format ->
-                    FermuxCard(
+                    AppCard(
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(0.25f)

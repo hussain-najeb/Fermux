@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
-fun FermuxErrorCopyButton(
+fun ErrorCopyButton(
      modifier: Modifier = Modifier,
      onClick: () -> Unit
 ) {

@@ -30,11 +30,11 @@ sealed class MainScreens (val route: String, val descriptor: String?) {
 }
 
 sealed class SettingsScreens(val route: String, val descriptor: String?) {
-    object SimpleDownloader: SettingsScreens(route = "downloader", descriptor = "Main Downloader Page")
+    object SimpleDownloader: SettingsScreens(route = "simple downloader", descriptor = "Main Downloader Page")
     object AdvancedDownloader: SettingsScreens(route = "advanced Downloader", descriptor = "Advanced Downloader Settings")
-    object SimpleFFmpeg: SettingsScreens(route = "FFmpeg", descriptor = "Main FFmpeg Page")
+    object SimpleFFmpeg: SettingsScreens(route = "simple FFmpeg", descriptor = "Main FFmpeg Page")
     object AdvancedFFmpeg: SettingsScreens(route = "advanced FFmpeg", descriptor = "Advanced FFmpeg Settings")
-    object SimpleTerminal: SettingsScreens(route = "terminal", descriptor = "Terminal Main Page")
+    object SimpleTerminal: SettingsScreens(route = "simple terminal", descriptor = "Terminal Main Page")
     object AdvancedTerminal: SettingsScreens(route = "advanced terminal", descriptor = "Advanced Terminal Page")
     object Themes: SettingsScreens(route = "themes", descriptor = "Themes Page")
     object AboutAppPage: SettingsScreens(route = "about", descriptor = "About Page")
@@ -65,6 +65,7 @@ fun FermuxAppMainScreen() {
         composable(SettingsScreens.SimpleDownloader.route) {  }
         composable(SettingsScreens.AdvancedDownloader.route) {  }
         composable(SettingsScreens.SimpleFFmpeg.route) {  }
+        composable(SettingsScreens.AdvancedFFmpeg.route) {  }
         composable(SettingsScreens.SimpleTerminal.route) {  }
         composable(SettingsScreens.AdvancedTerminal.route) {  }
         composable(SettingsScreens.Themes.route) {  }

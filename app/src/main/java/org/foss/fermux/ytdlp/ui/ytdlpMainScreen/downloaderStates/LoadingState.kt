@@ -29,8 +29,8 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
-import org.foss.fermux.fermuxUIComponents.buttons.FermuxCancelButton
-import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxCard
+import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
+import org.foss.fermux.fermuxUIComponents.generalComponents.AppCard
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
 import kotlin.time.Duration.Companion.milliseconds
@@ -57,7 +57,7 @@ fun LoadingCard(
 
 
      Column(modifier = Modifier.fillMaxWidth()) {
-          FermuxCard(
+          AppCard(
                shape = RoundedCornerShape(12.dp),
                modifier = Modifier
                     .padding(16.dp)
@@ -88,7 +88,7 @@ fun LoadingCard(
 
                          Icon(imageVector = Icons.Default.Close, contentDescription = null)
                     }
-                    FermuxCancelButton(
+                    CancelButton(
                          modifier = Modifier
                               .align(alignment = Alignment.TopStart).padding(6.dp),
                          onClick = { onCancel() }

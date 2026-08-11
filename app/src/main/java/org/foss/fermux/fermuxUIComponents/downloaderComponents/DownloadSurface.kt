@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
-fun FermuxFinishedDownloadCard(
+fun FinishedDownloadCard(
      modifier: Modifier = Modifier,
      shape: Shape = RoundedCornerShape(10.dp),
      colors: CardColors = CardDefaults.elevatedCardColors(

@@ -50,7 +50,7 @@ import org.foss.fermux.ui.theme.FermuxColors
  */
 
 @Composable
-fun FermuxTextWithIconButton(
+fun TextWithIconButton(
      modifier: Modifier = Modifier,
      textModifier: Modifier = Modifier,
      text: String? = null,
