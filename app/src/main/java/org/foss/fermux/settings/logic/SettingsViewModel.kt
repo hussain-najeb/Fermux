@@ -40,7 +40,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
     val ytdlpDetails: StateFlow<Boolean> = settingsTab.ytdlpDetails
-        .stateIn(viewModelScope, SharingStarted.Lazily, true)
+        .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
     val sponsorBlock: StateFlow<Boolean> = settingsTab.sponsorBlock
         .stateIn(viewModelScope, SharingStarted.Lazily, true)

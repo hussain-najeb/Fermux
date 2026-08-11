@@ -56,8 +56,11 @@ fun SimpleDownloaderPage(
      @SuppressLint("ContextCastToActivity") settingsViewModel: SettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
 ) {
 
+     /**
+      * TODO. Make the aniamtion smooth when the Slider appears and the Logs Surface Goes down and up, currently its janky. I have an idea for a solution. Maybe wrap all the settings in an AnimateContent
+      */
+
      val ytdlpDetails by settingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
-     val sleepRequest by settingsViewModel.sleepRequest.collectAsStateWithLifecycle()
      val audioHistory by settingsViewModel.audioHistory.collectAsStateWithLifecycle()
      val videoHistory by settingsViewModel.videoHistory.collectAsStateWithLifecycle()
      val isCheckingForUpdate by settingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
@@ -86,7 +89,7 @@ fun SimpleDownloaderPage(
      val simpleDownloaderSettings = listOf(
           SettingListInfo(
                title = "Update Ytdlp",
-               description = "Press the update button to update your current version of ytdlp. Current version is ${settingsViewModel.currentVersionName}",
+               description = "Update your current version of ytdlp. Current version is ${settingsViewModel.currentVersionName}",
                icon = Icons.Default.Update,
                content = {
                     val updatingIcon = updateIconPainter(updateState)
@@ -152,6 +155,19 @@ fun SimpleDownloaderPage(
                          expanded = expanded
                     )
                }
+          ),
+          SettingListInfo(
+               title = if (ytdlpDetails) "Hide Logs" else "Show Logs",
+               description = if (ytdlpDetails) "Hide the downloader Logs" else "Show the downloader Logs",
+               image = if (ytdlpDetails) painterResource(id = R.drawable.eye_open) else painterResource(id = R.drawable.eye_closed),
+               content = {
+                    SettingsSwitch(
+                         checked = ytdlpDetails,
+                         onCheckedChange = {
+                              settingsViewModel.setYtdlpDetails(it)
+                         }
+                    )
+               }
           )
      )
 
@@ -191,8 +207,6 @@ fun SimpleDownloaderPage(
           }
      }
 }
-
-
 
 @Composable
 private fun updateIconPainter(updateState: UpdateState): Painter {

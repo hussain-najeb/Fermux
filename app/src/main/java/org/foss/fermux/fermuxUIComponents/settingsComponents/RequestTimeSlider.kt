@@ -3,6 +3,7 @@ package org.foss.fermux.fermuxUIComponents.settingsComponents
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -18,7 +19,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderColors
@@ -51,31 +51,32 @@ fun RequestTimeSlider(expanded: Boolean,
 
      AnimatedVisibility(
           visible = expanded,
-          enter = slideInVertically(animationSpec = MaterialTheme.motionScheme.fastEffectsSpec()) + fadeIn(initialAlpha = 0.1f),
-          exit = slideOutVertically(animationSpec = MaterialTheme.motionScheme.fastEffectsSpec()) + fadeOut(targetAlpha = 0.1f)
+          enter = slideInVertically(animationSpec = tween(200)) + fadeIn(initialAlpha = 0.3f),
+          exit = slideOutVertically(animationSpec = tween(250)) + fadeOut(targetAlpha = 0.1f)
      ) {
           Surface(modifier = Modifier
                .wrapContentSize()
-               .padding(8.dp),
+               .padding(start = 8.dp, end = 8.dp),
                color = FermuxColors.fermuxComponents,
                shape = RoundedCornerShape(8.dp),
-               border = BorderStroke(1.dp, color = FermuxColors.fermux)
+               border = BorderStroke(1.dp, color = FermuxColors.fermuxHelperBorder)
                ) {
                Slider(
-                    value = sleepRequest.coerceIn(1, 5).toFloat(),
+                    value = sleepRequest.coerceIn(0, 5).toFloat(),
                     onValueChange = { value ->
                          settingsViewModel.setSleepRequest(value.roundToInt())
                     },
-                    valueRange = 1f..5f,
-                    steps = 3,
+                    valueRange = 0f..5f,
+                    steps = 4,
                     thumb = {
                          Box(
                               modifier = Modifier
-                              .size(16.dp)
-                              .background(
-                                   color = FermuxColors.fermuxGenericBorder,
-                                   shape = RectangleShape
-                              )
+
+                                   .size(25.dp)
+                                   .background(
+                                        color = FermuxColors.fermuxGenericBorder,
+                                        shape = RoundedCornerShape(6.dp)
+                                   )
                          )
                     },
                     modifier = Modifier.padding(7.dp),

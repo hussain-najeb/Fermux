@@ -21,7 +21,7 @@ data class FermuxColor(
     val fermuxSecondaryBorder:      Color    = Color(0xFF67ECA2),
     val fermuxGenericBorder:        Color    = Color(0xFF7E7EF6),
     val fermuxTertiaryBorder:       Color    = Color(0xFF3B3B40),
-    val fermuxHelperBorder:         Color    = Color(0xFF54549A),
+    val fermuxHelperBorder:         Color    = Color(0xFF6B6B9E),
 
     // Fermux global components
     val fermuxComponents:           Color    = Color(0xFF3C3F68),

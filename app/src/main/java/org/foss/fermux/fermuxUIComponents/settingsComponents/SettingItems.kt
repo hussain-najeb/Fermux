@@ -58,10 +58,10 @@ fun SettingLists(
      Column(modifier = Modifier.fillMaxSize()
      ) {
           Surface(
-               modifier = Modifier.padding(7.dp),
+               modifier = Modifier.padding(3.dp),
                shape = RoundedCornerShape(8.dp),
                contentColor = contentColor,
-               border = BorderStroke(width = 1.5.dp, color = borderColor),
+               border = BorderStroke(width = 1.dp, color = borderColor),
                interactionSource = interactionSource,
                onClick = onClick,
                color = surfaceColor
