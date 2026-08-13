@@ -1,4 +1,4 @@
-package org.foss.fermux.terminal.main.ui
+package org.foss.fermux.terminal.ui
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
@@ -21,19 +21,10 @@ fun ArrowKeyMovement(
     onHistoryDown: () -> Unit
 ) {
 
-
-
-
     Row(modifier = Modifier) {
-
-
-        // Calculate new positions before the buttons so both can read them.
-        // coerceAtLeast(0) prevents going below position 0 (start of text).
-        // coerceAtMost(length) prevents going past the end of the text.
         val leftArrow = (userCommand.selection.start - 1).coerceAtLeast(0)
         val rightArrow = (userCommand.selection.start + 1).coerceAtMost(userCommand.text.length)
 
-        // Move cursor one position to the left
         IconButton(onClick = {
             onCommandChange(
                 TextFieldValue(

@@ -84,9 +84,7 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
                          val now = System.currentTimeMillis()
                          currentProgress = progress.coerceIn(0f, 100f)
 
-                         // WorkManager progress is persisted in its database. Do not write
-                         // once for the progress callback and again for the log callback.
-                         if (now - lastProgressUpdateAt >= 500L) {
+                         if (now - lastProgressUpdateAt >= 900L) {
                               lastProgressUpdateAt = now
                               runBlocking {
                                    setProgress(

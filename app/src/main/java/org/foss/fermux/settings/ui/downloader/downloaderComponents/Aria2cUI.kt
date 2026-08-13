@@ -1,4 +1,4 @@
-package org.foss.fermux.settings.ui
+package org.foss.fermux.settings.ui.downloader.downloaderComponents
 
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -44,27 +46,32 @@ fun Aria2cOptions(
      val aria2c by settingsViewModel.aria2c.collectAsStateWithLifecycle()
      val aria2cEdgeCase by settingsViewModel.aria2cEdgeCase.collectAsStateWithLifecycle()
 
-
-
-     val aria2cSettings = remember {
+     val aria2cSettings =
           listOf(
                SettingListInfo(
-                    title = if (aria2c)"Aria2c Off" else "Aria2c Toggled off",
-                    description = if (aria2c) "Disable aria2c for the downloader" else "Enable aria2c for the downloader",
-                    image = if (aria2c) R.drawable.zap_off else R.drawable.zap,
+                    title = "Aria2c Implementation",
+                    description = if (aria2c) "Enabled aria2c for the downloader" else "Disabled aria2c for the downloader",
+                    image = if (aria2c) R.drawable.zap else R.drawable.zap_off,
                     content = {
                          SettingsSwitch(
                               checked = aria2c,
-                              onCheckedChange = {settingsViewModel.setAria2cImpl(it)}
+                              onCheckedChange = { settingsViewModel.setAria2cImpl(it) }
                          )
                     }
                ),
                SettingListInfo(
                     title = "Aria2c Edge Case",
-                    description = "" // DO this!
+                    description = if (aria2cEdgeCase) "Use aria2c for DASH/HLS stream to skip the Best quality avoiding ffmpeg bugs" else "Using standard downloader for DASH and HLS streams",
+                    icon = Icons.Default.Tune,
+                    content = {
+                         SettingsSwitch(
+                              checked = aria2cEdgeCase,
+                              onCheckedChange = { settingsViewModel.setAria2cEdgeCase(it) }
+                         )
+                    }
                )
           )
-     }
+
 
 
 
@@ -106,12 +113,26 @@ fun Aria2cOptions(
                          Spacer(modifier = Modifier.height(8.dp))
 
                          Text(
-                              text = "Turn On/Off Aria2c Implementation with it's edge case",
+                              text = "Turn On/Off Aria2c Implementation with it's edge case if needed",
                               color = FermuxColors.fermuxOffWhiteTextColor,
                               fontSize = 15.sp,
                               style = MaterialTheme.typography.bodyMedium,
                               modifier = Modifier.padding(10.dp)
                          )
+
+                         aria2cSettings.forEach { setting ->
+                              SettingLists(
+                                   title = setting.title,
+                                   description = setting.description,
+                                   icon = setting.icon,
+                                   image = setting.image,
+                                   content = setting.content,
+                                   trailingContent = setting.trailingContent,
+                                   onClick = {
+                                        setting.onClick?.invoke()
+                                   }
+                              )
+                         }
 
 
 

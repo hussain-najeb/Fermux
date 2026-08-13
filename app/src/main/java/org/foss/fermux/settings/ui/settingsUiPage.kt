@@ -35,28 +35,8 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun SettingsScreen(
-     navController: NavHostController,
-     @SuppressLint("ContextCastToActivity") settingsViewModel: SettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
+     navController: NavHostController
 ) {
-
-
-
-    // Text(
-    //    text = "My section",
-    //    modifier = Modifier.padding(
-    //        start = 16.dp,
-    //        top = 20.dp,
-    //        bottom = 8.dp
-    //    ),
-    //    color = MaterialTheme.colorScheme.primary,
-    //    style = MaterialTheme.typography.labelLarge,
-    //)
-
-// TODO. Add the cookies option in the Advanced Downloader Page
-
-
-
-
     val generalSettings = remember {
         listOf(
             SettingListInfo(

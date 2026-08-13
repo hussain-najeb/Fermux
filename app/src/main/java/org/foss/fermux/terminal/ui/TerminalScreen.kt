@@ -35,11 +35,12 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import org.foss.fermux.terminal.main.logic.TerminalLine
-import org.foss.fermux.terminal.main.logic.TermuxOutput
-import org.foss.fermux.terminal.main.logic.myTermuxCommands
+import org.foss.fermux.terminal.logic.TerminalLine
+import org.foss.fermux.terminal.logic.TermuxOutput
+import org.foss.fermux.terminal.logic.myTermuxCommands
 import org.foss.fermux.ui.theme.JetbrainsMono
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
+import org.foss.fermux.terminal.ui.ArrowKeyMovement
 import kotlin.collections.plus
 
 @Composable
@@ -51,16 +52,9 @@ fun FermuxTerminalScreen(
     var history by remember { mutableStateOf(listOf<String>()) }
     var commandPlace by remember { mutableIntStateOf(-1) }
 
-
-
-    LargeTopBarScaffold(
-        title = "Terminal",
-        onBack = { navigationController.popBackStack() }
-    ) { paddingValues ->
         Column(
             Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
                 .systemBarsPadding()
                 .imePadding()
                 .background(Color(0xFF282C34))
@@ -97,8 +91,6 @@ fun FermuxTerminalScreen(
         }
 
         Spacer(modifier = Modifier.height(1.dp))
-
-
 
         BasicTextField(
             value = userCommand,
@@ -185,28 +177,27 @@ fun FermuxTerminalScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        ArrowKeyMovement(
-            userCommand = userCommand,
-            onCommandChange = { userCommand = it },
-            onHistoryUp = {
-                if (history.isNotEmpty()) {
-                     commandPlace = (commandPlace + 1).coerceAtMost(history.size - 1)
-                    val command = history[history.size - 1 - commandPlace]
-                    userCommand = TextFieldValue(command, TextRange(command.length))
+            ArrowKeyMovement(
+                userCommand = userCommand,
+                onCommandChange = { userCommand = it },
+                onHistoryUp = {
+                    if (history.isNotEmpty()) {
+                        commandPlace = (commandPlace + 1).coerceAtMost(history.size - 1)
+                        val command = history[history.size - 1 - commandPlace]
+                        userCommand = TextFieldValue(command, TextRange(command.length))
+                    }
+                },
+                onHistoryDown = {
+                    commandPlace = (commandPlace - 1).coerceAtLeast(-1)
+                    if (commandPlace == -1) {
+                        userCommand = TextFieldValue("")
+                    } else {
+                        val command = history[history.size - 1 - commandPlace]
+                        userCommand = TextFieldValue(command, TextRange(command.length))
+                    }
                 }
-            },
-            onHistoryDown = {
-                 commandPlace = (commandPlace - 1).coerceAtLeast(-1)
-                if (commandPlace == -1) {
-                    userCommand = TextFieldValue("")
-                } else {
-                    val command = history[history.size - 1 - commandPlace]
-                    userCommand = TextFieldValue(command, TextRange(command.length))
-                }
-            }
-        )
+            )
         }
     }
-}
 
 

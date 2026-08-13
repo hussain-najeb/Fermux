@@ -58,14 +58,11 @@ suspend fun downloaderLogic(
 
 
 
-    if (aria2cHLSWithDASHCase && videoQuality != VideoQuality.BEST) {
-        request.addOption("--downloader", "libaria2c.so")
-        request.addOption("--external-downloader-args", "aria2c:--summary-interval=1")
-    }
-    if (aria2c) {
-        request.addOption("--downloader", "libaria2c.so")
-        request.addOption("--external-downloader-args", "aria2c:--summary-interval=1")
+    val shouldUseAria2c = aria2c || (aria2cHLSWithDASHCase && videoQuality != VideoQuality.BEST)
 
+    if (shouldUseAria2c) {
+        request.addOption("--downloader", "libaria2c.so")
+        request.addOption("--external-downloader-args", "aria2c:--summary-interval=1")
     }
 
     if (sleepRequest > 0) {
