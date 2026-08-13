@@ -34,8 +34,7 @@ class DownloaderViewModel : ViewModel() {
     private var downloaderJob: Job? = null
 
     var showYtdlpDetails by mutableStateOf(false)
-    val flavorError =
-        listOf(
+    val flavorError = listOf(
             "Dammit, something must have gone wrong",
             "Could be a connection issue, check your internet connection",
             "You guessed it, it's a network error",

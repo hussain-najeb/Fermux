@@ -32,7 +32,7 @@ fun FFmepgState (
         }
 
         is FFmpegStatus.Error -> {
-            FFmpegErrorMassage(state.errorMessage, onReset = { viewModel.state = FFmpegStatus.Idle })
+            FFmpegErrorMassage(state.flavourMessage, onReset = { viewModel.state = FFmpegStatus.Idle })
         }
     }
 }

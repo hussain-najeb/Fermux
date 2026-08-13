@@ -63,8 +63,8 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
                     )
                }
           } catch (e: Exception) {
-               Log.d("fermux", "failed to save audio JSON", e)
-               Log.d("fermux", "failed to save video JSON", e)
+               Log.e("fermux", "failed to save audio JSON", e)
+               Log.e("fermux", "failed to save video JSON", e)
           }
 
           return try {

@@ -9,6 +9,7 @@ import androidx.work.workDataOf
 import kotlinx.coroutines.launch
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.webkit.MimeTypeMap
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,7 +17,6 @@ import androidx.compose.runtime.setValue
 import androidx.work.WorkInfo
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import okhttp3.internal.format
 import kotlin.text.takeLast
 
 
@@ -24,12 +24,11 @@ sealed class FFmpegStatus {
 
     data object Idle: FFmpegStatus()
     data class Loaded (val filePicked: FFmpegTargetFormat, val inputUri: Uri, val FFmpegLogs: String ): FFmpegStatus()
-    data class Error(val errorMessage: String) : FFmpegStatus()
+    data class Error(val flavourMessage: String, val rawError: String) : FFmpegStatus()
     data class Converting(val progress: Float, val duration: Long, val filePicked: FFmpegTargetFormat, val inputUri: Uri, val FFmpegLogs: String): FFmpegStatus()
 
 }
 
-// Single media kind instead of three exclusive booleans (bug 1)
 enum class MediaKind { VIDEO, AUDIO, IMAGE }
 
 enum class FFmpegTargetFormat(
@@ -54,7 +53,7 @@ enum class FFmpegTargetFormat(
     JPG("jpg",   category = MediaKind.IMAGE, mimeType = "image/jpeg",       ffmpegExtraArgs = listOf("-frames:v", "1"),             descriptor = "image(jpeg)"),
     PNG("png",   category = MediaKind.IMAGE, mimeType = "image/png",       ffmpegExtraArgs = listOf("-frames:v", "1"),             descriptor = "image(png)"),
 
-} // TODO. Video/Audio cutting and effects is planed here as well.
+} // TODO. Video/Audio cutting and effects is planned here as well.
 
 
 class FFmpegViewModel: ViewModel() {
@@ -65,16 +64,22 @@ class FFmpegViewModel: ViewModel() {
     var selectedFormat by mutableStateOf(FFmpegTargetFormat.WAV)
     var inputKind by mutableStateOf<MediaKind?>(null)
 
-    fun fail(message: String) {
-        state = FFmpegStatus.Error(message)
+    val flavourMessage = listOf(
+        "Oh no, did you convert audio to video?",
+        "This has always been problematic",
+        "Good luck solving it"
+    )
+
+
+    // To register
+    fun fail(flavourFailMessage: String, rawError: String) {
+        state = FFmpegStatus.Error(flavourFailMessage, rawError)
     }
 
-    // Guesses audio/video/image from MIME or file extension
     fun updateInputKind(context: Context) {
         inputKind = inputUri?.let { detectInputKind(context, it) }
     }
 
-    // Used by format sheets: right tab + allowed for this input
     fun isSheetFormat(format: FFmpegTargetFormat, sheet: MediaKind): Boolean {
         return format.category == sheet && isConversionAllowed(format)
     }
@@ -83,20 +88,24 @@ class FFmpegViewModel: ViewModel() {
         val input = inputKind ?: return false
         return when (input) {
             MediaKind.AUDIO -> target.category == MediaKind.AUDIO
-            // Video can be converted, demuxed, or frame-grabbed
             MediaKind.VIDEO -> true
             MediaKind.IMAGE -> target.category == MediaKind.IMAGE
         }
     }
 
-    fun startingConversion(context: Context, inputUri: Uri, targetFormat: FFmpegTargetFormat) {
+    fun startingConversion(context: Context, inputUri: Uri, targetFormat: FFmpegTargetFormat, e: Exception) {
         updateInputKind(context)
-        if (!isConversionAllowed(targetFormat)) {
-            fail("This file can't be converted to that format")
-            return
-        }
 
-        viewModelScope.launch {
+         try {
+              if (!isConversionAllowed(targetFormat)) {
+
+                  fail(flavourFailMessage = flavourMessage.random(), rawError = e.toString()  )
+              }
+         } catch (e: Exception) {
+             Log.e("fermux FFmpeg", "Failed conversion", e)
+         }
+
+         viewModelScope.launch {
              val inputData = workDataOf(
                  "FFMPEG_URI_FILE" to inputUri.toString(),
                  "TARGET_FORMAT" to targetFormat.name,

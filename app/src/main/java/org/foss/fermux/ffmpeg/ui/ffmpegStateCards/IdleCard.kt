@@ -59,7 +59,6 @@ fun IdleCard(
           viewModelStoreOwner = LocalContext.current as ComponentActivity
      ),
      navigationController: NavController,
-     state: FFmpegStatus
 ) {
      val context = LocalContext.current
      var expanded by remember { mutableStateOf(false) }
