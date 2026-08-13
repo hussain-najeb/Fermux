@@ -19,8 +19,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,8 +32,9 @@ fun SettingLists(
      title: String,
      description: String,
      icon: ImageVector? = null,
-     image: Painter? = null,
+     image: Int? = null,
      onClick: () -> Unit,
+     leadingContent: @Composable (() -> Unit)? = null,
      content: @Composable (() -> Unit)? = null,
      trailingContent: @Composable (() -> Unit)? = null
 ) {
@@ -84,17 +85,18 @@ fun SettingLists(
 
                     if (image != null) {
                          Icon(
-                              painter = image,
+                              painter = painterResource(id = image),
                               contentDescription = null,
                               modifier = Modifier
                                    .padding(end = 16.dp)
                                    .size(28.dp)
                          )
                     }
+                    leadingContent?.invoke()
                     Column(
                          modifier = Modifier
                               .weight(1f)
-                              .padding(start = if (icon == null) 12.dp else 0.dp)
+                              .padding(start = if (icon == null && image == null && leadingContent == null) 12.dp else 0.dp)
                     ) {
                          Text(
                               text = title,

@@ -125,7 +125,6 @@ fun SliderPreview() {
                )
           ) {
 
-
                Surface(
                     modifier = Modifier.padding(8.dp),
                     color = FermuxColors.fermuxComponents

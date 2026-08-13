@@ -49,6 +49,7 @@ fun Screens(sheet: MediaKind, navHostController: NavHostController, viewModel: F
                             .weight(0.25f)
                             .padding(8.dp),
                         shape = RoundedCornerShape(12.dp),
+                        pressable = true,
                         onClick = {
                             viewModel.selectedFormat = format
                             viewModel.inputUri?.let { uri ->
@@ -57,11 +58,13 @@ fun Screens(sheet: MediaKind, navHostController: NavHostController, viewModel: F
                             navHostController.popBackStack()
                         }
                     ) {
-                        Text(text = format.descriptor, color =
-                            Color.White ,
+                        Text(
+                            text = format.descriptor,
+                            color = Color.White,
                             fontSize = 20.sp,
                             fontStyle = FontStyle.Italic,
-                            modifier = Modifier.padding(15.dp))
+                            modifier = Modifier.padding(15.dp)
+                        )
                     }
                 }
         }

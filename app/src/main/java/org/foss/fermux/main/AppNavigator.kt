@@ -12,6 +12,7 @@ import org.foss.fermux.ffmpeg.ui.ConverterScreen
 import org.foss.fermux.ffmpeg.ui.formatSheet.AudioFormatSheet
 import org.foss.fermux.ffmpeg.ui.formatSheet.ImageFormatSheet
 import org.foss.fermux.ffmpeg.ui.formatSheet.VideoFormatSheet
+import org.foss.fermux.settings.ui.AboutPage
 import org.foss.fermux.settings.ui.SettingsScreen
 import org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage
 import org.foss.fermux.terminal.main.ui.FermuxTerminalScreen
@@ -33,11 +34,8 @@ sealed class MainScreens (val route: String, val descriptor: String?) {
 
 sealed class SettingsScreens(val route: String, val descriptor: String?) {
     object SimpleDownloader: SettingsScreens(route = "simple downloader", descriptor = "Main Downloader Page")
-    object AdvancedDownloader: SettingsScreens(route = "advanced Downloader", descriptor = "Advanced Downloader Settings")
     object SimpleFFmpeg: SettingsScreens(route = "simple FFmpeg", descriptor = "Main FFmpeg Page")
-    object AdvancedFFmpeg: SettingsScreens(route = "advanced FFmpeg", descriptor = "Advanced FFmpeg Settings")
     object SimpleTerminal: SettingsScreens(route = "simple terminal", descriptor = "Terminal Main Page")
-    object AdvancedTerminal: SettingsScreens(route = "advanced terminal", descriptor = "Advanced Terminal Page")
     object Themes: SettingsScreens(route = "themes", descriptor = "Themes Page")
     object AboutAppPage: SettingsScreens(route = "about", descriptor = "About Page")
 
@@ -65,13 +63,10 @@ fun FermuxAppMainScreen() {
 
         // Settings Screens
         composable(SettingsScreens.SimpleDownloader.route) { SimpleDownloaderPage(navController = navigationController) }
-        composable(SettingsScreens.AdvancedDownloader.route) {  }
         composable(SettingsScreens.SimpleFFmpeg.route) {  }
-        composable(SettingsScreens.AdvancedFFmpeg.route) {  }
         composable(SettingsScreens.SimpleTerminal.route) {  }
-        composable(SettingsScreens.AdvancedTerminal.route) {  }
         composable(SettingsScreens.Themes.route) {  }
-        composable(SettingsScreens.AboutAppPage.route) {  }
+        composable(SettingsScreens.AboutAppPage.route) { AboutPage(navController = navigationController) }
 
         // FFmpeg
         composable(MainScreens.VideoFormatSheet.route) { VideoFormatSheet(navHostController = navigationController, ffmpegViewModel) }
