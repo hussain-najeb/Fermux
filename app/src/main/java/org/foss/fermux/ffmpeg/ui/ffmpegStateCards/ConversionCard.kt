@@ -96,7 +96,7 @@ fun ConversionCard(
                          }
                     }
                }
-               AppSurface(expanded = true) {
+               AppSurface(expanded = expanded) {
                     Text(
                          text = FFmpegLogs,
                          modifier = Modifier.padding(3.dp),

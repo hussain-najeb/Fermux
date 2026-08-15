@@ -3,6 +3,7 @@
 package org.foss.fermux.ffmpeg.ui
 
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import org.foss.fermux.ffmpeg.logic.FFmpegStatus
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
@@ -16,7 +17,9 @@ fun FFmepgState (
     state: FFmpegStatus,
     FFmpegLogs: String,
     navigationController: NavController,
-    viewModel: FFmpegViewModel) {
+    ffmpegViewModel: FFmpegViewModel) {
+
+    val context = LocalContext.current
 
     when (state) {
         is FFmpegStatus.Idle -> {
@@ -32,7 +35,7 @@ fun FFmepgState (
         }
 
         is FFmpegStatus.Error -> {
-            FFmpegErrorMassage(state.flavourMessage, onReset = { viewModel.state = FFmpegStatus.Idle })
+            FFmpegErrorMassage(errorMessage = state.flavourMessage, rawError =  state.rawError, onCancel = { ffmpegViewModel.cancelButton(context)})
         }
     }
 }

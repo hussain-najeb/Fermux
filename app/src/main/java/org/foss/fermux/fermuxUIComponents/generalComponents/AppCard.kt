@@ -32,6 +32,7 @@ fun AppCard(
      color: FermuxColor = FermuxColors,
      situationalCardColor: Boolean? = null,
      shape: Shape = RoundedCornerShape(4.dp),
+     setBorder: Boolean = true,
      border: BorderStroke? = BorderStroke(1.5.dp, color.fermuxPrimaryBorder),
      pressable: Boolean? = null,
      onClick: (() -> Unit)? = null,
@@ -71,7 +72,7 @@ fun AppCard(
                containerColor = cardColor,
           ),
           shape = shape,
-          border = border,
+          border = if (setBorder) border else null,
           onClick = { if (isCardPressable) onClick?.invoke() }
      ) {
           content()

@@ -7,7 +7,10 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.withContext
 import org.foss.fermux.ytdlp.logic.downloader.copyFileToDownloads
 import java.io.BufferedReader
@@ -22,6 +25,8 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
         val targetFormatName = inputData.getString("TARGET_FORMAT") ?: return Result.failure()
         val targetFormat = FFmpegTargetFormat.valueOf(targetFormatName)
         val outputFile = File(applicationContext.cacheDir, "output_${id}.${targetFormat.workerFile}")
+
+
 
         return try {
             val fileUriInput = inputData.getString("FFMPEG_URI_FILE") ?: return Result.failure()
@@ -44,7 +49,6 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                 )
             }
 
-            // Per-format flags sent from ViewModel (bug 4)
             val extraArgs = inputData.getStringArray("FFMPEG_EXTRA_ARGS")?.toList() ?: emptyList()
 
             val process = withContext(Dispatchers.IO) {
@@ -64,15 +68,24 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                 builder.start()
             }
 
+            currentCoroutineContext()[Job]?.invokeOnCompletion { handler ->
+                if (handler is CancellationException)
+                    process.destroy()
+            }
 
             val output = StringBuilder()
             withContext(Dispatchers.IO) {
                 BufferedReader(InputStreamReader(process.inputStream)).use { reader ->
                     var line: String?
+                    var lastUpdateAt = 0L
                     while (reader.readLine().also { line = it } != null) {
                         output.appendLine(line)
-                        Log.d("FermuxFFmpeg", line!!)
-                        setProgress(workDataOf("line" to line))
+                        Log.d("Fermux FFmpeg Output", line!!)
+                        val now = System.currentTimeMillis()
+                        if (now - lastUpdateAt >= 500L) {
+                            lastUpdateAt = now
+                            setProgress(workDataOf("line" to line))
+                        }
                     }
                 }
             }
@@ -80,8 +93,6 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
             val exitCode = withContext(Dispatchers.IO) {
                 process.waitFor()
             }
-
-
             if (exitCode == 0) {
                 withContext(Dispatchers.IO) {
                     copyFileToDownloads(

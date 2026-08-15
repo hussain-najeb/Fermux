@@ -59,6 +59,7 @@ fun LoadingCard(
      Column(modifier = Modifier.fillMaxWidth()) {
           AppCard(
                shape = RoundedCornerShape(12.dp),
+               setBorder = false,
                modifier = Modifier
                     .padding(16.dp)
                     .aspectRatio(16f/9f)

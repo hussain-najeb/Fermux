@@ -22,7 +22,7 @@ import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
 
 @Composable
-fun FFmpegErrorMassage(errorMessage: String, onReset: () -> Unit) {
+fun FFmpegErrorMassage(errorMessage: String, rawError: String, onCancel: () -> Unit) {
 
      Column(
           modifier = Modifier.fillMaxSize(),
@@ -52,11 +52,18 @@ fun FFmpegErrorMassage(errorMessage: String, onReset: () -> Unit) {
                               color = Color.White,
                               fontFamily = JetbrainsMono,
                          )
-
+                         Text(
+                              text = rawError,
+                              modifier = Modifier
+                                   .padding(top = 30.dp, start = 16.dp),
+                              fontSize = 16.sp,
+                              color = Color.White,
+                              fontFamily = JetbrainsMono,
+                         )
                          CancelButton(
                               modifier = Modifier
                                    .padding(top = 16.dp),
-                              onClick = { onReset() }
+                              onClick = { onCancel() }
                          )
                     }
                }

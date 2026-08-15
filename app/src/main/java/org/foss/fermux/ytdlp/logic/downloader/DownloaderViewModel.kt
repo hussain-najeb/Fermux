@@ -24,7 +24,6 @@ import org.foss.fermux.storage.SettingsTab
 import java.net.UnknownHostException
 import java.util.*
 import kotlin.time.Duration.Companion.milliseconds
-
 class DownloaderViewModel : ViewModel() {
     var state by mutableStateOf<DownloadStatus>(DownloadStatus.Idle)
     var showFormatSheet by mutableStateOf(false)
@@ -75,62 +74,68 @@ class DownloaderViewModel : ViewModel() {
     fun startingDownload(context: Context, audio: AudioQuality?, video: VideoQuality?) {
         val settingsTab = SettingsTab(context.applicationContext)
         val metadata = (state as? DownloadStatus.Loaded)?.metadata ?: return
-        viewModelScope.launch { showYtdlpDetails = settingsTab.ytdlpDetails.first() }
-        val requestedUrls = OneTimeWorkRequestBuilder<DownloadWorker>()
-            .setInputData(
-                workDataOf(
-                    "url" to downloadUrl,
-                    "audio" to audio?.name,
-                    "video" to video?.name,
-                    "title" to metadata.title,
-                    "thumbnail" to metadata.thumbnail,
-                    "duration" to metadata.duration,
-                    "uploader" to metadata.uploader
+
+        downloaderJob = viewModelScope.launch {
+            val ytdlpDetails = settingsTab.ytdlpDetails.first()
+            showYtdlpDetails = ytdlpDetails
+
+            val requestedUrls = OneTimeWorkRequestBuilder<DownloadWorker>()
+                .setInputData(
+                    workDataOf(
+                        "url" to downloadUrl,
+                        "audio" to audio?.name,
+                        "video" to video?.name,
+                        "title" to metadata.title,
+                        "thumbnail" to metadata.thumbnail,
+                        "duration" to metadata.duration,
+                        "uploader" to metadata.uploader
+                    )
                 )
-            )
-            .build()
+                .build()
 
-        activeProcess = requestedUrls.id
-        state = DownloadStatus.Downloading(0f, metadata)
+            activeProcess = requestedUrls.id
+            state = DownloadStatus.Downloading(0f, metadata)
 
-        val workManager = WorkManager
-            .getInstance(context)
-        workManager.enqueue(requestedUrls)
-        workManager.getWorkInfoByIdFlow(requestedUrls.id)
-            .onEach { workInfo ->
-                workInfo ?: return@onEach
-                when (workInfo.state) {
-                    WorkInfo.State.RUNNING -> {
-                        val ytdlpDetails = settingsTab.ytdlpDetails.first()
-                        if (ytdlpDetails) {
+            val workManager = WorkManager
+                .getInstance(context)
+            workManager.enqueue(requestedUrls)
+            workManager.getWorkInfoByIdFlow(requestedUrls.id)
+                .onEach { workInfo ->
+                    workInfo ?: return@onEach
+                    when (workInfo.state) {
+                        WorkInfo.State.RUNNING -> {
+                            if (ytdlpDetails) {
 
-                        val logs = workInfo.progress.getString("text")
-                        if (!logs.isNullOrBlank()) {
-                            downloaderLogs = (downloaderLogs + logs)
+                                val logs = workInfo.progress.getString("text")
+                                if (!logs.isNullOrBlank()) {
+                                    downloaderLogs = (downloaderLogs + logs)
+                                }
+                            }
+                            val progress = workInfo.progress.getFloat("progress", 0f).coerceIn(0f, 100f)
+                            state = DownloadStatus.Downloading(progress, metadata)
                         }
-                    }
-                        val progress = workInfo.progress.getFloat("progress", 0f)
-                            .coerceIn(0f, 100f)
 
-                        state = DownloadStatus.Downloading(progress, metadata)
+                        WorkInfo.State.SUCCEEDED -> {
+                            state = DownloadStatus.Completed(metadata)
+                            activeProcess = null
+                        }
+
+                        WorkInfo.State.FAILED -> {
+                            val error = workInfo.outputData.getString("error") ?: "Unknown Error!"
+                            state = DownloadStatus.Error(flavorError.random(), rawError = error)
+                            activeProcess = null
+                        }
+
+                        WorkInfo.State.CANCELLED -> {
+                            state = DownloadStatus.Idle
+                            activeProcess = null
+                        }
+
+                        else -> {}
                     }
-                    WorkInfo.State.SUCCEEDED -> {
-                        state = DownloadStatus.Completed(metadata)
-                        activeProcess = null
-                    }
-                    WorkInfo.State.FAILED -> {
-                        val error = workInfo.outputData.getString("error") ?: "Unknown Error!"
-                        state = DownloadStatus.Error(flavorError.random(), rawError = error)
-                        activeProcess = null
-                    }
-                    WorkInfo.State.CANCELLED -> {
-                        state = DownloadStatus.Idle
-                        activeProcess = null
-                    }
-                    else -> {}
                 }
-            }
-            .launchIn(viewModelScope)
+                .launchIn(viewModelScope)
+        }
     }
 
     fun cancelButton(context: Context) {

@@ -9,14 +9,15 @@ import androidx.work.workDataOf
 import kotlinx.coroutines.launch
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import android.webkit.MimeTypeMap
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.work.WorkInfo
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.util.UUID
 import kotlin.text.takeLast
 
 
@@ -64,16 +65,30 @@ class FFmpegViewModel: ViewModel() {
     var selectedFormat by mutableStateOf(FFmpegTargetFormat.WAV)
     var inputKind by mutableStateOf<MediaKind?>(null)
 
+    private var activeProcess by mutableStateOf<UUID?>(null)
+
+    private var ffmpegJob: Job? = null
+
     val flavourMessage = listOf(
         "Oh no, did you convert audio to video?",
         "This has always been problematic",
         "Good luck solving it"
     )
 
-
-    // To register
-    fun fail(flavourFailMessage: String, rawError: String) {
+    private fun fail(flavourFailMessage: String, rawError: String) {
         state = FFmpegStatus.Error(flavourFailMessage, rawError)
+    }
+
+    fun typeErrorClarification(context: Context) {
+        val uri = inputUri
+        val mime = uri?.let { context.contentResolver.getType(it) }
+        val extension = uri?.let { MimeTypeMap.getFileExtensionFromUrl(it.toString()) }
+
+        fail(
+            flavourFailMessage = flavourMessage.random(),
+            rawError = "This input is unsupported, check this info:\n" +
+                    "uri = $uri\n" + "mime = ${mime ?: "Unknown"}\n" + "extension = ${extension?.takeIf { it.isNotBlank() } ?: "Unknown"}"
+        )
     }
 
     fun updateInputKind(context: Context) {
@@ -93,25 +108,24 @@ class FFmpegViewModel: ViewModel() {
         }
     }
 
-    fun startingConversion(context: Context, inputUri: Uri, targetFormat: FFmpegTargetFormat, e: Exception) {
+    fun startingConversion(context: Context, inputUri: Uri, targetFormat: FFmpegTargetFormat) {
         updateInputKind(context)
 
-         try {
-              if (!isConversionAllowed(targetFormat)) {
+        if (!isConversionAllowed(targetFormat)) {
+            fail(
+                flavourFailMessage = flavourMessage.random(),
+                rawError = "Cannot convert $inputKind input to ${targetFormat.descriptor}"
+            )
+            return
+        }
 
-                  fail(flavourFailMessage = flavourMessage.random(), rawError = e.toString()  )
-              }
-         } catch (e: Exception) {
-             Log.e("fermux FFmpeg", "Failed conversion", e)
-         }
-
-         viewModelScope.launch {
-             val inputData = workDataOf(
-                 "FFMPEG_URI_FILE" to inputUri.toString(),
-                 "TARGET_FORMAT" to targetFormat.name,
-                 "FFMPEG_EXTRA_ARGS" to targetFormat.ffmpegExtraArgs.toTypedArray(),
-                 "OUTPUT_MIME_TYPE" to targetFormat.mimeType,
-             )
+       ffmpegJob = viewModelScope.launch {
+            val inputData = workDataOf(
+                "FFMPEG_URI_FILE" to inputUri.toString(),
+                "TARGET_FORMAT" to targetFormat.name,
+                "FFMPEG_EXTRA_ARGS" to targetFormat.ffmpegExtraArgs.toTypedArray(),
+                "OUTPUT_MIME_TYPE" to targetFormat.mimeType,
+            )
 
             val request = OneTimeWorkRequestBuilder<FFmpegWorker>()
                 .setInputData(inputData)
@@ -119,6 +133,10 @@ class FFmpegViewModel: ViewModel() {
 
             val workManager = WorkManager.getInstance(context)
             workManager.enqueue(request)
+
+           activeProcess = request.id
+
+           state = FFmpegStatus.Converting(0f, 0L, targetFormat, inputUri, FFmpegLogs)
 
             workManager.getWorkInfoByIdFlow(request.id).onEach { workInfo ->
                 workInfo ?: return@onEach
@@ -130,23 +148,49 @@ class FFmpegViewModel: ViewModel() {
                         val logs = workInfo.progress.getString("line")
 
                         if (!logs.isNullOrBlank()) {
-                            FFmpegLogs = (FFmpegLogs + "\n" + logs).takeLast(200)
+                            FFmpegLogs = (FFmpegLogs + "\n" + logs).takeLast(900)
                         }
                         state = FFmpegStatus.Converting(progress, duration, targetFormat, inputUri, FFmpegLogs)
                     }
 
                     WorkInfo.State.SUCCEEDED -> {
                         state = FFmpegStatus.Loaded(targetFormat, inputUri, FFmpegLogs)
+                        activeProcess = null
                     }
 
                     WorkInfo.State.FAILED -> {
-                       fail(message = "Conversion failed in the worker")
+                        val rawError = workInfo.outputData.getString("error") ?: "Unknown error"
+                        fail(
+                            flavourFailMessage = flavourMessage.random(),
+                            rawError = rawError
+                        )
+                        activeProcess = null
+                    }
+
+                    WorkInfo.State.CANCELLED -> {
+                        state = FFmpegStatus.Idle
+                        activeProcess = null
                     }
                     else -> {}
                 }
             }
                 .launchIn(viewModelScope)
         }
+    }
+
+
+    fun cancelButton(context: Context) {
+        activeProcess?.let { id ->
+            WorkManager.getInstance(context).cancelWorkById(id)
+        }
+
+        ffmpegJob?.cancel()
+        ffmpegJob = null
+        state = FFmpegStatus.Idle
+        inputUri = null
+        FFmpegLogs = ""
+        selectedFormat = FFmpegTargetFormat.WAV
+        activeProcess = null
     }
 }
 
@@ -160,7 +204,6 @@ private fun detectInputKind(context: Context, uri: Uri): MediaKind? {
             else -> null
         }
     }
-    // Fallback when the picker doesn't give a MIME type
     val ext = MimeTypeMap.getFileExtensionFromUrl(uri.toString()).lowercase()
     val guessedMime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext) ?: return null
     return when {

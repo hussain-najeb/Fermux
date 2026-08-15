@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
 import org.foss.fermux.fermuxUIComponents.buttons.ErrorCopyButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.AppSurface
 import org.foss.fermux.ui.theme.FermuxColors
@@ -29,6 +30,7 @@ import org.foss.fermux.ui.theme.JetbrainsMono
 fun ErrorCard(
      errorMessage: String,
      rawError: String,
+     onCancel: () -> Unit
 ) {
      @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
      val scrollState = rememberScrollState()
@@ -84,6 +86,11 @@ fun ErrorCard(
                ErrorCopyButton(
                     modifier = Modifier.align(Alignment.BottomEnd),
                     onClick = { clipboard.setText(AnnotatedString(rawError)) }
+               )
+               CancelButton(
+                    modifier = Modifier
+                         .align(Alignment.BottomStart),
+                    onClick = {onCancel()}
                )
           }
      }

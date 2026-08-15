@@ -84,7 +84,7 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
                          val now = System.currentTimeMillis()
                          currentProgress = progress.coerceIn(0f, 100f)
 
-                         if (now - lastProgressUpdateAt >= 900L) {
+                         if (now - lastProgressUpdateAt >= 500L) {
                               lastProgressUpdateAt = now
                               runBlocking {
                                    setProgress(

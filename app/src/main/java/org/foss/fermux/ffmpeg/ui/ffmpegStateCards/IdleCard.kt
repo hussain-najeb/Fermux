@@ -42,7 +42,6 @@ import org.foss.fermux.fermuxUIComponents.buttons.MainActionButton
 import org.foss.fermux.fermuxUIComponents.buttons.TextWithIconButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.AppCard
 import org.foss.fermux.fermuxUIComponents.generalComponents.AppSurface
-import org.foss.fermux.ffmpeg.logic.FFmpegStatus
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.main.MainScreens
 import org.foss.fermux.ui.theme.FermuxColors
@@ -70,7 +69,7 @@ fun IdleCard(
           if (uri != null) {
                ffmpegViewModel.updateInputKind(context)
                if (ffmpegViewModel.inputKind == null) {
-                    ffmpegViewModel.fail("")
+                    ffmpegViewModel.typeErrorClarification(context)
                }
           }
      }
