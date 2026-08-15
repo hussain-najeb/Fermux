@@ -8,21 +8,30 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
+import org.foss.fermux.fermuxUIComponents.buttons.ErrorCopyButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.AppCard
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
 
 @Composable
 fun FFmpegErrorMassage(errorMessage: String, rawError: String, onCancel: () -> Unit) {
+
+
+     @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
+     val scrollState = rememberScrollState()
 
      Column(
           modifier = Modifier.fillMaxSize(),
@@ -39,6 +48,7 @@ fun FFmpegErrorMassage(errorMessage: String, rawError: String, onCancel: () -> U
                ) {
                     Column(
                          modifier = Modifier
+                              .verticalScroll(scrollState)
                               .fillMaxSize()
                               .background(FermuxColors.fermuxSurface),
                          verticalArrangement = Arrangement.Center,
@@ -60,12 +70,16 @@ fun FFmpegErrorMassage(errorMessage: String, rawError: String, onCancel: () -> U
                               color = Color.White,
                               fontFamily = JetbrainsMono,
                          )
-                         CancelButton(
-                              modifier = Modifier
-                                   .padding(top = 16.dp),
-                              onClick = { onCancel() }
-                         )
                     }
+                    CancelButton(
+                         modifier = Modifier
+                              .padding(top = 16.dp),
+                         onClick = { onCancel() }
+                    )
+                    ErrorCopyButton(
+                         modifier = Modifier.align(Alignment.BottomEnd),
+                         onClick = { clipboard.setText(AnnotatedString(rawError)) }
+                    )
                }
           }
      }

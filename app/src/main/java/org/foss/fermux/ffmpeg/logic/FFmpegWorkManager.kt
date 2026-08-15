@@ -7,11 +7,7 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.foss.fermux.ytdlp.logic.downloader.copyFileToDownloads
 import java.io.BufferedReader
 import java.io.File
@@ -25,7 +21,9 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
         val targetFormatName = inputData.getString("TARGET_FORMAT") ?: return Result.failure()
         val targetFormat = FFmpegTargetFormat.valueOf(targetFormatName)
         val outputFile = File(applicationContext.cacheDir, "output_${id}.${targetFormat.workerFile}")
-
+        val originalName = inputData.getString("ORIGINAL_FILE_NAME") ?: "Converted_to_$id"
+        val baseName = originalName.substringBeforeLast(".")
+        val displayName = "$baseName.${targetFormat.workerFile}"
 
 
         return try {
@@ -98,7 +96,7 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                     copyFileToDownloads(
                         applicationContext,
                         outputFile,
-                        "converted_to${targetFormat.workerFile}"
+                        displayName
                     )
                     Result.success()
                 }
