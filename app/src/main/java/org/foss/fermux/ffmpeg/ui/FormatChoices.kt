@@ -67,9 +67,9 @@ fun FormatList (ffmpegViewModel: FFmpegViewModel, chosenFormat: FFmpegTargetForm
 
                MediaKind.AUDIO -> AudioConversionState(ffmpegViewModel)
 
-               MediaKind.VIDEO -> VideoConversionState()
+               MediaKind.VIDEO -> VideoConversionState(ffmpegViewModel)
 
-               MediaKind.IMAGE -> ImageConversionState()
+               MediaKind.IMAGE -> ImageConversionState(ffmpegViewModel)
 
           }
      }
@@ -246,14 +246,87 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel) {
                title = "AVI",
                description = "AVI is Microsoft's old-school equivalent to MKV and MOV, it is a video container from 1992",
                onClick = {
+                    ffmpegViewModel.selectedFormat = FFmpegTargetFormat.AVI
+                    ffmpegViewModel.inputUri?.let { uri ->
+                         ffmpegViewModel.startingConversion(context, inputUri = uri, targetFormat = FFmpegTargetFormat.AVI)
+                    }
+               }
+          ),
+          FormatListItem(
+               title = "WEBM",
+               description = "WEBM is a modern, royalty-free video container created by Google specifically for the web",
+               onClick = {
+                    ffmpegViewModel.selectedFormat = FFmpegTargetFormat.WEBM
+                    ffmpegViewModel.inputUri?.let { uri ->
+                         ffmpegViewModel.startingConversion(context, inputUri = uri, targetFormat = FFmpegTargetFormat.WEBM)
+                    }
+               }
+          ),
+     )
 
+
+     videoOption.forEach { option ->
+          FormatLists(
+               title = option.title,
+               description = option.description,
+               onClick = {
+               option.onClick
+               }
+          )
+     }
+}
+
+
+@Composable
+fun ImageConversionState(ffmpegViewModel: FFmpegViewModel) {
+
+     val context = LocalContext.current
+
+     LaunchedEffect(ffmpegViewModel.inputUri) {
+          ffmpegViewModel.updateInputKind(context)
+     }
+
+
+     val imageOptions = listOf(
+          FormatListItem(
+               title = "GIF",
+               description = "it is a short, animated image file that plays on an endless loop without any sound",
+               onClick = {
+                    ffmpegViewModel.selectedFormat = FFmpegTargetFormat.GIF
+                    ffmpegViewModel.inputUri?.let { uri ->
+                         ffmpegViewModel.startingConversion(context, inputUri = uri, targetFormat = FFmpegTargetFormat.GIF)
+                    }
+               }
+          ),
+          FormatListItem(
+               title = "JPEG",
+               description = "JPEG is a compressed digital image format designed to balance small file sizes with high photo quality",
+               onClick = {
+                    ffmpegViewModel.selectedFormat = FFmpegTargetFormat.JPG
+                    ffmpegViewModel.inputUri?.let { uri ->
+                         ffmpegViewModel.startingConversion(context, inputUri = uri, targetFormat = FFmpegTargetFormat.JPG)
+                    }
+               }
+          ),
+          FormatListItem(
+               title = "PNG",
+               description = "PNG is an uncompressed image format that supports sharp detail, crisp text, and transparent backgrounds",
+               onClick = {
+                    ffmpegViewModel.selectedFormat = FFmpegTargetFormat.PNG
+                    ffmpegViewModel.inputUri?.let { uri ->
+                         ffmpegViewModel.startingConversion(context, inputUri = uri, targetFormat = FFmpegTargetFormat.PNG)
+                    }
                }
           )
      )
 
-
-
-
-
-
+     imageOptions.forEach { options ->
+          FormatLists(
+               title = options.title,
+               description = options.description,
+               onClick = {
+                    options.onClick
+               }
+          )
+     }
 }
