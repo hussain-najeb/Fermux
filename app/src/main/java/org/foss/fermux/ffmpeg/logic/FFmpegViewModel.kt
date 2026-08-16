@@ -67,10 +67,12 @@ class FFmpegViewModel: ViewModel() {
             MediaKind.AUDIO -> target.category == MediaKind.AUDIO
             MediaKind.VIDEO -> true
             MediaKind.IMAGE -> target.category == MediaKind.IMAGE
+            MediaKind.IDLE -> false
         }
     }
 
     fun startingConversion(context: Context, inputUri: Uri, targetFormat: FFmpegTargetFormat) {
+
         updateInputKind(context)
 
         if (!isConversionAllowed(targetFormat)) {
