@@ -6,7 +6,6 @@ import androidx.navigation.NavHostController
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.logic.MediaKind
 
-@OptIn(ExperimentalGridApi::class)
 @Composable
 fun ImageFormatSheet(navHostController: NavHostController, viewModel: FFmpegViewModel) {
 

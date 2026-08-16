@@ -40,9 +40,7 @@ fun Screens(sheet: MediaKind, navHostController: NavHostController, viewModel: F
             modifier = Modifier.align(Alignment.Center),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            FFmpegTargetFormat.entries
-                .filter { viewModel.isSheetFormat(it, sheet) }
-                .forEach { format ->
+            FFmpegTargetFormat.entries.filter { viewModel.isSheetFormat(it, sheet) }.forEach { format ->
                     AppCard(
                         modifier = Modifier
                             .fillMaxWidth()

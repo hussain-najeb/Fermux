@@ -43,27 +43,17 @@ package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 
     @OptIn(ExperimentalMaterial3Api::class)
 
-    /**
-     * @param showSheet is just a boolean to pop the sheet up the screen, it's off by default
-     * @param onConfirm is also for calling the thing, the enum classes at
-     * @see [AudioQuality]
-     * @see [VideoQuality]
-     */
-
     @Composable
     fun QualitySheet (showSheet: Boolean, onDismiss: () -> Unit,
                        onConfirm: (AudioQuality?, VideoQuality?) -> Unit) {
-        var pickedAudio by remember { mutableStateOf<AudioQuality?>(null) } // for the string to pass to
-        // the execute function in ytdlp
-        var pickedVideo by remember { mutableStateOf<VideoQuality?>(null) } // same here for videos
+        var pickedAudio by remember { mutableStateOf<AudioQuality?>(null) }
+        var pickedVideo by remember { mutableStateOf<VideoQuality?>(null) }
 
         if (showSheet) {
-            val sheetState = rememberModalBottomSheetState() // for keeping the sheet on screen
-            var page by remember { mutableIntStateOf(1) } // for selecting each tab in the sheet, so if video was
-            // selected it will go to 3 and so on
+            val sheetState = rememberModalBottomSheetState()
+            var page by remember { mutableIntStateOf(1) }
 
             ModalBottomSheet(
-                // the composable that does the thing
                 onDismissRequest = onDismiss,
                 sheetState = sheetState,
                 dragHandle = { BottomSheetDefaults.DragHandle() },
@@ -71,11 +61,11 @@ package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
                 modifier = Modifier
                     .fillMaxWidth(1f),
             ) {
-                var selectedPageIndex by remember { mutableIntStateOf(0) } // to get the buttons an index to work by
-                val options = listOf("Audio", "Video") // the names of the chosen options. 0 is audio, 1 is video
+                var selectedPageIndex by remember { mutableIntStateOf(0) }
+                val options = listOf("Audio", "Video")
 
 
-                Column(  // the default column so user can choose the audio and the video thing
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.background)
@@ -85,7 +75,7 @@ package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 
                     Icon(
                         imageVector = Icons.Outlined.Download,
-                        contentDescription = null, // the download icon in the middle of the thing
+                        contentDescription = null,
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
                             .size(50.dp)
@@ -110,15 +100,13 @@ package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 
                     Spacer(modifier = Modifier.height(13.dp))
 
-                    SingleChoiceSegmentedButtonRow(modifier = Modifier.align(Alignment.CenterHorizontally)) { // the button row that looks like a pill or whatever
+                    SingleChoiceSegmentedButtonRow(modifier = Modifier.align(Alignment.CenterHorizontally)) {
                         options.forEachIndexed { index, label ->
                             SegmentedButton(
-                                // the button thing, I think
                                 shape = SegmentedButtonDefaults.itemShape(
                                     index = index,
                                     count = options.size
-                                ), // to get the rounded shape
-                                // from both sizes. I think, so it doesn't look like shit
+                                ),
                                 onClick = {
                                     selectedPageIndex = index
                                     when (index) {

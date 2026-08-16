@@ -2,6 +2,13 @@
 
 package org.foss.fermux.ffmpeg.ui
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
@@ -19,23 +26,46 @@ fun FFmepgState (
     navigationController: NavController,
     ffmpegViewModel: FFmpegViewModel) {
 
+
+    val spatialSpec = MaterialTheme.motionScheme
     val context = LocalContext.current
 
-    when (state) {
-        is FFmpegStatus.Idle -> {
-            IdleCard(navigationController = navigationController)
-        }
+    AnimatedContent(
+        targetState = state,
+        transitionSpec = {
+            (slideInVertically(
+                animationSpec = spatialSpec.slowSpatialSpec(),
+                initialOffsetY = { -it }
+            ) + fadeIn(initialAlpha = 0.1f))
+                .togetherWith(
+                    exit = slideOutVertically(
+                        animationSpec = spatialSpec.slowSpatialSpec(),
+                        targetOffsetY = { -it }
+                    ) + fadeOut(targetAlpha = 0.1f)
+                )
+        },
+        label = "DownloaderCardTransition",
+        contentKey = { it::class }
+    ) { targetState ->
+        when (targetState) {
+            is FFmpegStatus.Idle -> {
+                IdleCard(navigationController = navigationController)
+            }
 
-        is FFmpegStatus.Converting -> {
-            ConversionCard(state.progress, state.inputUri, FFmpegLogs)
-        }
+            is FFmpegStatus.Converting -> {
+                ConversionCard(targetState.progress, targetState.inputUri, FFmpegLogs)
+            }
 
-        is FFmpegStatus.Loaded -> {
-            ConversionCard(progress = 100f, state.inputUri, FFmpegLogs)
-        }
+            is FFmpegStatus.Loaded -> {
+                ConversionCard(progress = 100f, targetState.inputUri, FFmpegLogs)
+            }
 
-        is FFmpegStatus.Error -> {
-            FFmpegErrorMassage(errorMessage = state.flavourMessage, rawError =  state.rawError, onCancel = { ffmpegViewModel.cancelButton(context)})
+            is FFmpegStatus.Error -> {
+                FFmpegErrorMassage(
+                    errorMessage = targetState.flavourMessage,
+                    rawError = targetState.rawError,
+                    onCancel = { ffmpegViewModel.cancelButton(context) })
+            }
         }
     }
 }

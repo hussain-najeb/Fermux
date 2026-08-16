@@ -2,6 +2,7 @@
 package org.foss.fermux.ffmpeg.ui.ffmpegStateCards
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -12,15 +13,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,14 +31,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import org.foss.fermux.R
 import coil3.compose.AsyncImage
-import org.foss.fermux.fermuxUIComponents.buttons.MainActionButton
+import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
 import org.foss.fermux.fermuxUIComponents.buttons.TextWithIconButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.AppCard
 import org.foss.fermux.fermuxUIComponents.generalComponents.AppSurface
@@ -47,10 +50,12 @@ import org.foss.fermux.main.MainScreens
 import org.foss.fermux.ui.theme.FermuxColors
 
 
+
 private data class FormatButtonItem(
-     val format: MainScreens,
-     val text: String
+     val format: Formats,
+     val text: String,
 )
+
 
 @Composable
 fun IdleCard(
@@ -90,21 +95,21 @@ fun IdleCard(
                               horizontalAlignment = Alignment.CenterHorizontally
                          ) {
                               Text(text = "Upload a file to convert",
-                                   fontSize = 14.sp,
-                                   fontFamily = FontFamily.Monospace,
+                                   fontSize = 19.sp,
+                                   fontFamily = FontFamily.Default,
                                    fontStyle = FontStyle.Normal,
                                    color = FermuxColors.fermuxInActiveTextColor,
-                                   modifier = Modifier.padding(8.dp)
                               )
 
                               Spacer(modifier = Modifier.height(8.dp))
 
-                              MainActionButton(
-                                   icon = Icons.Default.Upload,
+                              ImageButton(
+                                   image = painterResource( R.drawable.upload),
                                    modifier = Modifier
-                                        .defaultMinSize(minWidth = 70.dp)
+                                        .size(80.dp)
                                         .padding(8.dp),
-                                   onClick = {fileLauncher.launch("*/*")}
+                                   onClick = { fileLauncher.launch("*/*") },
+                                   contentPadding = PaddingValues(9.dp)
                               )
                          }
                     }
@@ -118,33 +123,92 @@ fun IdleCard(
                               modifier = Modifier
                                    .fillMaxSize()
                                    .background(FermuxColors.fermuxSurface)
-                         )
+                              )
+                         }
+                    }
+               }
+          }
+     }
 
-                         TextWithIconButton(
+
+
+        private data class PreviewFormatButtonItem(
+     val format: MainScreens,
+     val text: String
+)
+
+@Preview (heightDp = 800, showBackground = true, backgroundColor = 0xFF181825)
+@Composable
+fun EditableIdleCardPreviewContent(
+     inputUri: Uri? = Uri.parse("/home/Hussain/Downloads/maxresdefault.jpg"),
+     onUploadClick: () -> Unit = {},
+     onFormatSelected: (MainScreens) -> Unit = {}
+) {
+     Column(modifier = Modifier.fillMaxSize()) {
+          AppCard(
+               shape = RoundedCornerShape(8.dp),
+               modifier = Modifier.padding(8.dp)
+          ) {
+               Box(
+                    modifier = Modifier
+                         .fillMaxWidth()
+                         .height(200.dp)
+               ) {
+                    if (inputUri == null) {
+                         Column(
                               modifier = Modifier
-                                   .align(Alignment.BottomStart)
-                                   .padding(10.dp),
-                              icon = Icons.Default.ExpandMore,
-                              contentPadding = PaddingValues(8.dp),
-                              iconRotation = if (expanded) 180f else 0f,
-                              text = if (expanded) "Hide Format" else "Show Format",
-                              onClick = { expanded = !expanded }
+                                   .fillMaxSize()
+                                   .background(FermuxColors.fermuxSurface),
+                              verticalArrangement = Arrangement.Center,
+                              horizontalAlignment = Alignment.CenterHorizontally
+                         ) {
+                              Text(
+                                   text = "Upload a file to convert",
+                                   fontSize = 17.sp,
+                                   fontFamily = FontFamily.Default,
+                                   fontStyle = FontStyle.Normal,
+                                   color = FermuxColors.fermuxWhiteColor,
+                              )
+
+                              Spacer(modifier = Modifier.height(8.dp))
+
+                              ImageButton(
+                                   image = painterResource(R.drawable.upload),
+                                   modifier = Modifier
+                                        .size(60.dp)
+                                        .padding(8.dp),
+                                   onClick = onUploadClick
+                              )
+                         }
+                    }
+
+                    // --- STATE 2: FILE LOADED ---
+                    if (inputUri != null) {
+                         AsyncImage(
+                              model = inputUri,
+                              contentDescription = "Test Image Preview",
+                              contentScale = ContentScale.Crop,
+                              modifier = Modifier
+                                   .fillMaxSize()
+                                   .background(FermuxColors.fermuxSurface)
                          )
                     }
                }
 
-               AppSurface(expanded = expanded) {
+               // --- EDITABLE SURFACE & FOR-EACH SECTION ---
+               AppSurface(expanded = true) {
 
+                    // Modify, add, or remove format buttons here:
                     val formatButtons = listOf(
-                         FormatButtonItem(
+                         PreviewFormatButtonItem(
                               format = MainScreens.AudioFormatSheet,
                               text = "Press To Convert To Audio"
                          ),
-                         FormatButtonItem(
+                         PreviewFormatButtonItem(
                               format = MainScreens.VideoFormatSheet,
                               text = "Press To Convert To Video"
                          ),
-                         FormatButtonItem(
+                         PreviewFormatButtonItem(
                               format = MainScreens.ImageFormatSheet,
                               text = "Press To Convert To Image"
                          )
@@ -155,6 +219,7 @@ fun IdleCard(
                               .fillMaxWidth()
                               .padding(10.dp),
                     ) {
+                         // EDITABLE LOOP
                          formatButtons.forEach { item ->
                               Row(
                                    verticalAlignment = Alignment.CenterVertically
@@ -166,7 +231,7 @@ fun IdleCard(
                                              .fillMaxWidth()
                                              .height(60.dp)
                                              .padding(5.dp),
-                                        onClick = { navigationController.navigate(item.format.route) }
+                                        onClick = { onFormatSelected(item.format) }
                                    )
                               }
                          }

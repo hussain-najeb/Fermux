@@ -43,16 +43,6 @@ fun Why() {
 
         Spacer(Modifier.height(20.dp))
 
-        MainActionButton(
-            modifier = Modifier.size(70.dp),
-            image = painterResource(R.drawable.ic_launcher_background),
-            componentSize = 50.dp, // The biggest the image can get.
-            iconRotation = if (pressed) 180f else 0f,
-            onClick = {pressed = !pressed },
-        )
-
-        Spacer(Modifier.height(20.dp))
-
         CancelButton(
             modifier = Modifier.size(45.dp),
             iconRotation = if (pressed) 360f else 0f,

@@ -25,10 +25,6 @@ import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.SettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 
-
-
-
-
 /**
  *  TODO. Add an option to reset to default settings
  */

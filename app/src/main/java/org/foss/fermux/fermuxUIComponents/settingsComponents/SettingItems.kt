@@ -34,8 +34,8 @@ fun SettingLists(
      icon: ImageVector? = null,
      image: Int? = null,
      onClick: () -> Unit,
-     leadingContent: @Composable (() -> Unit)? = null,
      content: @Composable (() -> Unit)? = null,
+     leadingContent: @Composable (() -> Unit)? = null,
      trailingContent: @Composable (() -> Unit)? = null
 ) {
 

@@ -3,15 +3,13 @@ package org.foss.fermux.ffmpeg.logic
 import android.net.Uri
 
 sealed class FFmpegStatus {
-
      data object Idle: FFmpegStatus()
      data class Loaded (val filePicked: FFmpegTargetFormat, val inputUri: Uri, val ffmpegLogs: String ): FFmpegStatus()
      data class Error(val flavourMessage: String, val rawError: String) : FFmpegStatus()
      data class Converting(val progress: Float, val duration: Long, val filePicked: FFmpegTargetFormat, val inputUri: Uri, val ffmpegLogs: String): FFmpegStatus()
-
 }
 
-enum class MediaKind { VIDEO, AUDIO, IMAGE }
+enum class MediaKind {IDLE, VIDEO, AUDIO, IMAGE }
 
 enum class FFmpegTargetFormat(
      val workerFile: String,
