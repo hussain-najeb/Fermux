@@ -17,6 +17,7 @@ import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.ConversionCard
 import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.FFmpegErrorMassage
 import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.IdleCard
+import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.MidConversionProcess
 
 
 @Composable
@@ -49,6 +50,10 @@ fun FFmepgState (
         when (targetState) {
             is FFmpegStatus.Idle -> {
                 IdleCard()
+            }
+
+            is FFmpegStatus.MidConversion -> {
+                MidConversionProcess()
             }
 
             is FFmpegStatus.Converting -> {
