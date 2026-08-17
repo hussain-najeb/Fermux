@@ -8,12 +8,13 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -35,6 +36,7 @@ fun FormatLists(
      image: Int? = null,
      onClick: () -> Unit
 ) {
+     val scrollState = rememberScrollState()
 
      val interactionSource = remember { MutableInteractionSource() }
      val isPressed by interactionSource.collectIsPressedAsState()
@@ -51,7 +53,9 @@ fun FormatLists(
           targetValue = if (isPressed) FermuxColors.fermuxActiveIcon else FermuxColors.fermuxGenericBorder
      )
 
-     Column(modifier = Modifier.fillMaxSize()
+     Column(modifier = Modifier
+          .fillMaxWidth()
+          .verticalScroll(scrollState)
      ) {
           Surface(
                modifier = Modifier.padding(3.dp),

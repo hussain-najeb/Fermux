@@ -23,7 +23,6 @@ import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.IdleCard
 fun FFmepgState (
     state: FFmpegStatus,
     FFmpegLogs: String,
-    navigationController: NavController,
     ffmpegViewModel: FFmpegViewModel) {
 
 
@@ -44,12 +43,12 @@ fun FFmepgState (
                     ) + fadeOut(targetAlpha = 0.1f)
                 )
         },
-        label = "DownloaderCardTransition",
+        label = "ffmpegCardTransition",
         contentKey = { it::class }
     ) { targetState ->
         when (targetState) {
             is FFmpegStatus.Idle -> {
-                IdleCard(navigationController = navigationController)
+                IdleCard()
             }
 
             is FFmpegStatus.Converting -> {

@@ -34,7 +34,6 @@ fun ConverterScreen(@SuppressLint("ContextCastToActivity") viewModel: FFmpegView
             FFmepgState(
                 viewModel.state,
                 viewModel.FFmpegLogs,
-                navigationController = navigationController,
                 ffmpegViewModel = viewModel
             )
         }

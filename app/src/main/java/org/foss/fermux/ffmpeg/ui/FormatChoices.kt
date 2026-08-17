@@ -1,5 +1,6 @@
 package org.foss.fermux.ffmpeg.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -8,8 +9,6 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,14 +18,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FormatLists
-import org.foss.fermux.fermuxUIComponents.generalComponents.AppSurface
 import org.foss.fermux.ffmpeg.logic.FFmpegTargetFormat
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.logic.MediaKind
-import org.foss.fermux.settings.logic.SettingListInfo
 
 
 data class FormatListItem(
@@ -39,13 +35,13 @@ data class FormatListItem(
 
 
 @Composable
-fun FormatList (ffmpegViewModel: FFmpegViewModel, chosenFormat: FFmpegTargetFormat, state: MediaKind) {
+fun FormatList(ffmpegViewModel: FFmpegViewModel) {
 
+     var pickedKind by remember { mutableStateOf(MediaKind.IDLE) }
      val spatialSpec = MaterialTheme.motionScheme
 
-
      AnimatedContent(
-          targetState = state,
+          targetState = pickedKind,
           transitionSpec = {
                (slideInVertically(
                     animationSpec = spatialSpec.slowSpatialSpec(),
@@ -59,78 +55,64 @@ fun FormatList (ffmpegViewModel: FFmpegViewModel, chosenFormat: FFmpegTargetForm
                     )
           },
           label = "DownloaderCardTransition",
-          contentKey = { it::class }
      ) { targetState ->
-
           when (targetState) {
-               MediaKind.IDLE ->  IdleConversionState()
-
-               MediaKind.AUDIO -> AudioConversionState(ffmpegViewModel)
-
-               MediaKind.VIDEO -> VideoConversionState(ffmpegViewModel)
-
-               MediaKind.IMAGE -> ImageConversionState(ffmpegViewModel)
-
+               MediaKind.IDLE -> IdleConversionState(
+                    onPick = { pickedKind = it }
+               )
+               MediaKind.AUDIO -> AudioConversionState(
+                    ffmpegViewModel,
+                    onBack = { pickedKind = MediaKind.IDLE }
+               )
+               MediaKind.VIDEO -> VideoConversionState(
+                    ffmpegViewModel,
+                    onBack = { pickedKind = MediaKind.IDLE }
+               )
+               MediaKind.IMAGE -> ImageConversionState(
+                    ffmpegViewModel,
+                    onBack = { pickedKind = MediaKind.IDLE }
+               )
           }
      }
 }
 
-
-
+@SuppressLint("SuspiciousIndentation")
 @Composable
-fun IdleConversionState() {
-
-     var pickedFormat by remember { mutableStateOf<MediaKind?>(value = null) }
+fun IdleConversionState(onPick: (MediaKind) -> Unit) {
 
      val formatOptions = listOf(
           FormatListItem(
                title = "Audio",
                description = "Convert the selected media to audio",
                image = R.drawable.audio,
-               onClick = {
-                    pickedFormat = MediaKind.AUDIO
-               }
+               onClick = { onPick(MediaKind.AUDIO) }
           ),
           FormatListItem(
                title = "Video",
                description = "Convert the selected media to video",
                image = R.drawable.video,
-               onClick = {
-                    pickedFormat = MediaKind.VIDEO
-               }
+               onClick = { onPick(MediaKind.VIDEO) }
           ),
           FormatListItem(
                title = "Image",
                description = "Convert selected media to image",
                image = R.drawable.image,
-               onClick = {
-                    pickedFormat = MediaKind.IMAGE
-               }
+               onClick = { onPick(MediaKind.IMAGE) }
           )
      )
      Column(modifier = Modifier.fillMaxSize()) {
-
-          AppSurface(
-               shape = RoundedCornerShape(8.dp),
-               modifier = Modifier.padding(8.dp)
-          ) {
-
-               formatOptions.forEach { option ->
-                    FormatLists(
+          formatOptions.forEach { option ->
+               FormatLists(
                     title = option.title,
                     description = option.description,
-                    image = option.image ?: 1,
-                    onClick = {
-                         option.onClick
-                         }
-                    )
-               }
+                    onClick = option.onClick
+               )
           }
      }
 }
 
 @Composable
-fun AudioConversionState(ffmpegViewModel: FFmpegViewModel) {
+fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
 
      val context = LocalContext.current
 
@@ -143,9 +125,9 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel) {
                title = "MP3",
                description = "Best compatible format",
                onClick = {
-                         ffmpegViewModel.selectedFormat = FFmpegTargetFormat.MP3
-                         ffmpegViewModel.inputUri?.let { uri ->
-                              ffmpegViewModel.startingConversion(context, uri, FFmpegTargetFormat.MP3)
+                    ffmpegViewModel.selectedFormat = FFmpegTargetFormat.MP3
+                    ffmpegViewModel.inputUri?.let { uri ->
+                         ffmpegViewModel.startingConversion(context, uri, FFmpegTargetFormat.MP3)
                     }
                }
           ),
@@ -155,7 +137,11 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel) {
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.FLAC
                     ffmpegViewModel.inputUri?.let { uri ->
-                         ffmpegViewModel.startingConversion(context, inputUri = uri, targetFormat = FFmpegTargetFormat.FLAC)
+                         ffmpegViewModel.startingConversion(
+                              context,
+                              inputUri = uri,
+                              targetFormat = FFmpegTargetFormat.FLAC
+                         )
                     }
                }
           ),
@@ -165,7 +151,11 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel) {
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.WAV
                     ffmpegViewModel.inputUri?.let { uri ->
-                         ffmpegViewModel.startingConversion(context, inputUri = uri, targetFormat = FFmpegTargetFormat.WAV)
+                         ffmpegViewModel.startingConversion(
+                              context,
+                              inputUri = uri,
+                              targetFormat = FFmpegTargetFormat.WAV
+                         )
                     }
                }
           ),
@@ -175,7 +165,11 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel) {
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.OGG
                     ffmpegViewModel.inputUri?.let { uri ->
-                         ffmpegViewModel.startingConversion(context, inputUri = uri, targetFormat = FFmpegTargetFormat.OGG)
+                         ffmpegViewModel.startingConversion(
+                              context,
+                              inputUri = uri,
+                              targetFormat = FFmpegTargetFormat.OGG
+                         )
                     }
                }
           ),
@@ -185,25 +179,33 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel) {
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.M4A
                     ffmpegViewModel.inputUri?.let { uri ->
-                         ffmpegViewModel.startingConversion(context, inputUri = uri, targetFormat = FFmpegTargetFormat.M4A)
+                         ffmpegViewModel.startingConversion(
+                              context,
+                              inputUri = uri,
+                              targetFormat = FFmpegTargetFormat.M4A
+                         )
                     }
                }
           ),
      )
-
-     audioOptions.forEach { option ->
+     Column(modifier = Modifier.fillMaxSize()) {
           FormatLists(
-               title = option.title,
-               description = option.description,
-               onClick = {
-                    option.onClick
-               }
+               title = "Back",
+               description = "Choose a different media kind",
+               onClick = onBack
           )
+          audioOptions.forEach { option ->
+               FormatLists(
+                    title = option.title,
+                    description = option.description,
+                    onClick = option.onClick
+               )
+          }
      }
 }
 
 @Composable
-fun VideoConversionState(ffmpegViewModel: FFmpegViewModel) {
+fun VideoConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
 
      val context = LocalContext.current
 
@@ -218,7 +220,11 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel) {
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.MP4
                     ffmpegViewModel.inputUri?.let { uri ->
-                         ffmpegViewModel.startingConversion(context, inputUri = uri, targetFormat = FFmpegTargetFormat.MP4)
+                         ffmpegViewModel.startingConversion(
+                              context,
+                              inputUri = uri,
+                              targetFormat = FFmpegTargetFormat.MP4
+                         )
                     }
                }
           ),
@@ -228,7 +234,11 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel) {
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.MKV
                     ffmpegViewModel.inputUri?.let { uri ->
-                         ffmpegViewModel.startingConversion(context, inputUri = uri, targetFormat = FFmpegTargetFormat.MKV)
+                         ffmpegViewModel.startingConversion(
+                              context,
+                              inputUri = uri,
+                              targetFormat = FFmpegTargetFormat.MKV
+                         )
                     }
                }
           ),
@@ -238,7 +248,11 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel) {
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.MOV
                     ffmpegViewModel.inputUri?.let { uri ->
-                         ffmpegViewModel.startingConversion(context, inputUri = uri, targetFormat = FFmpegTargetFormat.MOV)
+                         ffmpegViewModel.startingConversion(
+                              context,
+                              inputUri = uri,
+                              targetFormat = FFmpegTargetFormat.MOV
+                         )
                     }
                }
           ),
@@ -248,7 +262,11 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel) {
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.AVI
                     ffmpegViewModel.inputUri?.let { uri ->
-                         ffmpegViewModel.startingConversion(context, inputUri = uri, targetFormat = FFmpegTargetFormat.AVI)
+                         ffmpegViewModel.startingConversion(
+                              context,
+                              inputUri = uri,
+                              targetFormat = FFmpegTargetFormat.AVI
+                         )
                     }
                }
           ),
@@ -258,27 +276,34 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel) {
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.WEBM
                     ffmpegViewModel.inputUri?.let { uri ->
-                         ffmpegViewModel.startingConversion(context, inputUri = uri, targetFormat = FFmpegTargetFormat.WEBM)
+                         ffmpegViewModel.startingConversion(
+                              context,
+                              inputUri = uri,
+                              targetFormat = FFmpegTargetFormat.WEBM
+                         )
                     }
                }
           ),
      )
-
-
-     videoOption.forEach { option ->
+     Column(modifier = Modifier.fillMaxSize()) {
           FormatLists(
-               title = option.title,
-               description = option.description,
-               onClick = {
-               option.onClick
-               }
+               title = "Back",
+               description = "Choose a different media kind",
+               onClick = onBack
           )
+          videoOption.forEach { option ->
+               FormatLists(
+                    title = option.title,
+                    description = option.description,
+                    onClick = option.onClick
+               )
+          }
      }
 }
 
 
 @Composable
-fun ImageConversionState(ffmpegViewModel: FFmpegViewModel) {
+fun ImageConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
 
      val context = LocalContext.current
 
@@ -294,7 +319,11 @@ fun ImageConversionState(ffmpegViewModel: FFmpegViewModel) {
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.GIF
                     ffmpegViewModel.inputUri?.let { uri ->
-                         ffmpegViewModel.startingConversion(context, inputUri = uri, targetFormat = FFmpegTargetFormat.GIF)
+                         ffmpegViewModel.startingConversion(
+                              context,
+                              inputUri = uri,
+                              targetFormat = FFmpegTargetFormat.GIF
+                         )
                     }
                }
           ),
@@ -304,7 +333,11 @@ fun ImageConversionState(ffmpegViewModel: FFmpegViewModel) {
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.JPG
                     ffmpegViewModel.inputUri?.let { uri ->
-                         ffmpegViewModel.startingConversion(context, inputUri = uri, targetFormat = FFmpegTargetFormat.JPG)
+                         ffmpegViewModel.startingConversion(
+                              context,
+                              inputUri = uri,
+                              targetFormat = FFmpegTargetFormat.JPG
+                         )
                     }
                }
           ),
@@ -314,19 +347,27 @@ fun ImageConversionState(ffmpegViewModel: FFmpegViewModel) {
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.PNG
                     ffmpegViewModel.inputUri?.let { uri ->
-                         ffmpegViewModel.startingConversion(context, inputUri = uri, targetFormat = FFmpegTargetFormat.PNG)
+                         ffmpegViewModel.startingConversion(
+                              context,
+                              inputUri = uri,
+                              targetFormat = FFmpegTargetFormat.PNG
+                         )
                     }
                }
           )
      )
-
-     imageOptions.forEach { options ->
+     Column(modifier = Modifier.fillMaxSize()) {
           FormatLists(
-               title = options.title,
-               description = options.description,
-               onClick = {
-                    options.onClick
-               }
+               title = "Back",
+               description = "Choose a different media kind",
+               onClick = onBack
           )
+          imageOptions.forEach { option ->
+               FormatLists(
+                    title = option.title,
+                    description = option.description,
+                    onClick = option.onClick
+               )
+          }
      }
 }
