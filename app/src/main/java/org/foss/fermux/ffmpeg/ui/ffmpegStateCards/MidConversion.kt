@@ -19,7 +19,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import org.foss.fermux.fermuxUIComponents.generalComponents.AppCard
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
-import org.foss.fermux.ffmpeg.ui.FormatList
+import org.foss.fermux.ffmpeg.ui.formatStates.FormatList
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable

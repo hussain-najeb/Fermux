@@ -8,10 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FormatLists
 import org.foss.fermux.ffmpeg.logic.FFmpegTargetFormat
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
-import org.foss.fermux.ffmpeg.ui.FormatListItem
 
 @Composable
 fun ImageConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
@@ -27,8 +27,15 @@ fun ImageConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
 
      val imageOptions = listOf(
           FormatListItem(
+               title = "Back",
+               description = "Choose a different media kind",
+               image = R.drawable.back_arrow,
+               onClick = onBack
+          ),
+          FormatListItem(
                title = "GIF",
                description = "it is a short, animated image file that plays on an endless loop without any sound",
+               image = R.drawable.gif,
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.GIF
                     ffmpegViewModel.inputUri?.let { uri ->
@@ -43,6 +50,7 @@ fun ImageConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
           FormatListItem(
                title = "JPEG",
                description = "JPEG is a compressed digital image format designed to balance small file sizes with high photo quality",
+               image = R.drawable.jpg,
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.JPG
                     ffmpegViewModel.inputUri?.let { uri ->
@@ -57,6 +65,7 @@ fun ImageConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
           FormatListItem(
                title = "PNG",
                description = "PNG is an uncompressed image format that supports sharp detail, crisp text, and transparent backgrounds",
+               image = R.drawable.png,
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.PNG
                     ffmpegViewModel.inputUri?.let { uri ->
@@ -73,15 +82,11 @@ fun ImageConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
           .fillMaxWidth()
           .verticalScroll(scrollState)
      ) {
-          FormatLists(
-               title = "Back",
-               description = "Choose a different media kind",
-               onClick = onBack
-          )
           imageOptions.forEach { option ->
                FormatLists(
                     title = option.title,
                     description = option.description,
+                    image = option.image,
                     onClick = option.onClick
                )
           }

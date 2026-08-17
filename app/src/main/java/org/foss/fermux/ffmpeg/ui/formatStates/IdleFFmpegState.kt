@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FormatLists
 import org.foss.fermux.ffmpeg.logic.MediaKind
-import org.foss.fermux.ffmpeg.ui.FormatListItem
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -45,6 +44,7 @@ fun IdleConversionState(onPick: (MediaKind) -> Unit) {
           formatOptions.forEach { option ->
                FormatLists(
                     title = option.title,
+                    image = option.image,
                     description = option.description,
                     onClick = option.onClick
                )

@@ -8,10 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FormatLists
 import org.foss.fermux.ffmpeg.logic.FFmpegTargetFormat
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
-import org.foss.fermux.ffmpeg.ui.FormatListItem
 
 @Composable
 fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
@@ -25,8 +25,15 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
 
      val audioOptions = listOf(
           FormatListItem(
+               title = "Back",
+               description = "Choose a different media kind",
+               image = R.drawable.back_arrow,
+               onClick = onBack
+          ),
+          FormatListItem(
                title = "MP3",
                description = "Best compatible format",
+               image = R.drawable.mp3,
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.MP3
                     ffmpegViewModel.inputUri?.let { uri ->
@@ -37,6 +44,7 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
           FormatListItem(
                title = "FLAC",
                description = "Flac is a lossless audio format with a big files size",
+               image = R.drawable.flac,
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.FLAC
                     ffmpegViewModel.inputUri?.let { uri ->

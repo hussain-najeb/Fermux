@@ -26,14 +26,7 @@ import androidx.compose.ui.unit.sp
 import org.foss.fermux.fermuxUIComponents.buttons.BackButton
 import org.foss.fermux.ui.theme.FermuxColors
 
-/**
- * The standard Fermux page shell: a collapsing [LargeTopAppBar] with a back
- * button, wired up to a [Scaffold] with the app's background color and
- * nested-scroll behavior already configured.
- * Use this for any top-level page that needs the large collapsing title
- * back button pattern (Settings, History, etc.) instead of re-wiring
- * Scaffold/LargeTopAppBar/scrollBehavior by hand each time.
- */
+
 @Composable
 fun LargeTopBarScaffold(
     title: String,

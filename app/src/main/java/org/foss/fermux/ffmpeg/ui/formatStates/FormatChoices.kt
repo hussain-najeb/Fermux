@@ -1,35 +1,19 @@
-package org.foss.fermux.ffmpeg.ui
+package org.foss.fermux.ffmpeg.ui.formatStates
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FormatLists
-import org.foss.fermux.ffmpeg.logic.FFmpegTargetFormat
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.logic.MediaKind
-import org.foss.fermux.ffmpeg.ui.formatStates.AudioConversionState
-import org.foss.fermux.ffmpeg.ui.formatStates.IdleConversionState
-import org.foss.fermux.ffmpeg.ui.formatStates.ImageConversionState
-import org.foss.fermux.ffmpeg.ui.formatStates.VideoConversionState
 
 
 data class FormatListItem(

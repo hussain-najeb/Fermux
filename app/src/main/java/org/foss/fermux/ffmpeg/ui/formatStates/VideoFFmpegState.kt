@@ -8,10 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FormatLists
 import org.foss.fermux.ffmpeg.logic.FFmpegTargetFormat
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
-import org.foss.fermux.ffmpeg.ui.FormatListItem
 
 @Composable
 fun VideoConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
@@ -26,8 +26,15 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
 
      val videoOption = listOf(
           FormatListItem(
+               title = "Back",
+               description = "Choose a different media kind",
+               image = R.drawable.back_arrow,
+               onClick = onBack
+          ),
+          FormatListItem(
                title = "MP4",
-               description = "Best over all format for video",
+               description = "Best over all format for video and size",
+               image = R.drawable.mp4,
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.MP4
                     ffmpegViewModel.inputUri?.let { uri ->
