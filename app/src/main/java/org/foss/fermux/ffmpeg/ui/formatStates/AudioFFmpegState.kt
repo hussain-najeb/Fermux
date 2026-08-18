@@ -59,6 +59,7 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
           FormatListItem(
                title = "WAV",
                description = "A WAV file is like a digital photocopy of a sound, It gives you the highest possible audio quality, but the a MASSIVE file size",
+               image = R.drawable.wav,
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.WAV
                     ffmpegViewModel.inputUri?.let { uri ->
@@ -73,6 +74,7 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
           FormatListItem(
                title = "OGG",
                description = "Lowest quality, with a much lower file size",
+               image = R.drawable.ogg,
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.OGG
                     ffmpegViewModel.inputUri?.let { uri ->
@@ -87,6 +89,7 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
           FormatListItem(
                title = "M4A",
                description = "M4A is a modern, high-efficiency format that is smaller than WAV and FLAC and better quality than OGG",
+               image = R.drawable.m4p,
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.M4A
                     ffmpegViewModel.inputUri?.let { uri ->
@@ -103,15 +106,11 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
           .fillMaxWidth()
           .verticalScroll(scrollState)
      ) {
-          FormatLists(
-               title = "Back",
-               description = "Choose a different media kind",
-               onClick = onBack
-          )
           audioOptions.forEach { option ->
                FormatLists(
                     title = option.title,
                     description = option.description,
+                    image = option.image,
                     onClick = option.onClick
                )
           }

@@ -49,6 +49,7 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
           FormatListItem(
                title = "MKV",
                description = "MKV is a video container that holds movies, tv shows, and all their audio tracks together",
+               image = R.drawable.mkv,
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.MKV
                     ffmpegViewModel.inputUri?.let { uri ->
@@ -63,6 +64,7 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
           FormatListItem(
                title = "MOV",
                description = "MOV is Apple’s equivalent to MKV, it is a video container",
+               image = R.drawable.mov,
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.MOV
                     ffmpegViewModel.inputUri?.let { uri ->
@@ -77,6 +79,7 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
           FormatListItem(
                title = "AVI",
                description = "AVI is Microsoft's old-school equivalent to MKV and MOV, it is a video container from 1992",
+               image = R.drawable.avi,
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.AVI
                     ffmpegViewModel.inputUri?.let { uri ->
@@ -91,6 +94,7 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
           FormatListItem(
                title = "WEBM",
                description = "WEBM is a modern, royalty-free video container created by Google specifically for the web",
+               image = R.drawable.webm,
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.WEBM
                     ffmpegViewModel.inputUri?.let { uri ->
@@ -107,15 +111,11 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
           .fillMaxWidth()
           .verticalScroll(scrollState)
      ) {
-          FormatLists(
-               title = "Back",
-               description = "Choose a different media kind",
-               onClick = onBack
-          )
           videoOption.forEach { option ->
                FormatLists(
                     title = option.title,
                     description = option.description,
+                    image = option.image,
                     onClick = option.onClick
                )
           }
