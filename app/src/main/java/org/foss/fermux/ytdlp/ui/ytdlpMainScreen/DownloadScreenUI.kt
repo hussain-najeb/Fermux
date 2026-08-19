@@ -51,6 +51,8 @@ enum class Page(val image: ImageVector, val descriptor: String) {
  * TODO. make the download button ATOMIC.
  * TODO. Add a Delete button for the typed url in the textField
  */
+
+ 
 @Composable
 fun DownloadContent(
     @SuppressLint("ContextCastToActivity") viewModel: DownloaderViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)) {
@@ -159,7 +161,6 @@ fun DownloaderScreen(navController: NavHostController) {
             }
 
             SideBar(
-                currentPage = currentPage,
                 onPageSelected = { currentPage = it },
             )
         }

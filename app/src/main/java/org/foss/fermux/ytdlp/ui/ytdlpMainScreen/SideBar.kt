@@ -25,7 +25,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
@@ -42,7 +41,6 @@ import org.foss.fermux.ui.theme.FermuxColors
  */
 @Composable
 fun SideBar(
-     currentPage: Page,
      onPageSelected: (Page) -> Unit,
      modifier: Modifier = Modifier,
 ) {
@@ -93,7 +91,7 @@ fun SideBar(
                modifier = Modifier.size(70.dp).align(Alignment.BottomStart),
                imageModifier = Modifier.size(32.dp),
                imageRotation = if (isSideBarOpen) 180f else 0f,
-               image = if (isSideBarOpen) painterResource(id = R.drawable.sidebar_hide) else painterResource(id = R.drawable.sidebar_show),
+               image = if (isSideBarOpen) R.drawable.sidebar_hide else R.drawable.sidebar_show,
                onClick = { isSideBarOpen = !isSideBarOpen },
           )
      }

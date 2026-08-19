@@ -88,12 +88,12 @@ fun SimpleDownloaderPage(
                description = "Update your current version of ytdlp. Current version is ${settingsViewModel.currentVersionName}",
                icon = Icons.Default.Update,
                content = {
-                    val updatingIcon = updateIconPainter(updateState)
+                    val updatingIconRes = updateIconResource(updateState)
                     ImageButton(
                          modifier = Modifier.size(50.dp),
                          imageRotation = if (updateState == UpdateState.UPDATING) rotation else 0f,
                          contentPadding = PaddingValues(9.dp),
-                         image = updatingIcon,
+                         image = updatingIconRes, // Fix: Pass the Int directly
                          enabled = updateState != UpdateState.UPDATING,
                          onClick = { settingsViewModel.checkYtdlpUpdate() }
                     )
@@ -257,10 +257,10 @@ fun SimpleDownloaderPage(
 }
 
 @Composable
-private fun updateIconPainter(updateState: UpdateState): Painter {
+private fun updateIconResource(updateState: UpdateState): Int {
      return when (updateState) {
-          UpdateState.IDLE, UpdateState.UPDATING -> painterResource(id = R.drawable.update_icon)
-          UpdateState.SUCCESS -> painterResource(id = R.drawable.check)
-          UpdateState.FAILED -> rememberVectorPainter(image = Icons.Default.Close)
+          UpdateState.IDLE, UpdateState.UPDATING -> R.drawable.update_icon
+          UpdateState.SUCCESS -> R.drawable.check
+          UpdateState.FAILED -> R.drawable.close
      }
 }

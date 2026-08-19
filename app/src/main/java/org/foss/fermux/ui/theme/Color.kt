@@ -30,6 +30,10 @@ data class FermuxColor(
     val fermuxSurface:              Color    = Color(0xFF1f2034),
     val fermuxErrorCardColor:       Color    = Color(0xFF8c1d18),
 
+    // Fermux FFmpeg crad colors
+    val fermuxFFmpegGreen:          Color    = Color(0xFF388e3c),
+
+
     // Fermux switch Colors
     val fermuxThumbOn:              Color    = Color(0xFF40407F),
     val fermuxThumbOff:             Color    = Color(0xFF848489),

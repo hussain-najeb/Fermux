@@ -19,15 +19,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import org.foss.fermux.ui.theme.FermuxColor
 import org.foss.fermux.ui.theme.FermuxColors
+import org.foss.fermux.R
 
 @Composable
 fun BackButton(
      modifier: Modifier = Modifier,
      color: FermuxColor = FermuxColors,
-     icon: ImageVector,
      border: BorderStroke? = BorderStroke(0.8.dp, color.fermuxTertiaryBorder),
      contentPadding: PaddingValues = PaddingValues(4.dp),
      onClick: () -> Unit
@@ -88,7 +89,7 @@ fun BackButton(
           onClick = onClick
      ) {
           Icon(
-               imageVector = icon,
+               painter = painterResource(id = R.drawable.back_arrow),
                tint = iconColor,
                contentDescription = "Back Button",
           )

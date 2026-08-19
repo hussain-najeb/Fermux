@@ -17,6 +17,7 @@ import org.foss.fermux.settings.ui.SettingsScreen
 import org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage
 import org.foss.fermux.terminal.main.ui.FermuxTerminalScreen
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloaderScreen
+import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.FFmpegLogs
 
 
 sealed class MainScreens (val route: String, val descriptor: String?) {
@@ -25,11 +26,6 @@ sealed class MainScreens (val route: String, val descriptor: String?) {
     object Downloader: MainScreens("downloader", "Downloader")
     object Converter: MainScreens("converter" , "Converter")
     object Terminal: MainScreens("terminal"  , "Terminal")
-
-    // TODO. Add these in there own FFmpeg sealed class navigator
-    object AudioFormatSheet: MainScreens("audio", "Audio")
-    object VideoFormatSheet: MainScreens("video", "Video")
-    object ImageFormatSheet: MainScreens("Image", "Image")
 }
 
 sealed class SettingsScreens(val route: String, val descriptor: String?) {
@@ -40,6 +36,16 @@ sealed class SettingsScreens(val route: String, val descriptor: String?) {
     object AboutAppPage: SettingsScreens(route = "about", descriptor = "About Page")
 
 }
+
+// Miscellaneous navigation
+sealed class Miscellaneous(val route: String) {
+object FFmpegLog: Miscellaneous(route = "FFmpegLogs")
+}
+
+
+
+
+
 
 @SuppressLint("ViewModelConstructorInComposable")
 @Composable
@@ -59,7 +65,7 @@ fun FermuxAppMainScreen() {
         composable(MainScreens.Terminal.route) { FermuxTerminalScreen(navigationController) }
         composable(MainScreens.Settings.route) { SettingsScreen(navController = navigationController) }
         composable(MainScreens.Downloader.route) { DownloaderScreen(navController = navigationController) }
-        composable(MainScreens.Converter.route) { ConverterScreen(navigationController = navigationController) }
+        composable(MainScreens.Converter.route) { ConverterScreen(navController = navigationController) }
 
         // Settings Screens
         composable(SettingsScreens.SimpleDownloader.route) { SimpleDownloaderPage(navController = navigationController) }
@@ -67,10 +73,8 @@ fun FermuxAppMainScreen() {
         composable(SettingsScreens.SimpleTerminal.route) {  }
         composable(SettingsScreens.Themes.route) {  }
         composable(SettingsScreens.AboutAppPage.route) { AboutPage(navController = navigationController) }
-
-        // FFmpeg
-        composable(MainScreens.VideoFormatSheet.route) { VideoFormatSheet(navHostController = navigationController, ffmpegViewModel) }
-        composable(MainScreens.AudioFormatSheet.route) { AudioFormatSheet(navHostController = navigationController, ffmpegViewModel) }
-        composable(MainScreens.ImageFormatSheet.route) { ImageFormatSheet(navHostController = navigationController, ffmpegViewModel) }
+        
+        // FFmpeg 
+        composable(route = Miscellaneous.FFmpegLog.route) { FFmpegLogs(navController = navigationController) }
     }
 }

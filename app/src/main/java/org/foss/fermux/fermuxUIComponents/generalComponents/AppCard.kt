@@ -22,10 +22,6 @@ import androidx.compose.ui.unit.dp
 import org.foss.fermux.ui.theme.FermuxColor
 import org.foss.fermux.ui.theme.FermuxColors
 
-
-
-
-
 @Composable
 fun AppCard(
      modifier: Modifier = Modifier,

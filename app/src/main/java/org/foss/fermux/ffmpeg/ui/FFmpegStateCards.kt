@@ -11,6 +11,8 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import org.foss.fermux.ffmpeg.logic.FFmpegStatus
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.ConversionCard
@@ -22,9 +24,9 @@ import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.MidConversionProcess
 @Composable
 fun FFmepgState (
     state: FFmpegStatus,
-    FFmpegLogs: String,
-    ffmpegViewModel: FFmpegViewModel) {
-
+    ffmpegViewModel: FFmpegViewModel,
+    navController: NavController
+) {
 
     val spatialSpec = MaterialTheme.motionScheme
     val context = LocalContext.current
@@ -56,11 +58,11 @@ fun FFmepgState (
             }
 
             is FFmpegStatus.Converting -> {
-                ConversionCard(targetState.progress, targetState.inputUri, FFmpegLogs)
+                ConversionCard(targetState.progress, targetState.inputUri, navController = navController)
             }
 
             is FFmpegStatus.Loaded -> {
-                ConversionCard(progress = 100f, targetState.inputUri, FFmpegLogs)
+                ConversionCard(progress = 100f, targetState.inputUri, navController = navController)
             }
 
             is FFmpegStatus.Error -> {

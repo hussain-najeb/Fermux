@@ -19,7 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import org.foss.fermux.ui.theme.FermuxColor
 import org.foss.fermux.ui.theme.FermuxColors
@@ -28,7 +28,7 @@ import org.foss.fermux.ui.theme.FermuxColors
 fun ImageButton(
      modifier: Modifier = Modifier,
      imageModifier: Modifier = Modifier,
-     image: Painter? = null,
+     image: Int,
      contentDescription: String? = null,
      imageRotation: Float = 0f,
      enabled: Boolean = true,
@@ -97,13 +97,11 @@ fun ImageButton(
           interactionSource = interactionSource,
           onClick = onClick
      ) {
-          if (image != null) {
-               Icon(
-                    painter = image,
-                    tint = iconColor,
-                    contentDescription = contentDescription,
-                    modifier = imageModifier.rotate(iconRotate)
-               )
-          }
+         Icon(
+              painter = painterResource(id = image),
+              tint = iconColor,
+              contentDescription = contentDescription,
+              modifier = imageModifier.rotate(iconRotate)
+         )
      }
 }
