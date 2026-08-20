@@ -3,6 +3,8 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -10,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -21,13 +24,16 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import org.foss.fermux.fermuxUIComponents.buttons.AppIconButton
+import org.foss.fermux.fermuxUIComponents.buttons.GlobalCancelButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
@@ -48,8 +54,8 @@ enum class Page(val image: ImageVector, val descriptor: String) {
  * (e.g. [DownloaderScreen]) gives it, and does not draw its own background
  * or manage scaffold/sidebar concerns.
  *
+ * 
  * TODO. make the download button ATOMIC.
- * TODO. Add a Delete button for the typed url in the textField
  */
 
  
@@ -58,6 +64,8 @@ fun DownloadContent(
     @SuppressLint("ContextCastToActivity") viewModel: DownloaderViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)) {
     val context = LocalContext.current
     val clipboard = LocalClipboardManager.current
+
+    var expanded by remember { mutableStateOf(false) }
 
     QualitySheet(
         showSheet = viewModel.showFormatSheet,
@@ -76,44 +84,73 @@ fun DownloadContent(
                 .background(FermuxColors.fermuxBackground)
         ) {
 
+            Text(
+                text = "Note: always update your version of the downloader in the settings",
+                color = FermuxColors.fermuxBackgroundTextColor,
+                fontSize = 16.sp,
+                fontStyle = FontStyle.Normal,
+                fontFamily = FontFamily.Default,
+                modifier = Modifier.padding(7.dp)
+            )
+
             DownloaderCards(viewModel.state, viewModel)
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(9.dp),
-                value = viewModel.downloadUrl,
-                minLines = 1,
-                maxLines = 2,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor      = FermuxColors.fermuxPrimaryBorder,
-                    unfocusedBorderColor    = FermuxColors.fermuxPrimaryBorder,
-                    focusedLabelColor       = FermuxColors.fermuxPrimaryBorder,
-                    unfocusedLabelColor     = FermuxColors.fermuxTextColorBackground,
-                    cursorColor             = FermuxColors.fermuxGenericBorder, // TODO. Have the cursor change color every second.
-                    focusedTextColor        = Color.White,
-                    unfocusedTextColor      = Color.White,
-                    unfocusedContainerColor = FermuxColors.fermuxComponents,
-                    focusedContainerColor   = FermuxColors.fermuxSaturatedComponents
-                ),
-                onValueChange = { txt -> viewModel.downloadUrl = txt },
-                placeholder = {
-                    Text(
-                        text = "Type URL here",
-                        fontFamily = FontFamily.Default,
-                        textAlign = TextAlign.Start,
-                        color = FermuxColors.fermuxTextColorBackground,
-                        modifier = Modifier.padding(start = 10.dp)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Send,
-                    capitalization = KeyboardCapitalization.None,
-                    autoCorrect = false
-                ),
-            )
+
+
+            Box(modifier = Modifier.wrapContentSize()) {
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(15.dp),
+                    value = viewModel.downloadUrl,
+                    minLines = 1,
+                    maxLines = 7,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = FermuxColors.fermuxPrimaryBorder,
+                        unfocusedBorderColor = FermuxColors.fermuxPrimaryBorder,
+                        focusedLabelColor = FermuxColors.fermuxPrimaryBorder,
+                        unfocusedLabelColor = FermuxColors.fermuxTextColorBackground,
+                        cursorColor = FermuxColors.fermuxGenericBorder,
+                        focusedTextColor = Color.White,
+                        unfocusedTextColor = Color.White,
+                        unfocusedContainerColor = FermuxColors.fermuxComponents,
+                        focusedContainerColor = FermuxColors.fermuxSaturatedComponents
+                    ),
+                    onValueChange = { txt -> viewModel.downloadUrl = txt },
+                    placeholder = {
+                        Text(
+                            text = "Type URL here",
+                            fontFamily = FontFamily.Default,
+                            textAlign = TextAlign.Start,
+                            color = FermuxColors.fermuxTextColorBackground,
+                            modifier = Modifier.padding(start = 9.dp, bottom = 5.dp)
+                        )
+                    },
+                    trailingIcon = {
+                        
+                           androidx.compose.animation.AnimatedVisibility(
+          visible = viewModel.downloadUrl.isNotEmpty(),
+          enter = expandVertically(tween(70)) + fadeIn(tween(100)),
+          exit = shrinkVertically(tween(70)) + fadeOut(tween(100))) {
+                            GlobalCancelButton(
+                                modifier = Modifier
+                                .size(40.dp)
+                                .padding(end = 3.dp),
+                                onClick = {
+                                    viewModel.downloadUrl = ""
+                                    }
+                                )
+                            }                     
+                        },
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Send,
+                        capitalization = KeyboardCapitalization.None,
+                        autoCorrect = false
+                    ),
+                )
+            }
         }
 
         Box(
@@ -148,6 +185,7 @@ fun DownloaderScreen(navController: NavHostController) {
         title = "Downloader",
         onBack = { navController.popBackStack() },
     ) { innerPadding ->
+
         Box(
             modifier = Modifier
                 .fillMaxSize()

@@ -57,11 +57,9 @@ navController: NavHostController
 				verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
 			) {
 
-				Spacer(modifier = Modifier.height(180.dp))
-
 				Surface(
 					modifier = Modifier
-					.padding(5.dp),
+					.padding(top = 180.dp, start = 5.dp, end = 5.dp),
 					color = FermuxColors.fermuxComponents,
 					shape = RoundedCornerShape(10.dp),
 					border = BorderStroke(1.dp, FermuxColors.fermuxWhiteColor)
@@ -70,7 +68,7 @@ navController: NavHostController
 						text = ffmpegViewModel.FFmpegLogs,
 						color = FermuxColors.fermuxWhiteColor,
 						fontFamily = JetbrainsMono,
-						modifier = Modifier.padding(4.dp)
+						modifier = Modifier.padding(14.dp)
 					)
 				}
 			}

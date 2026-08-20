@@ -81,37 +81,44 @@ fun FinishedCard (
                     )
                     progress?.let {
                          when (downloadState) {
-                              ProgressState.InProgress -> Column(modifier = Modifier
-                                   .align(Alignment.Center)
-                                   .background(FermuxColors.fermuxComponents.copy(alpha = 0.48f))
-                                   .clip(RoundedCornerShape(10.dp))
-                                   .size(50.dp)
-                              ) {
-                                   CircularWavyProgressIndicator(
-                                        progress = { progress / 100f },
-                                        color = FermuxColors.fermuxGenericBorder,
-                                        trackColor = FermuxColors.fermuxTertiaryBorder,
-                                        modifier = Modifier
-                                             .padding(8.dp)
-                                             .align(Alignment.CenterHorizontally)
-                                   )
-                              } // TODO. The check mark after the download is finished looks bad, fix it. also add a border to the whole thing!
-                              ProgressState.Done -> Column(
-                                   modifier = Modifier
-                                        .align(Alignment.Center)
-                                        .background(FermuxColors.fermuxComponents.copy(alpha = 0.48f))
-                              ) {
-                                   Icon(
-                                        Icons.Default.Check,
-                                        contentDescription = "Download Complete",
-                                        modifier = Modifier
-                                             .padding(8.dp)
-                                             .align(Alignment.CenterHorizontally)
-                                   )
-                              }
+    ProgressState.InProgress -> Column(
+        modifier = Modifier
+            .align(Alignment.Center)
+            .size(50.dp)
+            .background(
+                color = FermuxColors.fermuxComponents.copy(alpha = 0.48f),
+                shape = RoundedCornerShape(10.dp) 
+            )
+    ) {
+        CircularWavyProgressIndicator(
+            progress = { progress / 100f },
+            color = FermuxColors.fermuxGenericBorder,
+            trackColor = FermuxColors.fermuxTertiaryBorder,
+            modifier = Modifier
+                .padding(8.dp)
+                .align(Alignment.CenterHorizontally)
+        )
+     }
+     
+    ProgressState.Done -> Column(
+        modifier = Modifier
+            .align(Alignment.Center)
+            .background(
+                color = FermuxColors.fermuxComponents.copy(alpha = 0.48f),
+                shape = RoundedCornerShape(10.dp)
+            )
+    ) {
+        Icon(
+            Icons.Default.Check,
+            contentDescription = "Download Complete",
+            modifier = Modifier
+                .padding(8.dp)
+                .align(Alignment.CenterHorizontally)
+        )
+    }
 
-                              null -> Unit
-                         }
+    null -> Unit
+}
                     }
                     CancelButton(
                          modifier = Modifier
@@ -128,6 +135,7 @@ fun FinishedCard (
                               onClick = { } // TODO. ADD the dialog in the function here
                          )
                     }
+                    
                }
                FermuxDownloadDescription {
                     Column(modifier = Modifier.fillMaxSize().background(FermuxColors.fermuxComponents)) {

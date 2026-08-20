@@ -25,16 +25,12 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W500
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
 import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FFmpegCard
 import org.foss.fermux.ffmpeg.logic.FFmpegStatus
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ui.theme.FermuxColors
-
-
-
-
+import org.foss.fermux.R
 
 
 @Composable
@@ -74,7 +70,7 @@ fun IdleCard(
                               horizontalAlignment = Alignment.CenterHorizontally
                          ) {
                               Text(
-                                   text = "Upload a file to convert",
+                                   text = "Upload A File",
                                    fontSize = 23.sp,
                                    fontFamily = FontFamily.Default,
                                    fontStyle = FontStyle.Normal,
