@@ -31,8 +31,8 @@ fun LogCopy(
     modifier: Modifier = Modifier,
     color: FermuxColor = FermuxColors,
     contentDescription: String? = null,
-    border: BorderStroke? = BorderStroke(1.5.dp, color.fermuxGenericBorder),
-    contentPadding: PaddingValues = PaddingValues(4.dp),
+    border: BorderStroke? = BorderStroke(1.dp, color.fermuxTertiaryBorder),
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     onClick: () -> Unit
 ) {
 
