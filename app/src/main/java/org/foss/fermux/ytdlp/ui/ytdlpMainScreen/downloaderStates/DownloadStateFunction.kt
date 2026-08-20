@@ -9,11 +9,17 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
 import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 
 @Composable
-fun DownloaderCards(state: DownloadStatus, downloaderViewModel: DownloaderViewModel) {
+fun DownloaderCards(
+    state: DownloadStatus, 
+    downloaderViewModel: DownloaderViewModel,
+    navController: NavController
+    ) {
+
     val context = LocalContext.current
     val spatialSpec = MaterialTheme.motionScheme
 
@@ -46,20 +52,23 @@ fun DownloaderCards(state: DownloadStatus, downloaderViewModel: DownloaderViewMo
                 FinishedCard(
                     targetState.metadata,
                     targetState.downloadProgress,
-                    onCancel = { downloaderViewModel.cancelButton(context) }
+                    onCancel = { downloaderViewModel.cancelButton(context) },
+                    navController = navController
                 )
             }
             is DownloadStatus.Loaded -> {
                 FinishedCard(
                     targetState.metadata,
-                    onCancel = { downloaderViewModel.cancelButton(context) }
-                )
+                    onCancel = { downloaderViewModel.cancelButton(context) },
+                    navController = navController
+                    )
             }
             is DownloadStatus.Completed -> {
                 FinishedCard(
                     targetState.metadata,
                     progress = 100f,
-                    onCancel = { downloaderViewModel.cancelButton(context) }
+                    onCancel = { downloaderViewModel.cancelButton(context) },
+                    navController = navController
                 )
             }
             is DownloadStatus.Error -> {

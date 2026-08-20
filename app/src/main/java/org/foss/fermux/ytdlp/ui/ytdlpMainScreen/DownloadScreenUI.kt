@@ -30,12 +30,15 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import org.foss.fermux.fermuxUIComponents.buttons.AppIconButton
 import org.foss.fermux.fermuxUIComponents.buttons.GlobalCancelButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.ui.theme.FermuxColors
+import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 import org.foss.fermux.ytdlp.ui.historyPage.DownloadVideoList
 import org.foss.fermux.ytdlp.ui.historyPage.DownloadedAudioScreen
@@ -61,17 +64,25 @@ enum class Page(val image: ImageVector, val descriptor: String) {
  
 @Composable
 fun DownloadContent(
-    @SuppressLint("ContextCastToActivity") viewModel: DownloaderViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)) {
+    @SuppressLint("ContextCastToActivity") 
+    downloaderViewModel: DownloaderViewModel = 
+    viewModel(viewModelStoreOwner = 
+        LocalContext.current as ComponentActivity),
+    navController: NavController
+    ) {
+
+
+    val doingTask = downloaderViewModel.state is DownloadStatus.Loading || downloaderViewModel.state is DownloadStatus.Downloading
     val context = LocalContext.current
     val clipboard = LocalClipboardManager.current
 
     var expanded by remember { mutableStateOf(false) }
 
     QualitySheet(
-        showSheet = viewModel.showFormatSheet,
-        onDismiss = { viewModel.showFormatSheet = false },
-        onConfirm = { audio, video ->  viewModel.showFormatSheet = false
-            viewModel.startingDownload(context, audio, video)
+        showSheet = downloaderViewModel.showFormatSheet,
+        onDismiss = { downloaderViewModel.showFormatSheet = false },
+        onConfirm = { audio, video ->  downloaderViewModel.showFormatSheet = false
+            downloaderViewModel.startingDownload(context, audio, video)
         }
     )
 
@@ -93,7 +104,7 @@ fun DownloadContent(
                 modifier = Modifier.padding(7.dp)
             )
 
-            DownloaderCards(viewModel.state, viewModel)
+            DownloaderCards(downloaderViewModel.state, downloaderViewModel, navController = navController )
 
             Spacer(modifier = Modifier.height(10.dp))
 
@@ -104,7 +115,7 @@ fun DownloadContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(15.dp),
-                    value = viewModel.downloadUrl,
+                    value = downloaderViewModel.downloadUrl,
                     minLines = 1,
                     maxLines = 7,
                     colors = OutlinedTextFieldDefaults.colors(
@@ -118,7 +129,7 @@ fun DownloadContent(
                         unfocusedContainerColor = FermuxColors.fermuxComponents,
                         focusedContainerColor = FermuxColors.fermuxSaturatedComponents
                     ),
-                    onValueChange = { txt -> viewModel.downloadUrl = txt },
+                    onValueChange = { txt -> downloaderViewModel.downloadUrl = txt },
                     placeholder = {
                         Text(
                             text = "Type URL here",
@@ -131,7 +142,7 @@ fun DownloadContent(
                     trailingIcon = {
                         
                            androidx.compose.animation.AnimatedVisibility(
-          visible = viewModel.downloadUrl.isNotEmpty(),
+          visible = downloaderViewModel.downloadUrl.isNotEmpty(),
           enter = expandVertically(tween(70)) + fadeIn(tween(100)),
           exit = shrinkVertically(tween(70)) + fadeOut(tween(100))) {
                             GlobalCancelButton(
@@ -139,7 +150,7 @@ fun DownloadContent(
                                 .size(40.dp)
                                 .padding(end = 3.dp),
                                 onClick = {
-                                    viewModel.downloadUrl = ""
+                                    downloaderViewModel.downloadUrl = ""
                                     }
                                 )
                             }                     
@@ -164,13 +175,14 @@ fun DownloadContent(
                 AppIconButton(
                     icon = Icons.Default.ContentPaste,
                     modifier = Modifier.size(70.dp).padding(6.dp),
-                    onClick = { clipboard.getText()?.text?.let { viewModel.downloadUrl = it } }
+                    onClick = { clipboard.getText()?.text?.let { downloaderViewModel.downloadUrl = it } }
                 )
                 // DownloadButton
                 AppIconButton(
                     icon = Icons.Default.FileDownload,
+                    enabled = doingTask,
                     modifier = Modifier.size(70.dp).padding(6.dp),
-                    onClick = { viewModel.fetchedMetadata(viewModel.downloadUrl) }  // TODO. Add a way in the fetchMetadata function a try and catch error Log.E
+                    onClick = { downloaderViewModel.fetchedMetadata(downloaderViewModel.downloadUrl) }  // TODO. Add a way in the fetchMetadata function a try and catch error Log.E
                 )
             }
         }
@@ -182,9 +194,11 @@ fun DownloaderScreen(navController: NavHostController) {
     var currentPage by remember { mutableStateOf(Page.DownloadPage) }
 
     LargeTopBarScaffold(
-        title = "Downloader",
-        onBack = { navController.popBackStack() },
-    ) { innerPadding ->
+    title = "Downloader",
+    onBack = {
+       navController.popBackStack()
+        },
+) { innerPadding ->
 
         Box(
             modifier = Modifier
@@ -193,7 +207,7 @@ fun DownloaderScreen(navController: NavHostController) {
                 .background(FermuxColors.fermuxBackground),
         ) {
             when (currentPage) {
-                Page.DownloadPage -> DownloadContent()
+                Page.DownloadPage -> DownloadContent(navController = navController)
                 Page.AudioListPage -> DownloadedAudioScreen()
                 Page.VideoListPage -> DownloadVideoList()
             }

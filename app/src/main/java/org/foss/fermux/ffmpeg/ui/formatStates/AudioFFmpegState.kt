@@ -58,7 +58,7 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
           ),
           FormatListItem(
                title = "WAV",
-               description = "A WAV file is like a digital photocopy of a sound, It gives you the highest possible audio quality, but the a MASSIVE file size",
+               description = "A WAV file gives the highest possible audio quality, but a MASSIVE file size",
                image = R.drawable.wav,
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.WAV
@@ -73,7 +73,7 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
           ),
           FormatListItem(
                title = "OGG",
-               description = "Lowest quality, with a much lower file size",
+               description = "OGG is a lower quality format, with a much lower file size",
                image = R.drawable.ogg,
                onClick = {
                     ffmpegViewModel.selectedFormat = FFmpegTargetFormat.OGG

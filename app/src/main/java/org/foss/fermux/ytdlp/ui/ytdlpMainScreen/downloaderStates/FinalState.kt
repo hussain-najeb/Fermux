@@ -33,11 +33,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.FermuxDownloadDescription
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.FinishedDownloadCard
 import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
 import org.foss.fermux.fermuxUIComponents.buttons.AppIconButton
+import org.foss.fermux.main.Miscellaneous
 import org.foss.fermux.settings.logic.SettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.DownloadMetadata
@@ -47,10 +49,11 @@ private enum class ProgressState { InProgress, Done }
 
 @Composable
 fun FinishedCard (
-     metadata: DownloadMetadata,
-     progress: Float? = null,
-     onCancel: () -> Unit,
-     @SuppressLint("ContextCastToActivity") settingsViewModel: SettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
+    metadata: DownloadMetadata,
+    progress: Float? = null,
+    onCancel: () -> Unit,
+    navController: NavController,
+    @SuppressLint("ContextCastToActivity") settingsViewModel: SettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
 
 ) {
 
@@ -132,7 +135,7 @@ fun FinishedCard (
                                    .align(alignment = Alignment.BottomStart),
                               icon = Icons.Default.ExpandMore,
                               contentPadding = PaddingValues(8.dp),
-                              onClick = { } // TODO. ADD the dialog in the function here
+                              onClick = { navController.navigate(Miscellaneous.DownloaderLogs.route) }
                          )
                     }
                     
@@ -161,60 +164,6 @@ fun FinishedCard (
                     }
                }
 
-          }
-     }
-}
-
-@Preview (heightDp = 800, widthDp = 440,showBackground = true, backgroundColor = 0xFF181825  )
-@Composable
-fun CardDownload() {
-     Column(
-          modifier = Modifier
-               .fillMaxWidth()
-     ) {
-          FinishedDownloadCard {
-
-               Box(modifier = Modifier.clip(RoundedCornerShape(bottomStart = 4.dp, bottomEnd = 4.dp ))) {
-                    AsyncImage(
-                         model = "/home/Hussain/Downloads/maxresdefault.jpg",
-                         contentDescription = "test image",
-                         contentScale = ContentScale.Crop,
-
-                         modifier = Modifier
-                              .fillMaxWidth()
-                              .aspectRatio(16f / 9f)
-                              .background(FermuxColors.fermuxSurface)
-                    )
-
-                    CancelButton(
-                         modifier = Modifier
-                              .align(alignment = Alignment.TopStart).padding(10.dp),
-                         onClick = { }
-                    )
-
-               }
-               FermuxDownloadDescription {
-                    Column(modifier = Modifier.fillMaxWidth().background(FermuxColors.fermuxComponents)) {
-                         Text(
-                              text = "Dummy Test Title For Video And Audio",
-                              fontFamily = FontFamily.Default,
-                              fontSize = 18.sp,
-                              fontWeight = FontWeight.W400,
-                              color = Color.White,
-                              modifier = Modifier
-                                   .padding(7.dp)
-                         )
-
-                         Text(
-                              text = "Dummy uploader",
-                              fontFamily = FontFamily.Default,
-                              fontSize = 13.sp,
-                              color = FermuxColors.fermuxTextColorBackground,
-                              modifier = Modifier
-                                   .padding(7.dp)
-                         )
-                    }
-               }
           }
      }
 }

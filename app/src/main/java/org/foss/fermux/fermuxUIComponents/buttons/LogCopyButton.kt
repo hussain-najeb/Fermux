@@ -1,5 +1,6 @@
 package org.foss.fermux.fermuxUIComponents.buttons
 
+
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -15,41 +16,40 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import org.foss.fermux.R
 import org.foss.fermux.ui.theme.FermuxColor
 import org.foss.fermux.ui.theme.FermuxColors
-import org.foss.fermux.R
+
 
 @Composable
-fun BackButton(
-     modifier: Modifier = Modifier,
-     color: FermuxColor = FermuxColors,
-     border: BorderStroke? = BorderStroke(0.8.dp, color.fermuxTertiaryBorder),
-     contentPadding: PaddingValues = PaddingValues(4.dp),
-     onClick: () -> Unit
+fun LogCopy(
+    modifier: Modifier = Modifier,
+    color: FermuxColor = FermuxColors,
+    contentDescription: String? = null,
+    border: BorderStroke? = BorderStroke(1.5.dp, color.fermuxGenericBorder),
+    contentPadding: PaddingValues = PaddingValues(4.dp),
+    onClick: () -> Unit
 ) {
 
-     val interactionSource = remember { MutableInteractionSource() }
-     val isPressed by interactionSource.collectIsPressedAsState()
-     var isClickable by remember { mutableStateOf(true) }
+val interactionSource = remember { MutableInteractionSource() }
+val isPressed by interactionSource.collectIsPressedAsState()
 
 
-     val containerColor by animateColorAsState(
-          targetValue = when {
-               isPressed -> color.fermuxActiveButton
-               else -> color.fermuxInActiveBackButton
-          },
-          animationSpec = tween(200),
-          label = "Fermux Button Colors",
+val containerColor by animateColorAsState(
+      targetValue = when {
+        isPressed -> color.fermuxActiveButton
+        else -> color.fermuxInActiveBackButton
+      },
+        animationSpec = tween(200),
+        label = "Fermux Button Colors",
      )
 
-     val contentColor by animateColorAsState(
+ val contentColor by animateColorAsState(
           targetValue = when {
                isPressed -> color.fermuxActiveTextColor
                else -> color.fermuxInActiveTextColor
@@ -73,9 +73,7 @@ fun BackButton(
           label = "Fermux Button Animation"
      )
 
-
-
-     OutlinedButton(
+OutlinedButton(
           modifier = modifier.graphicsLayer {
                scaleX = buttonAnimation
                scaleY = buttonAnimation
@@ -89,17 +87,13 @@ fun BackButton(
           ),
           contentPadding = contentPadding,
           interactionSource = interactionSource,
-          onClick = {
-                    if (isClickable) {
-                         isClickable = false
-                         onClick()
-                    }
-               }
+          onClick = onClick
      ) {
           Icon(
-               painter = painterResource(id = R.drawable.back_arrow),
+               painter = painterResource(id = R.drawable.content_copy),
                tint = iconColor,
                contentDescription = "Back Button",
           )
      }
+
 }

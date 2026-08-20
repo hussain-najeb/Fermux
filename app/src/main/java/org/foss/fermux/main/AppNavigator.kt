@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderLogs
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.ui.ConverterScreen
 import org.foss.fermux.ffmpeg.ui.formatSheet.AudioFormatSheet
@@ -40,6 +41,7 @@ sealed class SettingsScreens(val route: String, val descriptor: String?) {
 // Miscellaneous navigation
 sealed class Miscellaneous(val route: String) {
 object FFmpegLog: Miscellaneous(route = "FFmpegLogs")
+object DownloaderLogs: Miscellaneous(route = "ytdlpLog")
 }
 
 
@@ -76,5 +78,8 @@ fun FermuxAppMainScreen() {
         
         // FFmpeg 
         composable(route = Miscellaneous.FFmpegLog.route) { FFmpegLogs(navController = navigationController) }
+
+        // Ytdlp
+        composable(route = Miscellaneous.DownloaderLogs.route) { DownloaderLogs(navController = navigationController) }
     }
 }
