@@ -19,9 +19,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.util.UUID
 import kotlin.text.takeLast
-
-
-
+import android.media.MediaExtractor
+import android.media.MediaFormat
+import android.util.Log
 
 
 class FFmpegViewModel: ViewModel() {
@@ -32,6 +32,8 @@ class FFmpegViewModel: ViewModel() {
     var selectedFormat by mutableStateOf(FFmpegTargetFormat.WAV)
     var inputKind by mutableStateOf<MediaKind?>(null)
     private var activeProcess by mutableStateOf<UUID?>(null)
+    var inputVideoCodec by mutableStateOf<String?>(null)
+    var inputAudioCodec by mutableStateOf<String?>(null)
     private var ffmpegJob: Job? = null
     val flavourMessage = listOf(
         "Oh no, did you convert audio to video?",
@@ -54,8 +56,55 @@ class FFmpegViewModel: ViewModel() {
     }
 
     fun updateInputKind(context: Context) {
-        inputKind = inputUri?.let { detectInputKind(context, it) }
+        val uri = inputUri
+        inputKind = uri?.let { detectInputKind(context, it) }
+
+        inputVideoCodec = null
+        inputAudioCodec = null
+
+        if (uri != null && inputKind == MediaKind.VIDEO) {
+            val extractor = MediaExtractor()
+            try {
+                extractor.setDataSource(context, uri, null)
+                for (i in 0 until extractor.trackCount) {
+                    val mime = extractor.getTrackFormat(i).getString(MediaFormat.KEY_MIME) ?: continue
+                    when {
+                        mime.startsWith("video/") && inputVideoCodec == null -> inputVideoCodec = mime
+                        mime.startsWith("audio/") && inputAudioCodec == null -> inputAudioCodec = mime
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("fermux ffmpeg error update input kind", "failed for some reason", e)
+            } finally {
+                extractor.release()
+            }
+        }
     }
+
+
+    private val videoRemuxAllowlist = mapOf(
+        FFmpegTargetFormat.MP4  to setOf("video/avc", "video/hevc", "video/av01", "video/mp4v-es"),
+        FFmpegTargetFormat.MOV  to setOf("video/avc", "video/hevc", "video/mp4v-es"),
+        FFmpegTargetFormat.AVI  to setOf("video/avc", "video/mp4v-es"),
+        FFmpegTargetFormat.WEBM to setOf("video/av01", "video/x-vnd.on2.vp8", "video/x-vnd.on2.vp9"),
+    )
+
+    private val audioRemuxAllowlist = mapOf(
+        FFmpegTargetFormat.MOV to setOf("audio/mp4a-latm", "audio/raw"),
+        FFmpegTargetFormat.AVI to setOf("audio/mpeg", "audio/raw"),
+    )
+
+    fun isVideoTargetSupported(target: FFmpegTargetFormat): Boolean {
+        if (target.category != MediaKind.VIDEO) return true
+
+        val allowedVideo = videoRemuxAllowlist[target]
+        val allowedAudio = audioRemuxAllowlist[target]
+
+        val videoOk = inputVideoCodec == null || allowedVideo == null || inputVideoCodec in allowedVideo
+        val audioOk = inputAudioCodec == null || allowedAudio == null || inputAudioCodec in allowedAudio
+        return videoOk && audioOk
+    }
+
 
     fun isSheetFormat(format: FFmpegTargetFormat, sheet: MediaKind): Boolean {
         return format.category == sheet && isConversionAllowed(format)
@@ -127,7 +176,7 @@ class FFmpegViewModel: ViewModel() {
                     }
 
                     WorkInfo.State.FAILED -> {
-                        val rawError = workInfo.outputData.getString("error") ?: "Unknown error"
+                        val rawError = workInfo.outputData.getString("error") ?: "Unknown error (worker returned no data)"
                         fail(
                             flavourFailMessage = flavourMessage.random(),
                             rawError = rawError

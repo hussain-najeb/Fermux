@@ -18,7 +18,7 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
     @SuppressLint("UseKtx")
     override suspend fun doWork(): Result {
         val tempFile = File(applicationContext.cacheDir, "input_${id}.tmp")
-        val targetFormatName = inputData.getString("TARGET_FORMAT") ?: return Result.failure()
+        val targetFormatName = inputData.getString("TARGET_FORMAT") ?: return Result.failure(workDataOf("error" to "Missing TARGET_FORMAT in input data"))
         val targetFormat = FFmpegTargetFormat.valueOf(targetFormatName)
         val outputFile = File(applicationContext.cacheDir, "output_${id}.${targetFormat.workerFile}")
         val originalName = inputData.getString("ORIGINAL_FILE_NAME") ?: "Converted_to_$id"
@@ -27,7 +27,9 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
 
 
         return try {
-            val fileUriInput = inputData.getString("FFMPEG_URI_FILE") ?: return Result.failure()
+            val fileUriInput = inputData.getString("FFMPEG_URI_FILE") ?: 
+            return Result.failure(workDataOf("error" to "Missing FFMPEG_URI_FILE in input data"))
+
             val uriFile = Uri.parse(fileUriInput)
 
 
@@ -35,7 +37,7 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                 tempFile.outputStream().use { outputStream ->
                     inputStream.copyTo(outputStream)
                 }
-            } ?: return Result.failure()
+            } ?: return Result.failure(workDataOf("error" to "Could not open input stream for $uriFile — permission may have been lost"))
 
             val nativeLibDir = applicationContext.applicationInfo.nativeLibraryDir
             val ffmpegBinary = File(nativeLibDir, "libfermux_ffmpeg.so")
