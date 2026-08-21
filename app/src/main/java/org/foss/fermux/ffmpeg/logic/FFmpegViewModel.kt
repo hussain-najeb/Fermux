@@ -113,9 +113,9 @@ class FFmpegViewModel: ViewModel() {
     private fun isConversionAllowed(target: FFmpegTargetFormat): Boolean {
         val input = inputKind ?: return false
         return when (input) {
-            MediaKind.AUDIO -> target.category == MediaKind.AUDIO
+            MediaKind.AUDIO -> true
             MediaKind.VIDEO -> true
-            MediaKind.IMAGE -> target.category == MediaKind.IMAGE
+            MediaKind.IMAGE -> true
             MediaKind.IDLE -> false
         }
     }

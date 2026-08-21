@@ -21,11 +21,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import org.foss.fermux.storage.SettingsTab
 import java.net.UnknownHostException
-import java.util.*
+import java.util.UUID
 import kotlin.time.Duration.Companion.milliseconds
+
+
 class DownloaderViewModel : ViewModel() {
     var state by mutableStateOf<DownloadStatus>(DownloadStatus.Idle)
-    var showFormatSheet by mutableStateOf(false)
     var downloadUrl by mutableStateOf("")
     var downloaderLogs by mutableStateOf("")
     private var activeProcess by mutableStateOf<UUID?>(null)
@@ -47,8 +48,7 @@ class DownloaderViewModel : ViewModel() {
                 val metadata = withTimeout(20000L.milliseconds) {
                     fetchingTheMetadata(downloadUrl)
                 }
-                state = DownloadStatus.Loaded(metadata)
-                showFormatSheet = true
+                state = DownloadStatus.MidChoice(metadata)
             } catch (e: UnknownHostException) {
                 downloadErrorHandler(e)
             } catch (e: TimeoutCancellationException) {
@@ -70,7 +70,11 @@ class DownloaderViewModel : ViewModel() {
 
     fun startingDownload(context: Context, audio: AudioQuality?, video: VideoQuality?) {
         val settingsTab = SettingsTab(context.applicationContext)
-        val metadata = (state as? DownloadStatus.Loaded)?.metadata ?: return
+        val metadata = when (val current = state) {
+            is DownloadStatus.MidChoice -> current.metadata
+            is DownloadStatus.Loaded -> current.metadata
+            else -> return
+        }
 
         downloaderJob = viewModelScope.launch {
             val ytdlpDetails = settingsTab.ytdlpDetails.first()

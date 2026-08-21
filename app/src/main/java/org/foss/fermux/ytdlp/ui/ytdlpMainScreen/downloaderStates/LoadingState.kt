@@ -41,16 +41,16 @@ fun LoadingCard(
      val message =
           listOf(
                "Fetching Video Info",
-               "Connecting to Server...",
+               "Connecting To Server...",
                "Analyzing Metadata...",
-               "Wrapping things up...",
-               "Stuff is happening...",
-               "Hold your breath...",
+               "Wrapping Things Up...",
+               "Stuff Is Happening...",
+               "Hold Your Breath...",
                "Calibrating...",
-               "hopefully this works..",
-               "its close...",
-               "just s sec...",
-               "Something is about to happen...",
+               "Hopefully This Works..",
+               "It's Close...",
+               "Just A Second...",
+               "Something Is About To Happen...",
           )
      var loadingMessage by remember { mutableStateOf(message.random()) }
      val shuffledMessages = (message.shuffled())

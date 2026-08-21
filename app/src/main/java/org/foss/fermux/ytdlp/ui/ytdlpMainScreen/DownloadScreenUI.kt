@@ -37,6 +37,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -94,17 +95,7 @@ fun DownloadContent(
 
      val doingTask =
           downloaderViewModel.state is DownloadStatus.Loading || downloaderViewModel.state is DownloadStatus.Downloading
-     val context = LocalContext.current
      val clipboard = LocalClipboardManager.current
-
-     QualitySheet(
-          showSheet = downloaderViewModel.showFormatSheet,
-          onDismiss = { downloaderViewModel.showFormatSheet = false },
-          onConfirm = { audio, video ->
-               downloaderViewModel.showFormatSheet = false
-               downloaderViewModel.startingDownload(context, audio, video)
-          }
-     )
 
      Box(modifier = Modifier.fillMaxSize()) {
           Column(
@@ -231,7 +222,7 @@ fun DownloaderScreen(navController: NavHostController) {
                }
 
                SideBar(
-                    onPageSelected = { currentPage = it },
+                    onPageSelected = { currentPage = it }, // TODO. Make the sidebar naviagte to actual pages and not draw on the existing downloader tab
                )
           }
      }

@@ -58,10 +58,7 @@ fun FinishedCard(
      val downloadState = progress?.let {
           if (it >= 100f) ProgressState.Done else ProgressState.InProgress
      }
-     Column(
-          modifier = Modifier
-               .fillMaxWidth()
-     ) {
+     
           DownloaderCard {
 
                Box(modifier = Modifier
@@ -148,18 +145,17 @@ fun FinishedCard(
                               modifier = Modifier
                                    .padding(7.dp)
                          )
-                         metadata.uploader?.let {
-                              Text(
-                                   text = it,
-                                   fontFamily = FontFamily.Default,
-                                   fontSize = 13.sp,
-                                   color = FermuxColors.fermuxTextColorBackground,
-                                   modifier = Modifier
-                                        .padding(7.dp)
-                              )
-                         }
-                    }
-               }
-          }
+                     metadata.uploader?.let {
+                         Text(
+                                 text = it,
+                                 fontFamily = FontFamily.Default,
+                                 fontSize = 13.sp,
+                                 color = FermuxColors.fermuxTextColorBackground,
+                                 modifier = Modifier
+                                      .padding(7.dp)
+                            )
+                      }
+             }
+         }
      }
 }

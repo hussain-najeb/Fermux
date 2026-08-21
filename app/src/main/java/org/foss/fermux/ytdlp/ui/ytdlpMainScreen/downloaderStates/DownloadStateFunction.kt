@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
+import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderQualityFormatState.QualitySheet
 
 @Composable
 fun DownloaderCards(
@@ -63,6 +64,10 @@ fun DownloaderCards(
                     navController = navController
                     )
             }
+            is DownloadStatus.MidChoice -> {
+                    QualitySheet(downloaderViewModel)
+            }
+            
             is DownloadStatus.Completed -> {
                 FinishedCard(
                     targetState.metadata,

@@ -9,18 +9,21 @@ data class DownloadMetadata (
 sealed class DownloadStatus {
     data object Idle : DownloadStatus()
     data object Loading : DownloadStatus()
+    data class MidChoice(val metadata: DownloadMetadata ) : DownloadStatus()
     data class Loaded(val metadata: DownloadMetadata) : DownloadStatus() // Takes the loaded metadata first and lay it for the user
     data class Completed(val metadata: DownloadMetadata) : DownloadStatus()
     data class Error(val errorMessage: String, val rawError: String) : DownloadStatus()
     data class Downloading(val downloadProgress: Float, val metadata : DownloadMetadata) : DownloadStatus()
 }
 
+enum class FormatKind { Video, Audio, Idle }
 
-enum class AudioQuality (val musicQuality: String) // audio quality class to pass for ytdlp.
+enum class AudioQuality (val musicQuality: String, formatKind: FormatKind) // audio quality class to pass for ytdlp.
 {
-    BEST("0"),
-    HIGH("192K"),
-    MEDIUM("128k")
+    BEST("0", formatKind = FormatKind.Audio),   // ~220-260 kbps (V0)
+    HIGH("2", formatKind = FormatKind.Audio),   // ~170-210 kbps (V2)
+    MEDIUM("5", formatKind = FormatKind.Audio), // ~100-140 kbps (V5 - yt-dlp default)
+    LOW("9", formatKind = FormatKind.Audio) // ~65 kbps (V9)
 }
 
 
@@ -29,10 +32,12 @@ enum class AudioQuality (val musicQuality: String) // audio quality class to pas
 //    MP3()
 //}
 
-enum class VideoQuality(val videoQuality: String) {
-    BEST("bestvideo+bestaudio/best"),
-    HD1080("bestvideo[height<=1080]+bestaudio/best"),
-    HD720("bestvideo[height<=720]+bestaudio/best"),
-    SD480("bestvideo[height<=480]+bestaudio/best"),
-    Q360("bestvideo[height<=360]+bestaudio/best"),
+enum class VideoQuality(val videoQuality: String, formatKind: FormatKind) {
+    BEST("bestvideo+bestaudio/best", formatKind = FormatKind.Video),
+    HD1080("bestvideo[height<=1080]+bestaudio/best", formatKind = FormatKind.Video),
+    HD720("bestvideo[height<=720]+bestaudio/best", formatKind = FormatKind.Video),
+    SD480("bestvideo[height<=480]+bestaudio/best", formatKind = FormatKind.Video),
+    Q360("bestvideo[height<=360]+bestaudio/best", formatKind = FormatKind.Video),
+    Q240("bestvideo[height<=240]+bestaudio/best", formatKind = FormatKind.Video),
+    Q144("bestvideo[height<=144]+bestaudio/best", formatKind = FormatKind.Video)
 }
