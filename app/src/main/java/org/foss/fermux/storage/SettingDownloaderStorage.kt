@@ -27,6 +27,7 @@ val ARIA2C_EDGE_CASE = booleanPreferencesKey("aria2c_implementation_edge_case")
 val DOWNLOADING_DETAILS = booleanPreferencesKey("download_details")
 val SHOW_YTDLP_VIDEO_HISTORY = booleanPreferencesKey("video_history")
 val SHOW_YTDLP_AUDIO_HISTORY = booleanPreferencesKey("audio_history")
+val EMBEDTHUMBNAIL = booleanPreferencesKey("embed_thumbnail")
 val SPONSOR_BLOCK_IMPLEMENTATION = booleanPreferencesKey("sponsor_block")
 val DEFAULT_SPONSOR_BLOCK_CATEGORIES = setOf("sponsor", "selfpromo", "interaction")
 val SPONSOR_BLOCK_CATEGORIES = stringSetPreferencesKey("sponsor_block_categories")
@@ -37,24 +38,16 @@ val JSON_VIDEO_HISTORY = stringPreferencesKey("json_video")
 class SettingsTab(private val context: Context) {
 
     val downloadPath:      Flow<String> = context.dataStore.data.map { preferences -> preferences[DOWNLOAD_PATH] ?: "" }
-
     val notificationState: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[DOWNLOAD_PROGRESS_NOTIFICATION] ?: true }
-
     val sleepRequest: Flow<Int> = context.dataStore.data.map { preferences -> preferences[SLEEP_REQUEST_KEY] ?: 0}
-
+    val embedThumbnail: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[EMBEDTHUMBNAIL] ?: true }
     val aria2c: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[ARIA2C_KEY] ?: true }
-
     val aria2cHLSWithDASHCase: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[ARIA2C_EDGE_CASE] ?: false }
-
     val audioHistory:      Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[SHOW_YTDLP_AUDIO_HISTORY] ?: true }
-
     val videoHistory:      Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[SHOW_YTDLP_VIDEO_HISTORY] ?: true }
-
     val ytdlpDetails:      Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[DOWNLOADING_DETAILS] ?: true }
-
     val sponsorBlock:      Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] ?: false }
     val sponsorBlockCategories: Flow<Set<String>> =  context.dataStore.data.map { preferences -> preferences[SPONSOR_BLOCK_CATEGORIES] ?: DEFAULT_SPONSOR_BLOCK_CATEGORIES }
-
     val JSONAudioCard:     Flow<List<JSONHistoryCards>> = context.dataStore.data.map { preferences -> val json =
         preferences[JSON_AUDIO_HISTORY] ?: "[]"
         Json.decodeFromString<List<JSONHistoryCards>>(json)}
@@ -78,6 +71,10 @@ class SettingsTab(private val context: Context) {
 
     suspend fun setAria2cImpl (value: Boolean) {
         context.dataStore.edit { preferences -> preferences[ARIA2C_KEY] = value }
+    }
+
+    suspend fun setEmbedThumbnail (value: Boolean) {
+        context.dataStore.edit { preferences -> preferences[EMBEDTHUMBNAIL] = value }
     }
 
     suspend fun setAria2cEdgeCase (value: Boolean) {

@@ -64,6 +64,7 @@ fun SimpleDownloaderPage(
           updateChecker == false -> UpdateState.FAILED
           else -> UpdateState.IDLE
      }
+     val thumbnail by settingsViewModel.embedThumbnail.collectAsStateWithLifecycle()
      val notificationState by settingsViewModel.notificationState.collectAsStateWithLifecycle() // TODO. Add this at some point.
 
      val infiniteTransition =
@@ -161,7 +162,7 @@ fun SimpleDownloaderPage(
                          }
                     )
                }
-          )
+          ),
      )
 
      val advancedSettings = listOf(
@@ -179,6 +180,20 @@ fun SimpleDownloaderPage(
                image = R.drawable.layers,
                onClick = {
                     showAria2cDialog = true
+               }
+          ),
+          SettingListInfo(
+               title = if (thumbnail) "Uncut Thumbnail" else "Cut Thumbnail",
+               description = if (thumbnail) "The thumbnail of the downloaded media will be embedded upon download and will be saved"
+               else "The thumbnail of the downloaded media will be removed upon downloading and wont be saved",
+               image = if (thumbnail) R.drawable.scissors_off else R.drawable.scissors_on,
+               content = {
+                    SettingsSwitch(
+                         checked = thumbnail,
+                         onCheckedChange = {
+                              settingsViewModel.setEmbedThumbnail(it)
+                         }
+                    )
                }
           )
      )

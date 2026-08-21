@@ -25,6 +25,7 @@ suspend fun downloaderLogic(
      musicQuality: AudioQuality? = null,
      videoQuality: VideoQuality? = null,
      sponsorBlock: Boolean = false,
+     embedThumbnail: Boolean = true,
      sponsorBlockCategories: Set<String> = emptySet(),
      onUpdate: (Float, String) -> Unit) {
 
@@ -46,7 +47,7 @@ suspend fun downloaderLogic(
      *   Missing required Visitor Data. You may need to pass Visitor Data with
      *   --extractor-args "youtube:visitor_data=XXX" the user here gets a
      *   dialog and a reminder about the issue, brief rundown and how to fix it, including in that alert dialog the name of the
-     *   extractor and whats with it. RegEx should have a value that is "extractorName" called in as a regex when the regex sees
+     *   extractor and whats with it. RegEx or a filter should have a value that is "extractorName" called in as a regex when the regex sees
      *   there is the word "cookies" involved, so you get what site is doing the cookies and if its an issue in the first place.
      *   5- an alert dialog for the last point so its a clear thing that explains where and when and how its done!
      *   6- cookies expire!
@@ -76,6 +77,9 @@ suspend fun downloaderLogic(
         request.addOption("-v")
     }
 
+    if (embedThumbnail) {
+        request.addOption("--embed-thumbnail")
+    }
 
     musicQuality?.let {
         request.addOption("-x")

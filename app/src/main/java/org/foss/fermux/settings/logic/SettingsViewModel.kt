@@ -36,6 +36,9 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     val audioHistory: StateFlow<Boolean> = settingsTab.audioHistory
         .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
+    val embedThumbnail: StateFlow<Boolean> = settingsTab.embedThumbnail
+        .stateIn(viewModelScope, started = SharingStarted.Lazily, initialValue = true)
+
     val videoHistory: StateFlow<Boolean> = settingsTab.videoHistory
         .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
@@ -68,6 +71,10 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     fun setAria2cEdgeCase(value: Boolean) {
         viewModelScope.launch { settingsTab.setAria2cEdgeCase(value) }
+    }
+
+    fun setEmbedThumbnail(value: Boolean) {
+        viewModelScope.launch { settingsTab.setEmbedThumbnail(value) }
     }
 
     fun setAudioHistory(value: Boolean) {
