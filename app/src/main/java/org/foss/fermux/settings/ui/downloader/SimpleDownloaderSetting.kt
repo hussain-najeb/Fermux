@@ -14,10 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -67,7 +64,7 @@ fun SimpleDownloaderPage(
           updateChecker == false -> UpdateState.FAILED
           else -> UpdateState.IDLE
      }
-     val notificationState by settingsViewModel.notificationState.collectAsStateWithLifecycle()
+     val notificationState by settingsViewModel.notificationState.collectAsStateWithLifecycle() // TODO. Add this at some point.
 
      val infiniteTransition =
           rememberInfiniteTransition(label = "update transition")
@@ -99,21 +96,21 @@ fun SimpleDownloaderPage(
                     )
                }
           ),
-          SettingListInfo(
-               title = "Download Notifications",
-               description = "Notify me when the downloaded files finish downloading",
-               image = if (notificationState) R.drawable.bell_on else R.drawable.bell_off,
-               content = {
-                    SettingsSwitch(
-                         checked = notificationState,
-                         onCheckedChange = { settingsViewModel.setNotificationState(it) }
-                    )
-               }
-          ),
+//          SettingListInfo(
+//               title = "Download Notifications",
+//               description = "Notify me when the downloaded files finish downloading",
+//               image = if (notificationState) R.drawable.bell_on else R.drawable.bell_off,
+//               content = {
+//                    SettingsSwitch(
+//                         checked = notificationState,
+//                         onCheckedChange = { settingsViewModel.setNotificationState(it) }
+//                    )
+//               }
+//          ),
           SettingListInfo(
                title = "Audio History",
                description = "Enable/Disable audio history",
-               icon = Icons.Default.AudioFile,
+               image = R.drawable.file_music,
                content = {
                     SettingsSwitch(
                          checked = audioHistory,
@@ -124,7 +121,7 @@ fun SimpleDownloaderPage(
           SettingListInfo(
                title = "Video History",
                description = "Enable/Disable video history",
-               icon = Icons.Default.VideoFile,
+               image = R.drawable.file_video,
                content = {
                     SettingsSwitch(
                          checked = videoHistory,

@@ -18,8 +18,7 @@ fun FermuxDownloadDescription(
      ) {
 
      Surface(
-          modifier = modifier
-               .background(FermuxColors.fermuxComponents),
+          modifier = modifier,
           shape = shape,
      ) {
           content()

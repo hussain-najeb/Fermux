@@ -33,10 +33,10 @@ class DownloaderViewModel : ViewModel() {
 
     var showYtdlpDetails by mutableStateOf(false)
     val flavorError = listOf(
-            "Dammit, something must have gone wrong",
+            "Oh, something must have gone wrong",
             "Could be a connection issue, check your internet connection",
-            "You guessed it, it's a network error",
-            "what does an LLM say about it?",
+            "Must have been a network issue",
+            "What does an LLM say about it?",
             "Did you paste a URL?"
         )
 
@@ -47,10 +47,8 @@ class DownloaderViewModel : ViewModel() {
                 val metadata = withTimeout(20000L.milliseconds) {
                     fetchingTheMetadata(downloadUrl)
                 }
-
                 state = DownloadStatus.Loaded(metadata)
                 showFormatSheet = true
-
             } catch (e: UnknownHostException) {
                 downloadErrorHandler(e)
             } catch (e: TimeoutCancellationException) {

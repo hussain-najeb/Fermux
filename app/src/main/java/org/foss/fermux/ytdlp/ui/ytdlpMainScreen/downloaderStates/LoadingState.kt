@@ -4,12 +4,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
@@ -30,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
-import org.foss.fermux.fermuxUIComponents.generalComponents.AppCard
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderCard
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
 import kotlin.time.Duration.Companion.milliseconds
@@ -49,21 +47,17 @@ fun LoadingCard(
                "Stuff is happening...",
                "Hold your breath...",
                "Calibrating...",
+               "hopefully this works..",
+               "its close...",
+               "just s sec...",
                "Something is about to happen...",
           )
      var loadingMessage by remember { mutableStateOf(message.random()) }
      val shuffledMessages = (message.shuffled())
      var index by remember { mutableIntStateOf(0) }
 
-
      Column(modifier = Modifier.fillMaxWidth()) {
-          AppCard(
-               shape = RoundedCornerShape(12.dp),
-               setBorder = false,
-               modifier = Modifier
-                    .padding(16.dp)
-                    .aspectRatio(16f/9f)
-          ) {
+          DownloaderCard {
                LaunchedEffect(Unit) {
                     while (true) {
                          delay(4500.milliseconds)

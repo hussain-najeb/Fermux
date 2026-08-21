@@ -1,7 +1,8 @@
-package org.foss.fermux.fermuxUIComponents.ffmpegComponents
+package org.foss.fermux.fermuxUIComponents.downloaderComponents
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -12,26 +13,24 @@ import androidx.compose.ui.unit.dp
 import org.foss.fermux.ui.theme.FermuxColor
 import org.foss.fermux.ui.theme.FermuxColors
 
-
 @Composable
-fun FFmpegCard(
+fun DownloaderCard(
      modifier: Modifier = Modifier,
      color: FermuxColor = FermuxColors,
-     background: Boolean = false,
+     errorBackground: Boolean = false,
      shape: Shape = RoundedCornerShape(8.dp),
-     content: @Composable (ColumnScope.() -> Unit)? = null
+     content: @Composable () -> Unit
 ) {
-
      Card(
-          modifier = modifier,
+          modifier = modifier
+               .padding(16.dp)
+               .aspectRatio(16f/9f),
           shape = shape,
           colors = CardDefaults.cardColors(
-               containerColor = if (background) color.fermuxComponents else color.fermuxFFmpegGreen
+               containerColor = if (errorBackground) color.fermuxErrorCardColor else  color.fermuxSurface
           ),
           border = BorderStroke(1.dp, FermuxColors.fermuxWhiteColor)
      ) {
-          if (content != null) {
-               content()
-          }
+          content()
      }
 }

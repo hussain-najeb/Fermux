@@ -1,10 +1,13 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Error
@@ -21,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
 import org.foss.fermux.fermuxUIComponents.buttons.ErrorCopyButton
-import org.foss.fermux.fermuxUIComponents.generalComponents.AppSurface
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderCard
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
 
@@ -35,15 +38,8 @@ fun ErrorCard(
      @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
      val scrollState = rememberScrollState()
 
-
-     AppSurface(
-          expanded = true,
-          shape = RoundedCornerShape(8.dp),
-          border = BorderStroke(1.dp, FermuxColors.fermuxOffWhiteTextColor),
-          color = FermuxColors.fermuxErrorCardColor,
-          modifier = Modifier
-               .padding(16.dp)
-               .aspectRatio(16f / 9)
+     DownloaderCard(
+          errorBackground = true
      ) {
           Box(
                modifier = Modifier
