@@ -1,27 +1,26 @@
 @file:Suppress("PropertyName")
 
 package org.foss.fermux.ffmpeg.logic
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.workDataOf
-import kotlinx.coroutines.launch
 import android.content.Context
+import android.media.MediaExtractor
+import android.media.MediaFormat
 import android.net.Uri
+import android.util.Log
 import android.webkit.MimeTypeMap
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import java.util.UUID
-import kotlin.text.takeLast
-import android.media.MediaExtractor
-import android.media.MediaFormat
-import android.util.Log
 
 
 class FFmpegViewModel: ViewModel() {

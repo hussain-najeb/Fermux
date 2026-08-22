@@ -8,7 +8,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,8 +27,8 @@ import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.fermuxUIComponents.settingsComponents.RequestTimeSlider
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingLists
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
+import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.settings.logic.SettingListInfo
-import org.foss.fermux.settings.logic.SettingsViewModel
 import org.foss.fermux.settings.ui.downloader.downloaderComponents.Aria2cOptions
 import org.foss.fermux.settings.ui.downloader.downloaderComponents.SponsorBlockOptions
 import org.foss.fermux.ui.theme.FermuxColors
@@ -40,7 +41,7 @@ private enum class UpdateState {
 @Composable
 fun SimpleDownloaderPage(
      navController: NavHostController,
-     @SuppressLint("ContextCastToActivity") settingsViewModel: SettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
+     @SuppressLint("ContextCastToActivity") settingsViewModel: DownloaderSettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
 ) {
 
      /**

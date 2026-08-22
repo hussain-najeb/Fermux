@@ -19,9 +19,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
-import org.foss.fermux.storage.SettingsTab
+import org.foss.fermux.storage.DownloaderSettingsTab
 import java.net.UnknownHostException
-import java.util.UUID
+import java.util.*
 import kotlin.time.Duration.Companion.milliseconds
 
 
@@ -69,7 +69,7 @@ class DownloaderViewModel : ViewModel() {
     }
 
     fun startingDownload(context: Context, audio: AudioQuality?, video: VideoQuality?) {
-        val settingsTab = SettingsTab(context.applicationContext)
+        val settingsTab = DownloaderSettingsTab(context.applicationContext)
         val metadata = when (val current = state) {
             is DownloadStatus.MidChoice -> current.metadata
             is DownloadStatus.Loaded -> current.metadata

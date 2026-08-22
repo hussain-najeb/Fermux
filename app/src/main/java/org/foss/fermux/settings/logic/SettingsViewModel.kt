@@ -11,13 +11,13 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.foss.fermux.storage.DownloaderSettingsTab
 import org.foss.fermux.storage.JSONHistoryCards
-import org.foss.fermux.storage.SettingsTab
 import java.util.concurrent.atomic.AtomicBoolean
 
 
 class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(application) {
-    private val settingsTab = SettingsTab(application.applicationContext)
+    private val settingsTab = DownloaderSettingsTab(application.applicationContext)
 
     val downloadPath: StateFlow<String> = settingsTab.downloadPath
         .stateIn(viewModelScope, SharingStarted.Lazily, "")

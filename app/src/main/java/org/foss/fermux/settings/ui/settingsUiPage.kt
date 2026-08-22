@@ -2,13 +2,14 @@ package org.foss.fermux.settings.ui
 
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Brush
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import org.foss.fermux.R
@@ -16,7 +17,6 @@ import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingLists
 import org.foss.fermux.main.SettingsScreens
 import org.foss.fermux.settings.logic.SettingListInfo
-import org.foss.fermux.settings.logic.SettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 
 /**

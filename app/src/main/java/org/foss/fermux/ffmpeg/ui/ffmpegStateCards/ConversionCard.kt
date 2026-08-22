@@ -5,12 +5,7 @@ package org.foss.fermux.ffmpeg.ui.ffmpegStateCards
 import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -19,21 +14,19 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
-import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
-import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FFmpegCard
-import org.foss.fermux.ui.theme.FermuxColors
-import org.foss.fermux.main.Miscellaneous
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
+import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
+import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FFmpegCard
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
+import org.foss.fermux.main.Miscellaneous
+import org.foss.fermux.ui.theme.FermuxColors
 
 
 private enum class ProgressState { InProgress, Done }

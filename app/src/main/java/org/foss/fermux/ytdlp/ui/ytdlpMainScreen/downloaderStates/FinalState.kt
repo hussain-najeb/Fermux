@@ -3,13 +3,7 @@ package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -33,12 +27,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.FermuxDownloadDescription
 import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
 import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderCard
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.FermuxDownloadDescription
 import org.foss.fermux.main.Miscellaneous
-import org.foss.fermux.settings.logic.SettingsViewModel
+import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.DownloadMetadata
 
@@ -51,7 +45,7 @@ fun FinishedCard(
      progress: Float? = null,
      onCancel: () -> Unit,
      navController: NavController,
-     @SuppressLint("ContextCastToActivity") settingsViewModel: SettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
+     @SuppressLint("ContextCastToActivity") settingsViewModel: DownloaderSettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
 
 ) {
      val showYtdlpDetails by settingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()

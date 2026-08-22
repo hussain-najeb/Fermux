@@ -1,22 +1,15 @@
 package org.foss.fermux.ytdlp.ui.historyPage
 
-import androidx.compose.runtime.Composable
 import android.annotation.SuppressLint
 import android.app.Application
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -29,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.foss.fermux.settings.logic.SettingsViewModel
+import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.ui.theme.FermuxColors
 
@@ -38,7 +31,7 @@ import org.foss.fermux.ui.theme.FermuxColors
 fun DownloadVideoList() {
 
     val context = LocalContext.current
-    val settingsViewModel: SettingsViewModel = viewModel(
+    val settingsViewModel: DownloaderSettingsViewModel = viewModel(
         viewModelStoreOwner = LocalContext.current as ComponentActivity, factory =
             ViewModelProvider.AndroidViewModelFactory.getInstance(context.applicationContext as Application)
     )

@@ -34,14 +34,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingLists
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
+import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.settings.logic.SettingListInfo
-import org.foss.fermux.settings.logic.SettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun Aria2cOptions(
      onDismissRequest: () -> Unit,
-     @SuppressLint("ContextCastToActivity") settingsViewModel: SettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
+     @SuppressLint("ContextCastToActivity") settingsViewModel: DownloaderSettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
 ) {
      val aria2c by settingsViewModel.aria2c.collectAsStateWithLifecycle()
      val aria2cEdgeCase by settingsViewModel.aria2cEdgeCase.collectAsStateWithLifecycle()

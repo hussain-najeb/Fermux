@@ -7,14 +7,14 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import org.foss.fermux.storage.DownloaderSettingsTab
 import org.foss.fermux.storage.JSONHistoryCards
-import org.foss.fermux.storage.SettingsTab
 
 class DownloadWorker(context: Context, params: WorkerParameters ) :
      CoroutineWorker(context, params) {
      override suspend fun doWork(): Result {
 
-          val settingsTab = SettingsTab(applicationContext)
+          val settingsTab = DownloaderSettingsTab(applicationContext)
           val sponsorBlock = settingsTab.sponsorBlock.first()
           val sponsorBlockCategories = settingsTab.sponsorBlockCategories.first()
           val aria2c = settingsTab.aria2c.first()
@@ -35,7 +35,6 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
           val uploader = inputData.getString("uploader") ?: "unknown uploader"
 
           val showDetails = settingsTab.ytdlpDetails.first()
-          var currentProgress = 0f
           var lastProgressUpdateAt = 0L
 
           try {
@@ -86,7 +85,7 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
                     sleepRequest = sleepRequest,
                     onUpdate = { progress, line ->
                          val now = System.currentTimeMillis()
-                         currentProgress = progress.coerceIn(0f, 100f)
+                         val currentProgress = progress.coerceIn(0f, 100f)
 
                          if (now - lastProgressUpdateAt >= 500L) {
                               lastProgressUpdateAt = now

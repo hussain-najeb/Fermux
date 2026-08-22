@@ -7,10 +7,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
-import org.foss.fermux.ytdlp.logic.downloader.VideoQuality
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderFormatList
+import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
+import org.foss.fermux.ytdlp.logic.downloader.VideoQuality
 
 
 @Composable

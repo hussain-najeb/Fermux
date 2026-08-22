@@ -16,9 +16,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 import org.foss.fermux.ytdlp.logic.downloader.FormatKind
-import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderQualityFormatState.AudioQualityChoices
-import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderQualityFormatState.IdleQualityChoices
-import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderQualityFormatState.VideoQualityChoices
 
 
 @Composable

@@ -3,14 +3,11 @@ package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderQualityFormatState
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderFormatList
 import org.foss.fermux.ytdlp.logic.downloader.FormatKind
-import org.foss.fermux.R
-
 
 
 @SuppressLint("SuspiciousIndentation")

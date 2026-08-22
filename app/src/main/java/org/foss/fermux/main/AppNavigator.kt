@@ -3,19 +3,18 @@ package org.foss.fermux.main
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderLogs
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.ui.ConverterScreen
+import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.FFmpegLogs
 import org.foss.fermux.settings.ui.AboutPage
 import org.foss.fermux.settings.ui.SettingsScreen
 import org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage
 import org.foss.fermux.terminal.main.ui.FermuxTerminalScreen
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloaderScreen
-import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.FFmpegLogs
 
 
 sealed class MainScreens (val route: String, val descriptor: String?) {
