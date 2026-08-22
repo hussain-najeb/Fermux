@@ -37,8 +37,9 @@ class FFmpegViewModel: ViewModel() {
     private var ffmpegJob: Job? = null
     val flavourMessage = listOf(
         "Oh no, did you convert audio to video?",
-        "This has always been problematic",
-        "Good luck solving it"
+        "This is always problematic",
+        "Good luck solving it",
+        "that was a skill issue"
     )
     private fun fail(flavourFailMessage: String, rawError: String) {
         state = FFmpegStatus.Error(flavourFailMessage, rawError)
@@ -140,7 +141,6 @@ class FFmpegViewModel: ViewModel() {
                 "FFMPEG_URI_FILE" to inputUri.toString(),
                 "TARGET_FORMAT" to targetFormat.name,
                 "ORIGINAL_FILE_NAME" to originalName,
-                "FFMPEG_EXTRA_ARGS" to targetFormat.ffmpegExtraArgs.toTypedArray(),
                 "OUTPUT_MIME_TYPE" to targetFormat.mimeType,
             )
 

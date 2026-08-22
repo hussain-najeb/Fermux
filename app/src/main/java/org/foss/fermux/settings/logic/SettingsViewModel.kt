@@ -15,7 +15,8 @@ import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.storage.SettingsTab
 import java.util.concurrent.atomic.AtomicBoolean
 
-class SettingsViewModel(application: Application) : AndroidViewModel(application) {
+
+class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(application) {
     private val settingsTab = SettingsTab(application.applicationContext)
 
     val downloadPath: StateFlow<String> = settingsTab.downloadPath

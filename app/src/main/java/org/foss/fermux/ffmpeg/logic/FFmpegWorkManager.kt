@@ -7,16 +7,36 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withContext
+import org.foss.fermux.settings.logic.BuildDynamicFFmpegArgs
+import org.foss.fermux.storage.FFmpegSettingsTab
 import org.foss.fermux.ytdlp.logic.downloader.copyFileToDownloads
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
+import kotlin.coroutines.cancellation.CancellationException
 
 class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
     @SuppressLint("UseKtx")
     override suspend fun doWork(): Result {
+
+        val ffmpegSettings = FFmpegSettingsTab(applicationContext)
+        val prefs = FFmpegUserPrefs(
+                audioBitrate = ffmpegSettings.audioBitrate.first().takeIf { it.isNotBlank() },
+                normalizeAudio = ffmpegSettings.normalizeAudio.first(),
+                monoDownmix = ffmpegSettings.monoDownmix.first(),
+                enableVideoCompression = ffmpegSettings.enableVideoCompression.first(),
+                videoResolution = ffmpegSettings.videoResolution.first().takeIf { it.isNotBlank() },
+                videoCrf = ffmpegSettings.videoCrf.first(),
+                useHardwareEncoder = ffmpegSettings.useHardwareEncoder.first(),
+                threadLimit = ffmpegSettings.threadLimit.first().takeIf { it > 0 }
+            )
+
         val tempFile = File(applicationContext.cacheDir, "input_${id}.tmp")
         val targetFormatName = inputData.getString("TARGET_FORMAT") ?: return Result.failure(workDataOf("error" to "Missing TARGET_FORMAT in input data"))
         val targetFormat = FFmpegTargetFormat.valueOf(targetFormatName)
@@ -24,6 +44,8 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
         val originalName = inputData.getString("ORIGINAL_FILE_NAME") ?: "Converted_to_$id"
         val baseName = originalName.substringBeforeLast(".")
         val displayName = "$baseName.${targetFormat.workerFile}"
+
+        val args = BuildDynamicFFmpegArgs(targetFormat, prefs)
 
 
         return try {
@@ -37,7 +59,7 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                 tempFile.outputStream().use { outputStream ->
                     inputStream.copyTo(outputStream)
                 }
-            } ?: return Result.failure(workDataOf("error" to "Could not open input stream for $uriFile — permission may have been lost"))
+            } ?: return Result.failure(workDataOf("error" to "Could not open input stream for $uriFile, permission may have been lost"))
 
             val nativeLibDir = applicationContext.applicationInfo.nativeLibraryDir
             val ffmpegBinary = File(nativeLibDir, "libfermux_ffmpeg.so")
@@ -49,17 +71,16 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                 )
             }
 
-            val extraArgs = inputData.getStringArray("FFMPEG_EXTRA_ARGS")?.toList() ?: emptyList()
 
             val process = withContext(Dispatchers.IO) {
                 val builder = ProcessBuilder(
                     buildList {
                         add(ffmpegBinary.absolutePath)
-                        add("-i")
                         add(tempFile.absolutePath)
-                        addAll(extraArgs)
-                        add("-y")
+                        addAll(args)
                         add(outputFile.absolutePath)
+                        add("-i")
+                        add("-y")
                     }
                 )
 

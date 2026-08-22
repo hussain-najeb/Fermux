@@ -36,3 +36,15 @@ enum class FFmpegTargetFormat(
      PNG("png",   category = MediaKind.IMAGE, mimeType = "image/png",        ffmpegExtraArgs = listOf("-frames:v", "1"),             descriptor = "image(png)"),
 
 } // TODO. Video/Audio cutting and effects is planned here as well.
+
+data class FFmpegUserPrefs(
+    val audioBitrate: String? = null,
+    val normalizeAudio: Boolean = false,
+    val monoDownmix: Boolean = false,
+    val enableVideoCompression: Boolean = false,
+    val videoResolution: String? = null,
+    val videoCrf: Int? = null,
+    val useHardwareEncoder: Boolean = false,
+    val threadLimit: Int? = null,
+    // TODO. Reset to default settings here as well maybe. 
+)

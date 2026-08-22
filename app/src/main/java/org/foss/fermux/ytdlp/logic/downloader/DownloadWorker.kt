@@ -32,7 +32,7 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
           val title = inputData.getString("title") ?: "unknown title"
           val thumbnail = inputData.getString("thumbnail") ?: "unknown thumbnail"
           val duration = inputData.getInt("duration", 0).toLong()
-          val uploader = inputData.getString("uploader")
+          val uploader = inputData.getString("uploader") ?: "unknown uploader"
 
           val showDetails = settingsTab.ytdlpDetails.first()
           var currentProgress = 0f
@@ -80,7 +80,6 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
                     videoQuality = video,
                     showDetails = showDetails,
                     sponsorBlock = sponsorBlock,
-
                     sponsorBlockCategories = sponsorBlockCategories,
                     aria2c = aria2c,
                     aria2cHLSWithDASHCase = aria2cHLSWithDASHCase,

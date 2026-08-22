@@ -37,7 +37,7 @@ val JSON_AUDIO_HISTORY = stringPreferencesKey("json_audio")
 val JSON_VIDEO_HISTORY = stringPreferencesKey("json_video")
 
 @Suppress("PropertyName")
-class SettingsTab(private val context: Context) {
+class DownloaderSettingsTab(private val context: Context) {
 
     val downloadPath:      Flow<String> = context.dataStore.data.map { preferences -> preferences[DOWNLOAD_PATH] ?: "" }
     val notificationState: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[DOWNLOAD_PROGRESS_NOTIFICATION] ?: true }
