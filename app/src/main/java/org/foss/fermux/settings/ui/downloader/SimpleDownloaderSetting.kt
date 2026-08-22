@@ -53,6 +53,7 @@ fun SimpleDownloaderPage(
      var showSponsorDialog by remember { mutableStateOf(false) }
      var showAria2cDialog by remember { mutableStateOf(false) }
 
+
      val ytdlpDetails by settingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
      val audioHistory by settingsViewModel.audioHistory.collectAsStateWithLifecycle()
      val videoHistory by settingsViewModel.videoHistory.collectAsStateWithLifecycle()
@@ -66,6 +67,9 @@ fun SimpleDownloaderPage(
      }
      val thumbnail by settingsViewModel.embedThumbnail.collectAsStateWithLifecycle()
      val notificationState by settingsViewModel.notificationState.collectAsStateWithLifecycle() // TODO. Add this at some point.
+     val playlist by settingsViewModel.playlistState.collectAsStateWithLifecycle()
+
+
 
      val infiniteTransition =
           rememberInfiniteTransition(label = "update transition")
@@ -111,7 +115,7 @@ fun SimpleDownloaderPage(
           SettingListInfo(
                title = "Audio History",
                description = "Enable/Disable audio history",
-               image = R.drawable.file_music,
+               image = if (audioHistory) R.drawable.library_music_on else R.drawable.library_music_off,
                content = {
                     SettingsSwitch(
                          checked = audioHistory,
@@ -122,7 +126,7 @@ fun SimpleDownloaderPage(
           SettingListInfo(
                title = "Video History",
                description = "Enable/Disable video history",
-               image = R.drawable.file_video,
+               image = if (videoHistory) R.drawable.video_library_on else R.drawable.video_library_off,
                content = {
                     SettingsSwitch(
                          checked = videoHistory,
@@ -131,25 +135,17 @@ fun SimpleDownloaderPage(
                }
           ),
           SettingListInfo(
-               title = "Sleep Request Ytdlp Flag",
-               description = "Sleep Request is a ytdlp flag for delayed download between each request",
-               icon = Icons.Outlined.Terminal,
+               title = if (playlist) "Playlist on" else "Playlist off",
+               description = if (playlist) "Playlists will be downloaded when the url is copied from a playlist" else "Playlists will not be downloaded when the url is copied from a playlist",
+               image = if (playlist) R.drawable.playlist_on else R.drawable.playlist_off,
                content = {
-                    AppIconButton(
-                         modifier = Modifier.size(39.dp),
-                         icon = Icons.Default.ExpandMore,
-                         iconRotation = if (expanded) 180f else 0f,
-                         onClick = {
-                              expanded = !expanded
-                         }
-                    )
-               },
-               trailingContent = {
-                    RequestTimeSlider(
-                         expanded = expanded
-                    )
-               }
-          ),
+                    SettingsSwitch(
+                         checked = playlist,
+                         onCheckedChange = { settingsViewModel.setPlaylistState(it) }
+                         )
+                    }
+               )
+          ,
           SettingListInfo(
                title = if (ytdlpDetails) "Shown Logs" else "Hidden Logs",
                description = if (ytdlpDetails) "Shown the downloader Logs" else "Hidden the downloader Logs",
@@ -184,8 +180,8 @@ fun SimpleDownloaderPage(
           ),
           SettingListInfo(
                title = if (thumbnail) "Uncut Thumbnail" else "Cut Thumbnail",
-               description = if (thumbnail) "The thumbnail of the downloaded media will be embedded upon download and will be saved"
-               else "The thumbnail of the downloaded media will be removed upon downloading and wont be saved",
+               description = if (thumbnail) "The thumbnail of the downloaded media will be embedded and will be saved"
+               else "The thumbnail of the downloaded media will be removed and won't be saved",
                image = if (thumbnail) R.drawable.scissors_off else R.drawable.scissors_on,
                content = {
                     SettingsSwitch(
@@ -193,6 +189,26 @@ fun SimpleDownloaderPage(
                          onCheckedChange = {
                               settingsViewModel.setEmbedThumbnail(it)
                          }
+                    )
+               }
+          ),
+          SettingListInfo(
+               title = "Sleep Request Ytdlp Flag",
+               description = "Sleep Request is a ytdlp flag for delayed download between each request",
+               icon = Icons.Outlined.Terminal,
+               content = {
+                    AppIconButton(
+                         modifier = Modifier.size(39.dp),
+                         icon = Icons.Default.ExpandMore,
+                         iconRotation = if (expanded) 180f else 0f,
+                         onClick = {
+                              expanded = !expanded
+                         }
+                    )
+               },
+               trailingContent = {
+                    RequestTimeSlider(
+                         expanded = expanded
                     )
                }
           )

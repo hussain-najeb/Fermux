@@ -13,23 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
-
-suspend fun downloaderLogic(
-    context: Context,
-     showDetails: Boolean,
-     url: String,
-     taskId: String,
-     aria2c: Boolean = true,
-     aria2cHLSWithDASHCase: Boolean = false,
-     sleepRequest: Int = 0,
-     musicQuality: AudioQuality? = null,
-     videoQuality: VideoQuality? = null,
-     sponsorBlock: Boolean = false,
-     embedThumbnail: Boolean = true,
-     sponsorBlockCategories: Set<String> = emptySet(),
-     onUpdate: (Float, String) -> Unit) {
-
-    /**
+/**
      * Problem:
      * YouTube has been rolling out PO Token (Proof of Origin Token) requirements more aggressively
      * this is Google's newer anti-bot layer, separate from TLS fingerprinting and separate from
@@ -53,6 +37,24 @@ suspend fun downloaderLogic(
      *   6- cookies expire!
      */
 
+
+
+suspend fun downloaderLogic(
+    context: Context,
+     showDetails: Boolean,
+     url: String,
+     taskId: String,
+     aria2c: Boolean = true,
+     aria2cHLSWithDASHCase: Boolean = false,
+     sleepRequest: Int = 0,
+     playlistStatus: Boolean = true,
+     musicQuality: AudioQuality? = null,
+     videoQuality: VideoQuality? = null,
+     sponsorBlock: Boolean = false,
+     embedThumbnail: Boolean = true,
+     sponsorBlockCategories: Set<String> = emptySet(),
+     onUpdate: (Float, String) -> Unit) {
+
     val downloadDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
     val outputPath = "${downloadDir?.absolutePath}/%(title)s.%(ext)s"
     val request = YoutubeDLRequest(url)
@@ -63,7 +65,8 @@ suspend fun downloaderLogic(
 
     if (shouldUseAria2c) {
         request.addOption("--downloader", "libaria2c.so")
-        request.addOption("--external-downloader-args", "aria2c:--summary-interval=1")
+        request.addOption(
+        "--external-downloader-args", "aria2c:--summary-interval=1 -x 16 -s 16 -k 1M")
     }
 
     if (sleepRequest > 0) {
@@ -81,6 +84,10 @@ suspend fun downloaderLogic(
         request.addOption("--embed-thumbnail")
     }
 
+    if (playlistStatus) {
+        request.addOption("--no-playlist")
+    }
+
     musicQuality?.let {
         request.addOption("-x")
         request.addOption("--audio-format", "mp3")
@@ -89,6 +96,13 @@ suspend fun downloaderLogic(
     videoQuality?.let {
         request.addOption("-f", it.videoQuality)
     }
+
+
+
+    request.addOption("--restrict-filenames")
+    request.addOption("-i")
+    request.addOption("--convert-thumbnails", "jpg")
+    request.addOption("--embed-metadata")
 
     request.addOption("-o", outputPath)
 

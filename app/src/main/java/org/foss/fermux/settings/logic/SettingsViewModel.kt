@@ -27,6 +27,9 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     val sleepRequest: StateFlow<Int> = settingsTab.sleepRequest
         .stateIn(viewModelScope, SharingStarted.Lazily, 0)
 
+    val playlistState: StateFlow<Boolean> = settingsTab.playlistStatus
+    .stateIn(viewModelScope, SharingStarted.Lazily, true)
+
     val aria2c: StateFlow<Boolean> = settingsTab.aria2c
         .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
@@ -37,7 +40,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
     val embedThumbnail: StateFlow<Boolean> = settingsTab.embedThumbnail
-        .stateIn(viewModelScope, started = SharingStarted.Lazily, initialValue = true)
+        .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
     val videoHistory: StateFlow<Boolean> = settingsTab.videoHistory
         .stateIn(viewModelScope, SharingStarted.Lazily, true)
@@ -71,6 +74,10 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     fun setAria2cEdgeCase(value: Boolean) {
         viewModelScope.launch { settingsTab.setAria2cEdgeCase(value) }
+    }
+
+    fun setPlaylistState(value: Boolean) {
+        viewModelScope.launch { settingsTab.setPlaylistStatus(value)}
     }
 
     fun setEmbedThumbnail(value: Boolean) {
