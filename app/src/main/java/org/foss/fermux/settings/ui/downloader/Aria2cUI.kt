@@ -1,4 +1,4 @@
-package org.foss.fermux.settings.ui.downloader.downloaderComponents
+package org.foss.fermux.settings.ui.downloader
 
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity

@@ -2,9 +2,18 @@ package org.foss.fermux.settings.ui.downloader
 
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -13,7 +22,11 @@ import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -24,13 +37,11 @@ import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.AppIconButton
 import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
-import org.foss.fermux.fermuxUIComponents.settingsComponents.RequestTimeSlider
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.RequestTimeSlider
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingLists
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.settings.logic.SettingListInfo
-import org.foss.fermux.settings.ui.downloader.downloaderComponents.Aria2cOptions
-import org.foss.fermux.settings.ui.downloader.downloaderComponents.SponsorBlockOptions
 import org.foss.fermux.ui.theme.FermuxColors
 
 
@@ -195,7 +206,7 @@ fun SimpleDownloaderPage(
           ),
           SettingListInfo(
                title = "Sleep Request Ytdlp Flag",
-               description = "Sleep Request is a ytdlp flag for delayed download between each request",
+               description = "Sleep Request is a flag for delayed download between each request",
                icon = Icons.Outlined.Terminal,
                content = {
                     AppIconButton(
