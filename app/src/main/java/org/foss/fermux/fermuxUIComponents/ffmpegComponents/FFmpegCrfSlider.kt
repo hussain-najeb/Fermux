@@ -78,7 +78,7 @@ fun CrfSlider(
 
                                         .size(25.dp)
                                         .background(
-                                             color = FermuxColors.fermuxGenericBorder,
+                                             color = FermuxColors.ffmpegSliderThumb,
                                              shape = RoundedCornerShape(6.dp)
                                         )
                               )

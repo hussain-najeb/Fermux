@@ -47,6 +47,7 @@ data class FermuxColor(
     // Fermux slider
     val activeSliderColor:          Color    = Color(0xFF4D7DE5),
     val inActiveSliderColor:        Color    = Color(0xFFB5C1E8),
+    val ffmpegSliderThumb:          Color    = Color(0xFF388e3c),
 
 
 

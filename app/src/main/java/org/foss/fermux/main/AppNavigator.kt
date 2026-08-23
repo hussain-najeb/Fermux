@@ -12,6 +12,7 @@ import org.foss.fermux.ffmpeg.ui.ConverterScreen
 import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.FFmpegLogs
 import org.foss.fermux.settings.ui.AboutPage
 import org.foss.fermux.settings.ui.SettingsScreen
+import org.foss.fermux.settings.ui.converter.SimpleFFmpegSetting
 import org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage
 import org.foss.fermux.terminal.main.ui.FermuxTerminalScreen
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloaderScreen
@@ -67,7 +68,7 @@ fun FermuxAppMainScreen() {
 
         // Settings Screens
         composable(SettingsScreens.SimpleDownloader.route) { SimpleDownloaderPage(navController = navigationController) }
-        composable(SettingsScreens.SimpleFFmpeg.route) {  }
+        composable(SettingsScreens.SimpleFFmpeg.route) { SimpleFFmpegSetting(navController = navigationController) }
         composable(SettingsScreens.SimpleTerminal.route) {  }
         composable(SettingsScreens.Themes.route) {  }
         composable(SettingsScreens.AboutAppPage.route) { AboutPage(navController = navigationController) }

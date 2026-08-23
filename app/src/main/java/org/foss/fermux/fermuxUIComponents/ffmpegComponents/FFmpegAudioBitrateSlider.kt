@@ -64,10 +64,9 @@ fun AudioBitrateSlider(
                     thumb = {
                          Box(
                               modifier = Modifier
-
                                    .size(25.dp)
                                    .background(
-                                        color = FermuxColors.fermuxGenericBorder,
+                                        color = FermuxColors.ffmpegSliderThumb,
                                         shape = RoundedCornerShape(6.dp)
                                    )
                          )
