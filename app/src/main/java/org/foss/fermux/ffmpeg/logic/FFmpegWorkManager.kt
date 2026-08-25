@@ -75,14 +75,16 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
             val process = withContext(Dispatchers.IO) {
                 val builder = ProcessBuilder(
                     buildList {
-                        add(ffmpegBinary.absolutePath)
-                        add(tempFile.absolutePath)
-                        addAll(args)
-                        add(outputFile.absolutePath)
-                        add("-i")
-                        add("-y")
-                    }
-                )
+                    add(ffmpegBinary.absolutePath)
+                    add("-hwaccel")
+                    add("none")
+                    add("-i")
+                    add(tempFile.absolutePath)
+                    addAll(args)
+                    add("-y")
+                    add(outputFile.absolutePath)
+                }
+                    )
 
                 builder.environment()["LD_LIBRARY_PATH"] = nativeLibDir
                 builder.redirectErrorStream(true)

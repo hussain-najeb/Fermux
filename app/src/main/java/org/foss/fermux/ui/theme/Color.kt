@@ -16,6 +16,12 @@ data class FermuxColor(
     val fermuxActiveButton:         Color    = Color(0xFFadc6ff),
     val fermuxInActiveBackButton:   Color    = Color(0xFF252638),
 
+    // Fermux Segmented buttons
+    val activeContainer: Color = Color(0xFF9baede),
+    val activeContent: Color = Color(0xFF102f60),
+    val inActiveContainer: Color = Color(0xFF30325d),
+    val inActiveContent: Color = Color.White,
+
     // Fermux Borders
     val fermuxPrimaryBorder:        Color    = Color(0xFF005DFF),
     val fermuxSecondaryBorder:      Color    = Color(0xFF67ECA2),
@@ -29,6 +35,7 @@ data class FermuxColor(
     val fermuxBackground:           Color    = Color(0xFF181825),
     val fermuxSurface:              Color    = Color(0xFF1f2034),
     val fermuxErrorCardColor:       Color    = Color(0xFF8c1d18),
+    val inActiveTextField: Color = Color(0xFF474968),
 
     // Fermux FFmpeg crad colors
     val fermuxFFmpegGreen:          Color    = Color(0xFF388e3c),

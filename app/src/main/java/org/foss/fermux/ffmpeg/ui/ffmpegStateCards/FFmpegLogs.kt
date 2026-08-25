@@ -86,7 +86,7 @@ fun FFmpegLogs(
                     }
                 }
                 Text(
-                	text = "Note*: This is the log page for the ffmpeg output during conversion, it doesnt display errors",
+                	text = "Note*: This is the log page for the ffmpeg output during conversion",
                 	color = FermuxColors.fermuxBackgroundTextColor,
                 	fontSize = 16.sp,
                 	fontStyle = FontStyle.Normal,

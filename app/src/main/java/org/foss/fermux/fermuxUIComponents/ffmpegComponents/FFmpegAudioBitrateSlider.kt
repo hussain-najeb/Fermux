@@ -2,33 +2,27 @@ package org.foss.fermux.fermuxUIComponents.ffmpegComponents
 
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderColors
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.foss.fermux.settings.logic.FFmpegSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
-import kotlin.math.roundToInt
 
 @Composable
 fun AudioBitrateSlider(
@@ -38,9 +32,13 @@ fun AudioBitrateSlider(
 
      val audio by settingsViewModel.audioBitrate.collectAsStateWithLifecycle()
 
-     val currentKbps = audio.removeSuffix("k").toIntOrNull() ?: 192
-
-
+     val option = listOf( 
+          "64k" to "64k", 
+          "128k" to "128k", 
+          "192k" to "192k", 
+          "256k" to "256k", 
+          "320k" to "320k" 
+          )
 
      AnimatedVisibility(
           visible = expanded,
@@ -54,37 +52,35 @@ fun AudioBitrateSlider(
                shape = RoundedCornerShape(8.dp),
                border = BorderStroke(1.dp, color = FermuxColors.fermuxHelperBorder)
           ) {
-               Slider(
-                    value = currentKbps.coerceIn(64, 320).toFloat(),
-                    onValueChange = { value ->
-                         settingsViewModel.setVideoCrf(value.roundToInt())
-                    },
-                    valueRange = 64f..320f,
-                    steps = 7,
-                    thumb = {
-                         Box(
-                              modifier = Modifier
-                                   .size(25.dp)
-                                   .background(
-                                        color = FermuxColors.ffmpegSliderThumb,
-                                        shape = RoundedCornerShape(6.dp)
-                                   )
-                         )
-                    },
-                    modifier = Modifier.padding(7.dp),
-                    colors = SliderColors(
-                         activeTrackColor = FermuxColors.activeSliderColor,
-                         inactiveTrackColor = FermuxColors.inActiveSliderColor,
-                         activeTickColor = Color.White,
-                         inactiveTickColor = Color.Gray.copy(alpha = 0.5f),
-                         thumbColor = Color.Unspecified,
-                         disabledThumbColor = Color.Unspecified,
-                         disabledActiveTrackColor = Color.Unspecified,
-                         disabledActiveTickColor = Color.Unspecified,
-                         disabledInactiveTrackColor = Color.Unspecified,
-                         disabledInactiveTickColor = Color.Unspecified,
-                    )
-               )
+               SingleChoiceSegmentedButtonRow(
+                modifier = Modifier
+                    .padding(7.dp)
+                    .fillMaxWidth()
+            ) {
+            option.forEachIndexed { position, (selectedChoice, names) ->
+                    SegmentedButton(
+                        selected = audio == selectedChoice,
+                        onClick = { settingsViewModel.setAudioBitrate(selectedChoice) },
+                        icon = {},
+                        shape = SegmentedButtonDefaults.itemShape(
+                            index = position, 
+                            count = option.size,
+                            baseShape = RoundedCornerShape(8.dp)
+        ),
+        
+        colors = SegmentedButtonDefaults.colors(
+            activeContainerColor = FermuxColors.activeContainer,
+            activeContentColor = FermuxColors.activeContent,
+            inactiveContainerColor = FermuxColors.inActiveContainer,
+            inactiveContentColor = FermuxColors.inActiveContent,
+            activeBorderColor = FermuxColors.fermuxSecondaryBorder,
+            inactiveBorderColor = FermuxColors.fermuxGenericBorder
+        ),
+                    ) {
+                        Text(names)
+                    }
+                }
+            }
           }
      }
 }

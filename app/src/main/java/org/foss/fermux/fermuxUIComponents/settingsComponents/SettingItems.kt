@@ -102,7 +102,7 @@ fun SettingLists(
                          Spacer(modifier = Modifier.height(2.dp))
                          Text(
                               text = description,
-                              maxLines = 2,
+                              maxLines = 4,
                               style = MaterialTheme.typography.bodyMedium,
                               overflow = TextOverflow.Ellipsis,
                          )

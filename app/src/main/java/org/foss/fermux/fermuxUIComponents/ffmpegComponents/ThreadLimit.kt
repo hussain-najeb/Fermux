@@ -19,23 +19,38 @@ import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.foss.fermux.settings.logic.FFmpegSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
+import kotlin.math.roundToInt
 
 @Composable
-fun ResolutionSelect(
+fun ThreadLimitSelect(
     expanded: Boolean,
     @SuppressLint("ContextCastToActivity") settingsViewModel: FFmpegSettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
 ) {
-    val resolution by settingsViewModel.videoResolution.collectAsStateWithLifecycle()
-    val options = listOf("" to "Original", "480" to "480p", "720" to "720p", "1080" to "1080p", "1440" to "1440p")
+    val threadLimit by settingsViewModel.threadLimit.collectAsStateWithLifecycle()
+    val useHardwareEncoder by settingsViewModel.useHardwareEncoder.collectAsStateWithLifecycle()
+
+    val availableCores = Runtime.getRuntime().availableProcessors()
+    val options = listOf(
+        0 to "Default",
+        (availableCores * 0.25f).roundToInt().coerceAtLeast(1) to "25%",
+        (availableCores * 0.5f).roundToInt().coerceAtLeast(1) to "50%",
+        (availableCores * 0.75f).roundToInt().coerceAtLeast(1) to "75%",
+    )
+
+    LaunchedEffect(useHardwareEncoder) {
+        if (useHardwareEncoder && threadLimit != 0) {
+            settingsViewModel.setThreadLimit(0)
+        }
+    }
 
     AnimatedVisibility(
         visible = expanded,
@@ -53,27 +68,27 @@ fun ResolutionSelect(
                     .padding(7.dp)
                     .fillMaxWidth()
             ) {
-            options.forEachIndexed { position, (selectedChoice, names) ->
+                options.forEachIndexed { position, (selectedChoice, label) ->
                     SegmentedButton(
-                        selected = resolution == selectedChoice,
-                        onClick = { settingsViewModel.setVideoResolution(selectedChoice) },
+                        selected = threadLimit == selectedChoice,
+                        enabled = !useHardwareEncoder,
+                        onClick = { settingsViewModel.setThreadLimit(selectedChoice) },
                         icon = {},
                         shape = SegmentedButtonDefaults.itemShape(
-                            index = position, 
+                            index = position,
                             count = options.size,
                             baseShape = RoundedCornerShape(8.dp)
-        ),
-        
-        colors = SegmentedButtonDefaults.colors(
-            activeContainerColor = FermuxColors.activeContainer,
-            activeContentColor = FermuxColors.activeContent,
-            inactiveContainerColor = FermuxColors.inActiveContainer,
-            inactiveContentColor = FermuxColors.inActiveContent,
-            activeBorderColor = FermuxColors.fermuxSecondaryBorder,
-            inactiveBorderColor = FermuxColors.fermuxGenericBorder
-        ),
+                        ),
+                        colors = SegmentedButtonDefaults.colors(
+                            activeContainerColor = FermuxColors.activeContainer,
+                            activeContentColor = FermuxColors.activeContent,
+                            inactiveContainerColor = FermuxColors.inActiveContainer,
+                            inactiveContentColor = FermuxColors.inActiveContent,
+                            activeBorderColor = FermuxColors.fermuxSecondaryBorder,
+                            inactiveBorderColor = FermuxColors.fermuxGenericBorder
+                        ),
                     ) {
-                        Text(names)
+                        Text(label)
                     }
                 }
             }

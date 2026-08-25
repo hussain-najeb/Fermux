@@ -18,17 +18,22 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
 import org.foss.fermux.fermuxUIComponents.buttons.ErrorCopyButton
+import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.AppSurface
+import org.foss.fermux.main.Miscellaneous
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
 
 @Composable
 fun FFmpegErrorMassage(
-     errorMessage: String, 
-     rawError: String, 
-     onCancel: () -> Unit) {
+    errorMessage: String,
+    rawError: String,
+    navController: NavController,
+    onCancel: () -> Unit) {
 
 
 @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
@@ -82,7 +87,7 @@ fun FFmpegErrorMassage(
                          color = FermuxColors.fermuxLightErrorTextColor,
                          modifier = Modifier.padding(top = 20.dp, start = 12.dp)
                     )
-               }
+               }   
            Box(modifier = Modifier
                .fillMaxSize()
                ) {
@@ -90,6 +95,13 @@ fun FFmpegErrorMassage(
                     modifier = Modifier.align(Alignment.BottomEnd),
                     onClick = { clipboard.setText(AnnotatedString(rawError)) }
                )
+               ImageButton(
+                              modifier = Modifier
+                                   .align(Alignment.TopEnd),
+                              image = R.drawable.logs,
+                              onClick = { navController.navigate(Miscellaneous.FFmpegLog.route) }
+                         )
+
                CancelButton(
                     modifier = Modifier
                          .align(Alignment.BottomStart),

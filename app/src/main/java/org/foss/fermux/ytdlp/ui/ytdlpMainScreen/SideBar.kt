@@ -51,7 +51,7 @@ fun SideBar(
                     modifier = Modifier
                          .padding(start = 5.dp)
                          .clip(RoundedCornerShape(8.dp))
-                         .border(1.0.dp, FermuxColors.fermuxSecondaryBorder, RoundedCornerShape(8.dp))
+                         .border(1.0.dp, FermuxColors.fermuxHelperBorder, RoundedCornerShape(8.dp))
                          .width(70.dp)
                          .background(FermuxColors.fermuxSurface),
                ) {

@@ -206,18 +206,9 @@ fun SimpleDownloaderPage(
           ),
           SettingListInfo(
                title = "Sleep Request Ytdlp Flag",
-               description = "Sleep Request is a flag for delayed download between each request",
+               description = "Sleep Request is a flag for delayed download between each request, each number represents a second. 0 means the flag is off",
                icon = Icons.Outlined.Terminal,
-               content = {
-                    AppIconButton(
-                         modifier = Modifier.size(39.dp),
-                         icon = Icons.Default.ExpandMore,
-                         iconRotation = if (expanded) 180f else 0f,
-                         onClick = {
-                              expanded = !expanded
-                         }
-                    )
-               },
+               onClick = { expanded = !expanded },
                trailingContent = {
                     RequestTimeSlider(
                          expanded = expanded
@@ -227,7 +218,7 @@ fun SimpleDownloaderPage(
      )
 
      LargeTopBarScaffold(
-          title = "Settings",
+          title = "Downloader Settings",
           onBack = { navController.popBackStack() }
      ) { paddingValues ->
           Column(
@@ -251,6 +242,17 @@ fun SimpleDownloaderPage(
                          }
                     )
                }
+
+               Text(
+                    text = "General",
+                    modifier = Modifier.padding(
+                         start = 16.dp,
+                         top = 20.dp,
+                         bottom = 8.dp
+                    ),
+                    color = FermuxColors.fermuxActiveButton,
+                    style = MaterialTheme.typography.labelLarge,
+               )
 
                simpleDownloaderSettings.forEach { setting ->
                     SettingLists(

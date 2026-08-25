@@ -12,6 +12,7 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -74,8 +75,9 @@ fun DownloadContent(
      navController: NavController
 ) {
 
-     val doingTask =
-          downloaderViewModel.state is DownloadStatus.Loading || downloaderViewModel.state is DownloadStatus.Downloading
+     
+     val doingTask = downloaderViewModel.state is DownloadStatus.Loading || downloaderViewModel.state is DownloadStatus.Downloading
+     val isError = downloaderViewModel.state is DownloadStatus.Error
      val clipboard = LocalClipboardManager.current
 
      Box(modifier = Modifier.fillMaxSize()) {
@@ -106,19 +108,26 @@ fun DownloadContent(
                               .fillMaxWidth()
                               .padding(15.dp),
                          value = downloaderViewModel.downloadUrl,
+                         isError = isError,
+                         shape = RoundedCornerShape(8.dp),
                          minLines = 1,
                          maxLines = 7,
-                         colors = OutlinedTextFieldDefaults.colors(
-                              focusedBorderColor = FermuxColors.fermuxPrimaryBorder,
-                              unfocusedBorderColor = FermuxColors.fermuxPrimaryBorder,
-                              focusedLabelColor = FermuxColors.fermuxPrimaryBorder,
-                              unfocusedLabelColor = FermuxColors.fermuxTextColorBackground,
-                              cursorColor = FermuxColors.fermuxGenericBorder,
-                              focusedTextColor = Color.White,
-                              unfocusedTextColor = Color.White,
-                              unfocusedContainerColor = FermuxColors.fermuxComponents,
-                              focusedContainerColor = FermuxColors.fermuxSaturatedComponents
-                         ),
+                         colors = OutlinedTextFieldDefaults.colors( // TODO. Add actual good colors here.
+     focusedBorderColor = FermuxColors.fermuxSecondaryBorder,
+     unfocusedBorderColor = FermuxColors.fermuxGenericBorder,
+     focusedLabelColor = FermuxColors.fermuxPrimaryBorder,
+     unfocusedLabelColor = FermuxColors.fermuxTextColorBackground,
+     cursorColor = FermuxColors.fermuxGenericBorder,
+     focusedTextColor = Color.White,
+     unfocusedTextColor = Color.White,
+     errorTextColor = FermuxColors.fermuxLightErrorTextColor,
+     errorBorderColor = FermuxColors.fermuxLightErrorTextColor,
+     errorLabelColor = FermuxColors.fermuxLightErrorTextColor,
+     errorCursorColor = FermuxColors.fermuxLightErrorTextColor,
+     errorContainerColor = FermuxColors.fermuxErrorCardColor,
+     unfocusedContainerColor = FermuxColors.fermuxComponents,
+     focusedContainerColor = FermuxColors.inActiveTextField
+),
                          onValueChange = { txt -> downloaderViewModel.downloadUrl = txt },
                          placeholder = {
                               Text(

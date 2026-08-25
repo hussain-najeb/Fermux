@@ -61,9 +61,7 @@ fun FFmepgState (
 
             is FFmpegStatus.Error -> {
                 FFmpegErrorMassage(
-                    errorMessage = targetState.flavourMessage,
-                    rawError = targetState.rawError,
-                    onCancel = { ffmpegViewModel.cancelButton(context) })
+                    errorMessage = targetState.flavourMessage, rawError = targetState.rawError, onCancel = { ffmpegViewModel.cancelButton(context) }, navController = navController)
             }
         }
     }

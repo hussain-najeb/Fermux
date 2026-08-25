@@ -63,8 +63,6 @@ val context = LocalContext.current
                     .wrapContentSize()
                     .background(FermuxColors.fermuxComponents)
                     ) {
-
-
                     FormatList(ffmpegViewModel)
                }
           }

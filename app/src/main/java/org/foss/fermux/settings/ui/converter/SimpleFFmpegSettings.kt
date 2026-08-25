@@ -8,6 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,12 +19,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.ffmpegComponents.AudioBitrateSlider
+import org.foss.fermux.fermuxUIComponents.ffmpegComponents.CrfSlider
 import org.foss.fermux.fermuxUIComponents.ffmpegComponents.ResolutionSelect
+import org.foss.fermux.fermuxUIComponents.ffmpegComponents.ThreadLimitSelect
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingLists
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
@@ -45,13 +52,15 @@ fun SimpleFFmpegSetting(
 	val threadLimit by ffmpegSettingsViewModel.threadLimit.collectAsStateWithLifecycle()
 
 	var audioBitrateExpansion by remember { mutableStateOf(false) }
-	var resolutionSelector by remember { mutableStateOf(false) }
+	var resolutionExpandable by remember { mutableStateOf(false) }
+	var crfExpandable by remember { mutableStateOf(false) }
+	var threadExpandable by remember { mutableStateOf(false) }
 
 
 	val simpleFFmpegSetting = listOf(
 		SettingListInfo(
 			title = "Audio Bitrate",
-			description = "Audio bitrate is the amount of data processed for each second of sound",
+			description = "Audio bitrate is the amount of data processed for each second of sound, higher is better",
 			image = R.drawable.edit_audio,
 			onClick = { audioBitrateExpansion = !audioBitrateExpansion },
 			trailingContent = {
@@ -98,20 +107,56 @@ fun SimpleFFmpegSetting(
         		}
         	),
         SettingListInfo(
-        	title = "Video Resolution",
-        	description = "Edit the video resolution for the selected media prior to using the converter",
+        	title = "Video Resolution", // TODO. Add anmimation? to this toggle
+        	description = "Edit the video resolution for the selected media prior to using the converter so it outputs the selceted resolution in this setting. Original is recommended",
         	image = R.drawable.video_resolution,
-        	onClick = { resolutionSelector = !resolutionSelector },
-        	content = {
+        	onClick = { resolutionExpandable = !resolutionExpandable },
+        	trailingContent = {
                 ResolutionSelect(
-                	expanded = resolutionSelector
+                	expanded = resolutionExpandable
                 	)
         		}
-        	),
+        	)
 	)
 
+	val advanced = listOf(
+		SettingListInfo(
+        	title = "Video CRF",
+        	description = "CRF is the quality target used when compressing videos. Lower is better",
+        	icon = Icons.Default.Tune,
+        	onClick = { crfExpandable = !crfExpandable },
+        	trailingContent = {
+                CrfSlider(
+             		expanded = crfExpandable)
+        			}
+        		),
+        SettingListInfo(
+        	title = "Hardware Endcoding",
+        	description = "Uses the hardware chip for ffmpeg encoding instead of CPU. It's much faster and saves battery, but files are slightly larger",
+        	image = R.drawable.hardware_encoding,
+        	content = {
+        		SettingsSwitch(
+        			checked = useHardwareEncoder,
+        			onCheckedChange = {
+        				ffmpegSettingsViewModel.setUseHardwareEncoder(it)
+        					}
+        				)
+        			},
+        		),
+        SettingListInfo(
+        	title = "CPU Thread Limit",
+		description = "Limits how many CPU cores ffmpeg can use during conversion, trading speed for less heat and battery drain. Has no effect when hardware encoding is on",
+		onClick = { threadExpandable = !threadExpandable },
+		trailingContent = {
+			ThreadLimitSelect (
+			expanded = threadExpandable
+					)
+				}
+        		)
+		)
+
 LargeTopBarScaffold(
-          title = "Settings",
+          title = "Converter Settings",
           onBack = { navController.popBackStack() }
      ) { paddingValues ->
           Column(
@@ -122,6 +167,18 @@ LargeTopBarScaffold(
                     .padding(paddingValues)
           ) {
 
+
+          	Text(
+                    text = "General",
+                    modifier = Modifier.padding(
+                         start = 16.dp,
+                         top = 20.dp,
+                         bottom = 8.dp
+                    ),
+                    color = FermuxColors.fermuxActiveButton,
+                    style = MaterialTheme.typography.labelLarge,
+               )
+
 simpleFFmpegSetting.forEach { option ->
     SettingLists(
     	title = option.title,
@@ -131,8 +188,31 @@ simpleFFmpegSetting.forEach { option ->
     	onClick = { option.onClick?.invoke() },
     	content = option.content,
     	trailingContent = option.trailingContent
-    			)
+    				)
  			}
+
+ 			Text(
+                    text = "Advanced",
+                    modifier = Modifier.padding(
+                         start = 16.dp,
+                         top = 20.dp,
+                         bottom = 8.dp
+                    ),
+                    color = FermuxColors.fermuxActiveButton,
+                    style = MaterialTheme.typography.labelLarge,
+               )
+
+advanced.forEach { option -> 
+	SettingLists(
+    	title = option.title,
+    	description = option.description,
+    	image = option.image,
+    	icon = option.icon,
+    	onClick = { option.onClick?.invoke() },
+    	content = option.content,
+    	trailingContent = option.trailingContent
+    				)
+			}
 		}
 	}
 }
