@@ -13,7 +13,7 @@ fun FermuxDownloadDescription(
      modifier: Modifier = Modifier,
      shape: Shape = RoundedCornerShape(bottomEnd = 10.dp, bottomStart = 10.dp),
      content: @Composable () -> Unit
-     ) {
+) {
 
      Surface(
           modifier = modifier,

@@ -11,73 +11,77 @@ import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderQualityFormatState.Qua
 
 @Composable
 fun DownloaderCards(
-    state: DownloadStatus, 
-    downloaderViewModel: DownloaderViewModel,
-    navController: NavController
-    ) {
+     state: DownloadStatus,
+     downloaderViewModel: DownloaderViewModel,
+     navController: NavController
+) {
 
-    val context = LocalContext.current
-    val spatialSpec = MaterialTheme.motionScheme
+     val context = LocalContext.current
+     val spatialSpec = MaterialTheme.motionScheme
 
-    AnimatedContent(
-        targetState = state,
-        transitionSpec = {
-            (slideInVertically(
-                animationSpec = spatialSpec.slowSpatialSpec(),
-                initialOffsetY = { -it }
-            ) + fadeIn(initialAlpha = 0.1f))
-                .togetherWith(
-                exit = slideOutVertically(
+     AnimatedContent(
+          targetState = state,
+          transitionSpec = {
+               (slideInVertically(
                     animationSpec = spatialSpec.slowSpatialSpec(),
-                    targetOffsetY = { -it }
-                ) + fadeOut(targetAlpha = 0.1f)
-            )
-        },
-        label = "DownloaderCardTransition",
-        contentKey = { it::class }
-    ) { targetState ->
-        when (targetState) {
-            is DownloadStatus.Idle -> {}
-            is DownloadStatus.Loading -> {
-                LoadingCard(
-                    state = targetState,
-                    onCancel = { downloaderViewModel.cancelButton(context) }
-                )
-            }
-            is DownloadStatus.Downloading -> {
-                FinishedCard(
-                    targetState.metadata,
-                    targetState.downloadProgress,
-                    onCancel = { downloaderViewModel.cancelButton(context) },
-                    navController = navController
-                )
-            }
-            is DownloadStatus.Loaded -> {
-                FinishedCard(
-                    targetState.metadata,
-                    onCancel = { downloaderViewModel.cancelButton(context) },
-                    navController = navController
+                    initialOffsetY = { -it }
+               ) + fadeIn(initialAlpha = 0.1f))
+                    .togetherWith(
+                         exit = slideOutVertically(
+                              animationSpec = spatialSpec.slowSpatialSpec(),
+                              targetOffsetY = { -it }
+                         ) + fadeOut(targetAlpha = 0.1f)
                     )
-            }
-            is DownloadStatus.MidChoice -> {
+          },
+          label = "DownloaderCardTransition",
+          contentKey = { it::class }
+     ) { targetState ->
+          when (targetState) {
+               is DownloadStatus.Idle -> {}
+               is DownloadStatus.Loading -> {
+                    LoadingCard(
+                         state = targetState,
+                         onCancel = { downloaderViewModel.cancelButton(context) }
+                    )
+               }
+
+               is DownloadStatus.Downloading -> {
+                    FinishedCard(
+                         targetState.metadata,
+                         targetState.downloadProgress,
+                         onCancel = { downloaderViewModel.cancelButton(context) },
+                         navController = navController
+                    )
+               }
+
+               is DownloadStatus.Loaded -> {
+                    FinishedCard(
+                         targetState.metadata,
+                         onCancel = { downloaderViewModel.cancelButton(context) },
+                         navController = navController
+                    )
+               }
+
+               is DownloadStatus.MidChoice -> {
                     QualitySheet(downloaderViewModel)
-            }
-            
-            is DownloadStatus.Completed -> {
-                FinishedCard(
-                    targetState.metadata,
-                    progress = 100f,
-                    onCancel = { downloaderViewModel.cancelButton(context) },
-                    navController = navController
-                )
-            }
-            is DownloadStatus.Error -> {
-                ErrorCard(
-                    errorMessage = targetState.errorMessage,
-                    rawError = targetState.rawError,
-                    onCancel = { downloaderViewModel.cancelButton(context) }
-                )
-            }
-        }
-    }
+               }
+
+               is DownloadStatus.Completed -> {
+                    FinishedCard(
+                         targetState.metadata,
+                         progress = 100f,
+                         onCancel = { downloaderViewModel.cancelButton(context) },
+                         navController = navController
+                    )
+               }
+
+               is DownloadStatus.Error -> {
+                    ErrorCard(
+                         errorMessage = targetState.errorMessage,
+                         rawError = targetState.rawError,
+                         onCancel = { downloaderViewModel.cancelButton(context) }
+                    )
+               }
+          }
+     }
 }

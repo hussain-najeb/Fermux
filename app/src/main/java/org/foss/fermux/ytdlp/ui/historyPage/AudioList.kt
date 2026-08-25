@@ -32,77 +32,78 @@ import org.foss.fermux.ui.theme.FermuxColors
 @Composable
 fun DownloadedAudioScreen() {
 
-    val context = LocalContext.current
+     val context = LocalContext.current
 
-    val settingsViewModel: DownloaderSettingsViewModel = viewModel(
-        viewModelStoreOwner = LocalContext.current as ComponentActivity, factory =
-            ViewModelProvider.AndroidViewModelFactory.getInstance(context.applicationContext as Application)
-    )
+     val settingsViewModel: DownloaderSettingsViewModel = viewModel(
+          viewModelStoreOwner = LocalContext.current as ComponentActivity, factory =
+               ViewModelProvider.AndroidViewModelFactory.getInstance(context.applicationContext as Application)
+     )
 
-    val audioHistory by settingsViewModel.audioHistoryList.collectAsState()
+     val audioHistory by settingsViewModel.audioHistoryList.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .background(FermuxColors.fermuxBackground)
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Text(
-            text = "Audio History",
-            color = FermuxColors.fermuxInActiveTextColor,
-            fontSize = 40.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.SansSerif,
-            modifier = Modifier.padding(start = 24.dp, top = 19.dp, end = 24.dp)
-        )
+     Column(
+          modifier = Modifier
+               .background(FermuxColors.fermuxBackground)
+               .fillMaxSize(),
+          verticalArrangement = Arrangement.Center,
+     ) {
+          Text(
+               text = "Audio History",
+               color = FermuxColors.fermuxInActiveTextColor,
+               fontSize = 40.sp,
+               fontWeight = FontWeight.Bold,
+               fontFamily = FontFamily.SansSerif,
+               modifier = Modifier.padding(start = 24.dp, top = 19.dp, end = 24.dp)
+          )
 
-        Spacer(modifier = Modifier.height(10.dp))
+          Spacer(modifier = Modifier.height(10.dp))
 
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 10.dp),
-            thickness = 1.dp,
-            color = FermuxColors.fermuxComponents
-        )
+          HorizontalDivider(
+               modifier = Modifier.padding(horizontal = 10.dp),
+               thickness = 1.dp,
+               color = FermuxColors.fermuxComponents
+          )
 
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
-        ) {
-            if (audioHistory.isEmpty()) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .weight(1f),
+          LazyColumn(
+               modifier = Modifier.fillMaxSize(),
+               contentPadding = PaddingValues(8.dp),
+               horizontalAlignment = Alignment.CenterHorizontally,
+               verticalArrangement = Arrangement.Top
+          ) {
+               if (audioHistory.isEmpty()) {
+                    item {
+                         Box(
+                              modifier = Modifier
+                                   .fillMaxSize()
+                                   .weight(1f),
 
-                        contentAlignment = Alignment.Center
-                    ) {
+                              contentAlignment = Alignment.Center
+                         ) {
 
-                        Spacer(modifier = Modifier.height(700.dp))
+                              Spacer(modifier = Modifier.height(700.dp))
 
-                            Text(
-                                text = "Audio files will appear here.",
-                                color = FermuxColors.fermuxTextColorBackground,
-                                fontSize = 16.sp,
-                                fontFamily = FontFamily.SansSerif,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(horizontal = 40.dp)
-                            )
+                              Text(
+                                   text = "Audio files will appear here.",
+                                   color = FermuxColors.fermuxTextColorBackground,
+                                   fontSize = 16.sp,
+                                   fontFamily = FontFamily.SansSerif,
+                                   textAlign = TextAlign.Center,
+                                   modifier = Modifier.padding(horizontal = 40.dp)
+                              )
+                         }
                     }
-                }
-            } else {
+               } else {
 
-                items(audioHistory) { audioItems -> StoredCard(entry = audioItems)
+                    items(audioHistory) { audioItems ->
+                         StoredCard(entry = audioItems)
 
-                Spacer(modifier = Modifier.height(14.dp))
+                         Spacer(modifier = Modifier.height(14.dp))
 
-                }
-            }
-        }
-    }
+                    }
+               }
+          }
+     }
 }
 
 
@@ -111,5 +112,5 @@ fun DownloadedAudioScreen() {
 
 @Composable
 fun StoredCard(entry: JSONHistoryCards) {
-    HistoryCards(entry = entry)
+     HistoryCards(entry = entry)
 }

@@ -30,13 +30,14 @@ import org.foss.fermux.ui.theme.JetbrainsMono
 
 @Composable
 fun FFmpegErrorMassage(
-    errorMessage: String,
-    rawError: String,
-    navController: NavController,
-    onCancel: () -> Unit) {
+     errorMessage: String,
+     rawError: String,
+     navController: NavController,
+     onCancel: () -> Unit
+) {
 
 
-@Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
+     @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
      val scrollState = rememberScrollState()
 
 
@@ -60,10 +61,10 @@ fun FFmpegErrorMassage(
                          .verticalScroll(scrollState)
                          .padding(bottom = 40.dp)
                ) {
-     
+
                     Row {
                          Icon(
-                             imageVector = Icons.Rounded.Error,
+                              imageVector = Icons.Rounded.Error,
                               contentDescription = null,
                               tint = FermuxColors.fermuxLightErrorTextColor,
                               modifier = Modifier
@@ -87,27 +88,28 @@ fun FFmpegErrorMassage(
                          color = FermuxColors.fermuxLightErrorTextColor,
                          modifier = Modifier.padding(top = 20.dp, start = 12.dp)
                     )
-               }   
-           Box(modifier = Modifier
-               .fillMaxSize()
-               ) {
-               ErrorCopyButton(
-                    modifier = Modifier.align(Alignment.BottomEnd),
-                    onClick = { clipboard.setText(AnnotatedString(rawError)) }
-               )
-               ImageButton(
-                              modifier = Modifier
-                                   .align(Alignment.TopEnd),
-                              image = R.drawable.logs,
-                              onClick = { navController.navigate(Miscellaneous.FFmpegLog.route) }
-                         )
-
-               CancelButton(
+               }
+               Box(
                     modifier = Modifier
-                         .align(Alignment.BottomStart),
-                    onClick = {onCancel()}
+                         .fillMaxSize()
+               ) {
+                    ErrorCopyButton(
+                         modifier = Modifier.align(Alignment.BottomEnd),
+                         onClick = { clipboard.setText(AnnotatedString(rawError)) }
                     )
-               }    
+                    ImageButton(
+                         modifier = Modifier
+                              .align(Alignment.TopEnd),
+                         image = R.drawable.logs,
+                         onClick = { navController.navigate(Miscellaneous.FFmpegLog.route) }
+                    )
+
+                    CancelButton(
+                         modifier = Modifier
+                              .align(Alignment.BottomStart),
+                         onClick = { onCancel() }
+                    )
+               }
           }
      }
 }

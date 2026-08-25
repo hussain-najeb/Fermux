@@ -21,12 +21,13 @@ import org.foss.fermux.ffmpeg.ui.formatStates.FormatList
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
-fun MidConversionProcess(@SuppressLint("ContextCastToActivity") ffmpegViewModel: FFmpegViewModel = viewModel(
-     viewModelStoreOwner = LocalContext.current as ComponentActivity
-)
+fun MidConversionProcess(
+     @SuppressLint("ContextCastToActivity") ffmpegViewModel: FFmpegViewModel = viewModel(
+          viewModelStoreOwner = LocalContext.current as ComponentActivity
+     )
 ) {
 
-val context = LocalContext.current
+     val context = LocalContext.current
 
      Column(
           modifier = Modifier
@@ -34,12 +35,13 @@ val context = LocalContext.current
      ) {
           FFmpegCard(
                modifier = Modifier
-               .padding(10.dp),
+                    .padding(10.dp),
                background = true
-               ) {
+          ) {
                if (ffmpegViewModel.inputUri != null) {
-                    Box(modifier = Modifier
-                         .aspectRatio(16f/9f)
+                    Box(
+                         modifier = Modifier
+                              .aspectRatio(16f / 9f)
                     ) {
                          AsyncImage(
                               model = ffmpegViewModel.inputUri,
@@ -50,19 +52,19 @@ val context = LocalContext.current
                                    .clip(shape = RoundedCornerShape(bottomEnd = 8.dp, bottomStart = 8.dp))
                                    .background(FermuxColors.fermuxSurface)
                          )
-                        CancelButton(
-                         modifier = Modifier
-                         .padding(10.dp)
-                         .align(Alignment.TopStart) ,
-                         onClick = { ffmpegViewModel.cancelButton(context) }
+                         CancelButton(
+                              modifier = Modifier
+                                   .padding(10.dp)
+                                   .align(Alignment.TopStart),
+                              onClick = { ffmpegViewModel.cancelButton(context) }
                          )
                     }
                }
                Column(
                     modifier = Modifier
-                    .wrapContentSize()
-                    .background(FermuxColors.fermuxComponents)
-                    ) {
+                         .wrapContentSize()
+                         .background(FermuxColors.fermuxComponents)
+               ) {
                     FormatList(ffmpegViewModel)
                }
           }

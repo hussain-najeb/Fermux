@@ -22,50 +22,50 @@ import org.foss.fermux.ui.theme.FermuxColors
 @Preview
 @Composable
 fun Why() {
-    var pressed by remember { mutableStateOf(false) } // To give the button an On/Off state.
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        TextWithIconButton(
-            modifier = Modifier.defaultMinSize(minWidth = 70.dp), // To decide how big the button is.
-            contentPadding = PaddingValues(9.dp), // To give text and icon a room in the button.
-            icon = Icons.Default.ExpandMore, // Optional icon.
-            iconRotation = if (pressed) 180f else 0f, // Optional icon animation.
-            text = if (pressed) "show" else "hide", // Optional text given by caller for the button.
-            onClick = { pressed = !pressed } // onClick for executing the desired effect.
-        )
+     var pressed by remember { mutableStateOf(false) } // To give the button an On/Off state.
+     Column(
+          modifier = Modifier.fillMaxSize(),
+          horizontalAlignment = Alignment.CenterHorizontally,
+          verticalArrangement = Arrangement.Center
+     ) {
+          TextWithIconButton(
+               modifier = Modifier.defaultMinSize(minWidth = 70.dp), // To decide how big the button is.
+               contentPadding = PaddingValues(9.dp), // To give text and icon a room in the button.
+               icon = Icons.Default.ExpandMore, // Optional icon.
+               iconRotation = if (pressed) 180f else 0f, // Optional icon animation.
+               text = if (pressed) "show" else "hide", // Optional text given by caller for the button.
+               onClick = { pressed = !pressed } // onClick for executing the desired effect.
+          )
 
-        Spacer(Modifier.height(20.dp))
+          Spacer(Modifier.height(20.dp))
 
-        CancelButton(
-            modifier = Modifier.size(45.dp),
-            iconRotation = if (pressed) 360f else 0f,
-            onClick = {pressed = !pressed },
-        )
+          CancelButton(
+               modifier = Modifier.size(45.dp),
+               iconRotation = if (pressed) 360f else 0f,
+               onClick = { pressed = !pressed },
+          )
 
-        Spacer(Modifier.height(20.dp))
+          Spacer(Modifier.height(20.dp))
 
-        AppIconButton(
-            icon = Icons.Default.ContentPaste,
-            modifier = Modifier.size(50.dp),
-            onClick = {pressed = !pressed}
-        )
-            Column(
-                modifier = Modifier
+          AppIconButton(
+               icon = Icons.Default.ContentPaste,
+               modifier = Modifier.size(50.dp),
+               onClick = { pressed = !pressed }
+          )
+          Column(
+               modifier = Modifier
                     .fillMaxSize()
                     .background(FermuxColors.fermuxBackground)
                     .verticalScroll(rememberScrollState())
 
-            ) {
+          ) {
 
-                SettingsSwitch(
+               SettingsSwitch(
                     checked = pressed,
                     onCheckedChange = {}
-                )
+               )
 
-            }
-        }
+          }
+     }
 
-    }
+}

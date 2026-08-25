@@ -17,54 +17,54 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun LargeTopBarScaffold(
-    title: String,
-    onBack: () -> Unit,
-    modifier: Modifier = Modifier,
-    content: @Composable (PaddingValues) -> Unit
+     title: String,
+     onBack: () -> Unit,
+     modifier: Modifier = Modifier,
+     content: @Composable (PaddingValues) -> Unit
 ) {
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-        rememberTopAppBarState(),
-        canScroll = { true }
-    )
+     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
+          rememberTopAppBarState(),
+          canScroll = { true }
+     )
 
-    Scaffold(
-        modifier = modifier
-            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
-        containerColor = FermuxColors.fermuxBackground,
-        topBar = {
-            Column {
-                LargeTopAppBar(
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = FermuxColors.fermuxBackground,
-                        scrolledContainerColor = FermuxColors.fermuxBackground,
-                        navigationIconContentColor = Color.Unspecified,
-                        titleContentColor = Color.Unspecified,
-                        actionIconContentColor = Color.Unspecified
-                    ),
-                    scrollBehavior = scrollBehavior,
-                    title = {
-                        Text(
-                            title,
-                            fontFamily = FontFamily.Default,
-                            fontWeight = FontWeight.W500,
-                            fontSize = 35.sp,
-                            color = Color.White,
-                            modifier = Modifier.padding(10.dp)
-                        )
-                    },
-                    navigationIcon = {
-                        BackButton(
-                            modifier = Modifier.padding(10.dp).size(44.dp),
-                            contentPadding = PaddingValues(3.dp),
-                            onClick = onBack
-                        )
-                  }
-                )
-                SectionDivider()
-                Spacer(modifier = Modifier.height(20.dp))
-            }
-        },
-        content = content
-    )
+     Scaffold(
+          modifier = modifier
+               .fillMaxSize()
+               .nestedScroll(scrollBehavior.nestedScrollConnection),
+          containerColor = FermuxColors.fermuxBackground,
+          topBar = {
+               Column {
+                    LargeTopAppBar(
+                         colors = TopAppBarDefaults.topAppBarColors(
+                              containerColor = FermuxColors.fermuxBackground,
+                              scrolledContainerColor = FermuxColors.fermuxBackground,
+                              navigationIconContentColor = Color.Unspecified,
+                              titleContentColor = Color.Unspecified,
+                              actionIconContentColor = Color.Unspecified
+                         ),
+                         scrollBehavior = scrollBehavior,
+                         title = {
+                              Text(
+                                   title,
+                                   fontFamily = FontFamily.Default,
+                                   fontWeight = FontWeight.W500,
+                                   fontSize = 35.sp,
+                                   color = Color.White,
+                                   modifier = Modifier.padding(10.dp)
+                              )
+                         },
+                         navigationIcon = {
+                              BackButton(
+                                   modifier = Modifier.padding(10.dp).size(44.dp),
+                                   contentPadding = PaddingValues(3.dp),
+                                   onClick = onBack
+                              )
+                         }
+                    )
+                    SectionDivider()
+                    Spacer(modifier = Modifier.height(20.dp))
+               }
+          },
+          content = content
+     )
 }

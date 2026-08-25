@@ -11,5 +11,5 @@ data class JSONHistoryCards(
      val uploader: String? = null,
      val videoDuration: Long,
      val downloadTime: Long,
-    )
+)
 

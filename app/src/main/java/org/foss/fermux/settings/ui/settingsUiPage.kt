@@ -27,66 +27,66 @@ import org.foss.fermux.ui.theme.FermuxColors
 fun SettingsScreen(
      navController: NavHostController
 ) {
-    val generalSettings = remember {
-        listOf(
-            SettingListInfo(
-                title = "Downloader Settings",
-                description = "Changing the settings for Ytdlp",
-                image = R.drawable.yt_dlp,
-                route = SettingsScreens.SimpleDownloader.route
-            ),
-            SettingListInfo(
-                title = "Converter Settings",
-                description = "Changing the settings for FFmpeg",
-                image = R.drawable.ffmpeg,
-                route = SettingsScreens.SimpleFFmpeg.route
-            ),
-            SettingListInfo(
-                title = "Terminal Settings",
-                description = "Changing the settings for the Terminal",
-                image = R.drawable.terminal_screen,
-                route = SettingsScreens.SimpleTerminal.route
-            ),
-            SettingListInfo(
-                title = "Themes",
-                description = "Changing the theme of the app",
-                icon = Icons.Default.Brush,
-                route = SettingsScreens.Themes.route
-            ),
-            SettingListInfo(
-                title = "About",
-                description = "About page of the app",
-                icon = Icons.Default.Info,
-                route = SettingsScreens.AboutAppPage.route
-            )
-        )
-    }
+     val generalSettings = remember {
+          listOf(
+               SettingListInfo(
+                    title = "Downloader Settings",
+                    description = "Changing the settings for Ytdlp",
+                    image = R.drawable.yt_dlp,
+                    route = SettingsScreens.SimpleDownloader.route
+               ),
+               SettingListInfo(
+                    title = "Converter Settings",
+                    description = "Changing the settings for FFmpeg",
+                    image = R.drawable.ffmpeg,
+                    route = SettingsScreens.SimpleFFmpeg.route
+               ),
+               SettingListInfo(
+                    title = "Terminal Settings",
+                    description = "Changing the settings for the Terminal",
+                    image = R.drawable.terminal_screen,
+                    route = SettingsScreens.SimpleTerminal.route
+               ),
+               SettingListInfo(
+                    title = "Themes",
+                    description = "Changing the theme of the app",
+                    icon = Icons.Default.Brush,
+                    route = SettingsScreens.Themes.route
+               ),
+               SettingListInfo(
+                    title = "About",
+                    description = "About page of the app",
+                    icon = Icons.Default.Info,
+                    route = SettingsScreens.AboutAppPage.route
+               )
+          )
+     }
 
-    LargeTopBarScaffold(
-        title = "Settings",
-        onBack = { navController.popBackStack() }
-    ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(FermuxColors.fermuxBackground),
-            contentPadding = paddingValues
-        ) {
-            items(
-                items = generalSettings,
-                key = {it.title}
-            ) { settingsList ->
-                SettingLists(
-                    title = settingsList.title,
-                    description = settingsList.description,
-                    image = settingsList.image,
-                    icon = settingsList.icon,
-                    onClick = {
-                        settingsList.route?.let { navController.navigate(it) }
-                    },
-                    content = settingsList.content
-                )
-            }
-        }
-    }
+     LargeTopBarScaffold(
+          title = "Settings",
+          onBack = { navController.popBackStack() }
+     ) { paddingValues ->
+          LazyColumn(
+               modifier = Modifier
+                    .fillMaxSize()
+                    .background(FermuxColors.fermuxBackground),
+               contentPadding = paddingValues
+          ) {
+               items(
+                    items = generalSettings,
+                    key = { it.title }
+               ) { settingsList ->
+                    SettingLists(
+                         title = settingsList.title,
+                         description = settingsList.description,
+                         image = settingsList.image,
+                         icon = settingsList.icon,
+                         onClick = {
+                              settingsList.route?.let { navController.navigate(it) }
+                         },
+                         content = settingsList.content
+                    )
+               }
+          }
+     }
 }

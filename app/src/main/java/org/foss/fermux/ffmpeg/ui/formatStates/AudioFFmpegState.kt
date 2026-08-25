@@ -102,9 +102,10 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                }
           ),
      )
-     Column(modifier = Modifier
-          .fillMaxWidth()
-          .verticalScroll(scrollState)
+     Column(
+          modifier = Modifier
+               .fillMaxWidth()
+               .verticalScroll(scrollState)
      ) {
           audioOptions.forEach { option ->
                FormatLists(

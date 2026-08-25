@@ -75,8 +75,9 @@ fun DownloadContent(
      navController: NavController
 ) {
 
-     
-     val doingTask = downloaderViewModel.state is DownloadStatus.Loading || downloaderViewModel.state is DownloadStatus.Downloading
+
+     val doingTask =
+          downloaderViewModel.state is DownloadStatus.Loading || downloaderViewModel.state is DownloadStatus.Downloading
      val isError = downloaderViewModel.state is DownloadStatus.Error
      val clipboard = LocalClipboardManager.current
 
@@ -113,21 +114,21 @@ fun DownloadContent(
                          minLines = 1,
                          maxLines = 7,
                          colors = OutlinedTextFieldDefaults.colors( // TODO. Add actual good colors here.
-     focusedBorderColor = FermuxColors.fermuxSecondaryBorder,
-     unfocusedBorderColor = FermuxColors.fermuxGenericBorder,
-     focusedLabelColor = FermuxColors.fermuxPrimaryBorder,
-     unfocusedLabelColor = FermuxColors.fermuxTextColorBackground,
-     cursorColor = FermuxColors.fermuxGenericBorder,
-     focusedTextColor = Color.White,
-     unfocusedTextColor = Color.White,
-     errorTextColor = FermuxColors.fermuxLightErrorTextColor,
-     errorBorderColor = FermuxColors.fermuxLightErrorTextColor,
-     errorLabelColor = FermuxColors.fermuxLightErrorTextColor,
-     errorCursorColor = FermuxColors.fermuxLightErrorTextColor,
-     errorContainerColor = FermuxColors.fermuxErrorCardColor,
-     unfocusedContainerColor = FermuxColors.fermuxComponents,
-     focusedContainerColor = FermuxColors.inActiveTextField
-),
+                              focusedBorderColor = FermuxColors.fermuxSecondaryBorder,
+                              unfocusedBorderColor = FermuxColors.fermuxGenericBorder,
+                              focusedLabelColor = FermuxColors.fermuxPrimaryBorder,
+                              unfocusedLabelColor = FermuxColors.fermuxTextColorBackground,
+                              cursorColor = FermuxColors.fermuxGenericBorder,
+                              focusedTextColor = Color.White,
+                              unfocusedTextColor = Color.White,
+                              errorTextColor = FermuxColors.fermuxLightErrorTextColor,
+                              errorBorderColor = FermuxColors.fermuxLightErrorTextColor,
+                              errorLabelColor = FermuxColors.fermuxLightErrorTextColor,
+                              errorCursorColor = FermuxColors.fermuxLightErrorTextColor,
+                              errorContainerColor = FermuxColors.fermuxErrorCardColor,
+                              unfocusedContainerColor = FermuxColors.fermuxComponents,
+                              focusedContainerColor = FermuxColors.inActiveTextField
+                         ),
                          onValueChange = { txt -> downloaderViewModel.downloadUrl = txt },
                          placeholder = {
                               Text(
@@ -212,7 +213,9 @@ fun DownloaderScreen(navController: NavHostController) {
                }
 
                SideBar(
-                    onPageSelected = { currentPage = it }, // TODO. Make the sidebar naviagte to actual pages and not draw on the existing downloader tab
+                    onPageSelected = {
+                         currentPage = it
+                    }, // TODO. Make the sidebar naviagte to actual pages and not draw on the existing downloader tab
                )
           }
      }

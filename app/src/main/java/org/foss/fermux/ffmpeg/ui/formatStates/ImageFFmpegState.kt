@@ -78,9 +78,10 @@ fun ImageConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                }
           )
      )
-     Column(modifier = Modifier
-          .fillMaxWidth()
-          .verticalScroll(scrollState)
+     Column(
+          modifier = Modifier
+               .fillMaxWidth()
+               .verticalScroll(scrollState)
      ) {
           imageOptions.forEach { option ->
                FormatLists(

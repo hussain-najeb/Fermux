@@ -68,12 +68,11 @@ fun ErrorCopyButton(
           onClick = onClick
      ) {
           Icon(
-               imageVector = Icons.Default.ContentCopy ,
+               imageVector = Icons.Default.ContentCopy,
                tint = iconColor,
                contentDescription = "Copy Error",
           )
      }
-
 
 
 }

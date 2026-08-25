@@ -81,7 +81,7 @@ fun ErrorCard(
                CancelButton(
                     modifier = Modifier
                          .align(Alignment.BottomStart),
-                    onClick = {onCancel()}
+                    onClick = { onCancel() }
                )
           }
      }

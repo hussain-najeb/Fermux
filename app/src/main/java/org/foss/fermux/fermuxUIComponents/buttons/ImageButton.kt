@@ -97,11 +97,11 @@ fun ImageButton(
           interactionSource = interactionSource,
           onClick = onClick
      ) {
-         Icon(
-              painter = painterResource(id = image),
-              tint = iconColor,
-              contentDescription = contentDescription,
-              modifier = imageModifier.rotate(iconRotate)
-         )
+          Icon(
+               painter = painterResource(id = image),
+               tint = iconColor,
+               contentDescription = contentDescription,
+               modifier = imageModifier.rotate(iconRotate)
+          )
      }
 }

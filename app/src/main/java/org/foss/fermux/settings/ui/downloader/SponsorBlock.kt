@@ -8,13 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -92,58 +86,58 @@ fun SponsorBlockOptions(onDismissRequest: () -> Unit) {
                     ) { onDismissRequest() },
                contentAlignment = Alignment.Center
           ) {
-          Surface(
-               shape = MaterialTheme.shapes.large,
-               color = FermuxColors.fermuxComponents
-          ) {
-               Column(
-                    modifier = Modifier
-                         .padding(8.dp)
-                         .verticalScroll(rememberScrollState())
+               Surface(
+                    shape = MaterialTheme.shapes.large,
+                    color = FermuxColors.fermuxComponents
                ) {
+                    Column(
+                         modifier = Modifier
+                              .padding(8.dp)
+                              .verticalScroll(rememberScrollState())
+                    ) {
 
-                    Text(
-                         text = "Sponsor Categories",
-                         fontSize = 25.sp,
-                         color = FermuxColors.fermuxWhiteColor,
-                         style = MaterialTheme.typography.headlineMediumEmphasized,
-                         modifier = Modifier.padding(7.dp)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                         text = "Turn On/Off SponsorBlock add for Video Segments. Default is fine for most media",
-                         color = FermuxColors.fermuxOffWhiteTextColor,
-                         fontSize = 15.sp,
-                         style = MaterialTheme.typography.bodyMedium,
-                         modifier = Modifier.padding(10.dp)
-                    )
+                         Text(
+                              text = "Sponsor Categories",
+                              fontSize = 25.sp,
+                              color = FermuxColors.fermuxWhiteColor,
+                              style = MaterialTheme.typography.headlineMediumEmphasized,
+                              modifier = Modifier.padding(7.dp)
+                         )
+                         Spacer(modifier = Modifier.height(8.dp))
+                         Text(
+                              text = "Turn On/Off SponsorBlock add for Video Segments. Default is fine for most media",
+                              color = FermuxColors.fermuxOffWhiteTextColor,
+                              fontSize = 15.sp,
+                              style = MaterialTheme.typography.bodyMedium,
+                              modifier = Modifier.padding(10.dp)
+                         )
 
-                    sponsorBlockFlags.forEachIndexed { index, (flag, label) ->
-                         val isChecked = flag in sponsorBlockCategories
-                         SettingLists(
-                              title = label,
-                              description = sponsorDescriptions[index],
-                              leadingContent = {
-                                   Box(
-                                        modifier = Modifier
-                                             .clip(RoundedCornerShape(4.dp))
-                                             .padding(end = 10.dp)
-                                             .size(12.dp)
-                                             .background(sponsorBlockTintColors.getValue(flag))
-                                   )
-                              },
-                              onClick = {
-                                   val updated = if (isChecked) sponsorBlockCategories - flag
-                                   else sponsorBlockCategories + flag
-                                   settingsViewModel.setSponsorBlockCategories(updated)
-                              },
-                              content = {
-                                   SettingsSwitch(
-                                        checked = isChecked,
-                                        onCheckedChange = { checked ->
-                                             val updated = if (checked) sponsorBlockCategories + flag
-                                             else sponsorBlockCategories - flag
-                                             settingsViewModel.setSponsorBlockCategories(updated)
+                         sponsorBlockFlags.forEachIndexed { index, (flag, label) ->
+                              val isChecked = flag in sponsorBlockCategories
+                              SettingLists(
+                                   title = label,
+                                   description = sponsorDescriptions[index],
+                                   leadingContent = {
+                                        Box(
+                                             modifier = Modifier
+                                                  .clip(RoundedCornerShape(4.dp))
+                                                  .padding(end = 10.dp)
+                                                  .size(12.dp)
+                                                  .background(sponsorBlockTintColors.getValue(flag))
+                                        )
+                                   },
+                                   onClick = {
+                                        val updated = if (isChecked) sponsorBlockCategories - flag
+                                        else sponsorBlockCategories + flag
+                                        settingsViewModel.setSponsorBlockCategories(updated)
+                                   },
+                                   content = {
+                                        SettingsSwitch(
+                                             checked = isChecked,
+                                             onCheckedChange = { checked ->
+                                                  val updated = if (checked) sponsorBlockCategories + flag
+                                                  else sponsorBlockCategories - flag
+                                                  settingsViewModel.setSponsorBlockCategories(updated)
                                              }
                                         )
                                    },

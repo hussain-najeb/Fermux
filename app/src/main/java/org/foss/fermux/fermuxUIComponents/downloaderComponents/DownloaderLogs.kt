@@ -31,68 +31,69 @@ import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 @SuppressLint("ContextCastToActivity")
 @Composable
 fun DownloaderLogs(
-    navController: NavHostController
+     navController: NavHostController
 ) {
-    val downloaderViewModel: DownloaderViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
-    @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
-    val logScrollState = rememberScrollState()
+     val downloaderViewModel: DownloaderViewModel =
+          viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
+     @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
+     val logScrollState = rememberScrollState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(FermuxColors.fermuxBackground)
-    ) {
-        LargeTopBarScaffold(
-            title = "Logs",
-            onBack = { navController.popBackStack() }
-        ) { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Surface(
+     Column(
+          modifier = Modifier
+               .fillMaxSize()
+               .background(FermuxColors.fermuxBackground)
+     ) {
+          LargeTopBarScaffold(
+               title = "Logs",
+               onBack = { navController.popBackStack() }
+          ) { paddingValues ->
+               Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(400.dp),
-                    color = FermuxColors.fermuxComponents,
-                    shape = RoundedCornerShape(10.dp),
-                    border = BorderStroke(1.dp, FermuxColors.fermuxWhiteColor)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 10.dp, vertical = 12.dp)
+                         .padding(paddingValues)
+                         .fillMaxWidth()
+                         .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+               ) {
+                    Surface(
+                         modifier = Modifier
+                              .fillMaxWidth()
+                              .height(400.dp),
+                         color = FermuxColors.fermuxComponents,
+                         shape = RoundedCornerShape(10.dp),
+                         border = BorderStroke(1.dp, FermuxColors.fermuxWhiteColor)
                     ) {
-                        Text(
-                            text = downloaderViewModel.downloaderLogs,
-                            color = FermuxColors.fermuxWhiteColor,
-                            fontFamily = JetbrainsMono,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .verticalScroll(logScrollState)
-                                .padding(bottom = 40.dp)
-                        )
-                        LogCopy(
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .padding(8.dp)
-                                .size(50.dp),
-                            onClick = { clipboard.setText(AnnotatedString(downloaderViewModel.downloaderLogs)) }
-                        )
+                         Box(
+                              modifier = Modifier
+                                   .fillMaxSize()
+                                   .padding(horizontal = 10.dp, vertical = 12.dp)
+                         ) {
+                              Text(
+                                   text = downloaderViewModel.downloaderLogs,
+                                   color = FermuxColors.fermuxWhiteColor,
+                                   fontFamily = JetbrainsMono,
+                                   modifier = Modifier
+                                        .fillMaxSize()
+                                        .verticalScroll(logScrollState)
+                                        .padding(bottom = 40.dp)
+                              )
+                              LogCopy(
+                                   modifier = Modifier
+                                        .align(Alignment.BottomEnd)
+                                        .padding(8.dp)
+                                        .size(50.dp),
+                                   onClick = { clipboard.setText(AnnotatedString(downloaderViewModel.downloaderLogs)) }
+                              )
+                         }
                     }
-                }
-                Text(
-                	text = "Note*: This is the log page for the downloader output during download, it doesnt display errors",
-                	color = FermuxColors.fermuxBackgroundTextColor,
-                	fontSize = 16.sp,
-                	fontStyle = FontStyle.Normal,
-                	fontFamily = FontFamily.Default,
-                	modifier = Modifier.padding(7.dp)
-            	)
-            }
-        }
-    }
+                    Text(
+                         text = "Note*: This is the log page for the downloader output during download, it doesnt display errors",
+                         color = FermuxColors.fermuxBackgroundTextColor,
+                         fontSize = 16.sp,
+                         fontStyle = FontStyle.Normal,
+                         fontFamily = FontFamily.Default,
+                         modifier = Modifier.padding(7.dp)
+                    )
+               }
+          }
+     }
 }

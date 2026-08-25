@@ -32,159 +32,160 @@ import org.foss.fermux.ui.theme.JetbrainsMono
 
 @Composable
 fun FermuxTerminalScreen(
-    navigationController: NavHostController
+     navigationController: NavHostController
 ) {
-    val context = LocalContext.current
-    var userCommand by remember { mutableStateOf(TextFieldValue("")) }
-    var history by remember { mutableStateOf(listOf<String>()) }
-    var commandPlace by remember { mutableIntStateOf(-1) }
+     val context = LocalContext.current
+     var userCommand by remember { mutableStateOf(TextFieldValue("")) }
+     var history by remember { mutableStateOf(listOf<String>()) }
+     var commandPlace by remember { mutableIntStateOf(-1) }
 
-        Column(
-            Modifier
-                .fillMaxSize()
-                .systemBarsPadding()
-                .imePadding()
-                .background(Color(0xFF282C34))
-        ) {
+     Column(
+          Modifier
+               .fillMaxSize()
+               .systemBarsPadding()
+               .imePadding()
+               .background(Color(0xFF282C34))
+     ) {
 
 
-        LazyColumn(modifier = Modifier
-            .weight(1f)
-            ) {
-            items(TermuxOutput.lines) { line ->
-                when (line) {
-                    is TerminalLine.Output -> Text(
-                        text = line.outputText,
-                        color = Color.White,
-                        fontFamily = JetbrainsMono,
-                        modifier = Modifier.padding(horizontal = 10.dp)
-                    )
+          LazyColumn(
+               modifier = Modifier
+                    .weight(1f)
+          ) {
+               items(TermuxOutput.lines) { line ->
+                    when (line) {
+                         is TerminalLine.Output -> Text(
+                              text = line.outputText,
+                              color = Color.White,
+                              fontFamily = JetbrainsMono,
+                              modifier = Modifier.padding(horizontal = 10.dp)
+                         )
 
-                    is TerminalLine.Prompt -> Text(
-                        text = buildAnnotatedString {
-                            withStyle(SpanStyle(color = Color(0xFF5669BD))) { append("u0_a319") }
-                            withStyle(SpanStyle(color = Color(0xFFABB2BF))) { append("@") }
-                            withStyle(SpanStyle(color = Color(0xFF678E55))) { append("fermux") }
-                            withStyle(SpanStyle(color = Color(0xFFABB2BF))) { append(":~$ ") }
-                            withStyle(SpanStyle(color = Color(0xFF9EA55D))) { append(line.userPrompt) }
-                },
-                        fontFamily = JetbrainsMono,
-                        fontSize = 14.sp,
-                        modifier = Modifier.padding(horizontal = 10.dp)
+                         is TerminalLine.Prompt -> Text(
+                              text = buildAnnotatedString {
+                                   withStyle(SpanStyle(color = Color(0xFF5669BD))) { append("u0_a319") }
+                                   withStyle(SpanStyle(color = Color(0xFFABB2BF))) { append("@") }
+                                   withStyle(SpanStyle(color = Color(0xFF678E55))) { append("fermux") }
+                                   withStyle(SpanStyle(color = Color(0xFFABB2BF))) { append(":~$ ") }
+                                   withStyle(SpanStyle(color = Color(0xFF9EA55D))) { append(line.userPrompt) }
+                              },
+                              fontFamily = JetbrainsMono,
+                              fontSize = 14.sp,
+                              modifier = Modifier.padding(horizontal = 10.dp)
 
-                    )
-                }
-            }
-        }
+                         )
+                    }
+               }
+          }
 
-        Spacer(modifier = Modifier.height(1.dp))
+          Spacer(modifier = Modifier.height(1.dp))
 
-        BasicTextField(
-            value = userCommand,
-            onValueChange = { userCommand = it },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Send,
-                keyboardType = KeyboardType.Ascii,
-                capitalization = KeyboardCapitalization.None,
-                autoCorrect = false
-            ),
-            modifier = Modifier
+          BasicTextField(
+               value = userCommand,
+               onValueChange = { userCommand = it },
+               singleLine = true,
+               keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Send,
+                    keyboardType = KeyboardType.Ascii,
+                    capitalization = KeyboardCapitalization.None,
+                    autoCorrect = false
+               ),
+               modifier = Modifier
                     .fillMaxWidth()
-                .horizontalScroll(rememberScrollState())
-                .padding(horizontal = 12.dp, vertical = 8.dp),
-            keyboardActions = KeyboardActions(
-                onSend = {
-                    if (userCommand.text.isNotBlank()) {
-                        val cancelCommand = userCommand.text.trim()
-                        if (cancelCommand == "clear") {
-                            TermuxOutput.lines = listOf()
-                        } else {
-                            TermuxOutput.lines += TerminalLine.Prompt(cancelCommand)
-                            myTermuxCommands(context, cancelCommand)
-                        }
-                        history = history + cancelCommand
-                         commandPlace = -1
-                        userCommand = TextFieldValue("")
+                    .horizontalScroll(rememberScrollState())
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+               keyboardActions = KeyboardActions(
+                    onSend = {
+                         if (userCommand.text.isNotBlank()) {
+                              val cancelCommand = userCommand.text.trim()
+                              if (cancelCommand == "clear") {
+                                   TermuxOutput.lines = listOf()
+                              } else {
+                                   TermuxOutput.lines += TerminalLine.Prompt(cancelCommand)
+                                   myTermuxCommands(context, cancelCommand)
+                              }
+                              history = history + cancelCommand
+                              commandPlace = -1
+                              userCommand = TextFieldValue("")
+                         }
                     }
-                }
-            ),
-            textStyle = TextStyle(
-                fontFamily = JetbrainsMono,
-                color = Color(0xFF9EA55D),
-                fontSize = 14.sp
-            ),
-            cursorBrush = SolidColor(Color(0xFF678E55)),
-            decorationBox = { innerTextField ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = "u0_a319",
-                        color = Color(0xFF5669BD),
-                        fontFamily = JetbrainsMono,
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = "@",
-                        color = Color(0xFFABB2BF),
-                        fontFamily = JetbrainsMono,
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = "fermux",
-                        color = Color(0xFF678E55),
-                        fontFamily = JetbrainsMono,
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = ":",
-                        color = Color(0xFFABB2BF),
-                        fontFamily = JetbrainsMono,
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = "~",
-                        color = Color(0xFF678E55),
-                        fontFamily = JetbrainsMono,
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = "$ ",
-                        color = Color(0xFFABB2BF),
-                        fontFamily = JetbrainsMono,
-                        fontSize = 14.sp
-                    )
+               ),
+               textStyle = TextStyle(
+                    fontFamily = JetbrainsMono,
+                    color = Color(0xFF9EA55D),
+                    fontSize = 14.sp
+               ),
+               cursorBrush = SolidColor(Color(0xFF678E55)),
+               decorationBox = { innerTextField ->
+                    Row(
+                         verticalAlignment = Alignment.CenterVertically,
+                         modifier = Modifier.fillMaxWidth()
+                    ) {
+                         Text(
+                              text = "u0_a319",
+                              color = Color(0xFF5669BD),
+                              fontFamily = JetbrainsMono,
+                              fontSize = 14.sp
+                         )
+                         Text(
+                              text = "@",
+                              color = Color(0xFFABB2BF),
+                              fontFamily = JetbrainsMono,
+                              fontSize = 14.sp
+                         )
+                         Text(
+                              text = "fermux",
+                              color = Color(0xFF678E55),
+                              fontFamily = JetbrainsMono,
+                              fontSize = 14.sp
+                         )
+                         Text(
+                              text = ":",
+                              color = Color(0xFFABB2BF),
+                              fontFamily = JetbrainsMono,
+                              fontSize = 14.sp
+                         )
+                         Text(
+                              text = "~",
+                              color = Color(0xFF678E55),
+                              fontFamily = JetbrainsMono,
+                              fontSize = 14.sp
+                         )
+                         Text(
+                              text = "$ ",
+                              color = Color(0xFFABB2BF),
+                              fontFamily = JetbrainsMono,
+                              fontSize = 14.sp
+                         )
 
-                    innerTextField()
-                }
+                         innerTextField()
+                    }
 
-            })
+               })
 
-        Spacer(modifier = Modifier.height(16.dp))
+          Spacer(modifier = Modifier.height(16.dp))
 
-            ArrowKeyMovement(
-                userCommand = userCommand,
-                onCommandChange = { userCommand = it },
-                onHistoryUp = {
+          ArrowKeyMovement(
+               userCommand = userCommand,
+               onCommandChange = { userCommand = it },
+               onHistoryUp = {
                     if (history.isNotEmpty()) {
-                        commandPlace = (commandPlace + 1).coerceAtMost(history.size - 1)
-                        val command = history[history.size - 1 - commandPlace]
-                        userCommand = TextFieldValue(command, TextRange(command.length))
+                         commandPlace = (commandPlace + 1).coerceAtMost(history.size - 1)
+                         val command = history[history.size - 1 - commandPlace]
+                         userCommand = TextFieldValue(command, TextRange(command.length))
                     }
-                },
-                onHistoryDown = {
+               },
+               onHistoryDown = {
                     commandPlace = (commandPlace - 1).coerceAtLeast(-1)
                     if (commandPlace == -1) {
-                        userCommand = TextFieldValue("")
+                         userCommand = TextFieldValue("")
                     } else {
-                        val command = history[history.size - 1 - commandPlace]
-                        userCommand = TextFieldValue(command, TextRange(command.length))
+                         val command = history[history.size - 1 - commandPlace]
+                         userCommand = TextFieldValue(command, TextRange(command.length))
                     }
-                }
-            )
-        }
-    }
+               }
+          )
+     }
+}
 
 

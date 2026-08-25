@@ -37,9 +37,10 @@ fun IdleConversionState(onPick: (MediaKind) -> Unit) {
                onClick = { onPick(MediaKind.IMAGE) }
           )
      )
-     Column(modifier = Modifier
-          .fillMaxWidth()
-          .verticalScroll(scrollState)
+     Column(
+          modifier = Modifier
+               .fillMaxWidth()
+               .verticalScroll(scrollState)
      ) {
           formatOptions.forEach { option ->
                FormatLists(

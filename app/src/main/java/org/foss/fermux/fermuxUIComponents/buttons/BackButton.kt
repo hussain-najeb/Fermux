@@ -86,11 +86,11 @@ fun BackButton(
           contentPadding = contentPadding,
           interactionSource = interactionSource,
           onClick = {
-                    if (isClickable) {
-                         isClickable = false
-                         onClick()
-                    }
+               if (isClickable) {
+                    isClickable = false
+                    onClick()
                }
+          }
      ) {
           Icon(
                painter = painterResource(id = R.drawable.back_arrow),

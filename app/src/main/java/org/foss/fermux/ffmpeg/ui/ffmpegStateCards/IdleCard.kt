@@ -1,4 +1,3 @@
-
 package org.foss.fermux.ffmpeg.ui.ffmpegStateCards
 
 import android.annotation.SuppressLint
@@ -42,7 +41,7 @@ fun IdleCard(
                if (ffmpegViewModel.inputKind == null) {
                     ffmpegViewModel.typeErrorClarification(context)
                } else {
-                    ffmpegViewModel.state = FFmpegStatus.MidConversion(inputUri = uri )
+                    ffmpegViewModel.state = FFmpegStatus.MidConversion(inputUri = uri)
                }
           }
      }
@@ -53,34 +52,34 @@ fun IdleCard(
      ) {
           FFmpegCard(
                modifier = Modifier.padding(10.dp)
-               ) {
-                    if (ffmpegViewModel.inputUri == null) {
-                         Column(
+          ) {
+               if (ffmpegViewModel.inputUri == null) {
+                    Column(
+                         modifier = Modifier
+                              .aspectRatio(16f / 9f),
+                         verticalArrangement = Arrangement.Center,
+                         horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                         Text(
+                              text = "Upload A File",
+                              fontSize = 23.sp,
+                              fontFamily = FontFamily.Default,
+                              fontStyle = FontStyle.Normal,
+                              fontWeight = W500,
+                              color = FermuxColors.fermuxWhiteColor,
+                         )
+
+                         Spacer(modifier = Modifier.height(15.dp))
+
+                         ImageButton(
+                              image = R.drawable.upload,
                               modifier = Modifier
-                                   .aspectRatio(16f/9f),
-                              verticalArrangement = Arrangement.Center,
-                              horizontalAlignment = Alignment.CenterHorizontally
-                         ) {
-                              Text(
-                                   text = "Upload A File",
-                                   fontSize = 23.sp,
-                                   fontFamily = FontFamily.Default,
-                                   fontStyle = FontStyle.Normal,
-                                   fontWeight = W500 ,
-                                   color = FermuxColors.fermuxWhiteColor,
-                              )
-
-                              Spacer(modifier = Modifier.height(15.dp))
-
-                              ImageButton(
-                                   image = R.drawable.upload,
-                                   modifier = Modifier
-                                        .size(100.dp)
-                                        .padding(8.dp),
-                                   onClick = { fileLauncher.launch("*/*") },
-                                   contentPadding = PaddingValues(10.dp)
-                              )
-                         }
+                                   .size(100.dp)
+                                   .padding(8.dp),
+                              onClick = { fileLauncher.launch("*/*") },
+                              contentPadding = PaddingValues(10.dp)
+                         )
+                    }
                }
           }
      }

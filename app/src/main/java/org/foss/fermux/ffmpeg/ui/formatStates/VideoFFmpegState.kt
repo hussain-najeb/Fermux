@@ -128,9 +128,10 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
           }
      }
 
-     Column(modifier = Modifier
-          .fillMaxWidth()
-          .verticalScroll(scrollState)
+     Column(
+          modifier = Modifier
+               .fillMaxWidth()
+               .verticalScroll(scrollState)
      ) {
           videoOption.forEach { option ->
                FormatLists(

@@ -23,14 +23,14 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun DownloaderFormatList(
-    title: String,
-    description: String,
-    image: Int? = null,
-    onClick: () -> Unit,
-    content: @Composable (() -> Unit)? = null,
-    leadingContent: @Composable (() -> Unit)? = null,
-    ) {
-val interactionSource = remember { MutableInteractionSource() }
+     title: String,
+     description: String,
+     image: Int? = null,
+     onClick: () -> Unit,
+     content: @Composable (() -> Unit)? = null,
+     leadingContent: @Composable (() -> Unit)? = null,
+) {
+     val interactionSource = remember { MutableInteractionSource() }
      val isPressed by interactionSource.collectIsPressedAsState()
 
 
@@ -46,7 +46,8 @@ val interactionSource = remember { MutableInteractionSource() }
           targetValue = if (isPressed) FermuxColors.fermuxActiveIcon else FermuxColors.fermuxGenericBorder
      )
 
-     Column(modifier = Modifier.fillMaxSize()
+     Column(
+          modifier = Modifier.fillMaxSize()
      ) {
           Surface(
                modifier = Modifier.padding(3.dp),
@@ -86,14 +87,14 @@ val interactionSource = remember { MutableInteractionSource() }
                          )
                          Spacer(modifier = Modifier.height(2.dp))
                          Text(
-                            text = description,
-                            maxLines = 2,
-                            style = MaterialTheme.typography.bodyMedium,
-                            overflow = TextOverflow.Ellipsis,
-                    )
-                }
-                content?.invoke()
-            }
-        }
-    }
+                              text = description,
+                              maxLines = 2,
+                              style = MaterialTheme.typography.bodyMedium,
+                              overflow = TextOverflow.Ellipsis,
+                         )
+                    }
+                    content?.invoke()
+               }
+          }
+     }
 }

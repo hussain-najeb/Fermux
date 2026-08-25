@@ -53,7 +53,10 @@ fun LoadingCard(
                     }
                }
                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                    Column(
+                         horizontalAlignment = Alignment.CenterHorizontally,
+                         verticalArrangement = Arrangement.Center
+                    ) {
                          Text(
                               text = loadingMessage,
                               fontFamily = FontFamily.Default,

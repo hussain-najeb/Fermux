@@ -28,28 +28,28 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun LogCopy(
-    modifier: Modifier = Modifier,
-    color: FermuxColor = FermuxColors,
-    contentDescription: String? = null,
-    border: BorderStroke? = BorderStroke(1.dp, color.fermuxTertiaryBorder),
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-    onClick: () -> Unit
+     modifier: Modifier = Modifier,
+     color: FermuxColor = FermuxColors,
+     contentDescription: String? = null,
+     border: BorderStroke? = BorderStroke(1.dp, color.fermuxTertiaryBorder),
+     contentPadding: PaddingValues = PaddingValues(0.dp),
+     onClick: () -> Unit
 ) {
 
-val interactionSource = remember { MutableInteractionSource() }
-val isPressed by interactionSource.collectIsPressedAsState()
+     val interactionSource = remember { MutableInteractionSource() }
+     val isPressed by interactionSource.collectIsPressedAsState()
 
 
-val containerColor by animateColorAsState(
-      targetValue = when {
-        isPressed -> color.fermuxActiveButton
-        else -> color.fermuxInActiveBackButton
-      },
-        animationSpec = tween(200),
-        label = "Fermux Button Colors",
+     val containerColor by animateColorAsState(
+          targetValue = when {
+               isPressed -> color.fermuxActiveButton
+               else -> color.fermuxInActiveBackButton
+          },
+          animationSpec = tween(200),
+          label = "Fermux Button Colors",
      )
 
- val contentColor by animateColorAsState(
+     val contentColor by animateColorAsState(
           targetValue = when {
                isPressed -> color.fermuxActiveTextColor
                else -> color.fermuxInActiveTextColor
@@ -73,7 +73,7 @@ val containerColor by animateColorAsState(
           label = "Fermux Button Animation"
      )
 
-OutlinedButton(
+     OutlinedButton(
           modifier = modifier.graphicsLayer {
                scaleX = buttonAnimation
                scaleY = buttonAnimation

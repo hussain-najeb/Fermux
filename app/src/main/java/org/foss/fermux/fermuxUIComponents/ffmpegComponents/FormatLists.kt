@@ -46,8 +46,9 @@ fun FormatLists(
           targetValue = if (isPressed) FermuxColors.fermuxActiveIcon else FermuxColors.fermuxGenericBorder
      )
 
-     Column(modifier = Modifier
-          .fillMaxWidth()
+     Column(
+          modifier = Modifier
+               .fillMaxWidth()
      ) {
           Surface(
                modifier = Modifier.padding(3.dp),

@@ -16,7 +16,7 @@ import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 @Composable
 fun QualitySheet(downloaderViewModel: DownloaderViewModel) {
 
-    Card(
+     Card(
           modifier = Modifier
                .padding(16.dp)
                .wrapContentSize(),
@@ -25,7 +25,7 @@ fun QualitySheet(downloaderViewModel: DownloaderViewModel) {
                containerColor = FermuxColors.fermuxSurface
           ),
           border = BorderStroke(1.dp, FermuxColors.fermuxWhiteColor)
-    ) {
-            QualityState(downloaderViewModel) 
-    }
+     ) {
+          QualityState(downloaderViewModel)
+     }
 }

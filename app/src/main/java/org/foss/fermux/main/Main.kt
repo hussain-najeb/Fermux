@@ -12,24 +12,24 @@ import com.yausername.youtubedl_android.YoutubeDL
 import org.foss.fermux.ui.theme.FermuxTheme
 
 class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+     override fun onCreate(savedInstanceState: Bundle?) {
+          super.onCreate(savedInstanceState)
 
-        getInstance().init(this)
-        YoutubeDL.getInstance().init(this)
-        Aria2c.getInstance().init(this)
+          getInstance().init(this)
+          YoutubeDL.getInstance().init(this)
+          Aria2c.getInstance().init(this)
 
-        setContent {
-            FermuxTheme {
-                setSingletonImageLoaderFactory { context ->
-                    ImageLoader.Builder(context)
-                        .components {
-                            add(VideoFrameDecoder.Factory())
-                        }
-                        .build()
-                }
-                FermuxAppMainScreen()
-            }
-        }
-    }
+          setContent {
+               FermuxTheme {
+                    setSingletonImageLoaderFactory { context ->
+                         ImageLoader.Builder(context)
+                              .components {
+                                   add(VideoFrameDecoder.Factory())
+                              }
+                              .build()
+                    }
+                    FermuxAppMainScreen()
+               }
+          }
+     }
 }

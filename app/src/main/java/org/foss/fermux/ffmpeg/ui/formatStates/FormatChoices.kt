@@ -15,7 +15,6 @@ data class FormatListItem(
 )
 
 
-
 @Composable
 fun FormatList(ffmpegViewModel: FFmpegViewModel) {
 
@@ -42,14 +41,17 @@ fun FormatList(ffmpegViewModel: FFmpegViewModel) {
                MediaKind.IDLE -> IdleConversionState(
                     onPick = { pickedKind = it }
                )
+
                MediaKind.AUDIO -> AudioConversionState(
                     ffmpegViewModel,
                     onBack = { pickedKind = MediaKind.IDLE }
                )
+
                MediaKind.VIDEO -> VideoConversionState(
                     ffmpegViewModel,
                     onBack = { pickedKind = MediaKind.IDLE }
                )
+
                MediaKind.IMAGE -> ImageConversionState(
                     ffmpegViewModel,
                     onBack = { pickedKind = MediaKind.IDLE }

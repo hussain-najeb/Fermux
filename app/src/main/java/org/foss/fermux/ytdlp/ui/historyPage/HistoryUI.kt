@@ -39,131 +39,137 @@ import java.util.*
 @Composable
 fun HistoryCards(entry: JSONHistoryCards) {
 
-    var expanded by remember { mutableStateOf(false) }
-    @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
+     var expanded by remember { mutableStateOf(false) }
+     @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
 
-        Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-            AppCard(
-                modifier = Modifier
+     Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+          AppCard(
+               modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
-                shape = RoundedCornerShape(8.dp),
-            ) {
-                Box(contentAlignment = Alignment.TopStart) {
+               shape = RoundedCornerShape(8.dp),
+          ) {
+               Box(contentAlignment = Alignment.TopStart) {
                     AsyncImage(
-                        model = entry.thumbnail,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .aspectRatio(16f / 9f)
-                            .clip(RoundedCornerShape(8.dp))
+                         model = entry.thumbnail,
+                         contentDescription = null,
+                         contentScale = ContentScale.Crop,
+                         modifier = Modifier
+                              .aspectRatio(16f / 9f)
+                              .clip(RoundedCornerShape(8.dp))
                     )
 
 
                     this@Column.AnimatedVisibility(
-                        visible = true,
-                        enter = slideInHorizontally(
-                            animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
-                        ),
-                        exit = slideOutHorizontally(
-                            animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
-                        ),
-                        modifier = Modifier.align(Alignment.BottomStart)
+                         visible = true,
+                         enter = slideInHorizontally(
+                              animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                         ),
+                         exit = slideOutHorizontally(
+                              animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                         ),
+                         modifier = Modifier.align(Alignment.BottomStart)
                     ) {
-                        TextWithIconButton(
-                            modifier = Modifier
-                                .defaultMinSize(minWidth = 70.dp)
-                                // Note: inside the AnimatedVisibility scope, alignment is handled by outer Box/Column layout
-                                .padding(6.dp),
-                            contentPadding = PaddingValues(8.dp),
-                            iconRotation = if (expanded) 180f else 0f,
-                            icon = Icons.Default.ExpandMore,
-                            text = if (expanded) "Hide details" else "Show details",
-                            onClick = { expanded = !expanded },
-                        )
+                         TextWithIconButton(
+                              modifier = Modifier
+                                   .defaultMinSize(minWidth = 70.dp)
+                                   // Note: inside the AnimatedVisibility scope, alignment is handled by outer Box/Column layout
+                                   .padding(6.dp),
+                              contentPadding = PaddingValues(8.dp),
+                              iconRotation = if (expanded) 180f else 0f,
+                              icon = Icons.Default.ExpandMore,
+                              text = if (expanded) "Hide details" else "Show details",
+                              onClick = { expanded = !expanded },
+                         )
                     }
 
                     AppIconButton(
-                        icon = Icons.Default.ContentCopy,
-                        modifier = Modifier.size(60.dp).padding(6.dp).align(Alignment.BottomEnd),
-                        onClick = { clipboard.setText(AnnotatedString(entry.url)) }
+                         icon = Icons.Default.ContentCopy,
+                         modifier = Modifier.size(60.dp).padding(6.dp).align(Alignment.BottomEnd),
+                         onClick = { clipboard.setText(AnnotatedString(entry.url)) }
                     )
 
-                }
+               }
 
-                AppSurface(
+               AppSurface(
                     expanded = expanded,
                     padding = PaddingValues(8.dp),
                     modifier = Modifier.fillMaxSize()
-                ) {
+               ) {
                     Row {
-                        Text(text = "Title: ${entry.title}",
-                            fontFamily = FontFamily.Default,
-                            fontSize = 17.sp,
-                            color = Color(0xFF48AF79),
-                            modifier = Modifier
-                                .padding(3.dp)
-                        )
+                         Text(
+                              text = "Title: ${entry.title}",
+                              fontFamily = FontFamily.Default,
+                              fontSize = 17.sp,
+                              color = Color(0xFF48AF79),
+                              modifier = Modifier
+                                   .padding(3.dp)
+                         )
                     }
 
                     Spacer(modifier = Modifier.padding(4.dp))
                     HorizontalDivider(
-                        thickness = 1.0.dp,
-                        color = FermuxColors.fermuxComponents,
-                        modifier = Modifier.padding(2.dp)
+                         thickness = 1.0.dp,
+                         color = FermuxColors.fermuxComponents,
+                         modifier = Modifier.padding(2.dp)
                     )
 
                     Row {
-                        Text(text = "Duration: ${videoTime(entry.videoDuration.toInt())}",
-                            fontFamily = FontFamily.Default,
-                            fontSize = 17.sp,
-                            color = Color(0xFF546CE8),
-                            modifier = Modifier
-                                .padding(3.dp)
-                        )
+                         Text(
+                              text = "Duration: ${videoTime(entry.videoDuration.toInt())}",
+                              fontFamily = FontFamily.Default,
+                              fontSize = 17.sp,
+                              color = Color(0xFF546CE8),
+                              modifier = Modifier
+                                   .padding(3.dp)
+                         )
                     }
 
                     Spacer(modifier = Modifier.padding(4.dp))
                     HorizontalDivider(
-                        thickness = 1.0.dp,
-                        color = FermuxColors.fermuxComponents,
-                        modifier = Modifier.padding(2.dp)
+                         thickness = 1.0.dp,
+                         color = FermuxColors.fermuxComponents,
+                         modifier = Modifier.padding(2.dp)
                     )
 
                     val formattedDate = remember(entry.downloadTime) {
-                        SimpleDateFormat("yyyy-MM-dd HH:mm",
-                            Locale.getDefault()).format(Date(entry.downloadTime))
+                         SimpleDateFormat(
+                              "yyyy-MM-dd HH:mm",
+                              Locale.getDefault()
+                         ).format(Date(entry.downloadTime))
                     }
 
                     Row {
-                        Text(text = "Date: $formattedDate",
-                            fontFamily = FontFamily.Default,
-                            fontSize = 17.sp,
-                            color = Color(0xFFC96726),
-                            modifier = Modifier
-                                .padding(3.dp)
-                        )
+                         Text(
+                              text = "Date: $formattedDate",
+                              fontFamily = FontFamily.Default,
+                              fontSize = 17.sp,
+                              color = Color(0xFFC96726),
+                              modifier = Modifier
+                                   .padding(3.dp)
+                         )
                     }
 
                     Spacer(modifier = Modifier.padding(4.dp))
                     HorizontalDivider(
-                        thickness = 1.0.dp,
-                        color = FermuxColors.fermuxComponents,
-                        modifier = Modifier.padding(2.dp)
+                         thickness = 1.0.dp,
+                         color = FermuxColors.fermuxComponents,
+                         modifier = Modifier.padding(2.dp)
                     )
 
                     entry.uploader?.let {
-                        Row {
-                            Text(text = "Uploader: ${entry.uploader}",
-                                fontFamily = FontFamily.Default,
-                                fontSize = 17.sp,
-                                color = Color(0xFFF34545),
-                                modifier = Modifier
-                                    .padding(3.dp)
-                            )
-                        }
+                         Row {
+                              Text(
+                                   text = "Uploader: ${entry.uploader}",
+                                   fontFamily = FontFamily.Default,
+                                   fontSize = 17.sp,
+                                   color = Color(0xFFF34545),
+                                   modifier = Modifier
+                                        .padding(3.dp)
+                              )
+                         }
                     }
-                }
-            }
-        }
-    }
+               }
+          }
+     }
+}

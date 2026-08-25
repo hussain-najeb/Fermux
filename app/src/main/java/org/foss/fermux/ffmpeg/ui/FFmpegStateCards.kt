@@ -2,7 +2,12 @@
 
 package org.foss.fermux.ffmpeg.ui
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
@@ -16,53 +21,57 @@ import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.MidConversionProcess
 
 
 @Composable
-fun FFmepgState (
-    state: FFmpegStatus,
-    ffmpegViewModel: FFmpegViewModel,
-    navController: NavController
+fun FFmepgState(
+     state: FFmpegStatus,
+     ffmpegViewModel: FFmpegViewModel,
+     navController: NavController
 ) {
 
-    val spatialSpec = MaterialTheme.motionScheme
-    val context = LocalContext.current
+     val spatialSpec = MaterialTheme.motionScheme
+     val context = LocalContext.current
 
-    AnimatedContent(
-        targetState = state,
-        transitionSpec = {
-            (slideInVertically(
-                animationSpec = spatialSpec.slowSpatialSpec(),
-                initialOffsetY = { -it }
-            ) + fadeIn(initialAlpha = 0.1f))
-                .togetherWith(
-                    exit = slideOutVertically(
-                        animationSpec = spatialSpec.slowSpatialSpec(),
-                        targetOffsetY = { -it }
-                    ) + fadeOut(targetAlpha = 0.1f)
-                )
-        },
-        label = "ffmpegCardTransition",
-        contentKey = { it::class }
-    ) { targetState ->
-        when (targetState) {
-            is FFmpegStatus.Idle -> {
-                IdleCard()
-            }
+     AnimatedContent(
+          targetState = state,
+          transitionSpec = {
+               (slideInVertically(
+                    animationSpec = spatialSpec.slowSpatialSpec(),
+                    initialOffsetY = { -it }
+               ) + fadeIn(initialAlpha = 0.1f))
+                    .togetherWith(
+                         exit = slideOutVertically(
+                              animationSpec = spatialSpec.slowSpatialSpec(),
+                              targetOffsetY = { -it }
+                         ) + fadeOut(targetAlpha = 0.1f)
+                    )
+          },
+          label = "ffmpegCardTransition",
+          contentKey = { it::class }
+     ) { targetState ->
+          when (targetState) {
+               is FFmpegStatus.Idle -> {
+                    IdleCard()
+               }
 
-            is FFmpegStatus.MidConversion -> {
-                MidConversionProcess()
-            }
+               is FFmpegStatus.MidConversion -> {
+                    MidConversionProcess()
+               }
 
-            is FFmpegStatus.Converting -> {
-                ConversionCard(targetState.progress, targetState.inputUri, navController = navController)
-            }
+               is FFmpegStatus.Converting -> {
+                    ConversionCard(targetState.progress, targetState.inputUri, navController = navController)
+               }
 
-            is FFmpegStatus.Loaded -> {
-                ConversionCard(progress = 100f, targetState.inputUri, navController = navController)
-            }
+               is FFmpegStatus.Loaded -> {
+                    ConversionCard(progress = 100f, targetState.inputUri, navController = navController)
+               }
 
-            is FFmpegStatus.Error -> {
-                FFmpegErrorMassage(
-                    errorMessage = targetState.flavourMessage, rawError = targetState.rawError, onCancel = { ffmpegViewModel.cancelButton(context) }, navController = navController)
-            }
-        }
-    }
+               is FFmpegStatus.Error -> {
+                    FFmpegErrorMassage(
+                         errorMessage = targetState.flavourMessage,
+                         rawError = targetState.rawError,
+                         onCancel = { ffmpegViewModel.cancelButton(context) },
+                         navController = navController
+                    )
+               }
+          }
+     }
 }

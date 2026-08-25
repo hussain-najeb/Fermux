@@ -2,31 +2,17 @@ package org.foss.fermux.settings.ui.downloader
 
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -34,10 +20,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.buttons.AppIconButton
 import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
-import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.RequestTimeSlider
+import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingLists
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
@@ -52,7 +37,9 @@ private enum class UpdateState {
 @Composable
 fun SimpleDownloaderPage(
      navController: NavHostController,
-     @SuppressLint("ContextCastToActivity") settingsViewModel: DownloaderSettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
+     @SuppressLint("ContextCastToActivity") settingsViewModel: DownloaderSettingsViewModel = viewModel(
+          viewModelStoreOwner = LocalContext.current as ComponentActivity
+     )
 ) {
 
      /**
@@ -80,7 +67,6 @@ fun SimpleDownloaderPage(
      val thumbnail by settingsViewModel.embedThumbnail.collectAsStateWithLifecycle()
      val notificationState by settingsViewModel.notificationState.collectAsStateWithLifecycle() // TODO. Add this at some point.
      val playlist by settingsViewModel.playlistState.collectAsStateWithLifecycle()
-
 
 
      val infiniteTransition =
@@ -154,10 +140,9 @@ fun SimpleDownloaderPage(
                     SettingsSwitch(
                          checked = playlist,
                          onCheckedChange = { settingsViewModel.setPlaylistState(it) }
-                         )
-                    }
-               )
-          ,
+                    )
+               }
+          ),
           SettingListInfo(
                title = if (ytdlpDetails) "Shown Logs" else "Hidden Logs",
                description = if (ytdlpDetails) "Shown the downloader Logs" else "Hidden the downloader Logs",

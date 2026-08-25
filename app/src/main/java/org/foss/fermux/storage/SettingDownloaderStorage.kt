@@ -33,92 +33,106 @@ val JSON_VIDEO_HISTORY = stringPreferencesKey("json_video")
 @Suppress("PropertyName")
 class DownloaderSettingsTab(private val context: Context) {
 
-    val downloadPath:      Flow<String> = context.dataStore.data.map { preferences -> preferences[DOWNLOAD_PATH] ?: "" }
-    val notificationState: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[DOWNLOAD_PROGRESS_NOTIFICATION] ?: true }
-    val sleepRequest: Flow<Int> = context.dataStore.data.map { preferences -> preferences[SLEEP_REQUEST_KEY] ?: 0}
-    val embedThumbnail: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[EMBEDTHUMBNAIL] ?: true }
-    val aria2c: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[ARIA2C_KEY] ?: true }
-    val aria2cHLSWithDASHCase: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[ARIA2C_EDGE_CASE] ?: false }
-    val audioHistory: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[SHOW_YTDLP_AUDIO_HISTORY] ?: true }
-    val videoHistory: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[SHOW_YTDLP_VIDEO_HISTORY] ?: true }
-    val ytdlpDetails: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[DOWNLOADING_DETAILS] ?: true }
-    val sponsorBlock: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] ?: false }
-    val playlistStatus: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[PLAYLIST_STATUS] ?: false}
-    val sponsorBlockCategories: Flow<Set<String>> =  context.dataStore.data.map { preferences -> preferences[SPONSOR_BLOCK_CATEGORIES] ?: DEFAULT_SPONSOR_BLOCK_CATEGORIES }
-    val JSONAudioCard: Flow<List<JSONHistoryCards>> = context.dataStore.data.map { preferences -> val json =
-        preferences[JSON_AUDIO_HISTORY] ?: "[]"
-        Json.decodeFromString<List<JSONHistoryCards>>(json)}
+     val downloadPath: Flow<String> = context.dataStore.data.map { preferences -> preferences[DOWNLOAD_PATH] ?: "" }
+     val notificationState: Flow<Boolean> =
+          context.dataStore.data.map { preferences -> preferences[DOWNLOAD_PROGRESS_NOTIFICATION] ?: true }
+     val sleepRequest: Flow<Int> = context.dataStore.data.map { preferences -> preferences[SLEEP_REQUEST_KEY] ?: 0 }
+     val embedThumbnail: Flow<Boolean> =
+          context.dataStore.data.map { preferences -> preferences[EMBEDTHUMBNAIL] ?: true }
+     val aria2c: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[ARIA2C_KEY] ?: true }
+     val aria2cHLSWithDASHCase: Flow<Boolean> =
+          context.dataStore.data.map { preferences -> preferences[ARIA2C_EDGE_CASE] ?: false }
+     val audioHistory: Flow<Boolean> =
+          context.dataStore.data.map { preferences -> preferences[SHOW_YTDLP_AUDIO_HISTORY] ?: true }
+     val videoHistory: Flow<Boolean> =
+          context.dataStore.data.map { preferences -> preferences[SHOW_YTDLP_VIDEO_HISTORY] ?: true }
+     val ytdlpDetails: Flow<Boolean> =
+          context.dataStore.data.map { preferences -> preferences[DOWNLOADING_DETAILS] ?: true }
+     val sponsorBlock: Flow<Boolean> =
+          context.dataStore.data.map { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] ?: false }
+     val playlistStatus: Flow<Boolean> =
+          context.dataStore.data.map { preferences -> preferences[PLAYLIST_STATUS] ?: false }
+     val sponsorBlockCategories: Flow<Set<String>> = context.dataStore.data.map { preferences ->
+          preferences[SPONSOR_BLOCK_CATEGORIES] ?: DEFAULT_SPONSOR_BLOCK_CATEGORIES
+     }
+     val JSONAudioCard: Flow<List<JSONHistoryCards>> = context.dataStore.data.map { preferences ->
+          val json =
+               preferences[JSON_AUDIO_HISTORY] ?: "[]"
+          Json.decodeFromString<List<JSONHistoryCards>>(json)
+     }
 
-    val JSONVideoCard: Flow<List<JSONHistoryCards>> = context.dataStore.data.map { preferences -> val json =
-        preferences[JSON_VIDEO_HISTORY] ?: "[]"
-        Json.decodeFromString<List<JSONHistoryCards>>(json)}
+     val JSONVideoCard: Flow<List<JSONHistoryCards>> = context.dataStore.data.map { preferences ->
+          val json =
+               preferences[JSON_VIDEO_HISTORY] ?: "[]"
+          Json.decodeFromString<List<JSONHistoryCards>>(json)
+     }
 
-    suspend fun setDownloadPath (value: String) {
-        context.dataStore.edit { preferences -> preferences[DOWNLOAD_PATH] = value}
-    }
+     suspend fun setDownloadPath(value: String) {
+          context.dataStore.edit { preferences -> preferences[DOWNLOAD_PATH] = value }
+     }
 
-    suspend fun setNotificationState (value: Boolean) {
-        context.dataStore.edit { preferences -> preferences[DOWNLOAD_PROGRESS_NOTIFICATION] = value }
-    }
+     suspend fun setNotificationState(value: Boolean) {
+          context.dataStore.edit { preferences -> preferences[DOWNLOAD_PROGRESS_NOTIFICATION] = value }
+     }
 
-    @SuppressLint("SuspiciousIndentation")
-    suspend fun setSleepRequest(value: Int) {
-         context.dataStore.edit { preferences -> preferences[SLEEP_REQUEST_KEY] = value }
-    }
+     @SuppressLint("SuspiciousIndentation")
+     suspend fun setSleepRequest(value: Int) {
+          context.dataStore.edit { preferences -> preferences[SLEEP_REQUEST_KEY] = value }
+     }
 
-    suspend fun setAria2cImpl(value: Boolean) {
-        context.dataStore.edit { preferences -> preferences[ARIA2C_KEY] = value }
-    }
+     suspend fun setAria2cImpl(value: Boolean) {
+          context.dataStore.edit { preferences -> preferences[ARIA2C_KEY] = value }
+     }
 
-    suspend fun setEmbedThumbnail(value: Boolean) {
-        context.dataStore.edit { preferences -> preferences[EMBEDTHUMBNAIL] = value }
-    }
+     suspend fun setEmbedThumbnail(value: Boolean) {
+          context.dataStore.edit { preferences -> preferences[EMBEDTHUMBNAIL] = value }
+     }
 
-    suspend fun setAria2cEdgeCase(value: Boolean) {
-        context.dataStore.edit { preferences -> preferences[ARIA2C_EDGE_CASE] = value }
-    }
+     suspend fun setAria2cEdgeCase(value: Boolean) {
+          context.dataStore.edit { preferences -> preferences[ARIA2C_EDGE_CASE] = value }
+     }
 
-    suspend fun setAudioHistory(value: Boolean) {
-        context.dataStore.edit { preferences -> preferences[SHOW_YTDLP_AUDIO_HISTORY] = value }
-    }
+     suspend fun setAudioHistory(value: Boolean) {
+          context.dataStore.edit { preferences -> preferences[SHOW_YTDLP_AUDIO_HISTORY] = value }
+     }
 
-    suspend fun setPlaylistStatus(value: Boolean) {
-        context.dataStore.edit { preferences -> preferences[PLAYLIST_STATUS] = value }
-    }
+     suspend fun setPlaylistStatus(value: Boolean) {
+          context.dataStore.edit { preferences -> preferences[PLAYLIST_STATUS] = value }
+     }
 
-    suspend fun setVideoHistory(value: Boolean) {
-        context.dataStore.edit { preferences -> preferences[SHOW_YTDLP_VIDEO_HISTORY] = value }
-    }
+     suspend fun setVideoHistory(value: Boolean) {
+          context.dataStore.edit { preferences -> preferences[SHOW_YTDLP_VIDEO_HISTORY] = value }
+     }
 
-    suspend fun setYtdlpDetails(value: Boolean) {
-        context.dataStore.edit { preferences -> preferences[DOWNLOADING_DETAILS] = value }
-    }
+     suspend fun setYtdlpDetails(value: Boolean) {
+          context.dataStore.edit { preferences -> preferences[DOWNLOADING_DETAILS] = value }
+     }
 
-    suspend fun setSponsorBlock(value: Boolean) {
-        context.dataStore.edit { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] = value }
-    }
+     suspend fun setSponsorBlock(value: Boolean) {
+          context.dataStore.edit { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] = value }
+     }
 
-    suspend fun setSponsorBlockCategories(value: Set<String>) {
-       context.dataStore.edit { preferences -> preferences[SPONSOR_BLOCK_CATEGORIES] = value }
-    }
+     suspend fun setSponsorBlockCategories(value: Set<String>) {
+          context.dataStore.edit { preferences -> preferences[SPONSOR_BLOCK_CATEGORIES] = value }
+     }
 
-    suspend fun setJSONAudio(value: JSONHistoryCards) {
-        context.dataStore.edit { preferences ->
-            val currentJson = preferences[JSON_AUDIO_HISTORY] ?: "[]"
-            val currentList = Json.decodeFromString<List<JSONHistoryCards>>(currentJson)
-            val updatedList = currentList + value
-            preferences[JSON_AUDIO_HISTORY] = Json.encodeToString(updatedList)
-        }
-    }
+     suspend fun setJSONAudio(value: JSONHistoryCards) {
+          context.dataStore.edit { preferences ->
+               val currentJson = preferences[JSON_AUDIO_HISTORY] ?: "[]"
+               val currentList = Json.decodeFromString<List<JSONHistoryCards>>(currentJson)
+               val updatedList = currentList + value
+               preferences[JSON_AUDIO_HISTORY] = Json.encodeToString(updatedList)
+          }
+     }
 
-    suspend fun setJSONVideo(value: JSONHistoryCards) {
-        context.dataStore.edit { preferences ->
-            val currentJson = preferences[JSON_VIDEO_HISTORY] ?: "[]"
-            val currentList = Json.decodeFromString<List<JSONHistoryCards>>(currentJson)
-            val updatedList = currentList + value
-            preferences[JSON_VIDEO_HISTORY] = Json.encodeToString(updatedList)
-        }
-    }
+     suspend fun setJSONVideo(value: JSONHistoryCards) {
+          context.dataStore.edit { preferences ->
+               val currentJson = preferences[JSON_VIDEO_HISTORY] ?: "[]"
+               val currentList = Json.decodeFromString<List<JSONHistoryCards>>(currentJson)
+               val updatedList = currentList + value
+               preferences[JSON_VIDEO_HISTORY] = Json.encodeToString(updatedList)
+          }
+     }
 }
 
 

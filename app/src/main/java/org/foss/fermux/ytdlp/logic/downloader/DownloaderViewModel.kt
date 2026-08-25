@@ -26,130 +26,130 @@ import kotlin.time.Duration.Companion.milliseconds
 
 
 class DownloaderViewModel : ViewModel() {
-    var state by mutableStateOf<DownloadStatus>(DownloadStatus.Idle)
-    var downloadUrl by mutableStateOf("")
-    var downloaderLogs by mutableStateOf("")
-    private var activeProcess by mutableStateOf<UUID?>(null)
-    private var downloaderJob: Job? = null
+     var state by mutableStateOf<DownloadStatus>(DownloadStatus.Idle)
+     var downloadUrl by mutableStateOf("")
+     var downloaderLogs by mutableStateOf("")
+     private var activeProcess by mutableStateOf<UUID?>(null)
+     private var downloaderJob: Job? = null
 
-    var showYtdlpDetails by mutableStateOf(false)
-    val flavorError = listOf(
-            "Oh, something must have gone wrong",
-            "Could be a connection issue, check your internet connection",
-            "Must have been a network issue",
-            "What does an LLM say about it?",
-            "Did you paste a URL?"
-        )
+     var showYtdlpDetails by mutableStateOf(false)
+     val flavorError = listOf(
+          "Oh, something must have gone wrong",
+          "Could be a connection issue, check your internet connection",
+          "Must have been a network issue",
+          "What does an LLM say about it?",
+          "Did you paste a URL?"
+     )
 
-    fun fetchedMetadata(downloadUrl: String) {
-        downloaderJob = viewModelScope.launch {
-            state = DownloadStatus.Loading
-            try {
-                val metadata = withTimeout(20000L.milliseconds) {
-                    fetchingTheMetadata(downloadUrl)
-                }
-                state = DownloadStatus.MidChoice(metadata)
-            } catch (e: UnknownHostException) {
-                downloadErrorHandler(e)
-            } catch (e: TimeoutCancellationException) {
-                downloadErrorHandler(e)
-            } catch (e: Exception) {
-                downloadErrorHandler(e)
-            }
-        }
-    }
-
-    private fun downloadErrorHandler (e: Exception) {
-        Log.e("MetadataFetch", "Fetch failed: ${e.javaClass.simpleName}", e)
-        val raw = when(e) {
-            is TimeoutCancellationException -> "Timed out waiting for a response"
-            else -> e.message ?: e.toString()
-        }
-        state = DownloadStatus.Error(flavorError.random(), raw)
-    }
-
-    fun startingDownload(context: Context, audio: AudioQuality?, video: VideoQuality?) {
-        val settingsTab = DownloaderSettingsTab(context.applicationContext)
-        val metadata = when (val current = state) {
-            is DownloadStatus.MidChoice -> current.metadata
-            is DownloadStatus.Loaded -> current.metadata
-            else -> return
-        }
-
-        downloaderJob = viewModelScope.launch {
-            val ytdlpDetails = settingsTab.ytdlpDetails.first()
-            showYtdlpDetails = ytdlpDetails
-
-            val requestedUrls = OneTimeWorkRequestBuilder<DownloadWorker>()
-                .setInputData(
-                    workDataOf(
-                        "url" to downloadUrl,
-                        "audio" to audio?.name,
-                        "video" to video?.name,
-                        "title" to metadata.title,
-                        "thumbnail" to metadata.thumbnail,
-                        "duration" to metadata.duration,
-                        "uploader" to metadata.uploader
-                    )
-                )
-                .build()
-
-            activeProcess = requestedUrls.id
-            state = DownloadStatus.Downloading(0f, metadata)
-
-            val workManager = WorkManager
-                .getInstance(context)
-            workManager.enqueue(requestedUrls)
-            workManager.getWorkInfoByIdFlow(requestedUrls.id)
-                .onEach { workInfo ->
-                    workInfo ?: return@onEach
-                    when (workInfo.state) {
-                        WorkInfo.State.RUNNING -> {
-                            if (ytdlpDetails) {
-
-                                val logs = workInfo.progress.getString("text")
-                                if (!logs.isNullOrBlank()) {
-                                    downloaderLogs = (downloaderLogs + logs)
-                                }
-                            }
-                            val progress = workInfo.progress.getFloat("progress", 0f).coerceIn(0f, 100f)
-                            state = DownloadStatus.Downloading(progress, metadata)
-                        }
-
-                        WorkInfo.State.SUCCEEDED -> {
-                            state = DownloadStatus.Completed(metadata)
-                            activeProcess = null
-                        }
-
-                        WorkInfo.State.FAILED -> {
-                            val error = workInfo.outputData.getString("error")
-                            error?.let { state = DownloadStatus.Error(flavorError.random(), rawError = it) }
-                            activeProcess = null
-                        }
-
-                        WorkInfo.State.CANCELLED -> {
-                            state = DownloadStatus.Idle
-                            activeProcess = null
-                        }
-
-                        else -> {}
+     fun fetchedMetadata(downloadUrl: String) {
+          downloaderJob = viewModelScope.launch {
+               state = DownloadStatus.Loading
+               try {
+                    val metadata = withTimeout(20000L.milliseconds) {
+                         fetchingTheMetadata(downloadUrl)
                     }
-                }
-                .launchIn(viewModelScope)
-        }
-    }
+                    state = DownloadStatus.MidChoice(metadata)
+               } catch (e: UnknownHostException) {
+                    downloadErrorHandler(e)
+               } catch (e: TimeoutCancellationException) {
+                    downloadErrorHandler(e)
+               } catch (e: Exception) {
+                    downloadErrorHandler(e)
+               }
+          }
+     }
 
-    fun cancelButton(context: Context) {
-        activeProcess?.let { id ->
-            YoutubeDL.destroyProcessById(id.toString())
-            WorkManager.getInstance(context).cancelWorkById(id)
-        }
-        downloaderJob?.cancel()
-        downloaderJob = null
+     private fun downloadErrorHandler(e: Exception) {
+          Log.e("MetadataFetch", "Fetch failed: ${e.javaClass.simpleName}", e)
+          val raw = when (e) {
+               is TimeoutCancellationException -> "Timed out waiting for a response"
+               else -> e.message ?: e.toString()
+          }
+          state = DownloadStatus.Error(flavorError.random(), raw)
+     }
 
-        state = DownloadStatus.Idle
-        downloadUrl = ""
-        downloaderLogs = ""
-        activeProcess = null
-    }
+     fun startingDownload(context: Context, audio: AudioQuality?, video: VideoQuality?) {
+          val settingsTab = DownloaderSettingsTab(context.applicationContext)
+          val metadata = when (val current = state) {
+               is DownloadStatus.MidChoice -> current.metadata
+               is DownloadStatus.Loaded -> current.metadata
+               else -> return
+          }
+
+          downloaderJob = viewModelScope.launch {
+               val ytdlpDetails = settingsTab.ytdlpDetails.first()
+               showYtdlpDetails = ytdlpDetails
+
+               val requestedUrls = OneTimeWorkRequestBuilder<DownloadWorker>()
+                    .setInputData(
+                         workDataOf(
+                              "url" to downloadUrl,
+                              "audio" to audio?.name,
+                              "video" to video?.name,
+                              "title" to metadata.title,
+                              "thumbnail" to metadata.thumbnail,
+                              "duration" to metadata.duration,
+                              "uploader" to metadata.uploader
+                         )
+                    )
+                    .build()
+
+               activeProcess = requestedUrls.id
+               state = DownloadStatus.Downloading(0f, metadata)
+
+               val workManager = WorkManager
+                    .getInstance(context)
+               workManager.enqueue(requestedUrls)
+               workManager.getWorkInfoByIdFlow(requestedUrls.id)
+                    .onEach { workInfo ->
+                         workInfo ?: return@onEach
+                         when (workInfo.state) {
+                              WorkInfo.State.RUNNING -> {
+                                   if (ytdlpDetails) {
+
+                                        val logs = workInfo.progress.getString("text")
+                                        if (!logs.isNullOrBlank()) {
+                                             downloaderLogs = (downloaderLogs + logs)
+                                        }
+                                   }
+                                   val progress = workInfo.progress.getFloat("progress", 0f).coerceIn(0f, 100f)
+                                   state = DownloadStatus.Downloading(progress, metadata)
+                              }
+
+                              WorkInfo.State.SUCCEEDED -> {
+                                   state = DownloadStatus.Completed(metadata)
+                                   activeProcess = null
+                              }
+
+                              WorkInfo.State.FAILED -> {
+                                   val error = workInfo.outputData.getString("error")
+                                   error?.let { state = DownloadStatus.Error(flavorError.random(), rawError = it) }
+                                   activeProcess = null
+                              }
+
+                              WorkInfo.State.CANCELLED -> {
+                                   state = DownloadStatus.Idle
+                                   activeProcess = null
+                              }
+
+                              else -> {}
+                         }
+                    }
+                    .launchIn(viewModelScope)
+          }
+     }
+
+     fun cancelButton(context: Context) {
+          activeProcess?.let { id ->
+               YoutubeDL.destroyProcessById(id.toString())
+               WorkManager.getInstance(context).cancelWorkById(id)
+          }
+          downloaderJob?.cancel()
+          downloaderJob = null
+
+          state = DownloadStatus.Idle
+          downloadUrl = ""
+          downloaderLogs = ""
+          activeProcess = null
+     }
 }

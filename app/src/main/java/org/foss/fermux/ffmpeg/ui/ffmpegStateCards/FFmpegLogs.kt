@@ -32,68 +32,68 @@ import org.foss.fermux.ui.theme.JetbrainsMono
 @SuppressLint("ContextCastToActivity")
 @Composable
 fun FFmpegLogs(
-    navController: NavHostController
+     navController: NavHostController
 ) {
-    val ffmpegViewModel: FFmpegViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
-    @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
-    val logScrollState = rememberScrollState()
+     val ffmpegViewModel: FFmpegViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
+     @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
+     val logScrollState = rememberScrollState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(FermuxColors.fermuxBackground)
-    ) {
-        LargeTopBarScaffold(
-            title = "Logs",
-            onBack = { navController.popBackStack() }
-        ) { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Surface(
+     Column(
+          modifier = Modifier
+               .fillMaxSize()
+               .background(FermuxColors.fermuxBackground)
+     ) {
+          LargeTopBarScaffold(
+               title = "Logs",
+               onBack = { navController.popBackStack() }
+          ) { paddingValues ->
+               Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(400.dp),
-                    color = FermuxColors.fermuxComponents,
-                    shape = RoundedCornerShape(10.dp),
-                    border = BorderStroke(1.dp, FermuxColors.fermuxWhiteColor)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 10.dp, vertical = 12.dp)
+                         .padding(paddingValues)
+                         .fillMaxWidth()
+                         .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+               ) {
+                    Surface(
+                         modifier = Modifier
+                              .fillMaxWidth()
+                              .height(400.dp),
+                         color = FermuxColors.fermuxComponents,
+                         shape = RoundedCornerShape(10.dp),
+                         border = BorderStroke(1.dp, FermuxColors.fermuxWhiteColor)
                     ) {
-                        Text(
-                        text = ffmpegViewModel.FFmpegLogs,
-                            color = FermuxColors.fermuxWhiteColor,
-                            fontFamily = JetbrainsMono,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .verticalScroll(logScrollState)
-                                .padding(bottom = 40.dp) 
-                        )
-                        LogCopy(
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .padding(8.dp)
-                                .size(50.dp),
-                            onClick = { clipboard.setText(AnnotatedString(ffmpegViewModel.FFmpegLogs)) }
-                        )
+                         Box(
+                              modifier = Modifier
+                                   .fillMaxSize()
+                                   .padding(horizontal = 10.dp, vertical = 12.dp)
+                         ) {
+                              Text(
+                                   text = ffmpegViewModel.FFmpegLogs,
+                                   color = FermuxColors.fermuxWhiteColor,
+                                   fontFamily = JetbrainsMono,
+                                   modifier = Modifier
+                                        .fillMaxSize()
+                                        .verticalScroll(logScrollState)
+                                        .padding(bottom = 40.dp)
+                              )
+                              LogCopy(
+                                   modifier = Modifier
+                                        .align(Alignment.BottomEnd)
+                                        .padding(8.dp)
+                                        .size(50.dp),
+                                   onClick = { clipboard.setText(AnnotatedString(ffmpegViewModel.FFmpegLogs)) }
+                              )
+                         }
                     }
-                }
-                Text(
-                	text = "Note*: This is the log page for the ffmpeg output during conversion",
-                	color = FermuxColors.fermuxBackgroundTextColor,
-                	fontSize = 16.sp,
-                	fontStyle = FontStyle.Normal,
-                	fontFamily = FontFamily.Default,
-                	modifier = Modifier.padding(7.dp)
-            	)
-            }
-        }
-    }
+                    Text(
+                         text = "Note*: This is the log page for the ffmpeg output during conversion",
+                         color = FermuxColors.fermuxBackgroundTextColor,
+                         fontSize = 16.sp,
+                         fontStyle = FontStyle.Normal,
+                         fontFamily = FontFamily.Default,
+                         modifier = Modifier.padding(7.dp)
+                    )
+               }
+          }
+     }
 }

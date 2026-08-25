@@ -15,46 +15,47 @@ import androidx.compose.ui.text.input.TextFieldValue
 
 @Composable
 fun ArrowKeyMovement(
-    userCommand: TextFieldValue,
-    onCommandChange: (TextFieldValue) -> Unit,
-    onHistoryUp: () -> Unit,
-    onHistoryDown: () -> Unit
+     userCommand: TextFieldValue,
+     onCommandChange: (TextFieldValue) -> Unit,
+     onHistoryUp: () -> Unit,
+     onHistoryDown: () -> Unit
 ) {
 
-    Row(modifier = Modifier) {
-        val leftArrow = (userCommand.selection.start - 1).coerceAtLeast(0)
-        val rightArrow = (userCommand.selection.start + 1).coerceAtMost(userCommand.text.length)
+     Row(modifier = Modifier) {
+          val leftArrow = (userCommand.selection.start - 1).coerceAtLeast(0)
+          val rightArrow = (userCommand.selection.start + 1).coerceAtMost(userCommand.text.length)
 
-        IconButton(onClick = {
-            onCommandChange(
-                TextFieldValue(
-                    text = userCommand.text,
-                    selection = TextRange(leftArrow)
-                )
-            )
-        }) {
-            Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "left-arrow")
-        }
+          IconButton(onClick = {
+               onCommandChange(
+                    TextFieldValue(
+                         text = userCommand.text,
+                         selection = TextRange(leftArrow)
+                    )
+               )
+          }) {
+               Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "left-arrow")
+          }
 
-        // Move cursor one position to the right
-        IconButton(onClick = {
-            onCommandChange(
-                TextFieldValue(
-                    text = userCommand.text,
-                    selection = TextRange(rightArrow)
-                )
-            )
-        }) {
-            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, "right-arrow")
+          // Move cursor one position to the right
+          IconButton(onClick = {
+               onCommandChange(
+                    TextFieldValue(
+                         text = userCommand.text,
+                         selection = TextRange(rightArrow)
+                    )
+               )
+          }) {
+               Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, "right-arrow")
 
-        }
-        IconButton(onClick = { onHistoryUp() }) {
-            Icon(Icons.Filled.KeyboardArrowUp, "up-arrow")
-        }
+          }
+          IconButton(onClick = { onHistoryUp() }) {
+               Icon(Icons.Filled.KeyboardArrowUp, "up-arrow")
+          }
 
-        IconButton(onClick = { onHistoryDown() }) {
-            Icon(Icons.Filled.KeyboardArrowDown, "down-arrow")
-        }
-    }}
+          IconButton(onClick = { onHistoryDown() }) {
+               Icon(Icons.Filled.KeyboardArrowDown, "down-arrow")
+          }
+     }
+}
 
 

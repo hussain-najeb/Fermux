@@ -30,77 +30,75 @@ import org.foss.fermux.ui.theme.FermuxColors
 @Composable
 fun DownloadVideoList() {
 
-    val context = LocalContext.current
-    val settingsViewModel: DownloaderSettingsViewModel = viewModel(
-        viewModelStoreOwner = LocalContext.current as ComponentActivity, factory =
-            ViewModelProvider.AndroidViewModelFactory.getInstance(context.applicationContext as Application)
-    )
+     val context = LocalContext.current
+     val settingsViewModel: DownloaderSettingsViewModel = viewModel(
+          viewModelStoreOwner = LocalContext.current as ComponentActivity, factory =
+               ViewModelProvider.AndroidViewModelFactory.getInstance(context.applicationContext as Application)
+     )
 
-    val videoHistory by settingsViewModel.videoHistoryList.collectAsState()
+     val videoHistory by settingsViewModel.videoHistoryList.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .background(FermuxColors.fermuxBackground)
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Text(
-            text = "Video History",
-            color = FermuxColors.fermuxInActiveTextColor,
-            fontSize = 40.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.SansSerif,
-            modifier = Modifier.padding(start = 24.dp, top = 19.dp, end = 24.dp)
-        )
+     Column(
+          modifier = Modifier
+               .background(FermuxColors.fermuxBackground)
+               .fillMaxSize(),
+          verticalArrangement = Arrangement.Center,
+     ) {
+          Text(
+               text = "Video History",
+               color = FermuxColors.fermuxInActiveTextColor,
+               fontSize = 40.sp,
+               fontWeight = FontWeight.Bold,
+               fontFamily = FontFamily.SansSerif,
+               modifier = Modifier.padding(start = 24.dp, top = 19.dp, end = 24.dp)
+          )
 
-        Spacer(modifier = Modifier.height(10.dp))
+          Spacer(modifier = Modifier.height(10.dp))
 
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 10.dp),
-            thickness = 1.dp,
-            color = FermuxColors.fermuxComponents
-        )
+          HorizontalDivider(
+               modifier = Modifier.padding(horizontal = 10.dp),
+               thickness = 1.dp,
+               color = FermuxColors.fermuxComponents
+          )
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
-                ) {
+          LazyColumn(
+               modifier = Modifier.fillMaxSize(),
+               contentPadding = PaddingValues(8.dp),
+               horizontalAlignment = Alignment.CenterHorizontally,
+               verticalArrangement = Arrangement.Top
+          ) {
 
-            if (videoHistory.isEmpty()) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .weight(1f)
-                        ,
-                        contentAlignment = Alignment.Center
-                    ) {
+               if (videoHistory.isEmpty()) {
+                    item {
+                         Box(
+                              modifier = Modifier
+                                   .fillMaxSize()
+                                   .weight(1f),
+                              contentAlignment = Alignment.Center
+                         ) {
 
-                        Spacer(modifier = Modifier.height(700.dp))
+                              Spacer(modifier = Modifier.height(700.dp))
 
-                        Text(
-                            text = "Video files will appear here.",
-                            color = FermuxColors.fermuxTextColorBackground,
-                            fontSize = 16.sp,
-                            fontFamily = FontFamily.SansSerif,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(horizontal = 40.dp)
-                            )
+                              Text(
+                                   text = "Video files will appear here.",
+                                   color = FermuxColors.fermuxTextColorBackground,
+                                   fontSize = 16.sp,
+                                   fontFamily = FontFamily.SansSerif,
+                                   textAlign = TextAlign.Center,
+                                   modifier = Modifier.padding(horizontal = 40.dp)
+                              )
+                         }
                     }
-                }
-            } else {
-                items(videoHistory) {videoItem -> StoredVideos(entry = videoItem) }
-            }
-        }
-    }
+               } else {
+                    items(videoHistory) { videoItem -> StoredVideos(entry = videoItem) }
+               }
+          }
+     }
 }
 
 @Composable
-fun StoredVideos(entry: JSONHistoryCards)
-{
-    HistoryCards(entry = entry)
+fun StoredVideos(entry: JSONHistoryCards) {
+     HistoryCards(entry = entry)
 }
 
 

@@ -8,14 +8,14 @@ import java.io.File
 
 // TODO> This is work for later for a more consistent ytdlp integration.
 @Serializable
-data class CookieProfile (
+data class CookieProfile(
      val id: String = java.util.UUID.randomUUID().toString(),
      val url: String,
      val content: String
 )
 
 @Serializable
-data class CookiesStore (
+data class CookiesStore(
      val profiles: List<CookieProfile> = emptyList()
 )
 
@@ -44,7 +44,7 @@ class CookieRepo(private val context: Context) {
 
      fun update(profile: CookieProfile) {
           val store = load()
-          save(store.copy(profiles = store.profiles.map { if (it.url == profile.url) profile else it } ))
+          save(store.copy(profiles = store.profiles.map { if (it.url == profile.url) profile else it }))
      }
 
      fun delete(profile: CookieProfile) {

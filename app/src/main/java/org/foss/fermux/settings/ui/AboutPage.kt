@@ -39,7 +39,7 @@ fun AboutPage(navController: NavController) {
                description = "Check the Github Repository for more information",
                icon = Icons.Default.Description,
                onClick = {
-                         openUrl("https://github.com/hussain-najeb/Fermux")
+                    openUrl("https://github.com/hussain-najeb/Fermux")
                }
           ),
           SettingListInfo(
@@ -71,15 +71,11 @@ fun AboutPage(navController: NavController) {
                          description = aboutList.description,
                          icon = aboutList.icon,
                          image = aboutList.image,
-                         onClick = { aboutList.onClick?.invoke() } ,
+                         onClick = { aboutList.onClick?.invoke() },
                          content = aboutList.content,
                          trailingContent = aboutList.trailingContent
                     )
                }
-
-
-
-
 
 
           }

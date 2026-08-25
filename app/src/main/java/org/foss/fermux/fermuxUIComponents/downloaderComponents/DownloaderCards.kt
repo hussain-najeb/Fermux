@@ -24,10 +24,10 @@ fun DownloaderCard(
      Card(
           modifier = modifier
                .padding(16.dp)
-               .aspectRatio(16f/9f),
+               .aspectRatio(16f / 9f),
           shape = shape,
           colors = CardDefaults.cardColors(
-               containerColor = if (errorBackground) color.fermuxErrorCardColor else  color.fermuxSurface
+               containerColor = if (errorBackground) color.fermuxErrorCardColor else color.fermuxSurface
           ),
           border = BorderStroke(1.dp, FermuxColors.fermuxWhiteColor)
      ) {

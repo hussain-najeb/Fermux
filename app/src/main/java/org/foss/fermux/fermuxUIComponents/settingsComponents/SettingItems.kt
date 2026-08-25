@@ -51,7 +51,8 @@ fun SettingLists(
           targetValue = if (isPressed) FermuxColors.fermuxActiveIcon else FermuxColors.fermuxGenericBorder
      )
 
-     Column(modifier = Modifier.fillMaxSize()
+     Column(
+          modifier = Modifier.fillMaxSize()
      ) {
           Surface(
                modifier = Modifier.padding(3.dp),

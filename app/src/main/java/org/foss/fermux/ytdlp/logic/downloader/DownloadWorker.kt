@@ -10,7 +10,7 @@ import kotlinx.coroutines.runBlocking
 import org.foss.fermux.storage.DownloaderSettingsTab
 import org.foss.fermux.storage.JSONHistoryCards
 
-class DownloadWorker(context: Context, params: WorkerParameters ) :
+class DownloadWorker(context: Context, params: WorkerParameters) :
      CoroutineWorker(context, params) {
      override suspend fun doWork(): Result {
 
@@ -28,7 +28,7 @@ class DownloadWorker(context: Context, params: WorkerParameters ) :
           val audio = audioName?.let { AudioQuality.valueOf(it) }
           val video = videoName?.let { VideoQuality.valueOf(it) }
 
-          val url   = inputData.getString("url") ?: return Result.failure()
+          val url = inputData.getString("url") ?: return Result.failure()
           val title = inputData.getString("title") ?: "unknown title"
           val thumbnail = inputData.getString("thumbnail") ?: "unknown thumbnail"
           val duration = inputData.getInt("duration", 0).toLong()
