@@ -131,11 +131,11 @@ fun SimpleDownloaderPage(
                          onCheckedChange = { settingsViewModel.setVideoHistory(it) }
                     )
                }
-          ),
+          ), 
           SettingListInfo(
-               title = if (playlist) "Playlist on" else "Playlist off",
-               description = if (playlist) "Playlists will be downloaded when the url is copied from a playlist" else "Playlists will not be downloaded when the url is copied from a playlist",
-               image = if (playlist) R.drawable.playlist_on else R.drawable.playlist_off,
+               title = if (playlist) "Playlist off" else "Playlist on",
+               description = if (playlist) "Playlists will not be downloaded when the url is copied from a playlist" else "Playlists will be downloaded when the url is copied from a playlist",
+               image = if (playlist) R.drawable.playlist_off else R.drawable.playlist_on,
                content = {
                     SettingsSwitch(
                          checked = playlist,

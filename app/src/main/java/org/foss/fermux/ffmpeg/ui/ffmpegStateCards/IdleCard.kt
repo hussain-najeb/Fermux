@@ -74,7 +74,7 @@ fun IdleCard(
                          ImageButton(
                               image = R.drawable.upload,
                               modifier = Modifier
-                                   .size(100.dp)
+                                   .size(85.dp)
                                    .padding(8.dp),
                               onClick = { fileLauncher.launch("*/*") },
                               contentPadding = PaddingValues(10.dp)

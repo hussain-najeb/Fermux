@@ -2,9 +2,12 @@ package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderQualityFormatState
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderCard
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderFormatList
@@ -49,19 +52,18 @@ fun AudioQualityChoices(downloaderViewModel: DownloaderViewModel, onBack: () -> 
                onClick = { downloaderViewModel.startingDownload(context, AudioQuality.LOW, null) }
           ),
      )
-     DownloaderCard {
           Column(
-               modifier = Modifier
-                    .fillMaxSize()
-          ) {
-               audioListOptions.forEach { option ->
-                    DownloaderFormatList(
-                         title = option.title,
-                         description = option.description,
-                         image = option.icon,
-                         onClick = { option.onClick?.invoke() }
-                    )
-               }
+          modifier = Modifier
+               .fillMaxWidth()
+               .padding(8.dp)
+     ) {
+          audioListOptions.forEach { option ->
+               DownloaderFormatList(
+                    title = option.title,
+                    description = option.description,
+                    image = option.icon,
+                    onClick = { option.onClick?.invoke() }
+               )
           }
      }
 }

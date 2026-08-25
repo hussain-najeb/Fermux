@@ -2,6 +2,7 @@
 
 package org.foss.fermux.ffmpeg.ui.ffmpegStateCards
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
@@ -19,12 +20,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import coil3.compose.AsyncImage
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
 import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
 import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FFmpegCard
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
+import org.foss.fermux.ffmpeg.ui.MediaThumbnailImage
 import org.foss.fermux.main.Miscellaneous
 import org.foss.fermux.ui.theme.FermuxColors
 
@@ -32,6 +33,7 @@ import org.foss.fermux.ui.theme.FermuxColors
 private enum class ProgressState { InProgress, Done }
 
 
+@SuppressLint("ContextCastToActivity")
 @Composable
 fun ConversionCard(
      progress: Float? = null,
@@ -59,9 +61,8 @@ fun ConversionCard(
                          .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                ) {
-                    AsyncImage(
-                         model = pickedFileUri,
-                         contentDescription = null,
+                    MediaThumbnailImage(
+                         uri = pickedFileUri,
                          contentScale = ContentScale.Crop,
                          modifier = Modifier
                               .fillMaxWidth()

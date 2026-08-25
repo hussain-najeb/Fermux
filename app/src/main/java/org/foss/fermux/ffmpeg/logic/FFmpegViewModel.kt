@@ -21,7 +21,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.UUID
 
 
 class FFmpegViewModel : ViewModel() {
@@ -39,7 +39,7 @@ class FFmpegViewModel : ViewModel() {
           "Oh no, did you convert audio to video?",
           "This is always problematic",
           "Good luck solving it",
-          "that was a skill issue"
+          "It's a skill issue"
      )
 
      private fun fail(flavourFailMessage: String, rawError: String) {
@@ -167,7 +167,7 @@ class FFmpegViewModel : ViewModel() {
                               val logs = workInfo.progress.getString("line")
 
                               if (!logs.isNullOrBlank()) {
-                                   FFmpegLogs = (FFmpegLogs + "\n" + logs).takeLast(900)
+                                   FFmpegLogs = (FFmpegLogs + "\n" + logs)
                               }
                               state = FFmpegStatus.Converting(progress, duration, targetFormat, inputUri, FFmpegLogs)
                          }
