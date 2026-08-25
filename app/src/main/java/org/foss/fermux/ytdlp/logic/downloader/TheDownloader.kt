@@ -1,17 +1,13 @@
 package org.foss.fermux.ytdlp.logic.downloader
 
-import android.annotation.SuppressLint
-import android.content.ContentValues
 import android.content.Context
 import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
-import android.webkit.MimeTypeMap
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.File
+import org.foss.fermux.main.copyFileToDownloads
 
 /**
  * Problem:
@@ -94,10 +90,9 @@ suspend fun downloaderLogic(
           request.addOption("--audio-quality", it.musicQuality)
      }
      videoQuality?.let {
+          request.addOption("--merge-output-format", "mp4")
           request.addOption("-f", it.videoQuality)
      }
-
-
 
      request.addOption("--restrict-filenames")
      request.addOption("-i")
@@ -107,21 +102,14 @@ suspend fun downloaderLogic(
      request.addOption("-o", outputPath)
 
      withContext(Dispatchers.IO) {
-          val existingFiles = downloadDir
-               ?.listFiles()
-               ?.map { it.absolutePath }
-               ?.toSet()
-               ?: emptySet()
+          val existingFiles = downloadDir?.listFiles()?.map { it.absolutePath }?.toSet() ?: emptySet()
 
           val response = YoutubeDL.getInstance().execute(request, taskId) { progress, _, line ->
                onUpdate(progress, line)
           }
 
-          downloadDir
-               ?.listFiles()
-               ?.filter { it.absolutePath !in existingFiles }
-               ?.forEach { file ->
-                    copyFileToDownloads(context, file, file.name)
+          downloadDir?.listFiles()?.filter { it.absolutePath !in existingFiles }?.forEach { file ->
+                    copyFileToDownloads(context, file, file.name, subFolder = "fermux/downloader")
                }
           Log.d("fermux", "exit=${response.exitCode}")
           Log.d("fermux", "out=${response.out}")
@@ -130,65 +118,12 @@ suspend fun downloaderLogic(
 }
 
 
-suspend fun fetchingTheMetadata(url: String): DownloadMetadata =
-     withContext(Dispatchers.IO) {
-          val info = YoutubeDL.getInstance().getInfo(url)
-          DownloadMetadata(
-               title = info.title ?: "Unknown title",
-               thumbnail = info.thumbnail ?: "",
-               duration = info.duration,
-               uploader = info.uploader
-          )
-     }
-
-suspend fun copyFileToDownloads(
-     context: Context,
-     sourceFile: File,
-     displayName: String,
-) {
-     withContext(Dispatchers.IO) {
-
-          fun getMimeTypeFromFile(file: File): String {
-               val extension = file.extension.lowercase()
-               return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-                    ?: "application/octet-stream"
-          }
-
-          val values = ContentValues().apply {
-               put(MediaStore.Downloads.DISPLAY_NAME, displayName)
-               put(MediaStore.Downloads.MIME_TYPE, getMimeTypeFromFile(file = sourceFile))
-               put(
-                    MediaStore.Downloads.RELATIVE_PATH,
-                    "${Environment.DIRECTORY_DOWNLOADS}/fermux"
-               ) // TODO. add another function like this to the ffmpeg side so it has its own folder inside /fermux
-          }
-          val uri = context.contentResolver.insert(
-               MediaStore.Downloads.EXTERNAL_CONTENT_URI, values
-          ) ?: throw Exception("Error while opening download directory")
-
-          context.contentResolver.openOutputStream(uri)?.use { outputStream ->
-               sourceFile.inputStream().use { inputStream ->
-                    inputStream.copyTo(outputStream)
-               }
-
-               val deleted = sourceFile.delete()
-               Log.d("fermux", "success at deleting $deleted")
-               if (!deleted && sourceFile.exists()) {
-                    Log.w("fermux", "Failed to delete file: ${sourceFile.absolutePath}")
-               }
-          }
-     }
-}
-
-@SuppressLint("DefaultLocale")
-fun videoTime(seconds: Int): String {
-     val hours = seconds / 3600
-     val minutes = (seconds % 3600) / 60
-     val remainingSeconds = seconds % 60
-
-     return if (hours > 0) {
-          String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds)
-     } else {
-          String.format("%02d:%02d", minutes, remainingSeconds)
-     }
+suspend fun fetchingTheMetadata(url: String): DownloadMetadata = withContext(Dispatchers.IO) {
+     val info = YoutubeDL.getInstance().getInfo(url)
+     DownloadMetadata(
+          title = info.title ?: "Unknown title",
+          thumbnail = info.thumbnail ?: "",
+          duration = info.duration,
+          uploader = info.uploader
+     )
 }

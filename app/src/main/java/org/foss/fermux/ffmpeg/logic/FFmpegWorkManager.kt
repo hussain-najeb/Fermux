@@ -12,9 +12,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import org.foss.fermux.main.copyFileToDownloads
 import org.foss.fermux.settings.logic.BuildDynamicFFmpegArgs
 import org.foss.fermux.storage.FFmpegSettingsTab
-import org.foss.fermux.ytdlp.logic.downloader.copyFileToDownloads
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
@@ -123,7 +123,8 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                          copyFileToDownloads(
                               applicationContext,
                               outputFile,
-                              displayName
+                              displayName,
+                              subFolder = "fermux/converter"
                          )
                          Result.success()
                     }
