@@ -36,7 +36,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 
-
 @Composable
 fun SponsorBlockChoices(
 	expanded: Boolean,
@@ -52,7 +51,6 @@ fun SponsorBlockChoices(
           "outro" to "Outro",
           "preview" to "Preview/Recap"
         )
-
 
 	AnimatedVisibility(
           visible = expanded,
@@ -71,9 +69,8 @@ fun SponsorBlockChoices(
           	FlowRow(modifier = Modifier
           		.fillMaxWidth()
           		.padding(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
           		) {
           		flags.forEach { (flag, labeledFlag) -> 
           			val pickedFlags = flag in sponsorBlock

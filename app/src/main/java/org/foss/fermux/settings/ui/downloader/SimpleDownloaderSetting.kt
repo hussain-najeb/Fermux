@@ -35,6 +35,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.Aria2cModeSelector
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.RequestTimeSlider
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.SponsorBlockChoices
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
@@ -61,7 +62,6 @@ fun SimpleDownloaderPage(
       * TODO:
       *       * Make the animation smooth when the Slider appears and the Logs Surface Goes down and up, currently its janky. I have an idea for a solution. Maybe wrap all the settings in an AnimateContent
       *       * Add the cookies option in the Downloader Page
-      *       *
       */
 
      val sleepRequest by settingsViewModel.sleepRequest.collectAsStateWithLifecycle()
@@ -81,10 +81,12 @@ fun SimpleDownloaderPage(
      val playlist by settingsViewModel.playlistState.collectAsStateWithLifecycle()
 
      var sponsorExpansion by remember { mutableStateOf(false) }
-     var aria2cExpansion by remember { mutableStateOf(false) } 
+     var expanded by remember { mutableStateOf(false) }
+     var aria2cExpansion by remember { mutableStateOf(false) }
+     var resetDownloader by remember { mutableStateOf(false) }
 
-     val infiniteTransition =
-          rememberInfiniteTransition(label = "update transition")
+
+     val infiniteTransition = rememberInfiniteTransition(label = "update transition")
      val rotation by infiniteTransition.animateFloat(
           initialValue = 0f,
           targetValue = 1800f,
@@ -94,7 +96,8 @@ fun SimpleDownloaderPage(
           ),
           label = "update rotation"
      )
-     var expanded by remember { mutableStateOf(false) }
+
+
 
      val simpleDownloaderSettings = listOf(
           SettingListInfo(
@@ -187,10 +190,15 @@ fun SimpleDownloaderPage(
           ),
           SettingListInfo(
                title = "Aria2c",
-               description = "Aria2c Implementation for better download speed for large files",
+               description = "Aria2c Implementation for better download speeds, escpsiaclly for large files. Use the Edge Case option when downloading on the highest setting in the downloader, per  ",
                image = R.drawable.layers,
                onClick = { aria2cExpansion = !aria2cExpansion },
-
+               trailingContent = {
+                    Aria2cModeSelector(
+                         expanded = aria2cExpansion,
+                         downloaderSettingsViewModel = settingsViewModel
+                    )
+               }
           ),
           SettingListInfo(
                title = if (thumbnail) "Uncut Thumbnail" else "Cut Thumbnail",
@@ -215,6 +223,14 @@ fun SimpleDownloaderPage(
                     RequestTimeSlider(
                          expanded = expanded
                     )
+               }
+          ),
+          SettingListInfo(
+               title = "Reset Converter",
+               description = "Reset converter settings to there original state",
+               onClick = { resetDownloader = !resetDownloader },
+               trailingContent = {
+                    // TODO. Add the "reset button" to deafualt here and be done with it.
                }
           )
      )

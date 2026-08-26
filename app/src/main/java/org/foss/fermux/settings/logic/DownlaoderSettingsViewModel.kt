@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 import org.foss.fermux.storage.DownloaderSettingsTab
 import org.foss.fermux.storage.JSONHistoryCards
 import java.util.concurrent.atomic.AtomicBoolean
@@ -31,11 +32,8 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      val playlistState: StateFlow<Boolean> = settingsTab.playlistStatus
           .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
-     val aria2c: StateFlow<Boolean> = settingsTab.aria2c
-          .stateIn(viewModelScope, SharingStarted.Lazily, true)
-
-     val aria2cEdgeCase: StateFlow<Boolean> = settingsTab.aria2cHLSWithDASHCase
-          .stateIn(viewModelScope, SharingStarted.Lazily, false)
+     val aria2cMode: StateFlow<Aria2cMode> = settingsTab.aria2cMode
+     .stateIn(viewModelScope, SharingStarted.Lazily, Aria2cMode.Always)
 
      val audioHistory: StateFlow<Boolean> = settingsTab.audioHistory
           .stateIn(viewModelScope, SharingStarted.Lazily, true)
@@ -69,12 +67,8 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           viewModelScope.launch { settingsTab.setSleepRequest(value) }
      }
 
-     fun setAria2cImpl(value: Boolean) {
-          viewModelScope.launch { settingsTab.setAria2cImpl(value) }
-     }
-
-     fun setAria2cEdgeCase(value: Boolean) {
-          viewModelScope.launch { settingsTab.setAria2cEdgeCase(value) }
+     fun setAria2cMode(value: Aria2cMode) {
+          viewModelScope.launch { settingsTab.setAria2cMode(value) }
      }
 
      fun setPlaylistState(value: Boolean) {

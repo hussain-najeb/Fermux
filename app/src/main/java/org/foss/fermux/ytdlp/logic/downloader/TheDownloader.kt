@@ -37,10 +37,9 @@ import org.foss.fermux.main.copyFileToDownloads
 suspend fun downloaderLogic(
      context: Context,
      showDetails: Boolean,
+     aria2cMode: Aria2cMode = Aria2cMode.Always,
      url: String,
      taskId: String,
-     aria2c: Boolean = true,
-     aria2cHLSWithDASHCase: Boolean = false,
      sleepRequest: Int = 0,
      playlistStatus: Boolean = true,
      musicQuality: AudioQuality? = null,
@@ -55,16 +54,6 @@ suspend fun downloaderLogic(
      val outputPath = "${downloadDir?.absolutePath}/%(title)s.%(ext)s"
      val request = YoutubeDLRequest(url)
 
-
-     val shouldUseAria2c = aria2c || (aria2cHLSWithDASHCase && videoQuality != VideoQuality.BEST)
-
-     if (shouldUseAria2c) {
-          request.addOption("--downloader", "libaria2c.so")
-          request.addOption(
-               "--external-downloader-args", "aria2c:--summary-interval=1 -x 16 -s 16 -k 1M"
-          )
-     }
-
      if (sleepRequest > 0) {
           request.addOption("--sleep-requests", sleepRequest)
      }
@@ -74,6 +63,12 @@ suspend fun downloaderLogic(
      }
      if (showDetails) {
           request.addOption("-v")
+     }
+
+     val shouldUseAria2c = when (aria2cMode) {
+               Aria2cMode.Always -> true
+               Aria2cMode.EdgeCaseOnly -> videoQuality != VideoQuality.BEST
+               Aria2cMode.Disabled -> false
      }
 
      if (embedThumbnail) {
@@ -118,7 +113,6 @@ suspend fun downloaderLogic(
           Log.d("fermux", "err=${response.err}")
      }
 }
-
 
 suspend fun fetchingTheMetadata(url: String): DownloadMetadata = withContext(Dispatchers.IO) {
      val info = YoutubeDL.getInstance().getInfo(url)

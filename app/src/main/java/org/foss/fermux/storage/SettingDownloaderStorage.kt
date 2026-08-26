@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 import kotlinx.serialization.json.Json
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings_tab")
@@ -17,8 +18,7 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings_
 val DOWNLOAD_PATH = stringPreferencesKey("download_path")
 val DOWNLOAD_PROGRESS_NOTIFICATION = booleanPreferencesKey("download_progress_notification")
 val SLEEP_REQUEST_KEY = intPreferencesKey("sleep_request_seconds")
-val ARIA2C_KEY = booleanPreferencesKey("aria2c_implementation")
-val ARIA2C_EDGE_CASE = booleanPreferencesKey("aria2c_implementation_edge_case")
+val ARIA2C_MODE_KEY = stringPreferencesKey("aria2c_mode")
 val DOWNLOADING_DETAILS = booleanPreferencesKey("download_details")
 val SHOW_YTDLP_VIDEO_HISTORY = booleanPreferencesKey("video_history")
 val SHOW_YTDLP_AUDIO_HISTORY = booleanPreferencesKey("audio_history")
@@ -39,9 +39,11 @@ class DownloaderSettingsTab(private val context: Context) {
      val sleepRequest: Flow<Int> = context.dataStore.data.map { preferences -> preferences[SLEEP_REQUEST_KEY] ?: 0 }
      val embedThumbnail: Flow<Boolean> =
           context.dataStore.data.map { preferences -> preferences[EMBEDTHUMBNAIL] ?: true }
-     val aria2c: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[ARIA2C_KEY] ?: true }
-     val aria2cHLSWithDASHCase: Flow<Boolean> =
-          context.dataStore.data.map { preferences -> preferences[ARIA2C_EDGE_CASE] ?: false }
+     val aria2cMode: Flow<Aria2cMode> = context.dataStore.data.map { preferences ->
+     preferences[ARIA2C_MODE_KEY]
+                    ?.let { runCatching { Aria2cMode.valueOf(it) }.getOrNull() }
+                    ?: Aria2cMode.Always
+     }
      val audioHistory: Flow<Boolean> =
           context.dataStore.data.map { preferences -> preferences[SHOW_YTDLP_AUDIO_HISTORY] ?: true }
      val videoHistory: Flow<Boolean> =
@@ -80,16 +82,12 @@ class DownloaderSettingsTab(private val context: Context) {
           context.dataStore.edit { preferences -> preferences[SLEEP_REQUEST_KEY] = value }
      }
 
-     suspend fun setAria2cImpl(value: Boolean) {
-          context.dataStore.edit { preferences -> preferences[ARIA2C_KEY] = value }
+     suspend fun setAria2cMode(value: Aria2cMode) {
+     context.dataStore.edit { preferences -> preferences[ARIA2C_MODE_KEY] = value.name }
      }
 
      suspend fun setEmbedThumbnail(value: Boolean) {
           context.dataStore.edit { preferences -> preferences[EMBEDTHUMBNAIL] = value }
-     }
-
-     suspend fun setAria2cEdgeCase(value: Boolean) {
-          context.dataStore.edit { preferences -> preferences[ARIA2C_EDGE_CASE] = value }
      }
 
      suspend fun setAudioHistory(value: Boolean) {
@@ -139,8 +137,7 @@ class DownloaderSettingsTab(private val context: Context) {
                preferences.remove(DOWNLOAD_PATH)
                preferences.remove(DOWNLOAD_PROGRESS_NOTIFICATION)
                preferences.remove(SLEEP_REQUEST_KEY)
-               preferences.remove(ARIA2C_KEY)
-               preferences.remove(ARIA2C_EDGE_CASE)
+               preferences.remove(ARIA2C_MODE_KEY)
                preferences.remove(DOWNLOADING_DETAILS)
                preferences.remove(SHOW_YTDLP_VIDEO_HISTORY)
                preferences.remove(SHOW_YTDLP_AUDIO_HISTORY)

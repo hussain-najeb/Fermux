@@ -17,11 +17,11 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
           val settingsTab = DownloaderSettingsTab(applicationContext)
           val sponsorBlock = settingsTab.sponsorBlock.first()
           val sponsorBlockCategories = settingsTab.sponsorBlockCategories.first()
-          val aria2c = settingsTab.aria2c.first()
-          val aria2cHLSWithDASHCase = settingsTab.aria2cHLSWithDASHCase.first()
           val sleepRequest = settingsTab.sleepRequest.first()
           val embedThumbnail = settingsTab.embedThumbnail.first()
           val playlistStatus = settingsTab.playlistStatus.first()
+          val aria2cMode = settingsTab.aria2cMode.first()
+
 
           val audioName = inputData.getString("audio")
           val videoName = inputData.getString("video")
@@ -73,6 +73,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                     context = applicationContext,
                     url = url,
                     taskId = id.toString(),
+                    aria2cMode = aria2cMode,
                     musicQuality = audio,
                     embedThumbnail = embedThumbnail,
                     playlistStatus = playlistStatus,
@@ -80,8 +81,6 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                     showDetails = showDetails,
                     sponsorBlock = sponsorBlock,
                     sponsorBlockCategories = sponsorBlockCategories,
-                    aria2c = aria2c,
-                    aria2cHLSWithDASHCase = aria2cHLSWithDASHCase,
                     sleepRequest = sleepRequest,
                     onUpdate = { progress, line ->
                          val now = System.currentTimeMillis()

@@ -44,3 +44,8 @@ enum class VideoQuality(val videoQuality: String, formatKind: FormatKind) {
      Q240("bestvideo[height<=240]+bestaudio/best", formatKind = FormatKind.Video),
      Q144("bestvideo[height<=144]+bestaudio/best", formatKind = FormatKind.Video)
 }
+enum class Aria2cMode {
+     Disabled,
+     EdgeCaseOnly,
+     Always
+}
