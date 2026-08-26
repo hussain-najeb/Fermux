@@ -9,7 +9,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -80,9 +82,10 @@ fun SideBar(
                          .padding(start = 5.dp)
                          .clip(RoundedCornerShape(8.dp))
                          .border(1.0.dp, FermuxColors.fermuxHelperBorder, RoundedCornerShape(8.dp))
-                         .width(65.dp)
+                         .width(70.dp)
                          .background(FermuxColors.fermuxSurface),
                ) {
+                    Spacer(modifier = Modifier.height(6.dp))
                     sideBarEntries.forEach { option ->
                          ImageButton(
                               modifier = Modifier
@@ -92,6 +95,7 @@ fun SideBar(
                               onClick = option.onClick
                          )
                     }
+                    Spacer(modifier = Modifier.height(6.dp))
                }
           }
           ImageButton(

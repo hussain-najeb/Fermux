@@ -109,6 +109,11 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           viewModelScope.launch { settingsTab.setDownloadPath(value) }
      }
 
+
+     fun setClearYtdlp() {
+          viewModelScope.launch { settingsTab.clearYtdlp() }
+     }
+
      private val isUpdatingYtdlp = AtomicBoolean(false)
      private val _isCheckingForUpdate = MutableStateFlow(false)
      val isCheckingForUpdate: StateFlow<Boolean> = _isCheckingForUpdate

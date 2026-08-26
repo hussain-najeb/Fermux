@@ -133,9 +133,21 @@ class DownloaderSettingsTab(private val context: Context) {
                preferences[JSON_VIDEO_HISTORY] = Json.encodeToString(updatedList)
           }
      }
+
+     suspend fun clearYtdlp() {
+          context.dataStore.edit { preferences ->
+               preferences.remove(DOWNLOAD_PATH)
+               preferences.remove(DOWNLOAD_PROGRESS_NOTIFICATION)
+               preferences.remove(SLEEP_REQUEST_KEY)
+               preferences.remove(ARIA2C_KEY)
+               preferences.remove(ARIA2C_EDGE_CASE)
+               preferences.remove(DOWNLOADING_DETAILS)
+               preferences.remove(SHOW_YTDLP_VIDEO_HISTORY)
+               preferences.remove(SHOW_YTDLP_AUDIO_HISTORY)
+               preferences.remove(EMBEDTHUMBNAIL)
+               preferences.remove(PLAYLIST_STATUS)
+               preferences.remove(SPONSOR_BLOCK_IMPLEMENTATION)
+               preferences.remove(SPONSOR_BLOCK_CATEGORIES)
+          }
+     }
 }
-
-
-
-
-

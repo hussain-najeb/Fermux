@@ -81,7 +81,9 @@ suspend fun downloaderLogic(
      }
 
      if (playlistStatus) {
-          request.addOption("--no-playlist")
+          request.addOption("--yes-playlist")
+     } else { 
+          request.addOption("--no-playlist") 
      }
 
      musicQuality?.let {

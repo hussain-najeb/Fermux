@@ -66,4 +66,9 @@ class FFmpegSettingsViewModel(application: Application) : AndroidViewModel(appli
      fun setThreadLimit(value: Int) {
           viewModelScope.launch { ffmpegSettings.setThreadLimit(value) }
      }
+
+
+     fun setClearFFmpeg() {
+          viewModelScope.launch { ffmpegSettings.clearFFmpeg() }
+     }
 }

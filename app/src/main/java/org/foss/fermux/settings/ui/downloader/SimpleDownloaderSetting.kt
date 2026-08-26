@@ -2,9 +2,18 @@ package org.foss.fermux.settings.ui.downloader
 
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -13,7 +22,11 @@ import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -23,6 +36,7 @@ import androidx.navigation.NavHostController
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.RequestTimeSlider
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.SponsorBlockChoices
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingLists
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
@@ -50,9 +64,6 @@ fun SimpleDownloaderPage(
       *       *
       */
 
-     var showSponsorDialog by remember { mutableStateOf(false) }
-     var showAria2cDialog by remember { mutableStateOf(false) }
-
      val sleepRequest by settingsViewModel.sleepRequest.collectAsStateWithLifecycle()
      val ytdlpDetails by settingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
      val audioHistory by settingsViewModel.audioHistory.collectAsStateWithLifecycle()
@@ -69,6 +80,8 @@ fun SimpleDownloaderPage(
      val notificationState by settingsViewModel.notificationState.collectAsStateWithLifecycle() // TODO. Add this at some point.
      val playlist by settingsViewModel.playlistState.collectAsStateWithLifecycle()
 
+     var sponsorExpansion by remember { mutableStateOf(false) }
+     var aria2cExpansion by remember { mutableStateOf(false) } 
 
      val infiniteTransition =
           rememberInfiniteTransition(label = "update transition")
@@ -94,7 +107,7 @@ fun SimpleDownloaderPage(
                          modifier = Modifier.size(50.dp),
                          imageRotation = if (updateState == UpdateState.UPDATING) rotation else 0f,
                          contentPadding = PaddingValues(9.dp),
-                         image = updatingIconRes, // Fix: Pass the Int directly
+                         image = updatingIconRes,
                          enabled = updateState != UpdateState.UPDATING,
                          onClick = { settingsViewModel.checkYtdlpUpdate() }
                     )
@@ -164,17 +177,20 @@ fun SimpleDownloaderPage(
                title = "SponsorBlock",
                description = "SponsorBlock API integration for cutting promotions when downloading",
                image = R.drawable.sponsorblock,
-               onClick = {
-                    showSponsorDialog = true
+               onClick = { sponsorExpansion = !sponsorExpansion },
+               trailingContent = {
+                    SponsorBlockChoices(
+                         expanded = sponsorExpansion,
+                         downloaderSettingsViewModel = settingsViewModel
+                    )
                }
           ),
           SettingListInfo(
                title = "Aria2c",
                description = "Aria2c Implementation for better download speed for large files",
                image = R.drawable.layers,
-               onClick = {
-                    showAria2cDialog = true
-               }
+               onClick = { aria2cExpansion = !aria2cExpansion },
+
           ),
           SettingListInfo(
                title = if (thumbnail) "Uncut Thumbnail" else "Cut Thumbnail",
@@ -192,7 +208,7 @@ fun SimpleDownloaderPage(
           ),
           SettingListInfo(
                title = "Sleep Request Ytdlp Flag",
-               description = "Sleep Request is a flag for delayed download between each request, each number represents a second. 0 means the flag is off",
+               description = "Sleep request is a flag for delayed download between each request, each number represents a second. 0 means the flag is off",
                icon = if (sleepRequest >0) Icons.Filled.Flag else Icons.Outlined.Flag,
                onClick = { expanded = !expanded },
                trailingContent = {
@@ -214,21 +230,6 @@ fun SimpleDownloaderPage(
                     .verticalScroll(rememberScrollState())
                     .padding(paddingValues)
           ) {
-               if (showSponsorDialog) {
-                    SponsorBlockOptions(
-                         onDismissRequest = {
-                              showSponsorDialog = false
-                         }
-                    )
-               }
-               if (showAria2cDialog) {
-                    Aria2cOptions(
-                         onDismissRequest = {
-                              showAria2cDialog = false
-                         }
-                    )
-               }
-
                Text(
                     text = "General",
                     modifier = Modifier.padding(

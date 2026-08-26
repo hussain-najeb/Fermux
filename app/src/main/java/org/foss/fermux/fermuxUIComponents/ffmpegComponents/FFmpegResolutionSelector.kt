@@ -39,7 +39,7 @@ fun ResolutionSelect(
                shape = RoundedCornerShape(8.dp),
                border = BorderStroke(1.dp, color = FermuxColors.fermuxHelperBorder)
           ) {
-               SingleChoiceSegmentedButtonRow(
+               SingleChoiceSegmentedButtonRow(  // TODO. Add aniamtion to this one as well so beween each trans it gets some sort of anaimation
                     modifier = Modifier
                          .padding(7.dp)
                          .fillMaxWidth()
@@ -48,7 +48,6 @@ fun ResolutionSelect(
                          SegmentedButton(
                               selected = resolution == selectedChoice,
                               onClick = { settingsViewModel.setVideoResolution(selectedChoice) },
-                              icon = {},
                               shape = SegmentedButtonDefaults.itemShape(
                                    index = position,
                                    count = options.size,

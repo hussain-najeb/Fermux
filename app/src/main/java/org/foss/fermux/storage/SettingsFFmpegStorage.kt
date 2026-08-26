@@ -70,4 +70,18 @@ class FFmpegSettingsTab(private val context: Context) {
      suspend fun setThreadLimit(value: Int) {
           context.dataStore.edit { preferences -> preferences[THREAD_LIMIT_KEY] = value }
      }
+
+
+     suspend fun clearFFmpeg() {
+          context.dataStore.edit { preferences ->
+               preferences.remove(AUDIO_BITRATE_KEY)
+               preferences.remove(NORMALIZE_AUDIO_KEY)
+               preferences.remove(MONO_DOWNMIX_KEY)
+               preferences.remove(ENABLE_VIDEO_COMPRESSION_KEY)
+               preferences.remove(VIDEO_RESOLUTION_KEY)
+               preferences.remove(VIDEO_CRF_KEY)
+               preferences.remove(USE_HARDWARE_ENCODER_KEY)
+               preferences.remove(THREAD_LIMIT_KEY)
+          }
+     }
 }

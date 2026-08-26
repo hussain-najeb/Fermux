@@ -24,7 +24,7 @@ fun SettingsSwitch(
                     Icon(
                          imageVector = Icons.Default.Check,
                          contentDescription = null,
-                         tint = FermuxColors.fermuxBackground,
+                         tint = FermuxColors.fermuxOffWhiteTextColor,
                          modifier = Modifier.size(SwitchDefaults.IconSize),
                     )
                }

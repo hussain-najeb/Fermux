@@ -24,7 +24,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
@@ -36,17 +35,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import org.foss.fermux.fermuxUIComponents.buttons.AppIconButton
 import org.foss.fermux.fermuxUIComponents.buttons.GlobalCancelButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
-import org.foss.fermux.ytdlp.ui.historyPage.DownloadVideoList
-import org.foss.fermux.ytdlp.ui.historyPage.DownloadedAudioScreen
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates.DownloaderCards
-
 
 
 /**
@@ -183,21 +178,19 @@ fun DownloadContent(
                               // ClipBoard Button
                               AppIconButton(
                                    icon = Icons.Default.ContentPaste,
-                                   modifier = Modifier.size(70.dp).padding(6.dp),
+                                   modifier = Modifier.size(70.dp).padding(3.dp),
                                    onClick = { clipboard.getText()?.text?.let { downloaderViewModel.downloadUrl = it } }
                               )
                               // Download Button
                               AppIconButton(
                                    icon = Icons.Default.FileDownload,
                                    enabled = !doingTask,
-                                   modifier = Modifier.size(70.dp).padding(6.dp),
+                                   modifier = Modifier.size(70.dp).padding(3.dp),
                                    onClick = { downloaderViewModel.fetchedMetadata(downloaderViewModel.downloadUrl) }
                               )
                          }
+                         SideBar(navController = navController, modifier = Modifier.padding(3.dp))
                     }
-                    SideBar(
-                         navController = navController
-                    )
                }
           }
      }
