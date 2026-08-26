@@ -43,7 +43,7 @@ fun SimpleFFmpegSetting(
           viewModelStoreOwner = LocalContext.current as ComponentActivity
      )
 ) {
-
+     val threadLimit by ffmpegSettingsViewModel.threadLimit.collectAsStateWithLifecycle()
      val normalizeAudio by ffmpegSettingsViewModel.normalizeAudio.collectAsStateWithLifecycle()
      val monoDownmix by ffmpegSettingsViewModel.monoDownmix.collectAsStateWithLifecycle()
      val enableVideoCompression by ffmpegSettingsViewModel.enableVideoCompression.collectAsStateWithLifecycle()
@@ -106,7 +106,7 @@ fun SimpleFFmpegSetting(
                }
           ),
           SettingListInfo(
-               title = "Video Resolution", // TODO. Add anmimation? to this toggle
+               title = "Video Resolution", // TODO. Add anmimation? to this toggle.... I dont know that the fuck this means, I assume it needs to be wrapped in AnimateVisibility to get it to be smooth
                description = "Edit the video resolution for the selected media prior to using the converter so it outputs the selected resolution in this setting. Original is recommended",
                image = R.drawable.video_resolution,
                onClick = { resolutionExpandable = !resolutionExpandable },
@@ -146,6 +146,7 @@ fun SimpleFFmpegSetting(
           SettingListInfo(
                title = "CPU Thread Limit",
                description = "Limits how many CPU cores ffmpeg can use during conversion, trading speed for less heat and battery drain. Has no effect when hardware encoding is on",
+               image = if(threadLimit >0)R.drawable.thread_limit_on else R.drawable.thread_limit_off,
                onClick = { threadExpandable = !threadExpandable },
                trailingContent = {
                     ThreadLimitSelect(

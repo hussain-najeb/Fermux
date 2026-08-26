@@ -8,8 +8,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.Update
-import androidx.compose.material.icons.outlined.Terminal
+import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -52,7 +53,7 @@ fun SimpleDownloaderPage(
      var showSponsorDialog by remember { mutableStateOf(false) }
      var showAria2cDialog by remember { mutableStateOf(false) }
 
-
+     val sleepRequest by settingsViewModel.sleepRequest.collectAsStateWithLifecycle()
      val ytdlpDetails by settingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
      val audioHistory by settingsViewModel.audioHistory.collectAsStateWithLifecycle()
      val videoHistory by settingsViewModel.videoHistory.collectAsStateWithLifecycle()
@@ -131,11 +132,11 @@ fun SimpleDownloaderPage(
                          onCheckedChange = { settingsViewModel.setVideoHistory(it) }
                     )
                }
-          ), 
+          ),
           SettingListInfo(
-               title = if (playlist) "Playlist off" else "Playlist on",
-               description = if (playlist) "Playlists will not be downloaded when the url is copied from a playlist" else "Playlists will be downloaded when the url is copied from a playlist",
-               image = if (playlist) R.drawable.playlist_off else R.drawable.playlist_on,
+               title = if (playlist) "Playlist On" else "Playlist Off",
+               description = if (playlist) "Playlists will be downloaded when the url is copied from a playlist" else "Playlists will not be downloaded when the url is copied from a playlist",
+               image = if (playlist) R.drawable.playlist_on else R.drawable.playlist_off,
                content = {
                     SettingsSwitch(
                          checked = playlist,
@@ -192,7 +193,7 @@ fun SimpleDownloaderPage(
           SettingListInfo(
                title = "Sleep Request Ytdlp Flag",
                description = "Sleep Request is a flag for delayed download between each request, each number represents a second. 0 means the flag is off",
-               icon = Icons.Outlined.Terminal,
+               icon = if (sleepRequest >0) Icons.Filled.Flag else Icons.Outlined.Flag,
                onClick = { expanded = !expanded },
                trailingContent = {
                     RequestTimeSlider(

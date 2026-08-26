@@ -85,10 +85,10 @@ fun FermuxTerminalScreen(
                onValueChange = { userCommand = it },
                singleLine = true,
                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Send,
-                    keyboardType = KeyboardType.Ascii,
                     capitalization = KeyboardCapitalization.None,
-                    autoCorrect = false
+                    autoCorrectEnabled = false,
+                    keyboardType = KeyboardType.Ascii,
+                    imeAction = ImeAction.Send
                ),
                modifier = Modifier
                     .fillMaxWidth()

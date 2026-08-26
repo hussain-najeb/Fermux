@@ -21,14 +21,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.ui.theme.FermuxColors
 
 @SuppressLint("ContextCastToActivity")
 @Composable
-fun DownloadVideoList() {
+fun DownloadVideoList(navController: NavController) {
+
+
 
      val context = LocalContext.current
      val settingsViewModel: DownloaderSettingsViewModel = viewModel(
@@ -36,33 +41,16 @@ fun DownloadVideoList() {
                ViewModelProvider.AndroidViewModelFactory.getInstance(context.applicationContext as Application)
      )
 
-     val videoHistory by settingsViewModel.videoHistoryList.collectAsState()
+     val videoHistory by settingsViewModel.videoHistoryList.collectAsStateWithLifecycle()
 
-     Column(
-          modifier = Modifier
-               .background(FermuxColors.fermuxBackground)
-               .fillMaxSize(),
-          verticalArrangement = Arrangement.Center,
-     ) {
-          Text(
-               text = "Video History",
-               color = FermuxColors.fermuxInActiveTextColor,
-               fontSize = 40.sp,
-               fontWeight = FontWeight.Bold,
-               fontFamily = FontFamily.SansSerif,
-               modifier = Modifier.padding(start = 24.dp, top = 19.dp, end = 24.dp)
-          )
-
-          Spacer(modifier = Modifier.height(10.dp))
-
-          HorizontalDivider(
-               modifier = Modifier.padding(horizontal = 10.dp),
-               thickness = 1.dp,
-               color = FermuxColors.fermuxComponents
-          )
-
+     LargeTopBarScaffold(
+          title = "Video History",
+          onBack = { navController.popBackStack() }
+          ) { paddingValues -> 
           LazyColumn(
-               modifier = Modifier.fillMaxSize(),
+               modifier = Modifier
+               .fillMaxSize()
+               .padding(paddingValues),
                contentPadding = PaddingValues(8.dp),
                horizontalAlignment = Alignment.CenterHorizontally,
                verticalArrangement = Arrangement.Top
@@ -72,29 +60,24 @@ fun DownloadVideoList() {
                     item {
                          Box(
                               modifier = Modifier
-                                   .fillMaxSize()
-                                   .weight(1f),
+                                   .fillMaxSize(),
                               contentAlignment = Alignment.Center
                          ) {
-
-                              Spacer(modifier = Modifier.height(700.dp))
-
                               Text(
-                                   text = "Video files will appear here.",
+                                   text = "Video files will appear here",
                                    color = FermuxColors.fermuxTextColorBackground,
                                    fontSize = 16.sp,
-                                   fontFamily = FontFamily.SansSerif,
-                                   textAlign = TextAlign.Center,
-                                   modifier = Modifier.padding(horizontal = 40.dp)
-                              )
+                                        fontFamily = FontFamily.SansSerif,
+                                        textAlign = TextAlign.Center
+                                   )
+                              }
                          }
+                    } else {
+                         items(videoHistory) { videoItem -> StoredVideos(entry = videoItem) }
                     }
-               } else {
-                    items(videoHistory) { videoItem -> StoredVideos(entry = videoItem) }
                }
           }
      }
-}
 
 @Composable
 fun StoredVideos(entry: JSONHistoryCards) {

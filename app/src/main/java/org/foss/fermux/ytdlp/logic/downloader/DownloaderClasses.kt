@@ -30,7 +30,7 @@ enum class AudioQuality(val musicQuality: String, formatKind: FormatKind) // aud
 }
 
 
-// TODO. Add format supoprt for the downloader tab dialog
+// TODO. Add format support for the downloader tab dialog
 //enum class AudioFormat (val musicFormat: String) {
 //    MP3()
 //}

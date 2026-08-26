@@ -37,8 +37,6 @@ fun AppIconButton(
      onClick: () -> Unit
 ) {
 
-     // TODO. Replace the Whens
-
      val interactionSource = remember { MutableInteractionSource() }
      val isPressed by interactionSource.collectIsPressedAsState()
 
@@ -55,10 +53,7 @@ fun AppIconButton(
      )
 
      val iconColor by animateColorAsState(
-          targetValue = when {
-               isPressed -> color.fermuxActiveIcon
-               else -> color.fermuxInActiveIcon
-          },
+          targetValue = if (isPressed) color.fermuxActiveIcon else color.fermuxInActiveIcon,
           animationSpec = tween(durationMillis = 200),
           label = "Fermux Icon Colors"
      )

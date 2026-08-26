@@ -1,10 +1,13 @@
 package org.foss.fermux.fermuxUIComponents.generalComponents
 
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontFamily
@@ -33,11 +36,13 @@ fun LargeTopBarScaffold(
                .nestedScroll(scrollBehavior.nestedScrollConnection),
           containerColor = FermuxColors.fermuxBackground,
           topBar = {
-               Column {
+     
                     LargeTopAppBar(
+                         modifier = Modifier
+                         .clip(RoundedCornerShape(bottomEnd = 8.dp, bottomStart = 8.dp)),
                          colors = TopAppBarDefaults.topAppBarColors(
                               containerColor = FermuxColors.fermuxBackground,
-                              scrolledContainerColor = FermuxColors.fermuxBackground,
+                              scrolledContainerColor = FermuxColors.fermuxSaturatedComponents,
                               navigationIconContentColor = Color.Unspecified,
                               titleContentColor = Color.Unspecified,
                               actionIconContentColor = Color.Unspecified
@@ -48,7 +53,7 @@ fun LargeTopBarScaffold(
                                    title,
                                    fontFamily = FontFamily.Default,
                                    fontWeight = FontWeight.W500,
-                                   fontSize = 35.sp,
+                                   fontSize = 25.sp,
                                    color = Color.White,
                                    modifier = Modifier.padding(10.dp)
                               )
@@ -61,10 +66,7 @@ fun LargeTopBarScaffold(
                               )
                          }
                     )
-                    SectionDivider()
-                    Spacer(modifier = Modifier.height(20.dp))
-               }
-          },
+               },
           content = content
      )
 }

@@ -6,7 +6,14 @@ import android.annotation.SuppressLint
 import android.app.Application
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
@@ -24,13 +31,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.ui.theme.FermuxColors
 
 @SuppressLint("ContextCastToActivity")
 @Composable
-fun DownloadedAudioScreen() {
+fun DownloadedAudioScreen(navController: NavController) {
 
      val context = LocalContext.current
 
@@ -41,32 +50,14 @@ fun DownloadedAudioScreen() {
 
      val audioHistory by settingsViewModel.audioHistoryList.collectAsState()
 
-     Column(
-          modifier = Modifier
-               .background(FermuxColors.fermuxBackground)
-               .fillMaxSize(),
-          verticalArrangement = Arrangement.Center,
-     ) {
-          Text(
-               text = "Audio History",
-               color = FermuxColors.fermuxInActiveTextColor,
-               fontSize = 40.sp,
-               fontWeight = FontWeight.Bold,
-               fontFamily = FontFamily.SansSerif,
-               modifier = Modifier.padding(start = 24.dp, top = 19.dp, end = 24.dp)
-          )
-
-          Spacer(modifier = Modifier.height(10.dp))
-
-          HorizontalDivider(
-               modifier = Modifier.padding(horizontal = 10.dp),
-               thickness = 1.dp,
-               color = FermuxColors.fermuxComponents
-          )
-
-
+LargeTopBarScaffold(
+          title = "Video History",
+          onBack = { navController.popBackStack() }
+          ) { paddingValues -> 
           LazyColumn(
-               modifier = Modifier.fillMaxSize(),
+               modifier = Modifier
+               .fillMaxSize()
+               .padding(paddingValues),
                contentPadding = PaddingValues(8.dp),
                horizontalAlignment = Alignment.CenterHorizontally,
                verticalArrangement = Arrangement.Top
@@ -75,21 +66,16 @@ fun DownloadedAudioScreen() {
                     item {
                          Box(
                               modifier = Modifier
-                                   .fillMaxSize()
-                                   .weight(1f),
-
+                                   .fillMaxSize(),
                               contentAlignment = Alignment.Center
                          ) {
 
-                              Spacer(modifier = Modifier.height(700.dp))
-
                               Text(
-                                   text = "Audio files will appear here.",
+                                   text = "Audio files will appear here",
                                    color = FermuxColors.fermuxTextColorBackground,
                                    fontSize = 16.sp,
                                    fontFamily = FontFamily.SansSerif,
                                    textAlign = TextAlign.Center,
-                                   modifier = Modifier.padding(horizontal = 40.dp)
                               )
                          }
                     }
@@ -105,10 +91,6 @@ fun DownloadedAudioScreen() {
           }
      }
 }
-
-
-//  TODO. The cards should be scrollable and not static
-
 
 @Composable
 fun StoredCard(entry: JSONHistoryCards) {

@@ -1,35 +1,63 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
-import org.foss.fermux.fermuxUIComponents.buttons.TextWithIconButton
+import org.foss.fermux.main.MainScreens
+import org.foss.fermux.main.Miscellaneous
 import org.foss.fermux.ui.theme.FermuxColors
 
-/**
- * The floating, collapsible navigation rail: a toggle button pinned to the
- * bottom-start corner, and (when open) a column of page icons above it.
- *
- * This composable owns ONLY the rail UI — it does not size or own the
- * screen, and does not know what "page content" is. The caller overlays it
- * on top of their own content within whatever bounds are already sized.
- */
+
+private data class AppIcons (
+     val image: Int,
+     val onClick: () -> Unit
+)
+
 @Composable
 fun SideBar(
-     onPageSelected: (Page) -> Unit,
      modifier: Modifier = Modifier,
+     navController: NavController
 ) {
      var isSideBarOpen by remember { mutableStateOf(false) }
+
+     val sideBarEntries = listOf(
+          AppIcons(
+               image = R.drawable.download,
+               onClick = { navController.navigate(MainScreens.Downloader.route) }
+            ),
+          AppIcons(
+               image = R.drawable.library_music_off,
+               onClick = { navController.navigate(Miscellaneous.DownloaderMusicList.route) }
+          ),
+          AppIcons(
+               image = R.drawable.video_library_off,
+               onClick = { navController.navigate(Miscellaneous.DownloaderVideosList.route) }
+          )
+     )
 
      Box(
           modifier = modifier.fillMaxSize().padding(3.dp),
@@ -52,26 +80,20 @@ fun SideBar(
                          .padding(start = 5.dp)
                          .clip(RoundedCornerShape(8.dp))
                          .border(1.0.dp, FermuxColors.fermuxHelperBorder, RoundedCornerShape(8.dp))
-                         .width(70.dp)
+                         .width(65.dp)
                          .background(FermuxColors.fermuxSurface),
                ) {
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    Page.entries.forEach { page ->
-                         TextWithIconButton(
+                    sideBarEntries.forEach { option ->
+                         ImageButton(
                               modifier = Modifier
                                    .size(60.dp)
-                                   .padding(3.dp)
                                    .align(Alignment.CenterHorizontally),
-                              icon = page.image,
-                              contentDescription = page.descriptor,
-                              onClick = { onPageSelected(page) },
+                              image = option.image,
+                              onClick = option.onClick
                          )
-                         Spacer(modifier = Modifier.height(10.dp))
                     }
                }
           }
-
           ImageButton(
                modifier = Modifier.size(70.dp).align(Alignment.BottomStart),
                imageModifier = Modifier.size(32.dp),

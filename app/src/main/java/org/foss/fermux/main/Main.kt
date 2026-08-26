@@ -3,6 +3,7 @@ package org.foss.fermux.main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import coil3.ImageLoader
 import coil3.compose.setSingletonImageLoaderFactory
 import coil3.video.VideoFrameDecoder
@@ -14,6 +15,8 @@ import org.foss.fermux.ui.theme.FermuxTheme
 class MainActivity : ComponentActivity() {
      override fun onCreate(savedInstanceState: Bundle?) {
           super.onCreate(savedInstanceState)
+
+          enableEdgeToEdge()
 
           getInstance().init(this)
           YoutubeDL.getInstance().init(this)

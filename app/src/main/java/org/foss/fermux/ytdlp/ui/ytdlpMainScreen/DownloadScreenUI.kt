@@ -48,11 +48,6 @@ import org.foss.fermux.ytdlp.ui.historyPage.DownloadedAudioScreen
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates.DownloaderCards
 
 
-enum class Page(val image: ImageVector, val descriptor: String) {
-     DownloadPage(Icons.Default.Download, "Download Page"),
-     AudioListPage(Icons.Filled.LibraryMusic, "Audio Page"),
-     VideoListPage(Icons.Filled.VideoLibrary, "Video Page"),
-}
 
 /**
  * The download tab's content: URL input, download/clipboard actions, and the
@@ -81,119 +76,6 @@ fun DownloadContent(
      val isError = downloaderViewModel.state is DownloadStatus.Error
      val clipboard = LocalClipboardManager.current
 
-     Box(modifier = Modifier.fillMaxSize()) {
-          Column(
-               modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .fillMaxSize()
-                    .imePadding()
-                    .background(FermuxColors.fermuxBackground)
-          ) {
-
-               Text(
-                    text = "Note: always update your version of the downloader in the settings",
-                    color = FermuxColors.fermuxBackgroundTextColor,
-                    fontSize = 16.sp,
-                    fontStyle = FontStyle.Normal,
-                    fontFamily = FontFamily.Default,
-                    modifier = Modifier.padding(7.dp)
-               )
-
-               DownloaderCards(downloaderViewModel.state, downloaderViewModel, navController = navController)
-
-               Spacer(modifier = Modifier.height(10.dp))
-
-               Box(modifier = Modifier.wrapContentSize()) {
-                    OutlinedTextField(
-                         modifier = Modifier
-                              .fillMaxWidth()
-                              .padding(15.dp),
-                         value = downloaderViewModel.downloadUrl,
-                         isError = isError,
-                         shape = RoundedCornerShape(8.dp),
-                         minLines = 1,
-                         maxLines = 7,
-                         colors = OutlinedTextFieldDefaults.colors( // TODO. Add actual good colors here.
-                              focusedBorderColor = FermuxColors.fermuxSecondaryBorder,
-                              unfocusedBorderColor = FermuxColors.fermuxGenericBorder,
-                              focusedLabelColor = FermuxColors.fermuxPrimaryBorder,
-                              unfocusedLabelColor = FermuxColors.fermuxTextColorBackground,
-                              cursorColor = FermuxColors.fermuxGenericBorder,
-                              focusedTextColor = Color.White,
-                              unfocusedTextColor = Color.White,
-                              errorTextColor = FermuxColors.fermuxLightErrorTextColor,
-                              errorBorderColor = FermuxColors.fermuxLightErrorTextColor,
-                              errorLabelColor = FermuxColors.fermuxLightErrorTextColor,
-                              errorCursorColor = FermuxColors.fermuxLightErrorTextColor,
-                              errorContainerColor = FermuxColors.fermuxErrorCardColor,
-                              unfocusedContainerColor = FermuxColors.fermuxComponents,
-                              focusedContainerColor = FermuxColors.inActiveTextField
-                         ),
-                         onValueChange = { txt -> downloaderViewModel.downloadUrl = txt },
-                         placeholder = {
-                              Text(
-                                   text = "Type URL here",
-                                   fontFamily = FontFamily.Default,
-                                   textAlign = TextAlign.Start,
-                                   color = FermuxColors.fermuxTextColorBackground,
-                                   modifier = Modifier.padding(start = 9.dp, bottom = 5.dp)
-                              )
-                         },
-                         trailingIcon = {
-
-                              androidx.compose.animation.AnimatedVisibility(
-                                   visible = downloaderViewModel.downloadUrl.isNotEmpty(),
-                                   enter = expandVertically(tween(70)) + fadeIn(tween(100)),
-                                   exit = shrinkVertically(tween(70)) + fadeOut(tween(100))
-                              ) {
-                                   GlobalCancelButton(
-                                        modifier = Modifier
-                                             .size(40.dp)
-                                             .padding(end = 3.dp),
-                                        onClick = {
-                                             downloaderViewModel.downloadUrl = ""
-                                        }
-                                   )
-                              }
-                         },
-                         keyboardOptions = KeyboardOptions(
-                              imeAction = ImeAction.Send,
-                              capitalization = KeyboardCapitalization.None,
-                              autoCorrect = false
-                         ),
-                    )
-               }
-          }
-
-          Box(
-               contentAlignment = Alignment.BottomEnd,
-               modifier = Modifier
-                    .fillMaxSize()
-          ) {
-
-               Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                    // ClipBoard Button
-                    AppIconButton(
-                         icon = Icons.Default.ContentPaste,
-                         modifier = Modifier.size(70.dp).padding(6.dp),
-                         onClick = { clipboard.getText()?.text?.let { downloaderViewModel.downloadUrl = it } }
-                    )
-                    // Download Button
-                    AppIconButton(
-                         icon = Icons.Default.FileDownload,
-                         enabled = !doingTask,
-                         modifier = Modifier.size(70.dp).padding(6.dp),
-                         onClick = { downloaderViewModel.fetchedMetadata(downloaderViewModel.downloadUrl) }
-                    )
-               }
-          }
-     }
-}
-
-@Composable
-fun DownloaderScreen(navController: NavHostController) {
-     var currentPage by remember { mutableStateOf(Page.DownloadPage) }
-
      LargeTopBarScaffold(
           title = "Downloader",
           onBack = {
@@ -206,17 +88,117 @@ fun DownloaderScreen(navController: NavHostController) {
                     .padding(innerPadding)
                     .background(FermuxColors.fermuxBackground),
           ) {
-               when (currentPage) {
-                    Page.DownloadPage -> DownloadContent(navController = navController)
-                    Page.AudioListPage -> DownloadedAudioScreen()
-                    Page.VideoListPage -> DownloadVideoList()
-               }
 
-               SideBar(
-                    onPageSelected = {
-                         currentPage = it
-                    }, // TODO. Make the sidebar naviagte to actual pages and not draw on the existing downloader tab
-               )
+               Box(modifier = Modifier.fillMaxSize()) {
+                    Column(
+                         modifier = Modifier
+                              .verticalScroll(rememberScrollState())
+                              .fillMaxSize()
+                              .imePadding()
+                              .background(FermuxColors.fermuxBackground)
+                    ) {
+
+                         Text(
+                              text = "Note: always update your version of the downloader in the settings",
+                              color = FermuxColors.fermuxBackgroundTextColor,
+                              fontSize = 16.sp,
+                              fontStyle = FontStyle.Normal,
+                              fontFamily = FontFamily.Default,
+                              modifier = Modifier.padding(7.dp)
+                         )
+
+                         DownloaderCards(downloaderViewModel.state, downloaderViewModel, navController = navController)
+
+                         Spacer(modifier = Modifier.height(10.dp))
+
+                         Box(modifier = Modifier.wrapContentSize()) {
+                              OutlinedTextField(
+                                   modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(15.dp),
+                                   value = downloaderViewModel.downloadUrl,
+                                   isError = isError,
+                                   shape = RoundedCornerShape(8.dp),
+                                   minLines = 1,
+                                   maxLines = 7,
+                                   colors = OutlinedTextFieldDefaults.colors( // TODO. Add actual good colors here.
+                                        focusedBorderColor = FermuxColors.fermuxSecondaryBorder,
+                                        unfocusedBorderColor = FermuxColors.fermuxGenericBorder,
+                                        focusedLabelColor = FermuxColors.fermuxPrimaryBorder,
+                                        unfocusedLabelColor = FermuxColors.fermuxTextColorBackground,
+                                        cursorColor = FermuxColors.fermuxGenericBorder,
+                                        focusedTextColor = Color.White,
+                                        unfocusedTextColor = Color.White,
+                                        errorTextColor = FermuxColors.fermuxLightErrorTextColor,
+                                        errorBorderColor = FermuxColors.fermuxLightErrorTextColor,
+                                        errorLabelColor = FermuxColors.fermuxLightErrorTextColor,
+                                        errorCursorColor = FermuxColors.fermuxLightErrorTextColor,
+                                        errorContainerColor = FermuxColors.fermuxErrorCardColor,
+                                        unfocusedContainerColor = FermuxColors.fermuxComponents,
+                                        focusedContainerColor = FermuxColors.inActiveTextField
+                                   ),
+                                   onValueChange = { txt -> downloaderViewModel.downloadUrl = txt },
+                                   placeholder = {
+                                        Text(
+                                             text = "Type URL here",
+                                             fontFamily = FontFamily.Default,
+                                             textAlign = TextAlign.Start,
+                                             color = FermuxColors.fermuxTextColorBackground,
+                                             modifier = Modifier.padding(start = 9.dp, bottom = 5.dp)
+                                        )
+                                   },
+                                   trailingIcon = {
+
+                                        androidx.compose.animation.AnimatedVisibility(
+                                             visible = downloaderViewModel.downloadUrl.isNotEmpty(),
+                                             enter = expandVertically(tween(70)) + fadeIn(tween(100)),
+                                             exit = shrinkVertically(tween(70)) + fadeOut(tween(100))
+                                        ) {
+                                             GlobalCancelButton(
+                                                  modifier = Modifier
+                                                       .size(40.dp)
+                                                       .padding(end = 3.dp),
+                                                  onClick = {
+                                                       downloaderViewModel.downloadUrl = ""
+                                                  }
+                                             )
+                                        }
+                                   },
+                                   keyboardOptions = KeyboardOptions(
+                                        imeAction = ImeAction.Send,
+                                        capitalization = KeyboardCapitalization.None,
+                                        autoCorrect = false
+                                   ),
+                              )
+                         }
+                    }
+
+                    Box(
+                         contentAlignment = Alignment.BottomEnd,
+                         modifier = Modifier
+                              .fillMaxSize()
+                    ) {
+
+                         Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                              // ClipBoard Button
+                              AppIconButton(
+                                   icon = Icons.Default.ContentPaste,
+                                   modifier = Modifier.size(70.dp).padding(6.dp),
+                                   onClick = { clipboard.getText()?.text?.let { downloaderViewModel.downloadUrl = it } }
+                              )
+                              // Download Button
+                              AppIconButton(
+                                   icon = Icons.Default.FileDownload,
+                                   enabled = !doingTask,
+                                   modifier = Modifier.size(70.dp).padding(6.dp),
+                                   onClick = { downloaderViewModel.fetchedMetadata(downloaderViewModel.downloadUrl) }
+                              )
+                         }
+                    }
+                    SideBar(
+                         navController = navController
+                    )
+               }
           }
      }
 }

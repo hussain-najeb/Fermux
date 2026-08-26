@@ -16,44 +16,46 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun HomeScreen(navigationController: NavHostController) {
-
-     Box(
-          modifier = Modifier
-               .fillMaxSize()
-               .background(FermuxColors.fermuxBackground)
-               .padding(12.dp),
-          contentAlignment = Alignment.Center
-     ) {
-          Column(
-               modifier = Modifier.align(Alignment.TopCenter),
-               verticalArrangement = Arrangement.spacedBy(8.dp)
-          ) {
-               val screens = listOf(
-                    MainScreens.Terminal,
-                    MainScreens.Downloader,
-                    MainScreens.Converter,
-                    MainScreens.Settings,
-               )
-               screens.forEach { screen ->
-                    AppCard(
-                         modifier = Modifier
-                              .fillMaxWidth()
-                              .weight(0.25f)
-                              .padding(4.dp),
-                         pressable = true,
-                         onClick = { navigationController.navigate(screen.route) }
-                    ) {
-                         screen.descriptor?.let {
-                              Text(
-                                   text = it, color =
-                                        Color.White,
-                                   fontSize = 22.sp,
-                                   fontStyle = FontStyle.Italic,
-                                   modifier = Modifier.padding(15.dp)
-                              )
-                         }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(FermuxColors.fermuxBackground)
+            .systemBarsPadding()
+            .padding(12.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .align(Alignment.TopCenter),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            val screens = listOf(
+                MainScreens.Terminal,
+                MainScreens.Downloader,
+                MainScreens.Converter,
+                MainScreens.Settings,
+            )
+            screens.forEach { screen ->
+                AppCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(0.25f)
+                        .padding(4.dp),
+                    pressable = true,
+                    onClick = { navigationController.navigate(screen.route) }
+                ) {
+                    screen.descriptor?.let {
+                        Text(
+                            text = it,
+                            color = Color.White,
+                            fontSize = 22.sp,
+                            fontStyle = FontStyle.Italic,
+                            modifier = Modifier.padding(15.dp)
+                        )
                     }
-               }
-          }
-     }
+                }
+            }
+        }
+    }
 }
