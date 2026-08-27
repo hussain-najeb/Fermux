@@ -15,6 +15,8 @@ data class FermuxColor(
      val fermuxInActiveButton: Color = Color(0xFF303258),
      val fermuxActiveButton: Color = Color(0xFFadc6ff),
      val fermuxInActiveBackButton: Color = Color(0xFF252638),
+     val fermuxRedDeleteColorInActive: Color = Color(0xFFF8504E),
+     val fermuxRedDeleteColorActive: Color = Color(0xFFf06866),
 
      // Fermux Segmented buttons
      val activeContainer: Color = Color(0xFF9baede),

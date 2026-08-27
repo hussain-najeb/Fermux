@@ -24,6 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import org.foss.fermux.R
+import org.foss.fermux.fermuxUIComponents.buttons.SettingsResetButton
 import org.foss.fermux.fermuxUIComponents.ffmpegComponents.AudioBitrateSlider
 import org.foss.fermux.fermuxUIComponents.ffmpegComponents.CrfSlider
 import org.foss.fermux.fermuxUIComponents.ffmpegComponents.ResolutionSelect
@@ -54,6 +55,7 @@ fun SimpleFFmpegSetting(
      var resolutionExpandable by remember { mutableStateOf(false) }
      var crfExpandable by remember { mutableStateOf(false) }
      var threadExpandable by remember { mutableStateOf(false) }
+     var resetFFmpeg by remember { mutableStateOf(false) }
 
 
      val simpleFFmpegSetting = listOf(
@@ -151,6 +153,17 @@ fun SimpleFFmpegSetting(
                trailingContent = {
                     ThreadLimitSelect(
                          expanded = threadExpandable
+                    )
+               }
+          ),
+          SettingListInfo(
+               title = "Reset Converter Settings",
+               description = "Reset the converter settings to there original state",
+               onClick = { resetFFmpeg = !resetFFmpeg },
+               trailingContent = {
+                    SettingsResetButton(
+                         expanded = resetFFmpeg,
+                         onClick = { ffmpegSettingsViewModel.setClearFFmpeg() } // TODO. Add toast here so the user knows its been done
                     )
                }
           )

@@ -35,6 +35,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
+import org.foss.fermux.fermuxUIComponents.buttons.SettingsResetButton
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.Aria2cModeSelector
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.RequestTimeSlider
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.SponsorBlockChoices
@@ -96,7 +97,6 @@ fun SimpleDownloaderPage(
           ),
           label = "update rotation"
      )
-
 
 
      val simpleDownloaderSettings = listOf(
@@ -190,7 +190,7 @@ fun SimpleDownloaderPage(
           ),
           SettingListInfo(
                title = "Aria2c",
-               description = "Aria2c Implementation for better download speeds, escpsiaclly for large files. Use the Edge Case option when downloading on the highest setting in the downloader, per  ",
+               description = "Aria2c Implementation for better download speeds, especially for large files. Use the Edge Case option when downloading on the highest setting in the downloader, per  ",
                image = R.drawable.layers,
                onClick = { aria2cExpansion = !aria2cExpansion },
                trailingContent = {
@@ -217,7 +217,7 @@ fun SimpleDownloaderPage(
           SettingListInfo(
                title = "Sleep Request Ytdlp Flag",
                description = "Sleep request is a flag for delayed download between each request, each number represents a second. 0 means the flag is off",
-               icon = if (sleepRequest >0) Icons.Filled.Flag else Icons.Outlined.Flag,
+               icon = if (sleepRequest > 0) Icons.Filled.Flag else Icons.Outlined.Flag,
                onClick = { expanded = !expanded },
                trailingContent = {
                     RequestTimeSlider(
@@ -226,11 +226,14 @@ fun SimpleDownloaderPage(
                }
           ),
           SettingListInfo(
-               title = "Reset Converter",
-               description = "Reset converter settings to there original state",
+               title = "Reset Downloader Settings",
+               description = "Reset the downloader settings to there original state",
                onClick = { resetDownloader = !resetDownloader },
                trailingContent = {
-                    // TODO. Add the "reset button" to deafualt here and be done with it.
+                    SettingsResetButton(
+                         expanded = resetDownloader,
+                         onClick = { settingsViewModel.setClearYtdlp() } // TODO. Add toast here so the user knows its been done
+                    )
                }
           )
      )

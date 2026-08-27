@@ -2,14 +2,22 @@ package org.foss.fermux.fermuxUIComponents.ffmpegComponents
 
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -26,7 +34,7 @@ fun ResolutionSelect(
      @SuppressLint("ContextCastToActivity") settingsViewModel: FFmpegSettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
 ) {
      val resolution by settingsViewModel.videoResolution.collectAsStateWithLifecycle()
-     val options = listOf("" to "Original", "480" to "480p", "720" to "720p", "1080" to "1080p", "1440" to "1440p")
+     val options = listOf("" to "Defualt", "480" to "480p", "720" to "720p", "1080" to "1080p", "1440" to "1440p")
 
      AnimatedVisibility(
           visible = expanded,
@@ -39,7 +47,7 @@ fun ResolutionSelect(
                shape = RoundedCornerShape(8.dp),
                border = BorderStroke(1.dp, color = FermuxColors.fermuxHelperBorder)
           ) {
-               SingleChoiceSegmentedButtonRow(  // TODO. Add aniamtion to this one as well so beween each trans it gets some sort of anaimation
+               SingleChoiceSegmentedButtonRow(  // TODO. Add aniamtion to this one as well so beween each trans it gets some sort of anaimation, make it like the lawnChair setting where its a surface that hold options and the animations are mush smoother and better.
                     modifier = Modifier
                          .padding(7.dp)
                          .fillMaxWidth()

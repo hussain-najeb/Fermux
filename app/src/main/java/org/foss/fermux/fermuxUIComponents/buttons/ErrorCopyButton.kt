@@ -34,18 +34,14 @@ fun ErrorCopyButton(
      val isPressed by interactionSource.collectIsPressedAsState()
 
      val containerColor by animateColorAsState(
-          targetValue = when {
-               isPressed -> FermuxColors.fermuxActiveButton
-               else -> Color.White
-          },
+          targetValue = if (isPressed) FermuxColors.fermuxActiveButton else Color.White,
           animationSpec = tween(200),
           label = "Fermux Button Colors",
      )
      val iconColor by animateColorAsState(
-          targetValue = when {
-               isPressed -> FermuxColors.fermuxActiveIcon
-               else -> FermuxColors.fermuxInActiveButton
-          }
+          targetValue = if (isPressed) FermuxColors.fermuxActiveIcon else FermuxColors.fermuxInActiveButton,
+          animationSpec = tween(200),
+          label = "Fermux Icon Colors"
      )
      val buttonAnimation by animateFloatAsState(
           targetValue = if (isPressed) 0.90f else 1.0f,
