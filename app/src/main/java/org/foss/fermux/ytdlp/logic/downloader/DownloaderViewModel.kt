@@ -24,6 +24,10 @@ import java.net.UnknownHostException
 import java.util.*
 import kotlin.time.Duration.Companion.milliseconds
 
+/**
+ * The downloader ViewModel used to manage state, cancel tasks, and to handle network and ytdlp related errors.
+ */
+
 
 class DownloaderViewModel : ViewModel() {
      var state by mutableStateOf<DownloadStatus>(DownloadStatus.Idle)
@@ -41,6 +45,9 @@ class DownloaderViewModel : ViewModel() {
           "Did you paste a URL?"
      )
 
+     /**
+      * Uses the url to start a metadata collection task, assign the correct state, and handling errors with [downloadErrorHandler].
+      */
      fun fetchedMetadata(downloadUrl: String) {
           downloaderJob = viewModelScope.launch {
                state = DownloadStatus.Loading
@@ -59,6 +66,9 @@ class DownloaderViewModel : ViewModel() {
           }
      }
 
+     /**
+      * Used as a helper function for error handling.
+      */
      private fun downloadErrorHandler(e: Exception) {
           Log.e("MetadataFetch", "Fetch failed: ${e.javaClass.simpleName}", e)
           val raw = when (e) {
@@ -68,6 +78,9 @@ class DownloaderViewModel : ViewModel() {
           state = DownloadStatus.Error(flavorError.random(), raw)
      }
 
+     /**
+      * Used to handle The Downloader's states, settings, metadata, audio and video assignment, and for data to be assigned to [DownloadWorker] to make it work asynchronously and perform the downloading task.
+      */
      fun startingDownload(context: Context, audio: AudioQuality?, video: VideoQuality?) {
           val settingsTab = DownloaderSettingsTab(context.applicationContext)
           val metadata = when (val current = state) {
@@ -139,6 +152,14 @@ class DownloaderViewModel : ViewModel() {
           }
      }
 
+     /**
+      * Downloader cancel button to clear a process such as:
+      *
+      * * Handle Mid-download task that's unwanted
+      * * Handle the reset process after an error
+      * * Clear a successful process
+      *
+      */
      fun cancelButton(context: Context) {
           activeProcess?.let { id ->
                YoutubeDL.destroyProcessById(id.toString())

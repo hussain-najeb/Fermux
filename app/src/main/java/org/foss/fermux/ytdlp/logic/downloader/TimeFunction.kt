@@ -2,6 +2,10 @@ package org.foss.fermux.ytdlp.logic.downloader
 
 import android.annotation.SuppressLint
 
+
+/**
+ *  A function to calculate the time and hand it to [org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates.FinishedCard]
+ */
 @SuppressLint("DefaultLocale")
 fun videoTime(seconds: Int): String {
      val hours = seconds / 3600

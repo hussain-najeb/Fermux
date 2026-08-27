@@ -23,6 +23,9 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      val downloadPath: StateFlow<String> = settingsTab.downloadPath
           .stateIn(viewModelScope, SharingStarted.Lazily, "")
 
+     val quickJS: StateFlow<Boolean> = settingsTab.quickJS
+          .stateIn(viewModelScope,SharingStarted.Lazily, true )
+
      val notificationState: StateFlow<Boolean> = settingsTab.notificationState
           .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
@@ -85,6 +88,10 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
      fun setVideoHistory(value: Boolean) {
           viewModelScope.launch { settingsTab.setVideoHistory(value) }
+     }
+
+     fun setQuickJS(value: Boolean) {
+          viewModelScope.launch { settingsTab.setQuickJS(value) }
      }
 
      fun setYtdlpDetails(value: Boolean) {

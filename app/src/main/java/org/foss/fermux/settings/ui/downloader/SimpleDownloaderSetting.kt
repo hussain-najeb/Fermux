@@ -18,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.filled.SettingsBackupRestore
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material3.MaterialTheme
@@ -71,6 +72,8 @@ fun SimpleDownloaderPage(
      val videoHistory by settingsViewModel.videoHistory.collectAsStateWithLifecycle()
      val isCheckingForUpdate by settingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
      val updateChecker by settingsViewModel.upToDate.collectAsStateWithLifecycle()
+     val sponsorBlock by settingsViewModel.sponsorBlock.collectAsStateWithLifecycle()
+     val quickJS by  settingsViewModel.quickJS.collectAsStateWithLifecycle()
      val updateState = when {
           isCheckingForUpdate -> UpdateState.UPDATING
           updateChecker == true -> UpdateState.SUCCESS
@@ -181,6 +184,12 @@ fun SimpleDownloaderPage(
                description = "SponsorBlock API integration for cutting promotions when downloading",
                image = R.drawable.sponsorblock,
                onClick = { sponsorExpansion = !sponsorExpansion },
+               content = {
+                    SettingsSwitch(
+                         checked = sponsorBlock,
+                         onCheckedChange = { settingsViewModel.setSponsorBlock(it) }
+                    )
+               },
                trailingContent = {
                     SponsorBlockChoices(
                          expanded = sponsorExpansion,
@@ -190,7 +199,7 @@ fun SimpleDownloaderPage(
           ),
           SettingListInfo(
                title = "Aria2c",
-               description = "Aria2c Implementation for better download speeds, especially for large files. Use the Edge Case option when downloading on the highest setting in the downloader, per  ",
+               description = "Aria2c Implementation for better download speeds, especially for large files. Use the Edge Case option when downloading on the highest setting in the downloader",
                image = R.drawable.layers,
                onClick = { aria2cExpansion = !aria2cExpansion },
                trailingContent = {
@@ -226,8 +235,22 @@ fun SimpleDownloaderPage(
                }
           ),
           SettingListInfo(
+               title = "Quick JS Framework",
+               description = "QuickJS is a JavaScript engine yt-dlp uses to solve YouTube's PO token challenges and bypass Google's anti-bot measures",
+               image = if (quickJS) R.drawable.flash_on else R.drawable.flash_off,
+               content = {
+                    SettingsSwitch(
+                         checked = quickJS,
+                         onCheckedChange = {
+                              settingsViewModel.setQuickJS(it)
+                         }
+                    )
+               }
+          ),
+          SettingListInfo(
                title = "Reset Downloader Settings",
                description = "Reset the downloader settings to there original state",
+               icon = Icons.Default.SettingsBackupRestore,
                onClick = { resetDownloader = !resetDownloader },
                trailingContent = {
                     SettingsResetButton(

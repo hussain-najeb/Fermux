@@ -34,7 +34,7 @@ fun ResolutionSelect(
      @SuppressLint("ContextCastToActivity") settingsViewModel: FFmpegSettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
 ) {
      val resolution by settingsViewModel.videoResolution.collectAsStateWithLifecycle()
-     val options = listOf("" to "Defualt", "480" to "480p", "720" to "720p", "1080" to "1080p", "1440" to "1440p")
+     val options = listOf("" to "OG", "480" to "480p", "720" to "720p", "1080" to "1080p", "1440" to "1440p")
 
      AnimatedVisibility(
           visible = expanded,

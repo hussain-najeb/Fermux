@@ -10,31 +10,35 @@ import kotlinx.coroutines.runBlocking
 import org.foss.fermux.storage.DownloaderSettingsTab
 import org.foss.fermux.storage.JSONHistoryCards
 
+
+/**
+ * The downloads worker for background, asynchronous work. This class handles most of the settings work for the [org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage] page and [DownloaderSettingsTab] as well as handling the JSON history cards.
+ */
 class DownloadWorker(context: Context, params: WorkerParameters) :
      CoroutineWorker(context, params) {
      override suspend fun doWork(): Result {
 
           val settingsTab = DownloaderSettingsTab(applicationContext)
           val sponsorBlock = settingsTab.sponsorBlock.first()
+          val showDetails = settingsTab.ytdlpDetails.first()
           val sponsorBlockCategories = settingsTab.sponsorBlockCategories.first()
           val sleepRequest = settingsTab.sleepRequest.first()
           val embedThumbnail = settingsTab.embedThumbnail.first()
           val playlistStatus = settingsTab.playlistStatus.first()
           val aria2cMode = settingsTab.aria2cMode.first()
+          val quickJS = settingsTab.quickJS.first()
 
 
           val audioName = inputData.getString("audio")
           val videoName = inputData.getString("video")
           val audio = audioName?.let { AudioQuality.valueOf(it) }
           val video = videoName?.let { VideoQuality.valueOf(it) }
-
           val url = inputData.getString("url") ?: return Result.failure()
           val title = inputData.getString("title") ?: "unknown title"
           val thumbnail = inputData.getString("thumbnail") ?: "unknown thumbnail"
           val duration = inputData.getInt("duration", 0).toLong()
           val uploader = inputData.getString("uploader") ?: "unknown uploader"
 
-          val showDetails = settingsTab.ytdlpDetails.first()
           var lastProgressUpdateAt = 0L
 
           try {
@@ -74,6 +78,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                     url = url,
                     taskId = id.toString(),
                     aria2cMode = aria2cMode,
+                    quickJs = quickJS,
                     musicQuality = audio,
                     embedThumbnail = embedThumbnail,
                     playlistStatus = playlistStatus,

@@ -21,6 +21,7 @@ val SLEEP_REQUEST_KEY = intPreferencesKey("sleep_request_seconds")
 val ARIA2C_MODE_KEY = stringPreferencesKey("aria2c_mode")
 val DOWNLOADING_DETAILS = booleanPreferencesKey("download_details")
 val SHOW_YTDLP_VIDEO_HISTORY = booleanPreferencesKey("video_history")
+val QUICK_JS = booleanPreferencesKey("quick js")
 val SHOW_YTDLP_AUDIO_HISTORY = booleanPreferencesKey("audio_history")
 val EMBEDTHUMBNAIL = booleanPreferencesKey("embed_thumbnail")
 val PLAYLIST_STATUS = booleanPreferencesKey("playlist_status")
@@ -39,10 +40,11 @@ class DownloaderSettingsTab(private val context: Context) {
      val sleepRequest: Flow<Int> = context.dataStore.data.map { preferences -> preferences[SLEEP_REQUEST_KEY] ?: 0 }
      val embedThumbnail: Flow<Boolean> =
           context.dataStore.data.map { preferences -> preferences[EMBEDTHUMBNAIL] ?: true }
+     val quickJS: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[QUICK_JS] ?: true }
      val aria2cMode: Flow<Aria2cMode> = context.dataStore.data.map { preferences ->
-     preferences[ARIA2C_MODE_KEY]
-                    ?.let { runCatching { Aria2cMode.valueOf(it) }.getOrNull() }
-                    ?: Aria2cMode.Always
+          preferences[ARIA2C_MODE_KEY]
+               ?.let { runCatching { Aria2cMode.valueOf(it) }.getOrNull() }
+               ?: Aria2cMode.Always
      }
      val audioHistory: Flow<Boolean> =
           context.dataStore.data.map { preferences -> preferences[SHOW_YTDLP_AUDIO_HISTORY] ?: true }
@@ -51,7 +53,7 @@ class DownloaderSettingsTab(private val context: Context) {
      val ytdlpDetails: Flow<Boolean> =
           context.dataStore.data.map { preferences -> preferences[DOWNLOADING_DETAILS] ?: true }
      val sponsorBlock: Flow<Boolean> =
-          context.dataStore.data.map { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] ?: false }
+          context.dataStore.data.map { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] ?: true }
      val playlistStatus: Flow<Boolean> =
           context.dataStore.data.map { preferences -> preferences[PLAYLIST_STATUS] ?: false }
      val sponsorBlockCategories: Flow<Set<String>> = context.dataStore.data.map { preferences ->
@@ -83,7 +85,11 @@ class DownloaderSettingsTab(private val context: Context) {
      }
 
      suspend fun setAria2cMode(value: Aria2cMode) {
-     context.dataStore.edit { preferences -> preferences[ARIA2C_MODE_KEY] = value.name }
+          context.dataStore.edit { preferences -> preferences[ARIA2C_MODE_KEY] = value.name }
+     }
+
+     suspend fun setQuickJS(value: Boolean) {
+          context.dataStore.edit { preferences -> preferences[QUICK_JS] = value }
      }
 
      suspend fun setEmbedThumbnail(value: Boolean) {
@@ -145,6 +151,7 @@ class DownloaderSettingsTab(private val context: Context) {
                preferences.remove(PLAYLIST_STATUS)
                preferences.remove(SPONSOR_BLOCK_IMPLEMENTATION)
                preferences.remove(SPONSOR_BLOCK_CATEGORIES)
+               preferences.remove(QUICK_JS)
           }
      }
 }
