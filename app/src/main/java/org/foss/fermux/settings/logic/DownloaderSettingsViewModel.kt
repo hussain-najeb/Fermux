@@ -17,6 +17,11 @@ import org.foss.fermux.storage.JSONHistoryCards
 import java.util.concurrent.atomic.AtomicBoolean
 
 
+enum class YtdlpChannel {
+     Stable,
+     Nightly
+}
+
 class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(application) {
      private val settingsTab = DownloaderSettingsTab(application.applicationContext)
 
@@ -122,23 +127,43 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      private val _upToDate = MutableStateFlow<Boolean?>(null)
      val upToDate: StateFlow<Boolean?> = _upToDate
      val ytdlpUpdateStatus: StateFlow<String?> = _ytdlpUpdateStatus
-     val currentVersionName = YoutubeDL.getInstance().versionName(getApplication())
-     fun checkYtdlpUpdate() {
+     private val _currentVersionName = MutableStateFlow(
+          YoutubeDL.getInstance().versionName(getApplication()) ?: "Unknown"
+     )
+     val currentVersionName: StateFlow<String> = _currentVersionName
+
+     fun checkYtdlpUpdate(channel: YtdlpChannel = YtdlpChannel.Stable) {
           if (!isUpdatingYtdlp.compareAndSet(false, true)) return
+
           _isCheckingForUpdate.value = true
+          _upToDate.value = null
+
           viewModelScope.launch(Dispatchers.IO) {
                _ytdlpUpdateStatus.value = "Checking for update..."
+
                try {
-                    YoutubeDL.getInstance().updateYoutubeDL(
+                    val updateChannel = when (channel) {
+                         YtdlpChannel.Stable -> YoutubeDL.UpdateChannel.STABLE
+                         YtdlpChannel.Nightly -> YoutubeDL.UpdateChannel.NIGHTLY
+                    }
+
+                    val result = YoutubeDL.getInstance().updateYoutubeDL(
                          appContext = getApplication(),
-                         updateChannel = YoutubeDL.UpdateChannel.STABLE
+                         updateChannel = updateChannel
                     )
 
-                    _ytdlpUpdateStatus.value = "yt-dlp is up to date"
+                    _ytdlpUpdateStatus.value = when (result) {
+                         YoutubeDL.UpdateStatus.DONE -> "yt-dlp updated successfully"
+                         YoutubeDL.UpdateStatus.ALREADY_UP_TO_DATE ->
+                              "yt-dlp is already up to date"
+                         null -> "yt-dlp update completed"
+                    }
+                    _currentVersionName.value =
+                         YoutubeDL.getInstance().versionName(getApplication()) ?: "Unknown"
                     _upToDate.value = true
                } catch (e: Exception) {
                     Log.e("fermuxYtdlpUpdater", "yt-dlp update failed", e)
-                    _ytdlpUpdateStatus.value = "Update check failed"
+                    _ytdlpUpdateStatus.value = "Update failed"
                     _upToDate.value = false
                } finally {
                     _isCheckingForUpdate.value = false
@@ -146,5 +171,4 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
                }
           }
      }
-
 }

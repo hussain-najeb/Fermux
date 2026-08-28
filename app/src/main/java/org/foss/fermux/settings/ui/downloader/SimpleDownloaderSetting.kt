@@ -10,10 +10,8 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -35,9 +33,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
 import org.foss.fermux.fermuxUIComponents.buttons.SettingsResetButton
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.Aria2cModeSelector
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderVersionSwap
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.RequestTimeSlider
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.SponsorBlockChoices
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
@@ -46,11 +44,6 @@ import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.ui.theme.FermuxColors
-
-
-private enum class UpdateState {
-     IDLE, UPDATING, SUCCESS, FAILED
-}
 
 @Composable
 fun SimpleDownloaderPage(
@@ -72,14 +65,11 @@ fun SimpleDownloaderPage(
      val videoHistory by settingsViewModel.videoHistory.collectAsStateWithLifecycle()
      val isCheckingForUpdate by settingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
      val updateChecker by settingsViewModel.upToDate.collectAsStateWithLifecycle()
+     val ytdlpUpdateStatus by settingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
+     val currentVersionName by settingsViewModel.currentVersionName.collectAsStateWithLifecycle()
      val sponsorBlock by settingsViewModel.sponsorBlock.collectAsStateWithLifecycle()
      val quickJS by  settingsViewModel.quickJS.collectAsStateWithLifecycle()
-     val updateState = when {
-          isCheckingForUpdate -> UpdateState.UPDATING
-          updateChecker == true -> UpdateState.SUCCESS
-          updateChecker == false -> UpdateState.FAILED
-          else -> UpdateState.IDLE
-     }
+
      val thumbnail by settingsViewModel.embedThumbnail.collectAsStateWithLifecycle()
      val notificationState by settingsViewModel.notificationState.collectAsStateWithLifecycle() // TODO. Add this at some point.
      val playlist by settingsViewModel.playlistState.collectAsStateWithLifecycle()
@@ -88,6 +78,7 @@ fun SimpleDownloaderPage(
      var expanded by remember { mutableStateOf(false) }
      var aria2cExpansion by remember { mutableStateOf(false) }
      var resetDownloader by remember { mutableStateOf(false) }
+     var ytdlpUpdaterExpanded by remember { mutableStateOf(false) }
 
 
      val infiniteTransition = rememberInfiniteTransition(label = "update transition")
@@ -104,18 +95,18 @@ fun SimpleDownloaderPage(
 
      val simpleDownloaderSettings = listOf(
           SettingListInfo(
-               title = "Update Ytdlp",
-               description = "Update your current version of ytdlp. Current version is ${settingsViewModel.currentVersionName}",
+               title = "Update yt-dlp",
+               description = if (isCheckingForUpdate) {
+                    ytdlpUpdateStatus ?: "Checking for update..."
+               } else {
+                    "Current version is $currentVersionName"
+               },
                icon = Icons.Default.Update,
-               content = {
-                    val updatingIconRes = updateIconResource(updateState)
-                    ImageButton(
-                         modifier = Modifier.size(50.dp),
-                         imageRotation = if (updateState == UpdateState.UPDATING) rotation else 0f,
-                         contentPadding = PaddingValues(9.dp),
-                         image = updatingIconRes,
-                         enabled = updateState != UpdateState.UPDATING,
-                         onClick = { settingsViewModel.checkYtdlpUpdate() }
+               onClick = { ytdlpUpdaterExpanded = !ytdlpUpdaterExpanded },
+               trailingContent = {
+                    DownloaderVersionSwap(
+                         settingsViewModel = settingsViewModel,
+                         expanded = ytdlpUpdaterExpanded
                     )
                }
           ),
@@ -324,14 +315,5 @@ fun SimpleDownloaderPage(
                     )
                }
           }
-     }
-}
-
-@Composable
-private fun updateIconResource(updateState: UpdateState): Int {
-     return when (updateState) {
-          UpdateState.IDLE, UpdateState.UPDATING -> R.drawable.update_icon
-          UpdateState.SUCCESS -> R.drawable.check
-          UpdateState.FAILED -> R.drawable.close
      }
 }
