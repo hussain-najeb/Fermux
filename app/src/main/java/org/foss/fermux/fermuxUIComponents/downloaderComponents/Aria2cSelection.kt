@@ -71,7 +71,19 @@ fun Aria2cModeSelector(
                                    inactiveContainerColor = FermuxColors.inActiveContainer,
                                    inactiveContentColor = FermuxColors.inActiveContent,
                                    activeBorderColor = FermuxColors.fermuxSecondaryBorder,
-                                   inactiveBorderColor = FermuxColors.fermuxGenericBorder
+                                   inactiveBorderColor = FermuxColors.fermuxGenericBorder,
+                                   disabledActiveContainerColor =
+                                        FermuxColors.activeContainer.copy(alpha = 0.4f),
+                                   disabledActiveContentColor =
+                                        FermuxColors.activeContent.copy(alpha = 0.4f),
+                                   disabledActiveBorderColor =
+                                        FermuxColors.fermuxSecondaryBorder.copy(alpha = 0.4f),
+                                   disabledInactiveContainerColor =
+                                        FermuxColors.inActiveContainer.copy(alpha = 0.4f),
+                                   disabledInactiveContentColor =
+                                        FermuxColors.inActiveContent.copy(alpha = 0.4f),
+                                   disabledInactiveBorderColor =
+                                        FermuxColors.fermuxGenericBorder.copy(alpha = 0.4f)
                               )
                          ) {
                               Text(label)

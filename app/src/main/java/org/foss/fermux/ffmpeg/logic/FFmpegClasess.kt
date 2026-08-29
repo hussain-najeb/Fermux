@@ -131,5 +131,4 @@ data class FFmpegUserPrefs(
      val videoCrf: Int? = null,
      val useHardwareEncoder: Boolean = false,
      val threadLimit: Int? = null,
-     // TODO. Reset to default settings here as well maybe.
 )

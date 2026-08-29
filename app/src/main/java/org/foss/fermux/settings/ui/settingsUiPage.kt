@@ -19,9 +19,6 @@ import org.foss.fermux.main.SettingsScreens
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.ui.theme.FermuxColors
 
-/**
- *  TODO. Add an option to reset to default settings
- */
 
 @Composable
 fun SettingsScreen(

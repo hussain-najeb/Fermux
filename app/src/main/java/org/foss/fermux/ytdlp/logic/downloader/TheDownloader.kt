@@ -2,9 +2,7 @@ package org.foss.fermux.ytdlp.logic.downloader
 
 import android.content.Context
 import android.os.Environment
-import android.util.Log
 import com.yausername.youtubedl_android.YoutubeDLRequest
-import java.io.File
 
 /*
  *
@@ -39,7 +37,6 @@ import java.io.File
  * @param url This parameter is to get the url given by the user to be downloaded.
  * @param sleepRequest This parameter is for the user to decide how much they want time added between every ytdlp request.
  * @param quickJs This is a JS framework for impersonation used by ytdlp to get past YouTube.
- * @param sp
  */
 suspend fun downloaderLogic(
      context: Context,
@@ -62,14 +59,12 @@ suspend fun downloaderLogic(
      val outputPath = "${downloadDir?.absolutePath}/%(title)s.%(ext)s"
      val request = YoutubeDLRequest(url)
 
-     val nativeLibDir = context.applicationInfo.nativeLibraryDir
-     val quickJsBinary = File(nativeLibDir, "libqjs.so")
 
-     if (quickJsBinary.exists() && quickJs) {
-          request.addOption("--js-runtimes", "quickjs:${quickJsBinary.absolutePath}")
-     } else {
-          Log.w("fermux", "QuickJS binary not found at: $quickJsBinary")
-     }
+     if (quickJs)
+     request.addOption(
+          "--js-runtimes",
+          "quickjs:${context.applicationInfo.nativeLibraryDir}/libqjs.so"
+     )
 
      if (sleepRequest > 0) {
           request.addOption("--sleep-requests", sleepRequest)

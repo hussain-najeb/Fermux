@@ -19,7 +19,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 enum class YtdlpChannel {
      Stable,
-     Nightly
+     Nightly,
+     Master
 }
 
 class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(application) {
@@ -145,13 +146,13 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
                     val updateChannel = when (channel) {
                          YtdlpChannel.Stable -> YoutubeDL.UpdateChannel.STABLE
                          YtdlpChannel.Nightly -> YoutubeDL.UpdateChannel.NIGHTLY
+                         YtdlpChannel.Master -> YoutubeDL.UpdateChannel.MASTER
                     }
 
                     val result = YoutubeDL.getInstance().updateYoutubeDL(
                          appContext = getApplication(),
                          updateChannel = updateChannel
                     )
-
                     _ytdlpUpdateStatus.value = when (result) {
                          YoutubeDL.UpdateStatus.DONE -> "yt-dlp updated successfully"
                          YoutubeDL.UpdateStatus.ALREADY_UP_TO_DATE ->

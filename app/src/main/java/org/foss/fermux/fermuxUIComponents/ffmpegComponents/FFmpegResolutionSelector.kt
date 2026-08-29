@@ -34,7 +34,7 @@ fun ResolutionSelect(
      @SuppressLint("ContextCastToActivity") settingsViewModel: FFmpegSettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
 ) {
      val resolution by settingsViewModel.videoResolution.collectAsStateWithLifecycle()
-     val options = listOf("" to "OG", "480" to "480p", "720" to "720p", "1080" to "1080p", "1440" to "1440p")
+     val options = listOf("" to "Original", "480" to "480p", "720" to "720p", "1080" to "1080p", "1440" to "1440p")
 
      AnimatedVisibility(
           visible = expanded,
@@ -47,7 +47,7 @@ fun ResolutionSelect(
                shape = RoundedCornerShape(8.dp),
                border = BorderStroke(1.dp, color = FermuxColors.fermuxHelperBorder)
           ) {
-               SingleChoiceSegmentedButtonRow(  // TODO. Add aniamtion to this one as well so beween each trans it gets some sort of anaimation, make it like the lawnChair setting where its a surface that hold options and the animations are mush smoother and better.
+               SingleChoiceSegmentedButtonRow(  // TODO. Add animation to this one as well so between each trans it gets some sort of animation, make it like the lawnChair setting where its a surface that hold options and the animations are mush smoother and better.
                     modifier = Modifier
                          .padding(7.dp)
                          .fillMaxWidth()
@@ -61,7 +61,7 @@ fun ResolutionSelect(
                                    count = options.size,
                                    baseShape = RoundedCornerShape(8.dp)
                               ),
-
+                              icon = {},
                               colors = SegmentedButtonDefaults.colors(
                                    activeContainerColor = FermuxColors.activeContainer,
                                    activeContentColor = FermuxColors.activeContent,

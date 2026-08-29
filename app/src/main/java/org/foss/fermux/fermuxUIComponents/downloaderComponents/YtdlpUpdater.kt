@@ -31,7 +31,8 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 private val ytdlpChannelOptions = listOf(
      YtdlpChannel.Stable to "Stable",
-     YtdlpChannel.Nightly to "Nightly"
+     YtdlpChannel.Nightly to "Nightly",
+     YtdlpChannel.Master to "Master"
 )
 
 @Composable
