@@ -52,7 +52,7 @@ class DownloaderViewModel : ViewModel() {
           downloaderJob = viewModelScope.launch {
                state = DownloadStatus.Loading
                try {
-                    val metadata = withTimeout(20000L.milliseconds) {
+                    val metadata = withTimeout(60000L.milliseconds) {
                          fetchingTheMetadata(downloadUrl)
                     }
                     state = DownloadStatus.MidChoice(metadata)

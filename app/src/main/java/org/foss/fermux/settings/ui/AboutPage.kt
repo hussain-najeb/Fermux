@@ -47,7 +47,8 @@ fun AboutPage(navController: NavController) {
                title = "App Version",
                description = "The current version of the app is $versionName",
                icon = Icons.Outlined.Info
-          )
+          ),
+          // TODO. Add a thing here to get the versions of FFmepg, QuickJS, aria2c, and python version?
      )
 
 
@@ -76,7 +77,7 @@ fun AboutPage(navController: NavController) {
                          trailingContent = aboutList.trailingContent
                     )
                }
-
+// TODO. Add ffmpeg, ytdlp, aria2c and QuickJS.js info and version here as well.
 
           }
      }
