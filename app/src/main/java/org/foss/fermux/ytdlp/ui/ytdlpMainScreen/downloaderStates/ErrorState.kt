@@ -22,9 +22,13 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
 import org.foss.fermux.fermuxUIComponents.buttons.ErrorCopyButton
+import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderCard
+import org.foss.fermux.main.Miscellaneous
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
 
@@ -33,6 +37,7 @@ import org.foss.fermux.ui.theme.JetbrainsMono
 fun ErrorCard(
      errorMessage: String,
      rawError: String,
+     navController: NavController,
      onCancel: () -> Unit
 ) {
      @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
@@ -85,8 +90,14 @@ fun ErrorCard(
                )
                CancelButton(
                     modifier = Modifier
-                         .align(Alignment.BottomStart),
+                         .align(Alignment.TopStart),
                     onClick = { onCancel() }
+               )
+               ImageButton(
+                    modifier = Modifier
+                         .align(Alignment.BottomStart),
+                    image = R.drawable.logs,
+                    onClick = { navController.navigate(Miscellaneous.DownloaderLogs.route) }
                )
           }
      }

@@ -12,6 +12,11 @@ android {
      packaging {
           jniLibs {
                useLegacyPackaging = true
+               keepDebugSymbols += setOf(
+                    "**/libffmpeg.so",
+                    "**/libffprobe.so",
+                    "**/libffmpeg.zip.so"
+               )
           }
      }
 
@@ -81,7 +86,9 @@ dependencies {
      androidTestImplementation(libs.androidx.compose.ui.test.junit4)
      debugImplementation(libs.androidx.compose.ui.tooling)
      debugImplementation(libs.androidx.compose.ui.test.manifest)
+     implementation(libs.jackson.databind)
+     implementation(libs.common)
+     implementation(libs.jackson.annotations)
      implementation(files("libs/youtubedl-android-local.aar"))
-     implementation(libs.ffmpeg.android)
-     implementation(libs.aria2c.android)
+     implementation(files("libs/ffmpeg-android-local.aar"))
 }

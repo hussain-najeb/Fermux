@@ -61,6 +61,16 @@ enum class VideoQuality(val videoQuality: String) {
 }
 
 /**
+ * Enum for audio formats
+ */
+enum class AudioFormat(val ytdlpFormat: String) {
+     OpusFormat("opus"),
+     Mp3Format("mp3"),
+     FlacFormat("flac"),
+     M4aFormat("m4a")
+} // TODO. add UI to this
+
+/**
  * Enum class used by the [org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage] and the [downloaderLogic] to manage aria2c.
  */
 enum class Aria2cMode {

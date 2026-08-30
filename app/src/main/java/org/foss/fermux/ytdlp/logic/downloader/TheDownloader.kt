@@ -45,6 +45,7 @@ suspend fun downloaderLogic(
      url: String,
      taskId: String,
      sleepRequest: Int = 0,
+//     audioFormat: AudioFormat,
      playlistStatus: Boolean = true,
      quickJs: Boolean = true,
      musicQuality: AudioQuality? = null,
@@ -60,11 +61,15 @@ suspend fun downloaderLogic(
      val request = YoutubeDLRequest(url)
 
 
-     if (quickJs)
-     request.addOption(
-          "--js-runtimes",
-          "quickjs:${context.applicationInfo.nativeLibraryDir}/libqjs.so"
-     )
+     if (quickJs) {
+          request.addOption(
+               "--js-runtimes",
+               "quickjs:${context.applicationInfo.nativeLibraryDir}/libqjs-cli.so"
+          )
+     }
+
+     request.addOption("--impersonate", "chrome")
+
 
      if (sleepRequest > 0) {
           request.addOption("--sleep-requests", sleepRequest)
@@ -90,6 +95,7 @@ suspend fun downloaderLogic(
           )
      }
 
+     //if (embedThumbnail && audioFormat != AudioFormat.OpusFormat) {
      if (embedThumbnail) {
           request.addOption("--embed-thumbnail")
      }
@@ -102,7 +108,8 @@ suspend fun downloaderLogic(
 
      musicQuality?.let {
           request.addOption("-x")
-          request.addOption("--audio-format", "mp3")
+          request.addOption("--audio-quality", "mp3")
+//          request.addOption("--audio-format", audioFormat.ytdlpFormat)
           request.addOption("--audio-quality", it.musicQuality)
      }
      videoQuality?.let {

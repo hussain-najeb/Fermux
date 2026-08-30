@@ -15,21 +15,27 @@ import java.io.File
  */
 
 suspend fun execution(
-     downloadDir: File?,
-     request: YoutubeDLRequest,
-     taskId: String,
-     onUpdate: (Float, String) -> Unit,
-     context: Context
+     downloadDir: File?, request: YoutubeDLRequest, taskId: String, onUpdate: (Float, String) -> Unit, context: Context
 ) {
      withContext(Dispatchers.IO) {
-          val existingFiles = downloadDir?.listFiles()?.map { it.absolutePath }?.toSet() ?: emptySet()
+
+          val existingFiles = downloadDir?.listFiles()?.associate { file ->
+                    file.absolutePath to Pair(file.lastModified(), file.length())
+               } ?: emptyMap()
+
           val response = YoutubeDL.getInstance().execute(request, taskId) { progress, _, line ->
                onUpdate(progress, line)
           }
 
-          downloadDir?.listFiles()?.filter { it.absolutePath !in existingFiles }?.forEach { file ->
-               copyFileToDownloads(context, file, file.name, subFolder = "fermux/downloader")
-          }
+          downloadDir?.listFiles()?.filter { file ->
+                    val previous = existingFiles[file.absolutePath]
+
+                    previous == null || previous.first != file.lastModified() || previous.second != file.length()
+               }?.forEach { file ->
+                    copyFileToDownloads(
+                         context, file, file.name, subFolder = "fermux/downloader"
+                    )
+               }
           Log.d("fermux", "exit=${response.exitCode}")
           Log.d("fermux", "out=${response.out}")
           Log.d("fermux", "err=${response.err}")

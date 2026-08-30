@@ -140,7 +140,7 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           _upToDate.value = null
 
           viewModelScope.launch(Dispatchers.IO) {
-               _ytdlpUpdateStatus.value = "Checking for update..."
+               _ytdlpUpdateStatus.value = "Updating yt-dlp..."
 
                try {
                     val updateChannel = when (channel) {

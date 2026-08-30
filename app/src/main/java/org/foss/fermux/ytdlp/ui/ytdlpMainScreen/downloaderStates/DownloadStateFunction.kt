@@ -78,6 +78,7 @@ fun DownloaderCards(
                is DownloadStatus.Error -> {
                     ErrorCard(
                          errorMessage = targetState.errorMessage,
+                         navController = navController,
                          rawError = targetState.rawError,
                          onCancel = { downloaderViewModel.cancelButton(context) }
                     )

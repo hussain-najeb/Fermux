@@ -44,14 +44,6 @@ import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates.DownloaderCards
 
 
-/**
- * The download tab's content: URL input, download/clipboard actions, and the
- * status cards. This is plain content — it fills whatever [Box] the caller
- * (e.g. [DownloaderScreen]) gives it, and does not draw its own background
- * or manage scaffold/sidebar concerns.
- *
- * 
- */
 
 
 @Composable
@@ -94,7 +86,7 @@ fun DownloadContent(
                     ) {
 
                          Text(
-                              text = "Note: always update your version of the downloader in the settings",
+                              text = "Note: always update your version of the downloader in the settings. It's highly recommended to get the nightly version",
                               color = FermuxColors.fermuxBackgroundTextColor,
                               fontSize = 16.sp,
                               fontStyle = FontStyle.Normal,

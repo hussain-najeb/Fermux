@@ -16,7 +16,7 @@
       </SelectionState>
       <SelectionState runConfigName="fermux release">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-08-27T15:32:56.912864716Z">
+        <DropdownSelection timestamp="2026-08-29T20:56:52.929575525Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=/home/Hussain/Android/Sdk/.android/avd/Pixel_6a.avd" />
