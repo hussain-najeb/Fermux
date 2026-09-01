@@ -47,7 +47,7 @@ fun AboutPage(navController: NavController) {
                title = "Dependency And Library Versions",
                description = "Press to see all the versions of dependencies and libraries the app uses",
                image = R.drawable.library,
-               onClick = { navController.navigate(SettingsScreens.LibraryPage) }
+               onClick = { navController.navigate(SettingsScreens.LibraryPage.route) }
           )
      )
 

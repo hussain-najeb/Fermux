@@ -32,6 +32,7 @@ suspend fun downloaderLogic(
 //     audioFormat: AudioFormat,
      playlistStatus: Boolean = true,
      quickJs: Boolean = true,
+     fingerprinting: Boolean = true,
      musicQuality: AudioQuality? = null,
      videoQuality: VideoQuality? = null,
      sponsorBlock: Boolean = true,
@@ -52,8 +53,10 @@ suspend fun downloaderLogic(
           )
      }
 
-     request.addOption("--impersonate", "chrome")
 
+     if (fingerprinting) {
+          request.addOption("--impersonate", "chrome")
+     }
 
      if (sleepRequest > 0) {
           request.addOption("--sleep-requests", sleepRequest)

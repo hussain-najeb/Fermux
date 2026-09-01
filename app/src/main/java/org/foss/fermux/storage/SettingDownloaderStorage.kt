@@ -22,6 +22,7 @@ val ARIA2C_MODE_KEY = stringPreferencesKey("aria2c_mode")
 val DOWNLOADING_DETAILS = booleanPreferencesKey("download_details")
 val SHOW_YTDLP_VIDEO_HISTORY = booleanPreferencesKey("video_history")
 val QUICK_JS = booleanPreferencesKey("quick js")
+val FINGERPRINT = booleanPreferencesKey("fingerprint")
 val SHOW_YTDLP_AUDIO_HISTORY = booleanPreferencesKey("audio_history")
 val EMBEDTHUMBNAIL = booleanPreferencesKey("embed_thumbnail")
 val PLAYLIST_STATUS = booleanPreferencesKey("playlist_status")
@@ -41,6 +42,7 @@ class DownloaderSettingsTab(private val context: Context) {
      val embedThumbnail: Flow<Boolean> =
           context.dataStore.data.map { preferences -> preferences[EMBEDTHUMBNAIL] ?: true }
      val quickJS: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[QUICK_JS] ?: true }
+     val fingerprinting: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[FINGERPRINT] ?: true }
      val aria2cMode: Flow<Aria2cMode> = context.dataStore.data.map { preferences ->
           preferences[ARIA2C_MODE_KEY]
                ?.let { runCatching { Aria2cMode.valueOf(it) }.getOrNull() }
@@ -90,6 +92,10 @@ class DownloaderSettingsTab(private val context: Context) {
 
      suspend fun setQuickJS(value: Boolean) {
           context.dataStore.edit { preferences -> preferences[QUICK_JS] = value }
+     }
+
+     suspend fun setFingerprinting(value: Boolean) {
+          context.dataStore.edit { preferences -> preferences[FINGERPRINT] = value }     
      }
 
      suspend fun setEmbedThumbnail(value: Boolean) {
@@ -152,6 +158,7 @@ class DownloaderSettingsTab(private val context: Context) {
                preferences.remove(SPONSOR_BLOCK_IMPLEMENTATION)
                preferences.remove(SPONSOR_BLOCK_CATEGORIES)
                preferences.remove(QUICK_JS)
+               preferences.remove(FINGERPRINT)
           }
      }
 }

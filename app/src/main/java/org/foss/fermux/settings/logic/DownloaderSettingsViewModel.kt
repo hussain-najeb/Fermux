@@ -30,7 +30,10 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           .stateIn(viewModelScope, SharingStarted.Lazily, "")
 
      val quickJS: StateFlow<Boolean> = settingsTab.quickJS
-          .stateIn(viewModelScope,SharingStarted.Lazily, true )
+          .stateIn(viewModelScope, SharingStarted.Lazily, true )
+
+     val fingerprint: StateFlow<Boolean> = settingsTab.fingerprinting
+          .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
      val notificationState: StateFlow<Boolean> = settingsTab.notificationState
           .stateIn(viewModelScope, SharingStarted.Lazily, true)
@@ -98,6 +101,10 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
      fun setQuickJS(value: Boolean) {
           viewModelScope.launch { settingsTab.setQuickJS(value) }
+     }
+
+     fun setFingerprint(value: Boolean) {
+          viewModelScope.launch { settingsTab.setFingerprinting(value) }
      }
 
      fun setYtdlpDetails(value: Boolean) {

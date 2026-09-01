@@ -68,6 +68,7 @@ fun SimpleDownloaderPage(
      val currentVersionName by settingsViewModel.currentVersionName.collectAsStateWithLifecycle()
      val sponsorBlock by settingsViewModel.sponsorBlock.collectAsStateWithLifecycle()
      val quickJS by  settingsViewModel.quickJS.collectAsStateWithLifecycle()
+     val fingerprint by settingsViewModel.fingerprint.collectAsStateWithLifecycle()
 
      val thumbnail by settingsViewModel.embedThumbnail.collectAsStateWithLifecycle()
      val notificationState by settingsViewModel.notificationState.collectAsStateWithLifecycle() // TODO. Add this at some point.
@@ -233,6 +234,19 @@ fun SimpleDownloaderPage(
                          checked = quickJS,
                          onCheckedChange = {
                               settingsViewModel.setQuickJS(it)
+                         }
+                    )
+               }
+          ),
+         SettingListInfo(
+               title = "Impersonation",
+               description = "This setting enables curl_cffi and cffi, meaning it makes a request look like a real client from a website that's requesting something. Note that this is an EXPERIMENTAL feature",
+               image = if (fingerprint) R.drawable.fingerprint_on else R.drawable.fingerprint_off,
+               content = {
+                    SettingsSwitch(
+                         checked = fingerprint,
+                         onCheckedChange = {
+                              settingsViewModel.setFingerprint(it)
                          }
                     )
                }
