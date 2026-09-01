@@ -9,6 +9,7 @@ import coil3.compose.setSingletonImageLoaderFactory
 import coil3.video.VideoFrameDecoder
 import com.yausername.youtubedl_android.YoutubeDL
 import org.foss.fermux.ui.theme.FermuxTheme
+import org.foss.fermux.utils.FermuxAppMainScreen
 
 class MainActivity : ComponentActivity() {
      override fun onCreate(savedInstanceState: Bundle?) {

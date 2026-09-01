@@ -26,7 +26,7 @@ import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
 import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FFmpegCard
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.ui.MediaThumbnailImage
-import org.foss.fermux.main.Miscellaneous
+import org.foss.fermux.utils.Miscellaneous
 import org.foss.fermux.ui.theme.FermuxColors
 
 

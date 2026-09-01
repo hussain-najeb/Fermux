@@ -1,13 +1,12 @@
 package org.foss.fermux.ytdlp.logic.downloader
 
 import android.content.Context
-import android.os.Environment
 import android.util.Log
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.foss.fermux.main.copyFileToDownloads
+import org.foss.fermux.utils.fileCopyFilter
 import java.io.File
 
 
@@ -24,7 +23,7 @@ suspend fun execution(
                onUpdate(progress, line)
           }
 
-          fileCopyFilter(context, downloadDir)
+          fileCopyFilter(context, downloadDir, subfolderName = "downloader")
 
           Log.d("fermux", "exit=${response.exitCode}")
           Log.d("fermux", "out=${response.out}")
@@ -43,20 +42,4 @@ suspend fun fetchingTheMetadata(url: String): DownloadMetadata = withContext(Dis
           duration = info.duration,
           uploader = info.uploader
      )
-}
-
-suspend fun fileCopyFilter(
-     context: Context,
-     privateDirectory: File?,
-) {
-     val publicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-     val fermuxPublicDirectory = File(publicDirectory, "fermux/downloader")
-     val fermuxListfiles = fermuxPublicDirectory.listFiles()?.map { it.name }?.toSet() ?: emptySet()
-
-     privateDirectory?.listFiles()?.forEach { file ->
-          if (file.name !in fermuxListfiles) {
-               copyFileToDownloads(context, file, file.name, subFolder = "fermux/downloader")
-          }
-          file.delete()
-     }
 }

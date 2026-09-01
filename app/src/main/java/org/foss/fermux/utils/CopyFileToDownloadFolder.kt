@@ -1,4 +1,4 @@
-package org.foss.fermux.main
+package org.foss.fermux.utils
 
 import android.content.ContentValues
 import android.content.Context

@@ -108,7 +108,7 @@ fun SimpleFFmpegSetting(
                }
           ),
           SettingListInfo(
-               title = "Video Resolution", // TODO. Add anmimation? to this toggle.... I dont know that the fuck this means, I assume it needs to be wrapped in AnimateVisibility to get it to be smooth
+               title = "Video Resolution", // TODO. Add an animation? to this toggle.... I dont know that the fuck this means, I assume it needs to be wrapped in AnimateVisibility to get it to be smooth
                description = "Edit the video resolution for the selected media prior to using the converter so it outputs the selected resolution in this setting. Original is recommended",
                image = R.drawable.video_resolution,
                onClick = { resolutionExpandable = !resolutionExpandable },

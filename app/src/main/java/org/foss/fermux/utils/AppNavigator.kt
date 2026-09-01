@@ -1,4 +1,4 @@
-package org.foss.fermux.main
+package org.foss.fermux.utils
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderLogs
 import org.foss.fermux.ffmpeg.ui.ConverterScreen
 import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.FFmpegLogs
+import org.foss.fermux.main.HomeScreen
 import org.foss.fermux.settings.ui.AboutPage
 import org.foss.fermux.settings.ui.LibraryPage
 import org.foss.fermux.settings.ui.SettingsScreen

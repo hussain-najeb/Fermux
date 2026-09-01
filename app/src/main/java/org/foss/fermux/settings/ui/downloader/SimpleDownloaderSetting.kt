@@ -64,7 +64,6 @@ fun SimpleDownloaderPage(
      val audioHistory by settingsViewModel.audioHistory.collectAsStateWithLifecycle()
      val videoHistory by settingsViewModel.videoHistory.collectAsStateWithLifecycle()
      val isCheckingForUpdate by settingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
-     val updateChecker by settingsViewModel.upToDate.collectAsStateWithLifecycle()
      val ytdlpUpdateStatus by settingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
      val currentVersionName by settingsViewModel.currentVersionName.collectAsStateWithLifecycle()
      val sponsorBlock by settingsViewModel.sponsorBlock.collectAsStateWithLifecycle()
@@ -246,7 +245,7 @@ fun SimpleDownloaderPage(
                trailingContent = {
                     SettingsResetButton(
                          expanded = resetDownloader,
-                         onClick = { settingsViewModel.setClearYtdlp() } // TODO. Add toast here so the user knows its been done
+                         onClick = { settingsViewModel.setClearYtdlp() } //     TODO. Add toast here so the user knows its been done
                     )
                }
           )

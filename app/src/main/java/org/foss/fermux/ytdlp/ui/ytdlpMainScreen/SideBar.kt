@@ -29,8 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
-import org.foss.fermux.main.MainScreens
-import org.foss.fermux.main.Miscellaneous
+import org.foss.fermux.utils.MainScreens
+import org.foss.fermux.utils.Miscellaneous
 import org.foss.fermux.ui.theme.FermuxColors
 
 

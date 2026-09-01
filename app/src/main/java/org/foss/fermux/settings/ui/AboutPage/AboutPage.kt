@@ -17,8 +17,7 @@ import androidx.navigation.NavController
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingLists
-import org.foss.fermux.main.Miscellaneous
-import org.foss.fermux.main.SettingsScreens
+import org.foss.fermux.utils.SettingsScreens
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.getAppVersionName
 import org.foss.fermux.ui.theme.FermuxColors

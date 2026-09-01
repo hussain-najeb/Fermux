@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import org.foss.fermux.fermuxUIComponents.generalComponents.AppCard
 import org.foss.fermux.ui.theme.FermuxColors
+import org.foss.fermux.utils.MainScreens
 
 @Composable
 fun HomeScreen(navigationController: NavHostController) {

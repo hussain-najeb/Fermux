@@ -31,7 +31,7 @@ import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
 import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderCard
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.FermuxDownloadDescription
-import org.foss.fermux.main.Miscellaneous
+import org.foss.fermux.utils.Miscellaneous
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.DownloadMetadata

@@ -12,7 +12,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
-import org.foss.fermux.main.copyFileToDownloads
+import org.foss.fermux.utils.copyFileToDownloads
 import org.foss.fermux.settings.logic.BuildDynamicFFmpegArgs
 import org.foss.fermux.storage.FFmpegSettingsTab
 import java.io.BufferedReader

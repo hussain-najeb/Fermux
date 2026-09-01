@@ -47,7 +47,7 @@ fun ResolutionSelect(
                shape = RoundedCornerShape(8.dp),
                border = BorderStroke(1.dp, color = FermuxColors.fermuxHelperBorder)
           ) {
-               SingleChoiceSegmentedButtonRow(  // TODO. Add animation to this one as well so between each trans it gets some sort of animation, make it like the lawnChair setting where its a surface that hold options and the animations are mush smoother and better.
+               SingleChoiceSegmentedButtonRow(
                     modifier = Modifier
                          .padding(7.dp)
                          .fillMaxWidth()
