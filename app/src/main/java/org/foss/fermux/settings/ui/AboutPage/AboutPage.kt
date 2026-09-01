@@ -13,25 +13,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.navigation.NavController
+import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingLists
+import org.foss.fermux.main.Miscellaneous
+import org.foss.fermux.main.SettingsScreens
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.getAppVersionName
 import org.foss.fermux.ui.theme.FermuxColors
+import org.foss.fermux.utils.openUrl
 
 @Composable
 fun AboutPage(navController: NavController) {
      val context = LocalContext.current
      val versionName = remember { context.getAppVersionName() }
-
-
-     val uriHandler = LocalUriHandler.current
-     fun openUrl(url: String) {
-          uriHandler.openUri(url)
-     }
-
 
      val aboutSettingLists = listOf(
           SettingListInfo(
@@ -39,7 +35,7 @@ fun AboutPage(navController: NavController) {
                description = "Check the Github Repository for more information",
                icon = Icons.Default.Description,
                onClick = {
-                    openUrl("https://github.com/hussain-najeb/Fermux")
+                    context.openUrl("https://github.com/hussain-najeb/Fermux")
                }
           ),
           SettingListInfo(
@@ -48,14 +44,19 @@ fun AboutPage(navController: NavController) {
                description = "The current version of the app is $versionName",
                icon = Icons.Outlined.Info
           ),
-          // TODO. Add a thing here to get the versions of FFmepg, QuickJS, aria2c, and python version?
+          SettingListInfo(
+               title = "Dependency And Library Versions",
+               description = "Press to see all the versions of dependencies and libraries the app uses",
+               image = R.drawable.library,
+               onClick = { navController.navigate(SettingsScreens.LibraryPage) }
+          )
      )
 
 
 
 
      LargeTopBarScaffold(
-          title = "Settings",
+          title = "About Page",
           onBack = { navController.popBackStack() }
      ) { paddingValues ->
           Column(

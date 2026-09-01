@@ -9,6 +9,7 @@ import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderLogs
 import org.foss.fermux.ffmpeg.ui.ConverterScreen
 import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.FFmpegLogs
 import org.foss.fermux.settings.ui.AboutPage
+import org.foss.fermux.settings.ui.LibraryPage
 import org.foss.fermux.settings.ui.SettingsScreen
 import org.foss.fermux.settings.ui.converter.SimpleFFmpegSetting
 import org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage
@@ -32,6 +33,7 @@ sealed class SettingsScreens(val route: String, val descriptor: String?) {
      object SimpleTerminal : SettingsScreens(route = "simple terminal", descriptor = "Terminal Main Page")
      object Themes : SettingsScreens(route = "themes", descriptor = "Themes Page")
      object AboutAppPage : SettingsScreens(route = "about", descriptor = "About Page")
+     object LibraryPage: SettingsScreens(route = "Library", descriptor = "The main page for dependencies and library")
 
 }
 
@@ -70,6 +72,7 @@ fun FermuxAppMainScreen() {
           composable(SettingsScreens.SimpleTerminal.route) { }
           composable(SettingsScreens.Themes.route) { }
           composable(SettingsScreens.AboutAppPage.route) { AboutPage(navController) }
+          composable(SettingsScreens.LibraryPage.route) { LibraryPage(navController) }
 
           // FFmpeg
           composable(route = Miscellaneous.FFmpegLog.route) { FFmpegLogs(navController) }

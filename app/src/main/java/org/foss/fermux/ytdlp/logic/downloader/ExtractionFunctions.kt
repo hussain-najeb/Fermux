@@ -1,6 +1,7 @@
 package org.foss.fermux.ytdlp.logic.downloader
 
 import android.content.Context
+import android.os.Environment
 import android.util.Log
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLRequest
@@ -19,23 +20,12 @@ suspend fun execution(
 ) {
      withContext(Dispatchers.IO) {
 
-          val existingFiles = downloadDir?.listFiles()?.associate { file ->
-                    file.absolutePath to Pair(file.lastModified(), file.length())
-               } ?: emptyMap()
-
           val response = YoutubeDL.getInstance().execute(request, taskId) { progress, _, line ->
                onUpdate(progress, line)
           }
 
-          downloadDir?.listFiles()?.filter { file ->
-                    val previous = existingFiles[file.absolutePath]
+          fileCopyFilter(context, downloadDir)
 
-                    previous == null || previous.first != file.lastModified() || previous.second != file.length()
-               }?.forEach { file ->
-                    copyFileToDownloads(
-                         context, file, file.name, subFolder = "fermux/downloader"
-                    )
-               }
           Log.d("fermux", "exit=${response.exitCode}")
           Log.d("fermux", "out=${response.out}")
           Log.d("fermux", "err=${response.err}")
@@ -53,4 +43,20 @@ suspend fun fetchingTheMetadata(url: String): DownloadMetadata = withContext(Dis
           duration = info.duration,
           uploader = info.uploader
      )
+}
+
+suspend fun fileCopyFilter(
+     context: Context,
+     privateDirectory: File?,
+) {
+     val publicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+     val fermuxPublicDirectory = File(publicDirectory, "fermux/downloader")
+     val fermuxListfiles = fermuxPublicDirectory.listFiles()?.map { it.name }?.toSet() ?: emptySet()
+
+     privateDirectory?.listFiles()?.forEach { file ->
+          if (file.name !in fermuxListfiles) {
+               copyFileToDownloads(context, file, file.name, subFolder = "fermux/downloader")
+          }
+          file.delete()
+     }
 }

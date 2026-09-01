@@ -5,7 +5,6 @@ import android.os.Environment
 import com.yausername.youtubedl_android.YoutubeDLRequest
 
 /*
- *
  * Todo:
  *  1- Cookies implementation in the settings tab.
  *  2- UI for easy cookie extraction.
@@ -22,22 +21,7 @@ import com.yausername.youtubedl_android.YoutubeDLRequest
  *   6- cookies expire!
  */
 
-/**
- * The completed function of ytdlp that downloads and injects flags in during download.
- * This function has all the settings linked to the [org.foss.fermux.settings.logic.DownloaderSettingsViewModel]  in it to toggle on and off.
- *
- *
- * YouTube has been rolling out PO Token (Proof of Origin Token) requirements more aggressively
- * this is Google's newer anti-bot layer, separate from TLS fingerprinting and separate from
- * something like Instagram-like session checks. It specifically requires either:
- * A valid PO token (generated via a JS challenge, which yt-dlp gets through a plugin), or
- * Cookies from a real logged-in session as a fallback. That's why this function has the Quick.js engine embedded in it.
- * @param showDetails This parameter is to expose the ytdlp logs to the UI.
- * @param aria2cMode This is a boolean that turns the aria2c flag in the downloader.
- * @param url This parameter is to get the url given by the user to be downloaded.
- * @param sleepRequest This parameter is for the user to decide how much they want time added between every ytdlp request.
- * @param quickJs This is a JS framework for impersonation used by ytdlp to get past YouTube.
- */
+
 suspend fun downloaderLogic(
      context: Context,
      showDetails: Boolean,
@@ -119,7 +103,6 @@ suspend fun downloaderLogic(
 
      request.addOption("--restrict-filenames")
      request.addOption("-i")
-     request.addOption("--convert-thumbnails", "jpg")
      request.addOption("--embed-metadata")
 
      request.addOption("-o", outputPath)

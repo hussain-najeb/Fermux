@@ -34,16 +34,26 @@ suspend fun copyFileToDownloads(
           }
 
           val uri = context.contentResolver.insert(
-               MediaStore.Downloads.EXTERNAL_CONTENT_URI, values
+               MediaStore.Downloads.EXTERNAL_CONTENT_URI,
+               values
           ) ?: throw Exception("Error while opening download directory")
 
-          context.contentResolver.openOutputStream(uri)?.use { outputStream ->
-               sourceFile.inputStream().use { inputStream ->
-                    inputStream.copyTo(outputStream)
+          try {
+               val outputStream = context.contentResolver.openOutputStream(uri)
+                    ?: throw Exception("Failed to open output stream for $uri")
+
+               outputStream.use { output ->
+                    sourceFile.inputStream().use { input ->
+                         input.copyTo(output)
+                    }
                }
-          }
+          } catch (e: Exception) {
+               context.contentResolver.delete(uri, null, null)
+               throw e
+               }
 
           val deleted = sourceFile.delete()
+
           Log.d("fermux", "success at deleting $deleted")
           if (!deleted && sourceFile.exists()) {
                Log.w("fermux", "Failed to delete file: ${sourceFile.absolutePath}")
