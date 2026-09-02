@@ -17,3 +17,5 @@ local.properties
 SKILLS.md
 AGENTS.md
 .env
+app/libs/youtubedl-android-local.aar
+app/libs/ffmpeg-android-local.arr

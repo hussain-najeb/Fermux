@@ -24,7 +24,7 @@ val SHOW_YTDLP_VIDEO_HISTORY = booleanPreferencesKey("video_history")
 val QUICK_JS = booleanPreferencesKey("quick js")
 val FINGERPRINT = booleanPreferencesKey("fingerprint")
 val SHOW_YTDLP_AUDIO_HISTORY = booleanPreferencesKey("audio_history")
-val EMBEDTHUMBNAIL = booleanPreferencesKey("embed_thumbnail")
+val EMBED_THUMBNAIL = booleanPreferencesKey("embed_thumbnail")
 val PLAYLIST_STATUS = booleanPreferencesKey("playlist_status")
 val SPONSOR_BLOCK_IMPLEMENTATION = booleanPreferencesKey("sponsor_block")
 val DEFAULT_SPONSOR_BLOCK_CATEGORIES = setOf("sponsor", "selfpromo", "interaction")
@@ -40,7 +40,7 @@ class DownloaderSettingsTab(private val context: Context) {
           context.dataStore.data.map { preferences -> preferences[DOWNLOAD_PROGRESS_NOTIFICATION] ?: true }
      val sleepRequest: Flow<Int> = context.dataStore.data.map { preferences -> preferences[SLEEP_REQUEST_KEY] ?: 0 }
      val embedThumbnail: Flow<Boolean> =
-          context.dataStore.data.map { preferences -> preferences[EMBEDTHUMBNAIL] ?: true }
+          context.dataStore.data.map { preferences -> preferences[EMBED_THUMBNAIL] ?: true }
      val quickJS: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[QUICK_JS] ?: true }
      val fingerprinting: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[FINGERPRINT] ?: true }
      val aria2cMode: Flow<Aria2cMode> = context.dataStore.data.map { preferences ->
@@ -99,7 +99,7 @@ class DownloaderSettingsTab(private val context: Context) {
      }
 
      suspend fun setEmbedThumbnail(value: Boolean) {
-          context.dataStore.edit { preferences -> preferences[EMBEDTHUMBNAIL] = value }
+          context.dataStore.edit { preferences -> preferences[EMBED_THUMBNAIL] = value }
      }
 
      suspend fun setAudioHistory(value: Boolean) {
@@ -153,7 +153,7 @@ class DownloaderSettingsTab(private val context: Context) {
                preferences.remove(DOWNLOADING_DETAILS)
                preferences.remove(SHOW_YTDLP_VIDEO_HISTORY)
                preferences.remove(SHOW_YTDLP_AUDIO_HISTORY)
-               preferences.remove(EMBEDTHUMBNAIL)
+               preferences.remove(EMBED_THUMBNAIL)
                preferences.remove(PLAYLIST_STATUS)
                preferences.remove(SPONSOR_BLOCK_IMPLEMENTATION)
                preferences.remove(SPONSOR_BLOCK_CATEGORIES)
