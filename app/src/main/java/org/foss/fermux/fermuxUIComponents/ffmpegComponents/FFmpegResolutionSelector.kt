@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -34,18 +37,19 @@ fun ResolutionSelect(
      @SuppressLint("ContextCastToActivity") settingsViewModel: FFmpegSettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
 ) {
      val resolution by settingsViewModel.videoResolution.collectAsStateWithLifecycle()
-     val options = listOf("" to "Original", "480" to "480p", "720" to "720p", "1080" to "1080p", "1440" to "1440p")
+     val options = listOf("" to "As Is", "480" to "480p", "720" to "720p", "1080" to "1080p", "1440" to "1440p")
 
      AnimatedVisibility(
           visible = expanded,
-          enter = slideInVertically(animationSpec = tween(200)) + fadeIn(initialAlpha = 0.2f),
-          exit = slideOutVertically(animationSpec = tween(250)) + fadeOut(targetAlpha = 0.1f)
+          enter = expandVertically(animationSpec = MaterialTheme.motionScheme.fastEffectsSpec()) + fadeIn(initialAlpha = 0.2f),
+          exit = shrinkVertically(animationSpec = MaterialTheme.motionScheme.fastEffectsSpec()) + fadeOut(targetAlpha = 0.1f)
      ) {
           Surface(
                modifier = Modifier.wrapContentSize().padding(start = 8.dp, end = 8.dp),
                color = FermuxColors.fermuxComponents,
                shape = RoundedCornerShape(8.dp),
-               border = BorderStroke(1.dp, color = FermuxColors.fermuxHelperBorder)
+               border = BorderStroke(1.dp, color = FermuxColors.fermuxHelperBorder),
+               
           ) {
                SingleChoiceSegmentedButtonRow(
                     modifier = Modifier

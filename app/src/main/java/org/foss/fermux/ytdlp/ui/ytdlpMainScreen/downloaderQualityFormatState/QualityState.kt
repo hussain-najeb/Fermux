@@ -16,14 +16,15 @@ fun QualityState(downloaderViewModel: DownloaderViewModel) {
      val spatialSpec = MaterialTheme.motionScheme
      val context = LocalContext.current
 
-
      AnimatedContent(
           targetState = pickedFormat,
           transitionSpec = {
-               (slideInVertically(animationSpec = spatialSpec.slowSpatialSpec(), initialOffsetY = { -it }) + fadeIn(
+               (slideInVertically(
+                    animationSpec = spatialSpec.slowSpatialSpec(),
+                    initialOffsetY = { -it }) + fadeIn(
                     initialAlpha = 0.1f
-               ))
-                    .togetherWith(
+                    )
+               ).togetherWith(
                          exit = slideOutVertically(
                               animationSpec = spatialSpec.slowSpatialSpec(),
                               targetOffsetY = { -it }) + fadeOut(targetAlpha = 0.1f)
@@ -33,15 +34,12 @@ fun QualityState(downloaderViewModel: DownloaderViewModel) {
           contentKey = { it }
      ) { targetState ->
           when (targetState) {
-
-               FormatKind.Idle -> IdleQualityChoices(
-                    onPick = { pickedFormat = it },
-                    onCancel = { downloaderViewModel.cancelButton(context) })
-
-               FormatKind.Audio -> AudioQualityChoices(downloaderViewModel, onBack = { pickedFormat = FormatKind.Idle })
-
-               FormatKind.Video -> VideoQualityChoices(downloaderViewModel, onBack = { pickedFormat = FormatKind.Idle })
-
+               FormatKind.Idle -> IdleQualityChoices(onPick = { pickedFormat = it }, onCancel = { downloaderViewModel.cancelButton(context) }
+               )
+               FormatKind.Audio -> AudioQualityChoices(downloaderViewModel, onBack = { pickedFormat = FormatKind.Idle }
+               )
+               FormatKind.Video -> VideoQualityChoices(downloaderViewModel, onBack = { pickedFormat = FormatKind.Idle }
+               )
           }
      }
 }

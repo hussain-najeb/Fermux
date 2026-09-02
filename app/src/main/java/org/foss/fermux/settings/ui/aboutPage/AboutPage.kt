@@ -16,9 +16,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
-import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingLists
+import org.foss.fermux.fermuxUIComponents.settingsComponents.TileOptions
 import org.foss.fermux.utils.SettingsScreens
 import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.settings.logic.getAppVersionName
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.openUrl
@@ -35,19 +36,22 @@ fun AboutPage(navController: NavController) {
                icon = Icons.Default.Description,
                onClick = {
                     context.openUrl("https://github.com/hussain-najeb/Fermux")
-               }
+               },
+               position = TilePosition.TOP
           ),
           SettingListInfo(
                // TODO. Make so it checks if there is an update an have it tell the user. Maybe an auto updater for the app.
                title = "App Version",
                description = "The current version of the app is $versionName",
-               icon = Icons.Outlined.Info
+               icon = Icons.Outlined.Info,
+               position = TilePosition.MIDDLE
           ),
           SettingListInfo(
                title = "Dependency And Library Versions",
                description = "Press to see all the versions of dependencies and libraries the app uses",
                image = R.drawable.library,
-               onClick = { navController.navigate(SettingsScreens.LibraryPage.route) }
+               onClick = { navController.navigate(SettingsScreens.LibraryPage.route) },
+               position = TilePosition.BOTTOM
           )
      )
 
@@ -67,12 +71,16 @@ fun AboutPage(navController: NavController) {
           ) {
 
                aboutSettingLists.forEach { aboutList ->
-                    SettingLists(
+                    TileOptions(
                          title = aboutList.title,
                          description = aboutList.description,
+                         shape = aboutList.position.toShape(),
                          icon = aboutList.icon,
                          image = aboutList.image,
-                         onClick = { aboutList.onClick?.invoke() },
+                         onClick = {
+                              aboutList.onClick?.invoke()
+                              aboutList.route?.let { navController.navigate(it) }
+                         },
                          content = aboutList.content,
                          trailingContent = aboutList.trailingContent
                     )

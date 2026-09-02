@@ -1,6 +1,7 @@
 package org.foss.fermux.settings.ui.converter
 
 import android.annotation.SuppressLint
+import android.widget.ExpandableListAdapter
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -30,11 +31,21 @@ import org.foss.fermux.fermuxUIComponents.ffmpegComponents.CrfSlider
 import org.foss.fermux.fermuxUIComponents.ffmpegComponents.ResolutionSelect
 import org.foss.fermux.fermuxUIComponents.ffmpegComponents.ThreadLimitSelect
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
-import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingLists
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
+import org.foss.fermux.fermuxUIComponents.settingsComponents.TileOptions
 import org.foss.fermux.settings.logic.FFmpegSettingsViewModel
 import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
+
+
+private enum class ExpandableFFmpegSetting {
+     AudioBitrate,
+     ThreadLimit,
+     Resolution,
+     Crf,
+     ResetFFmpeg
+}
 
 
 @Composable
@@ -51,11 +62,15 @@ fun SimpleFFmpegSetting(
      val useHardwareEncoder by ffmpegSettingsViewModel.useHardwareEncoder.collectAsStateWithLifecycle()
 
 
-     var audioBitrateExpansion by remember { mutableStateOf(false) }
-     var resolutionExpandable by remember { mutableStateOf(false) }
-     var crfExpandable by remember { mutableStateOf(false) }
-     var threadExpandable by remember { mutableStateOf(false) }
-     var resetFFmpeg by remember { mutableStateOf(false) }
+     var expandedFFmpegSetting by remember {
+          mutableStateOf<ExpandableFFmpegSetting?>(null)
+     }
+
+     fun toggleFFmpeg(setting: ExpandableFFmpegSetting) {
+          expandedFFmpegSetting =
+               if (expandedFFmpegSetting == setting) null else setting
+     }
+
 
 
      val simpleFFmpegSetting = listOf(
@@ -63,12 +78,13 @@ fun SimpleFFmpegSetting(
                title = "Audio Bitrate",
                description = "Audio bitrate is the amount of data processed for each second of sound, higher is better",
                image = R.drawable.edit_audio,
-               onClick = { audioBitrateExpansion = !audioBitrateExpansion },
+               onClick = { toggleFFmpeg(ExpandableFFmpegSetting.AudioBitrate) },
                trailingContent = {
                     AudioBitrateSlider(
-                         expanded = audioBitrateExpansion
+                         expanded = expandedFFmpegSetting == ExpandableFFmpegSetting.AudioBitrate
                     )
-               }
+               },
+               position = TilePosition.TOP
           ),
           SettingListInfo(
                title = "Normalize Audio",
@@ -81,7 +97,8 @@ fun SimpleFFmpegSetting(
                               ffmpegSettingsViewModel.setNormalizeAudio(it)
                          }
                     )
-               }
+               },
+               position = TilePosition.MIDDLE
           ),
           SettingListInfo(
                title = "Mono Downmix",
@@ -92,7 +109,20 @@ fun SimpleFFmpegSetting(
                          checked = monoDownmix,
                          onCheckedChange = { ffmpegSettingsViewModel.setMonoDownmix(it) }
                     )
-               }
+               },
+               position = TilePosition.MIDDLE
+          ),
+          SettingListInfo(
+               title = "Video Resolution",
+               description = "Edit the video resolution for the selected media prior to using the converter so it outputs the selected resolution in this setting. Original is recommended",
+               image = R.drawable.video_resolution,
+               onClick = { toggleFFmpeg(ExpandableFFmpegSetting.Resolution) },
+               trailingContent = {
+                    ResolutionSelect(
+                         expanded = expandedFFmpegSetting == ExpandableFFmpegSetting.Resolution
+                    )
+               },
+               position = TilePosition.MIDDLE
           ),
           SettingListInfo(
                title = "Video Compression",
@@ -105,32 +135,47 @@ fun SimpleFFmpegSetting(
                               ffmpegSettingsViewModel.setEnableVideoCompression(it)
                          }
                     )
-               }
+               },
+               position = TilePosition.BOTTOM
           ),
-          SettingListInfo(
-               title = "Video Resolution", // TODO. Add an animation? to this toggle.... I dont know that the fuck this means, I assume it needs to be wrapped in AnimateVisibility to get it to be smooth
-               description = "Edit the video resolution for the selected media prior to using the converter so it outputs the selected resolution in this setting. Original is recommended",
-               image = R.drawable.video_resolution,
-               onClick = { resolutionExpandable = !resolutionExpandable },
-               trailingContent = {
-                    ResolutionSelect(
-                         expanded = resolutionExpandable
-                    )
-               }
-          )
      )
 
      val advanced = listOf(
           SettingListInfo(
+               title = "Reset Converter Settings",
+               description = "Reset the converter settings to there original state",
+               onClick = { toggleFFmpeg(ExpandableFFmpegSetting.ResetFFmpeg) },
+               trailingContent = {
+                    SettingsResetButton(
+                         expanded = expandedFFmpegSetting == ExpandableFFmpegSetting.ResetFFmpeg,
+                         onClick = { ffmpegSettingsViewModel.setClearFFmpeg() } // TODO. Add toast here so the user knows its been done
+                    )
+               },
+               position = TilePosition.TOP
+          ),
+          SettingListInfo(
                title = "Video CRF",
                description = "CRF is the quality target used when compressing videos. Lower is better",
                icon = Icons.Default.Tune,
-               onClick = { crfExpandable = !crfExpandable },
+               onClick = { toggleFFmpeg(ExpandableFFmpegSetting.Crf) },
                trailingContent = {
                     CrfSlider(
-                         expanded = crfExpandable
+                         expanded = expandedFFmpegSetting == ExpandableFFmpegSetting.Crf
                     )
-               }
+               },
+               position = TilePosition.MIDDLE
+          ),
+          SettingListInfo(
+               title = "CPU Thread Limit",
+               description = "Limits how many CPU cores ffmpeg can use during conversion, trading speed for less heat and battery drain. Has no effect when hardware encoding is on",
+               image = if(threadLimit >0)R.drawable.thread_limit_on else R.drawable.thread_limit_off,
+               onClick = { toggleFFmpeg(ExpandableFFmpegSetting.ThreadLimit) },
+               trailingContent = {
+                    ThreadLimitSelect(
+                         expanded = expandedFFmpegSetting == ExpandableFFmpegSetting.ThreadLimit
+                    )
+               },
+               position = TilePosition.MIDDLE
           ),
           SettingListInfo(
                title = "Hardware Endcoding",
@@ -144,29 +189,8 @@ fun SimpleFFmpegSetting(
                          }
                     )
                },
+               position = TilePosition.BOTTOM
           ),
-          SettingListInfo(
-               title = "CPU Thread Limit",
-               description = "Limits how many CPU cores ffmpeg can use during conversion, trading speed for less heat and battery drain. Has no effect when hardware encoding is on",
-               image = if(threadLimit >0)R.drawable.thread_limit_on else R.drawable.thread_limit_off,
-               onClick = { threadExpandable = !threadExpandable },
-               trailingContent = {
-                    ThreadLimitSelect(
-                         expanded = threadExpandable
-                    )
-               }
-          ),
-          SettingListInfo(
-               title = "Reset Converter Settings",
-               description = "Reset the converter settings to there original state",
-               onClick = { resetFFmpeg = !resetFFmpeg },
-               trailingContent = {
-                    SettingsResetButton(
-                         expanded = resetFFmpeg,
-                         onClick = { ffmpegSettingsViewModel.setClearFFmpeg() } // TODO. Add toast here so the user knows its been done
-                    )
-               }
-          )
      )
 
      LargeTopBarScaffold(
@@ -194,12 +218,16 @@ fun SimpleFFmpegSetting(
                )
 
                simpleFFmpegSetting.forEach { option ->
-                    SettingLists(
+                    TileOptions(
                          title = option.title,
                          description = option.description,
+                         shape = option.position.toShape(),
                          image = option.image,
                          icon = option.icon,
-                         onClick = { option.onClick?.invoke() },
+                         onClick = {
+                              option.onClick?.invoke()
+                              option.route?.let { navController.navigate(it) }
+                         },
                          content = option.content,
                          trailingContent = option.trailingContent
                     )
@@ -217,12 +245,16 @@ fun SimpleFFmpegSetting(
                )
 
                advanced.forEach { option ->
-                    SettingLists(
+                    TileOptions(
                          title = option.title,
                          description = option.description,
+                         shape = option.position.toShape(),
                          image = option.image,
                          icon = option.icon,
-                         onClick = { option.onClick?.invoke() },
+                         onClick = {
+                              option.onClick?.invoke()
+                              option.route?.let { navController.navigate(it) }
+                         },
                          content = option.content,
                          trailingContent = option.trailingContent
                     )

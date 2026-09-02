@@ -2,7 +2,10 @@ package org.foss.fermux.settings.ui
 
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -11,12 +14,14 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
-import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingLists
+import org.foss.fermux.fermuxUIComponents.settingsComponents.TileOptions
 import org.foss.fermux.utils.SettingsScreens
 import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
 
 
@@ -30,38 +35,44 @@ fun SettingsScreen(
                     title = "Downloader Settings",
                     description = "Changing the settings for Ytdlp",
                     image = R.drawable.yt_dlp,
-                    route = SettingsScreens.SimpleDownloader.route
+                    route = SettingsScreens.SimpleDownloader.route,
+                    position = TilePosition.TOP
                ),
                SettingListInfo(
                     title = "Converter Settings",
                     description = "Changing the settings for FFmpeg",
                     image = R.drawable.ffmpeg,
-                    route = SettingsScreens.SimpleFFmpeg.route
+                    route = SettingsScreens.SimpleFFmpeg.route,
+                    position = TilePosition.MIDDLE
                ),
                SettingListInfo(
                     title = "Terminal Settings",
                     description = "Changing the settings for the Terminal",
                     image = R.drawable.terminal_screen,
-                    route = SettingsScreens.SimpleTerminal.route
+                    route = SettingsScreens.SimpleTerminal.route,
+                    position = TilePosition.MIDDLE
                ),
                SettingListInfo(
                     title = "Themes",
                     description = "Changing the theme of the app",
                     icon = Icons.Default.Brush,
-                    route = SettingsScreens.Themes.route
+                    route = SettingsScreens.Themes.route,
+                    position = TilePosition.MIDDLE
                ),
                SettingListInfo(
                     title = "About",
                     description = "About page of the app",
                     icon = Icons.Default.Info,
-                    route = SettingsScreens.AboutAppPage.route
+                    route = SettingsScreens.AboutAppPage.route,
+                    position = TilePosition.BOTTOM
                )
           )
      }
 
      LargeTopBarScaffold(
           title = "Settings",
-          onBack = { navController.popBackStack() }
+          onBack = { navController.popBackStack() },
+          modifier = Modifier.padding(bottom = 15.dp)
      ) { paddingValues ->
           LazyColumn(
                modifier = Modifier
@@ -69,16 +80,22 @@ fun SettingsScreen(
                     .background(FermuxColors.fermuxBackground),
                contentPadding = paddingValues
           ) {
+               item { 
+                         Spacer(modifier = Modifier.height(17.dp))
+                    }
+
                items(
                     items = generalSettings,
                     key = { it.title }
                ) { settingsList ->
-                    SettingLists(
+                    TileOptions(
                          title = settingsList.title,
                          description = settingsList.description,
+                         shape = settingsList.position.toShape(),
                          image = settingsList.image,
                          icon = settingsList.icon,
                          onClick = {
+                              settingsList.onClick?.invoke()
                               settingsList.route?.let { navController.navigate(it) }
                          },
                          content = settingsList.content

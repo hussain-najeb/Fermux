@@ -46,8 +46,8 @@ fun ThreadLimitSelect(
 
      AnimatedVisibility(
           visible = expanded,
-          enter = slideInVertically(animationSpec = tween(200)) + fadeIn(initialAlpha = 0.2f),
-          exit = slideOutVertically(animationSpec = tween(250)) + fadeOut(targetAlpha = 0.1f)
+          enter = expandVertically(animationSpec = MaterialTheme.motionScheme.fastEffectsSpec()) + fadeIn(initialAlpha = 0.2f),
+          exit = shrinkVertically(animationSpec = MaterialTheme.motionScheme.fastEffectsSpec()) + fadeOut(targetAlpha = 0.1f)
      ) {
           Surface(
                modifier = Modifier.wrapContentSize().padding(start = 8.dp, end = 8.dp),

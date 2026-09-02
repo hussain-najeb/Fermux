@@ -51,6 +51,7 @@ import java.util.*
 fun HistoryCards(entry: JSONHistoryCards) {
 
      var expanded by remember { mutableStateOf(false) }
+     val spatialSpec = MaterialTheme.motionScheme
      @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
 
      Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
@@ -74,10 +75,10 @@ fun HistoryCards(entry: JSONHistoryCards) {
                     this@Column.AnimatedVisibility(
                          visible = true,
                          enter = slideInHorizontally(
-                              animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                              animationSpec = spatialSpec.fastSpatialSpec()
                          ),
                          exit = slideOutHorizontally(
-                              animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                              animationSpec = spatialSpec.fastSpatialSpec()
                          ),
                          modifier = Modifier.align(Alignment.BottomStart)
                     ) {

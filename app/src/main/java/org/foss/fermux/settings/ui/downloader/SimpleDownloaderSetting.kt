@@ -2,12 +2,6 @@ package org.foss.fermux.settings.ui.downloader
 
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,11 +33,22 @@ import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderVersion
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.RequestTimeSlider
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.SponsorBlockChoices
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
-import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingLists
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
+import org.foss.fermux.fermuxUIComponents.settingsComponents.TileOptions
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
+
+
+
+private enum class ExpandableDownloaderSetting {
+     YtdlpUpdater,
+     SponsorBlock,
+     Aria2c,
+     SleepRequest,
+     ResetDownloader
+}
 
 @Composable
 fun SimpleDownloaderPage(
@@ -52,10 +57,10 @@ fun SimpleDownloaderPage(
           viewModelStoreOwner = LocalContext.current as ComponentActivity
      )
 ) {
-
      /**
       * TODO:
-      *       * Make the animation smooth when the Slider appears and the Logs Surface Goes down and up, currently its janky. I have an idea for a solution. Maybe wrap all the settings in an AnimateContent
+      *       * Make the animation smooth when the Slider appears and the Logs Surface Goes down and up, 
+      *        currently its janky. I have an idea for a solution. Maybe wrap all the settings in an AnimateContent
       *       * Add the cookies option in the Downloader Page
       */
 
@@ -67,31 +72,20 @@ fun SimpleDownloaderPage(
      val ytdlpUpdateStatus by settingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
      val currentVersionName by settingsViewModel.currentVersionName.collectAsStateWithLifecycle()
      val sponsorBlock by settingsViewModel.sponsorBlock.collectAsStateWithLifecycle()
-     val quickJS by  settingsViewModel.quickJS.collectAsStateWithLifecycle()
+     val quickJS by settingsViewModel.quickJS.collectAsStateWithLifecycle()
      val fingerprint by settingsViewModel.fingerprint.collectAsStateWithLifecycle()
-
      val thumbnail by settingsViewModel.embedThumbnail.collectAsStateWithLifecycle()
-     val notificationState by settingsViewModel.notificationState.collectAsStateWithLifecycle() // TODO. Add this at some point.
+//   val notificationState by settingsViewModel.notificationState.collectAsStateWithLifecycle() // TODO. Add this at some point.
      val playlist by settingsViewModel.playlistState.collectAsStateWithLifecycle()
 
-     var sponsorExpansion by remember { mutableStateOf(false) }
-     var expanded by remember { mutableStateOf(false) }
-     var aria2cExpansion by remember { mutableStateOf(false) }
-     var resetDownloader by remember { mutableStateOf(false) }
-     var ytdlpUpdaterExpanded by remember { mutableStateOf(false) }
 
-
-     val infiniteTransition = rememberInfiniteTransition(label = "update transition")
-     val rotation by infiniteTransition.animateFloat(
-          initialValue = 0f,
-          targetValue = 1800f,
-          animationSpec = infiniteRepeatable(
-               animation = tween(10000, easing = LinearEasing),
-               repeatMode = RepeatMode.Restart
-          ),
-          label = "update rotation"
-     )
-
+     var expandedSetting by remember {
+          mutableStateOf<ExpandableDownloaderSetting?>(null)
+     }
+     fun toggleDownloader(setting: ExpandableDownloaderSetting) {
+          expandedSetting =
+               if (expandedSetting == setting) null else setting
+     }
 
      val simpleDownloaderSettings = listOf(
           SettingListInfo(
@@ -102,13 +96,14 @@ fun SimpleDownloaderPage(
                     "Current version is $currentVersionName"
                },
                icon = Icons.Default.Update,
-               onClick = { ytdlpUpdaterExpanded = !ytdlpUpdaterExpanded },
+               onClick = { toggleDownloader(ExpandableDownloaderSetting.YtdlpUpdater) },
                trailingContent = {
                     DownloaderVersionSwap(
                          settingsViewModel = settingsViewModel,
-                         expanded = ytdlpUpdaterExpanded
+                         expanded = expandedSetting == ExpandableDownloaderSetting.YtdlpUpdater
                     )
-               }
+               },
+               position = TilePosition.TOP
           ),
 //          SettingListInfo(
 //               title = "Download Notifications",
@@ -127,10 +122,9 @@ fun SimpleDownloaderPage(
                image = if (audioHistory) R.drawable.library_music_on else R.drawable.library_music_off,
                content = {
                     SettingsSwitch(
-                         checked = audioHistory,
-                         onCheckedChange = { settingsViewModel.setAudioHistory(it) }
-                    )
-               }
+                         checked = audioHistory, onCheckedChange = { settingsViewModel.setAudioHistory(it) })
+               },
+               position = TilePosition.MIDDLE
           ),
           SettingListInfo(
                title = "Video History",
@@ -138,10 +132,9 @@ fun SimpleDownloaderPage(
                image = if (videoHistory) R.drawable.video_library_on else R.drawable.video_library_off,
                content = {
                     SettingsSwitch(
-                         checked = videoHistory,
-                         onCheckedChange = { settingsViewModel.setVideoHistory(it) }
-                    )
-               }
+                         checked = videoHistory, onCheckedChange = { settingsViewModel.setVideoHistory(it) })
+               },
+               position = TilePosition.MIDDLE
           ),
           SettingListInfo(
                title = if (playlist) "Playlist On" else "Playlist Off",
@@ -149,10 +142,9 @@ fun SimpleDownloaderPage(
                image = if (playlist) R.drawable.playlist_on else R.drawable.playlist_off,
                content = {
                     SettingsSwitch(
-                         checked = playlist,
-                         onCheckedChange = { settingsViewModel.setPlaylistState(it) }
-                    )
-               }
+                         checked = playlist, onCheckedChange = { settingsViewModel.setPlaylistState(it) })
+               },
+               position = TilePosition.MIDDLE
           ),
           SettingListInfo(
                title = if (ytdlpDetails) "Shown Logs" else "Hidden Logs",
@@ -160,46 +152,59 @@ fun SimpleDownloaderPage(
                image = if (ytdlpDetails) R.drawable.eye_open else R.drawable.eye_closed,
                content = {
                     SettingsSwitch(
-                         checked = ytdlpDetails,
-                         onCheckedChange = {
+                         checked = ytdlpDetails, onCheckedChange = {
                               settingsViewModel.setYtdlpDetails(it)
-                         }
-                    )
-               }
+                         })
+               },
+               position = TilePosition.BOTTOM
           ),
      )
 
+
      val advancedSettings = listOf(
+          SettingListInfo(
+               title = "Reset Downloader Settings",
+               description = "Reset the downloader settings to there original state",
+               icon = Icons.Default.SettingsBackupRestore,
+               onClick = { toggleDownloader(ExpandableDownloaderSetting.ResetDownloader) },
+               trailingContent = {
+                    SettingsResetButton(
+                         expanded = expandedSetting == ExpandableDownloaderSetting.ResetDownloader,
+                         onClick = { settingsViewModel.setClearYtdlp() } //     TODO. Add toast here so the user knows its been done
+                    )
+               },
+               position = TilePosition.TOP
+          ),
           SettingListInfo(
                title = "SponsorBlock",
                description = "SponsorBlock API integration for cutting promotions when downloading",
                image = R.drawable.sponsorblock,
-               onClick = { sponsorExpansion = !sponsorExpansion },
+               onClick = { toggleDownloader(ExpandableDownloaderSetting.SponsorBlock) },
                content = {
                     SettingsSwitch(
-                         checked = sponsorBlock,
-                         onCheckedChange = { settingsViewModel.setSponsorBlock(it) }
-                    )
+                         checked = sponsorBlock, onCheckedChange = { settingsViewModel.setSponsorBlock(it) })
                },
                trailingContent = {
                     SponsorBlockChoices(
-                         expanded = sponsorExpansion,
+                         expanded = expandedSetting == ExpandableDownloaderSetting.SponsorBlock,
                          downloaderSettingsViewModel = settingsViewModel
                     )
-               }
+               },
+               position = TilePosition.MIDDLE
           ),
           SettingListInfo(
                title = "Aria2c",
                description = "Aria2c Implementation for better download speeds, especially for large files. Use the Edge Case option when downloading on the highest setting in the downloader",
                image = R.drawable.layers,
-               onClick = { aria2cExpansion = !aria2cExpansion },
+               onClick = { toggleDownloader(ExpandableDownloaderSetting.Aria2c) },
                trailingContent = {
                     Aria2cModeSelector(
-                         expanded = aria2cExpansion,
+                         expanded = expandedSetting == ExpandableDownloaderSetting.Aria2c ,
                          downloaderSettingsViewModel = settingsViewModel
                     )
-               }
-          ),
+               },
+               position = TilePosition.MIDDLE
+          ), 
           SettingListInfo(
                title = if (thumbnail) "Uncut Thumbnail" else "Cut Thumbnail",
                description = if (thumbnail) "The thumbnail of the downloaded media will be embedded and will be saved"
@@ -207,90 +212,70 @@ fun SimpleDownloaderPage(
                image = if (thumbnail) R.drawable.scissors_off else R.drawable.scissors_on,
                content = {
                     SettingsSwitch(
-                         checked = thumbnail,
-                         onCheckedChange = {
+                         checked = thumbnail, onCheckedChange = {
                               settingsViewModel.setEmbedThumbnail(it)
-                         }
-                    )
-               }
-          ),
+                         })
+               },
+               position = TilePosition.MIDDLE
+          ), 
           SettingListInfo(
                title = "Sleep Request Ytdlp Flag",
                description = "Sleep request is a flag for delayed download between each request, each number represents a second. 0 means the flag is off",
                icon = if (sleepRequest > 0) Icons.Filled.Flag else Icons.Outlined.Flag,
-               onClick = { expanded = !expanded },
+               onClick = { toggleDownloader(ExpandableDownloaderSetting.SleepRequest) },
                trailingContent = {
                     RequestTimeSlider(
-                         expanded = expanded
+                         expanded = expandedSetting == ExpandableDownloaderSetting.SleepRequest
                     )
-               }
-          ),
+               },
+               position = TilePosition.MIDDLE
+          ), 
           SettingListInfo(
                title = "Quick JS Framework",
                description = "QuickJS is a JavaScript engine yt-dlp uses to solve YouTube's PO token challenges and bypass Google's anti-bot measures",
                image = if (quickJS) R.drawable.flash_on else R.drawable.flash_off,
                content = {
                     SettingsSwitch(
-                         checked = quickJS,
-                         onCheckedChange = {
+                         checked = quickJS, onCheckedChange = {
                               settingsViewModel.setQuickJS(it)
-                         }
-                    )
-               }
+                         })
+               },
+               position = TilePosition.MIDDLE
           ),
-         SettingListInfo(
+          SettingListInfo(
                title = "Impersonation",
                description = "This setting enables curl_cffi and cffi, meaning it makes a request look like a real client from a website that's requesting something. Note that this is an EXPERIMENTAL feature",
                image = if (fingerprint) R.drawable.fingerprint_on else R.drawable.fingerprint_off,
                content = {
                     SettingsSwitch(
-                         checked = fingerprint,
-                         onCheckedChange = {
+                         checked = fingerprint, onCheckedChange = {
                               settingsViewModel.setFingerprint(it)
-                         }
-                    )
-               }
-          ),
-          SettingListInfo(
-               title = "Reset Downloader Settings",
-               description = "Reset the downloader settings to there original state",
-               icon = Icons.Default.SettingsBackupRestore,
-               onClick = { resetDownloader = !resetDownloader },
-               trailingContent = {
-                    SettingsResetButton(
-                         expanded = resetDownloader,
-                         onClick = { settingsViewModel.setClearYtdlp() } //     TODO. Add toast here so the user knows its been done
-                    )
-               }
-          )
+                         })
+               },
+               position = TilePosition.BOTTOM
+          ), 
      )
 
      LargeTopBarScaffold(
-          title = "Downloader Settings",
-          onBack = { navController.popBackStack() }
-     ) { paddingValues ->
+          title = "Downloader Settings", onBack = { navController.popBackStack() }) { paddingValues ->
           Column(
-               modifier = Modifier
-                    .fillMaxSize()
-                    .background(FermuxColors.fermuxBackground)
-                    .verticalScroll(rememberScrollState())
-                    .padding(paddingValues)
+               modifier = Modifier.fillMaxSize().background(FermuxColors.fermuxBackground)
+                    .verticalScroll(rememberScrollState()).padding(paddingValues)
           ) {
                Text(
                     text = "General",
                     modifier = Modifier.padding(
-                         start = 16.dp,
-                         top = 20.dp,
-                         bottom = 8.dp
+                         start = 16.dp, top = 20.dp, bottom = 8.dp
                     ),
                     color = FermuxColors.fermuxActiveButton,
                     style = MaterialTheme.typography.labelLarge,
                )
 
                simpleDownloaderSettings.forEach { setting ->
-                    SettingLists(
+                    TileOptions(
                          title = setting.title,
                          description = setting.description,
+                         shape = setting.position.toShape(),
                          icon = setting.icon,
                          image = setting.image,
                          content = setting.content,
@@ -305,18 +290,17 @@ fun SimpleDownloaderPage(
                Text(
                     text = "Advanced",
                     modifier = Modifier.padding(
-                         start = 16.dp,
-                         top = 20.dp,
-                         bottom = 8.dp
+                         start = 16.dp, top = 20.dp, bottom = 8.dp
                     ),
                     color = FermuxColors.fermuxActiveButton,
                     style = MaterialTheme.typography.labelLarge,
                )
 
                advancedSettings.forEach { setting ->
-                    SettingLists(
+                    TileOptions(
                          title = setting.title,
                          description = setting.description,
+                         shape = setting.position.toShape(),
                          icon = setting.icon,
                          image = setting.image,
                          content = setting.content,
