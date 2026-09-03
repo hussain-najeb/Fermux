@@ -78,3 +78,15 @@ enum class Aria2cMode {
      EdgeCaseOnly,
      Always
 }
+
+enum class YtdlpChannel {
+     Stable,
+     Nightly,
+     Master
+}    
+
+enum class ExternalDownloaders {
+     TurnedOff,
+     FFmpegAsExternal,
+     YtdlpNativeDownloader
+}

@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 import kotlinx.serialization.json.Json
+import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings_tab")
 
@@ -19,6 +20,7 @@ val DOWNLOAD_PATH = stringPreferencesKey("download_path")
 val DOWNLOAD_PROGRESS_NOTIFICATION = booleanPreferencesKey("download_progress_notification")
 val SLEEP_REQUEST_KEY = intPreferencesKey("sleep_request_seconds")
 val ARIA2C_MODE_KEY = stringPreferencesKey("aria2c_mode")
+val EXTERNAL_DOWNLOADER = stringPreferencesKey("set external downloaders for ytdlp")
 val DOWNLOADING_DETAILS = booleanPreferencesKey("download_details")
 val SHOW_YTDLP_VIDEO_HISTORY = booleanPreferencesKey("video_history")
 val QUICK_JS = booleanPreferencesKey("quick js")
@@ -48,6 +50,13 @@ class DownloaderSettingsTab(private val context: Context) {
                ?.let { runCatching { Aria2cMode.valueOf(it) }.getOrNull() }
                ?: Aria2cMode.Always
      }
+
+     val externalDownloaders: Flow<ExternalDownloaders> = context.dataStore.data.map { preferences -> 
+          preferences[EXTERNAL_DOWNLOADER]
+               ?.let { runCatching { ExternalDownloaders.valueOf(it) }.getOrNull() } 
+               ?: ExternalDownloaders.TurnedOff
+     }
+
      val audioHistory: Flow<Boolean> =
           context.dataStore.data.map { preferences -> preferences[SHOW_YTDLP_AUDIO_HISTORY] ?: true }
      val videoHistory: Flow<Boolean> =
@@ -88,6 +97,10 @@ class DownloaderSettingsTab(private val context: Context) {
 
      suspend fun setAria2cMode(value: Aria2cMode) {
           context.dataStore.edit { preferences -> preferences[ARIA2C_MODE_KEY] = value.name }
+     }
+
+     suspend fun setExternalDownloader(value: ExternalDownloaders) {
+          context.dataStore.edit { preferences -> preferences[EXTERNAL_DOWNLOADER] = value.name }
      }
 
      suspend fun setQuickJS(value: Boolean) {

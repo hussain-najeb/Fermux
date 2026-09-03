@@ -14,14 +14,9 @@ import kotlinx.coroutines.launch
 import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 import org.foss.fermux.storage.DownloaderSettingsTab
 import org.foss.fermux.storage.JSONHistoryCards
+import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
+import org.foss.fermux.ytdlp.logic.downloader.YtdlpChannel
 import java.util.concurrent.atomic.AtomicBoolean
-
-
-enum class YtdlpChannel {
-     Stable,
-     Nightly,
-     Master
-}
 
 class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(application) {
      private val settingsTab = DownloaderSettingsTab(application.applicationContext)
@@ -46,6 +41,9 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
      val aria2cMode: StateFlow<Aria2cMode> = settingsTab.aria2cMode
      .stateIn(viewModelScope, SharingStarted.Lazily, Aria2cMode.Always)
+
+     val externalDownloaders: StateFlow<ExternalDownloaders> = settingsTab.externalDownloaders
+          .stateIn(viewModelScope, SharingStarted.Lazily, ExternalDownloaders.TurnedOff)
 
      val audioHistory: StateFlow<Boolean> = settingsTab.audioHistory
           .stateIn(viewModelScope, SharingStarted.Lazily, true)
@@ -81,6 +79,10 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
      fun setAria2cMode(value: Aria2cMode) {
           viewModelScope.launch { settingsTab.setAria2cMode(value) }
+     }
+
+     fun setExternalDownloaders(value: ExternalDownloaders) {
+          viewModelScope.launch { settingsTab.setExternalDownloader(value) }
      }
 
      fun setPlaylistState(value: Boolean) {

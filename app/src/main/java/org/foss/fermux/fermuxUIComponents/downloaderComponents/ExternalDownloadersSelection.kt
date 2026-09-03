@@ -1,13 +1,10 @@
 package org.foss.fermux.fermuxUIComponents.downloaderComponents
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,24 +23,25 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
-import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
+import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
+
 
 @Composable
-fun Aria2cModeSelector(
-     expanded: Boolean,
-     downloaderSettingsViewModel: DownloaderSettingsViewModel
+fun ExternalDownloaderSelection(
+	expanded: Boolean,
+	enabled: Boolean,
+    downloaderSettingsViewModel: DownloaderSettingsViewModel
 ) {
 
-     val aria2cModeOptions = listOf(
-     Aria2cMode.Disabled to "Off",
-     Aria2cMode.EdgeCaseOnly to "Edge Case",
-     Aria2cMode.Always to "Always"
-     )
+	val externalDownloaderList = listOf(
+        ExternalDownloaders.TurnedOff to "Off",
+        ExternalDownloaders.FFmpegAsExternal to "FFmpeg",
+        ExternalDownloaders.YtdlpNativeDownloader to "native Yt-dlp"
+	)
 
+	val externalDownloaders by downloaderSettingsViewModel.externalDownloaders.collectAsStateWithLifecycle() 
 
-     val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
-
-     AnimatedVisibility(
+	AnimatedVisibility(
           visible = expanded,
           enter = expandVertically(animationSpec = MaterialTheme.motionScheme.fastEffectsSpec()) + fadeIn(initialAlpha = 0.2f),
           exit = shrinkVertically(animationSpec = MaterialTheme.motionScheme.fastEffectsSpec()) + fadeOut(targetAlpha = 0.1f)
@@ -61,15 +59,16 @@ fun Aria2cModeSelector(
                          .padding(7.dp)
                          .fillMaxWidth()
                ) {
-                    aria2cModeOptions.forEachIndexed { index, (mode, label) ->
+                    externalDownloaderList.forEachIndexed { index, (downloader, label) ->
                          SegmentedButton(
-                              selected = aria2cMode == mode,
-                              onClick = { downloaderSettingsViewModel.setAria2cMode(mode) },
+                              selected = externalDownloaders == downloader,
+                              onClick = { downloaderSettingsViewModel.setExternalDownloaders(downloader) },
                               shape = SegmentedButtonDefaults.itemShape(
                                    index = index,
-                                   count = aria2cModeOptions.size,
+                                   count = externalDownloaderList.size,
                                    baseShape = RoundedCornerShape(8.dp)
                               ),
+                              enabled = enabled,
                               colors = SegmentedButtonDefaults.colors(
                                    activeContainerColor = FermuxColors.activeContainer,
                                    activeContentColor = FermuxColors.activeContent,
@@ -97,4 +96,11 @@ fun Aria2cModeSelector(
                }
           }
      }
+
+
+
+
+
+
+
 }

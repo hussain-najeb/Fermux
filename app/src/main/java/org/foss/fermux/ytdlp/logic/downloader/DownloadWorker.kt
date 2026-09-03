@@ -26,8 +26,11 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
           val embedThumbnail = settingsTab.embedThumbnail.first()
           val playlistStatus = settingsTab.playlistStatus.first()
           val aria2cMode = settingsTab.aria2cMode.first()
+          val externalDownloaders = settingsTab.externalDownloaders.first()
           val quickJS = settingsTab.quickJS.first()
           val fingerprinting = settingsTab.fingerprinting.first()
+
+
 
           val audioName = inputData.getString("audio")
           val videoName = inputData.getString("video")
@@ -78,6 +81,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                     url = url,
                     taskId = id.toString(),
                     aria2cMode = aria2cMode,
+                    externalDownloaders = externalDownloaders,
                     quickJs = quickJS,
                     fingerprinting = fingerprinting,
                     musicQuality = audio,

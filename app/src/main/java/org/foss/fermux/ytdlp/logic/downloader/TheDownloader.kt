@@ -26,6 +26,7 @@ suspend fun downloaderLogic(
      context: Context,
      showDetails: Boolean,
      aria2cMode: Aria2cMode = Aria2cMode.Always,
+     externalDownloaders: ExternalDownloaders = ExternalDownloaders.TurnedOff,
      url: String,
      taskId: String,
      sleepRequest: Int = 0,
@@ -82,7 +83,26 @@ suspend fun downloaderLogic(
           )
      }
 
-     //if (embedThumbnail && audioFormat != AudioFormat.OpusFormat) {
+     val hlsConcurrentFragments = 8
+
+     val shouldUseExternalDownloader = when (externalDownloaders) {
+
+          ExternalDownloaders.FFmpegAsExternal -> { 
+          
+               request.addOption("--hls-prefer-ffmpeg")
+
+          }
+
+          ExternalDownloaders.YtdlpNativeDownloader -> { 
+               
+               request.addOption("--concurrent-fragments",hlsConcurrentFragments) 
+
+          }
+
+          ExternalDownloaders.TurnedOff -> {}
+     }
+
+   //if (embedThumbnail && audioFormat != AudioFormat.OpusFormat) {
      if (embedThumbnail) {
           request.addOption("--embed-thumbnail")
      }

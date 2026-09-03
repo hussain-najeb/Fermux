@@ -47,13 +47,14 @@ private enum class ExpandableDownloaderSetting {
      SponsorBlock,
      Aria2c,
      SleepRequest,
+     ExternalDownloaders,
      ResetDownloader
 }
 
 @Composable
 fun SimpleDownloaderPage(
      navController: NavHostController,
-     @SuppressLint("ContextCastToActivity") settingsViewModel: DownloaderSettingsViewModel = viewModel(
+     @SuppressLint("ContextCastToActivity") downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel(
           viewModelStoreOwner = LocalContext.current as ComponentActivity
      )
 ) {
@@ -64,19 +65,20 @@ fun SimpleDownloaderPage(
       *       * Add the cookies option in the Downloader Page
       */
 
-     val sleepRequest by settingsViewModel.sleepRequest.collectAsStateWithLifecycle()
-     val ytdlpDetails by settingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
-     val audioHistory by settingsViewModel.audioHistory.collectAsStateWithLifecycle()
-     val videoHistory by settingsViewModel.videoHistory.collectAsStateWithLifecycle()
-     val isCheckingForUpdate by settingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
-     val ytdlpUpdateStatus by settingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
-     val currentVersionName by settingsViewModel.currentVersionName.collectAsStateWithLifecycle()
-     val sponsorBlock by settingsViewModel.sponsorBlock.collectAsStateWithLifecycle()
-     val quickJS by settingsViewModel.quickJS.collectAsStateWithLifecycle()
-     val fingerprint by settingsViewModel.fingerprint.collectAsStateWithLifecycle()
-     val thumbnail by settingsViewModel.embedThumbnail.collectAsStateWithLifecycle()
-//   val notificationState by settingsViewModel.notificationState.collectAsStateWithLifecycle() // TODO. Add this at some point.
-     val playlist by settingsViewModel.playlistState.collectAsStateWithLifecycle()
+     val sleepRequest by downloaderSettingsViewModel.sleepRequest.collectAsStateWithLifecycle()
+     val ytdlpDetails by downloaderSettingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
+     val audioHistory by downloaderSettingsViewModel.audioHistory.collectAsStateWithLifecycle()
+     val videoHistory by downloaderSettingsViewModel.videoHistory.collectAsStateWithLifecycle()
+     val externalDownloaders by downloaderSettingsViewModel.externalDownloaders.collectAsStateWithLifecycle()
+     val isCheckingForUpdate by downloaderSettingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
+     val ytdlpUpdateStatus by downloaderSettingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
+     val currentVersionName by downloaderSettingsViewModel.currentVersionName.collectAsStateWithLifecycle()
+     val sponsorBlock by downloaderSettingsViewModel.sponsorBlock.collectAsStateWithLifecycle()
+     val quickJS by downloaderSettingsViewModel.quickJS.collectAsStateWithLifecycle()
+     val fingerprint by downloaderSettingsViewModel.fingerprint.collectAsStateWithLifecycle()
+     val thumbnail by downloaderSettingsViewModel.embedThumbnail.collectAsStateWithLifecycle()
+//   val notificationState by downloaderSettingsViewModel.notificationState.collectAsStateWithLifecycle() // TODO. Add this at some point.
+     val playlist by downloaderSettingsViewModel.playlistState.collectAsStateWithLifecycle()
 
 
      var expandedSetting by remember {
@@ -89,7 +91,7 @@ fun SimpleDownloaderPage(
 
      val simpleDownloaderSettings = listOf(
           SettingListInfo(
-               title = "Update yt-dlp",
+               title = "Update Yt-dlp",
                description = if (isCheckingForUpdate) {
                     ytdlpUpdateStatus ?: "Checking for update..."
                } else {
@@ -99,7 +101,7 @@ fun SimpleDownloaderPage(
                onClick = { toggleDownloader(ExpandableDownloaderSetting.YtdlpUpdater) },
                trailingContent = {
                     DownloaderVersionSwap(
-                         settingsViewModel = settingsViewModel,
+                         downloaderSettingsViewModel = downloaderSettingsViewModel,
                          expanded = expandedSetting == ExpandableDownloaderSetting.YtdlpUpdater
                     )
                },
@@ -112,7 +114,7 @@ fun SimpleDownloaderPage(
 //               content = {
 //                    SettingsSwitch(
 //                         checked = notificationState,
-//                         onCheckedChange = { settingsViewModel.setNotificationState(it) }
+//                         onCheckedChange = { downloaderSettingsViewModel.setNotificationState(it) }
 //                    )
 //               }
 //          ),
@@ -122,7 +124,7 @@ fun SimpleDownloaderPage(
                image = if (audioHistory) R.drawable.library_music_on else R.drawable.library_music_off,
                content = {
                     SettingsSwitch(
-                         checked = audioHistory, onCheckedChange = { settingsViewModel.setAudioHistory(it) })
+                         checked = audioHistory, onCheckedChange = { downloaderSettingsViewModel.setAudioHistory(it) })
                },
                position = TilePosition.MIDDLE
           ),
@@ -132,7 +134,7 @@ fun SimpleDownloaderPage(
                image = if (videoHistory) R.drawable.video_library_on else R.drawable.video_library_off,
                content = {
                     SettingsSwitch(
-                         checked = videoHistory, onCheckedChange = { settingsViewModel.setVideoHistory(it) })
+                         checked = videoHistory, onCheckedChange = { downloaderSettingsViewModel.setVideoHistory(it) })
                },
                position = TilePosition.MIDDLE
           ),
@@ -142,7 +144,7 @@ fun SimpleDownloaderPage(
                image = if (playlist) R.drawable.playlist_on else R.drawable.playlist_off,
                content = {
                     SettingsSwitch(
-                         checked = playlist, onCheckedChange = { settingsViewModel.setPlaylistState(it) })
+                         checked = playlist, onCheckedChange = { downloaderSettingsViewModel.setPlaylistState(it) })
                },
                position = TilePosition.MIDDLE
           ),
@@ -153,7 +155,7 @@ fun SimpleDownloaderPage(
                content = {
                     SettingsSwitch(
                          checked = ytdlpDetails, onCheckedChange = {
-                              settingsViewModel.setYtdlpDetails(it)
+                              downloaderSettingsViewModel.setYtdlpDetails(it)
                          })
                },
                position = TilePosition.BOTTOM
@@ -170,7 +172,7 @@ fun SimpleDownloaderPage(
                trailingContent = {
                     SettingsResetButton(
                          expanded = expandedSetting == ExpandableDownloaderSetting.ResetDownloader,
-                         onClick = { settingsViewModel.setClearYtdlp() } //     TODO. Add toast here so the user knows its been done
+                         onClick = { downloaderSettingsViewModel.setClearYtdlp() } //     TODO. Add toast here so the user knows its been done
                     )
                },
                position = TilePosition.TOP
@@ -182,12 +184,12 @@ fun SimpleDownloaderPage(
                onClick = { toggleDownloader(ExpandableDownloaderSetting.SponsorBlock) },
                content = {
                     SettingsSwitch(
-                         checked = sponsorBlock, onCheckedChange = { settingsViewModel.setSponsorBlock(it) })
+                         checked = sponsorBlock, onCheckedChange = { downloaderSettingsViewModel.setSponsorBlock(it) })
                },
                trailingContent = {
                     SponsorBlockChoices(
                          expanded = expandedSetting == ExpandableDownloaderSetting.SponsorBlock,
-                         downloaderSettingsViewModel = settingsViewModel
+                         downloaderSettingsViewModel = downloaderSettingsViewModel
                     )
                },
                position = TilePosition.MIDDLE
@@ -200,11 +202,18 @@ fun SimpleDownloaderPage(
                trailingContent = {
                     Aria2cModeSelector(
                          expanded = expandedSetting == ExpandableDownloaderSetting.Aria2c ,
-                         downloaderSettingsViewModel = settingsViewModel
+                         downloaderSettingsViewModel = downloaderSettingsViewModel
                     )
                },
                position = TilePosition.MIDDLE
           ), 
+          SettingListInfo(
+               title = "Yt-dlp HLS Options",
+               description = "Fallback options instead of Aria2, check the one you like if Aria2 is having issues, escpesaily with m3u8 since yt-dlp prefrese it's own options over Aria2 recently over security issues",
+               image = if () R.drawable.hls_on else R.drawable.hls_off,
+               onClick = { toggleDownloader(ExpandableDownloaderSetting.ExternalDownloaders) },
+
+               ),
           SettingListInfo(
                title = if (thumbnail) "Uncut Thumbnail" else "Cut Thumbnail",
                description = if (thumbnail) "The thumbnail of the downloaded media will be embedded and will be saved"
@@ -213,7 +222,7 @@ fun SimpleDownloaderPage(
                content = {
                     SettingsSwitch(
                          checked = thumbnail, onCheckedChange = {
-                              settingsViewModel.setEmbedThumbnail(it)
+                              downloaderSettingsViewModel.setEmbedThumbnail(it)
                          })
                },
                position = TilePosition.MIDDLE
@@ -237,8 +246,9 @@ fun SimpleDownloaderPage(
                content = {
                     SettingsSwitch(
                          checked = quickJS, onCheckedChange = {
-                              settingsViewModel.setQuickJS(it)
-                         })
+                              downloaderSettingsViewModel.setQuickJS(it)
+                         }
+                    )
                },
                position = TilePosition.MIDDLE
           ),
@@ -249,11 +259,12 @@ fun SimpleDownloaderPage(
                content = {
                     SettingsSwitch(
                          checked = fingerprint, onCheckedChange = {
-                              settingsViewModel.setFingerprint(it)
-                         })
+                              downloaderSettingsViewModel.setFingerprint(it)
+                         }
+                    )
                },
                position = TilePosition.BOTTOM
-          ), 
+          ),
      )
 
      LargeTopBarScaffold(

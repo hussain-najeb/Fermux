@@ -18,4 +18,9 @@ SKILLS.md
 AGENTS.md
 .env
 app/libs/youtubedl-android-local.aar
-app/libs/ffmpeg-android-local.arr
+app/libs/ffmpeg-android-local.aar
+run.sh
+.idea/
+.kotlin/
+
+.kotlin/

@@ -29,8 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
-import org.foss.fermux.settings.logic.YtdlpChannel
 import org.foss.fermux.ui.theme.FermuxColors
+import org.foss.fermux.ytdlp.logic.downloader.YtdlpChannel
 
 private val ytdlpChannelOptions = listOf(
      YtdlpChannel.Stable to "Stable",
@@ -40,11 +40,11 @@ private val ytdlpChannelOptions = listOf(
 
 @Composable
 fun DownloaderVersionSwap(
-     settingsViewModel: DownloaderSettingsViewModel,
+     downloaderSettingsViewModel: DownloaderSettingsViewModel,
      expanded: Boolean = false
 ) {
      var selectedChannel by remember { mutableStateOf(YtdlpChannel.Stable) }
-     val isCheckingForUpdate by settingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
+     val isCheckingForUpdate by downloaderSettingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
 
      AnimatedVisibility(
           visible = expanded,
@@ -70,7 +70,7 @@ fun DownloaderVersionSwap(
                               enabled = !isCheckingForUpdate,
                               onClick = {
                                    selectedChannel = channel
-                                   settingsViewModel.checkYtdlpUpdate(channel)
+                                   downloaderSettingsViewModel.checkYtdlpUpdate(channel)
                               },
                               shape = SegmentedButtonDefaults.itemShape(
                                    index = index,
