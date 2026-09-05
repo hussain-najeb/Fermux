@@ -28,20 +28,20 @@ import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
 
 @Composable
 fun ExternalDownloaderSelection(
-	expanded: Boolean,
-	enabled: Boolean,
-    downloaderSettingsViewModel: DownloaderSettingsViewModel
+     expanded: Boolean,
+     enabled: Boolean,
+     downloaderSettingsViewModel: DownloaderSettingsViewModel
 ) {
 
-	val externalDownloaderList = listOf(
-        ExternalDownloaders.TurnedOff to "Off",
-        ExternalDownloaders.FFmpegAsExternal to "FFmpeg",
-        ExternalDownloaders.YtdlpNativeDownloader to "native Yt-dlp"
-	)
+     val externalDownloaderList = listOf(
+          ExternalDownloaders.TurnedOff to "Off",
+          ExternalDownloaders.FFmpegAsExternal to "FFmpeg",
+          ExternalDownloaders.YtdlpNativeDownloader to "Hls Native"
+     )
 
-	val externalDownloaders by downloaderSettingsViewModel.externalDownloaders.collectAsStateWithLifecycle() 
+     val externalDownloaders by downloaderSettingsViewModel.externalDownloaders.collectAsStateWithLifecycle()
 
-	AnimatedVisibility(
+     AnimatedVisibility(
           visible = expanded,
           enter = expandVertically(animationSpec = MaterialTheme.motionScheme.fastEffectsSpec()) + fadeIn(initialAlpha = 0.2f),
           exit = shrinkVertically(animationSpec = MaterialTheme.motionScheme.fastEffectsSpec()) + fadeOut(targetAlpha = 0.1f)
@@ -96,11 +96,4 @@ fun ExternalDownloaderSelection(
                }
           }
      }
-
-
-
-
-
-
-
 }

@@ -85,8 +85,6 @@ fun AboutPage(navController: NavController) {
                          trailingContent = aboutList.trailingContent
                     )
                }
-// TODO. Add ffmpeg, ytdlp, aria2c and QuickJS.js info and version here as well.
-
           }
      }
 }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.foss.fermux.ui.theme.FermuxColor
 import org.foss.fermux.ui.theme.FermuxColors
@@ -32,6 +34,7 @@ fun ImageButton(
      contentDescription: String? = null,
      imageRotation: Float = 0f,
      enabled: Boolean = true,
+     componentSize: Dp = 50.dp,
      color: FermuxColor = FermuxColors,
      border: BorderStroke? = BorderStroke(1.dp, color.fermuxGenericBorder),
      contentPadding: PaddingValues = PaddingValues(4.dp),
@@ -42,28 +45,19 @@ fun ImageButton(
      val isPressed by interactionSource.collectIsPressedAsState()
 
      val containerColor by animateColorAsState(
-          targetValue = when {
-               isPressed -> color.fermuxActiveButton
-               else -> color.fermuxInActiveButton
-          },
+          targetValue = if (isPressed) color.fermuxActiveButton else color.fermuxInActiveButton,
           animationSpec = tween(200),
           label = "Fermux Button Colors",
      )
 
      val contentColor by animateColorAsState(
-          targetValue = when {
-               isPressed -> color.fermuxActiveTextColor
-               else -> color.fermuxInActiveTextColor
-          },
+          targetValue = if (isPressed)  color.fermuxActiveTextColor else color.fermuxInActiveTextColor,
           animationSpec = tween(200),
           label = "Fermux Text Colors",
      )
 
      val iconColor by animateColorAsState(
-          targetValue = when {
-               isPressed -> color.fermuxActiveIcon
-               else -> color.fermuxInActiveIcon
-          },
+          targetValue = if (isPressed) color.fermuxActiveIcon else  color.fermuxWhiteColor,
           animationSpec = tween(durationMillis = 150),
           label = "Fermux Icon Colors"
      )
@@ -85,8 +79,8 @@ fun ImageButton(
                scaleX = buttonAnimation
                scaleY = buttonAnimation
           }
-               .padding(5.dp),
-          shape = RoundedCornerShape(8.dp),
+               .size(componentSize),
+          shape = RoundedCornerShape(16.dp),
           border = border,
           colors = ButtonDefaults.textButtonColors(
                containerColor = containerColor,

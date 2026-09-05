@@ -20,9 +20,11 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
 import org.foss.fermux.fermuxUIComponents.buttons.ErrorCopyButton
@@ -90,7 +92,8 @@ fun ErrorCard(
                )
                CancelButton(
                     modifier = Modifier
-                         .align(Alignment.TopStart),
+                         .align(Alignment.BottomEnd)
+                         .padding(end = 60.dp),
                     onClick = { onCancel() }
                )
                ImageButton(
@@ -100,5 +103,21 @@ fun ErrorCard(
                     onClick = { navController.navigate(Miscellaneous.DownloaderLogs.route) }
                )
           }
+     }
+}
+
+@Preview
+@Composable
+fun tester() {
+
+    val navController = rememberNavController()
+
+     Column(modifier = Modifier.fillMaxSize().padding(10.dp)) {
+          ErrorCard(
+               errorMessage = "Test...Test...Test...Messages....Messages....Messages....",
+               rawError = "....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best....Linux Is The Best",
+               onCancel = {},
+               navController = navController
+          )
      }
 }

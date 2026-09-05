@@ -14,7 +14,7 @@ data class FermuxColor(
      // Fermux button colors
      val fermuxInActiveButton: Color = Color(0xFF303258),
      val fermuxActiveButton: Color = Color(0xFFadc6ff),
-     val fermuxInActiveBackButton: Color = Color(0xFF252638),
+     val fermuxInActiveBackButton: Color = Color(0xFF353749),
      val fermuxRedDeleteColorInActive: Color = Color(0xFFF8504E),
      val fermuxRedDeleteColorActive: Color = Color(0xFFf06866),
 
@@ -27,7 +27,7 @@ data class FermuxColor(
      // Fermux Borders
      val fermuxPrimaryBorder: Color = Color(0xFF005DFF),
      val fermuxSecondaryBorder: Color = Color(0xFF67ECA2),
-     val fermuxGenericBorder: Color = Color(0xFF7E7EF6),
+     val fermuxGenericBorder: Color = Color(0xFF7979FC),
      val fermuxTertiaryBorder: Color = Color(0xFF3B3B40),
      val fermuxHelperBorder: Color = Color(0xFF6B6B9E),
 
@@ -56,8 +56,7 @@ data class FermuxColor(
      // Fermux slider
      val activeSliderColor: Color = Color(0xFF4D7DE5),
      val inActiveSliderColor: Color = Color(0xFFB5C1E8),
-     val ffmpegSliderThumb: Color = Color(0xFF388e3c),
-
+     val something: Color = Color(0xFF3c4257),
 
      // Fermux text
      val fermuxWhiteColor: Color = Color.White,

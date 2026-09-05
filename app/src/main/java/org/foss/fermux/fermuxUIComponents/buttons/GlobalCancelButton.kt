@@ -28,8 +28,8 @@ import org.foss.fermux.ui.theme.FermuxColors
 fun GlobalCancelButton(
      modifier: Modifier = Modifier,
      color: FermuxColor = FermuxColors,
-     border: BorderStroke? = BorderStroke(0.8.dp, color.fermuxTertiaryBorder),
-     contentPadding: PaddingValues = PaddingValues(4.dp),
+     border: BorderStroke? = BorderStroke(0.8.dp, color.something),
+     contentPadding: PaddingValues = PaddingValues(1.dp),
      onClick: () -> Unit
 ) {
 

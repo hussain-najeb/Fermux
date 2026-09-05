@@ -30,6 +30,7 @@ import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.SettingsResetButton
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.Aria2cModeSelector
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderVersionSwap
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.ExternalDownloaderSelection
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.RequestTimeSlider
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.SponsorBlockChoices
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
@@ -39,7 +40,7 @@ import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
-
+import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 
 
 private enum class ExpandableDownloaderSetting {
@@ -58,18 +59,11 @@ fun SimpleDownloaderPage(
           viewModelStoreOwner = LocalContext.current as ComponentActivity
      )
 ) {
-     /**
-      * TODO:
-      *       * Make the animation smooth when the Slider appears and the Logs Surface Goes down and up, 
-      *        currently its janky. I have an idea for a solution. Maybe wrap all the settings in an AnimateContent
-      *       * Add the cookies option in the Downloader Page
-      */
 
      val sleepRequest by downloaderSettingsViewModel.sleepRequest.collectAsStateWithLifecycle()
      val ytdlpDetails by downloaderSettingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
      val audioHistory by downloaderSettingsViewModel.audioHistory.collectAsStateWithLifecycle()
      val videoHistory by downloaderSettingsViewModel.videoHistory.collectAsStateWithLifecycle()
-     val externalDownloaders by downloaderSettingsViewModel.externalDownloaders.collectAsStateWithLifecycle()
      val isCheckingForUpdate by downloaderSettingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
      val ytdlpUpdateStatus by downloaderSettingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
      val currentVersionName by downloaderSettingsViewModel.currentVersionName.collectAsStateWithLifecycle()
@@ -80,6 +74,9 @@ fun SimpleDownloaderPage(
 //   val notificationState by downloaderSettingsViewModel.notificationState.collectAsStateWithLifecycle() // TODO. Add this at some point.
      val playlist by downloaderSettingsViewModel.playlistState.collectAsStateWithLifecycle()
 
+
+     val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
+     val externalDownloadersEnabled = aria2cMode == Aria2cMode.Disabled
 
      var expandedSetting by remember {
           mutableStateOf<ExpandableDownloaderSetting?>(null)
@@ -156,7 +153,8 @@ fun SimpleDownloaderPage(
                     SettingsSwitch(
                          checked = ytdlpDetails, onCheckedChange = {
                               downloaderSettingsViewModel.setYtdlpDetails(it)
-                         })
+                         }
+                    )
                },
                position = TilePosition.BOTTOM
           ),
@@ -209,10 +207,17 @@ fun SimpleDownloaderPage(
           ), 
           SettingListInfo(
                title = "Yt-dlp HLS Options",
-               description = "Fallback options instead of Aria2, check the one you like if Aria2 is having issues, escpesaily with m3u8 since yt-dlp prefrese it's own options over Aria2 recently over security issues",
-               image = if () R.drawable.hls_on else R.drawable.hls_off,
+               description = "Fallback options instead of Aria2, check the one you like if Aria2 is having issues, especially with m3u8 since yt-dlp prefers it's own options over Aria2 recently over security issues",
+               image = R.drawable.hls_on,
                onClick = { toggleDownloader(ExpandableDownloaderSetting.ExternalDownloaders) },
-
+               trailingContent = {
+                   ExternalDownloaderSelection(
+                         enabled = externalDownloadersEnabled,
+                         expanded = expandedSetting == ExpandableDownloaderSetting.ExternalDownloaders,
+                         downloaderSettingsViewModel = downloaderSettingsViewModel
+                         )
+                    },
+                    position = TilePosition.MIDDLE
                ),
           SettingListInfo(
                title = if (thumbnail) "Uncut Thumbnail" else "Cut Thumbnail",
@@ -223,12 +228,13 @@ fun SimpleDownloaderPage(
                     SettingsSwitch(
                          checked = thumbnail, onCheckedChange = {
                               downloaderSettingsViewModel.setEmbedThumbnail(it)
-                         })
+                         }
+                    )
                },
                position = TilePosition.MIDDLE
           ), 
           SettingListInfo(
-               title = "Sleep Request Ytdlp Flag",
+               title = "Sleep Request Yt-dlp Flag",
                description = "Sleep request is a flag for delayed download between each request, each number represents a second. 0 means the flag is off",
                icon = if (sleepRequest > 0) Icons.Filled.Flag else Icons.Outlined.Flag,
                onClick = { toggleDownloader(ExpandableDownloaderSetting.SleepRequest) },
@@ -238,7 +244,20 @@ fun SimpleDownloaderPage(
                     )
                },
                position = TilePosition.MIDDLE
-          ), 
+          ),
+          SettingListInfo(
+               title = "Impersonation",
+               description = "This setting enables curl_cffi, meaning it makes a request look like a real browser. Note that this is an EXPERIMENTAL feature",
+               image = if (fingerprint) R.drawable.fingerprint_on else R.drawable.fingerprint_off,
+               content = {
+                    SettingsSwitch(
+                         checked = fingerprint, onCheckedChange = {
+                              downloaderSettingsViewModel.setFingerprint(it)
+                         }
+                    )
+               },
+               position = TilePosition.MIDDLE
+          ),
           SettingListInfo(
                title = "Quick JS Framework",
                description = "QuickJS is a JavaScript engine yt-dlp uses to solve YouTube's PO token challenges and bypass Google's anti-bot measures",
@@ -247,19 +266,6 @@ fun SimpleDownloaderPage(
                     SettingsSwitch(
                          checked = quickJS, onCheckedChange = {
                               downloaderSettingsViewModel.setQuickJS(it)
-                         }
-                    )
-               },
-               position = TilePosition.MIDDLE
-          ),
-          SettingListInfo(
-               title = "Impersonation",
-               description = "This setting enables curl_cffi and cffi, meaning it makes a request look like a real client from a website that's requesting something. Note that this is an EXPERIMENTAL feature",
-               image = if (fingerprint) R.drawable.fingerprint_on else R.drawable.fingerprint_off,
-               content = {
-                    SettingsSwitch(
-                         checked = fingerprint, onCheckedChange = {
-                              downloaderSettingsViewModel.setFingerprint(it)
                          }
                     )
                },

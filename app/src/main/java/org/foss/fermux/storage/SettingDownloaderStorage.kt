@@ -96,11 +96,21 @@ class DownloaderSettingsTab(private val context: Context) {
      }
 
      suspend fun setAria2cMode(value: Aria2cMode) {
-          context.dataStore.edit { preferences -> preferences[ARIA2C_MODE_KEY] = value.name }
+          context.dataStore.edit { preferences ->
+               preferences[ARIA2C_MODE_KEY] = value.name
+               if (value != Aria2cMode.Disabled) {
+                    preferences[EXTERNAL_DOWNLOADER] = ExternalDownloaders.TurnedOff.name
+               }
+          }
      }
 
      suspend fun setExternalDownloader(value: ExternalDownloaders) {
-          context.dataStore.edit { preferences -> preferences[EXTERNAL_DOWNLOADER] = value.name }
+          context.dataStore.edit { preferences ->
+               preferences[EXTERNAL_DOWNLOADER] = value.name
+               if (value != ExternalDownloaders.TurnedOff) {
+                    preferences[ARIA2C_MODE_KEY] = Aria2cMode.Disabled.name
+               }
+          }
      }
 
      suspend fun setQuickJS(value: Boolean) {

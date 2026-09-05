@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import org.foss.fermux.storage.DownloaderSettingsTab
 import java.net.UnknownHostException
-import java.util.*
+import java.util.UUID
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
@@ -143,6 +143,7 @@ class DownloaderViewModel : ViewModel() {
                               WorkInfo.State.CANCELLED -> {
                                    state = DownloadStatus.Idle
                                    activeProcess = null
+                                   downloaderLogs = ""
                               }
 
                               else -> {}

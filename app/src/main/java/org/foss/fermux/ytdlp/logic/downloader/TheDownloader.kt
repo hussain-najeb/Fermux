@@ -30,7 +30,7 @@ suspend fun downloaderLogic(
      url: String,
      taskId: String,
      sleepRequest: Int = 0,
-//     audioFormat: AudioFormat,
+//   audioFormat: AudioFormat,
      playlistStatus: Boolean = true,
      quickJs: Boolean = true,
      fingerprinting: Boolean = true,
@@ -54,6 +54,7 @@ suspend fun downloaderLogic(
           )
      }
 
+     // TODO. REBUILD ffmpeg with https support in yausername lib wrapper.
 
      if (fingerprinting) {
           request.addOption("--impersonate", "chrome")
@@ -79,27 +80,22 @@ suspend fun downloaderLogic(
      if (shouldUseAria2c) {
           request.addOption("--downloader", "libaria2c.so")
           request.addOption(
-               "--external-downloader-args", "aria2c:--summary-interval=1 -x 12 -s 12 -k 1M"
+               "--external-downloader-args",
+               "aria2c:--summary-interval=1 -x 12 -s 12 -k 1M"
           )
      }
 
      val hlsConcurrentFragments = 8
 
-     val shouldUseExternalDownloader = when (externalDownloaders) {
+     when { aria2cMode != Aria2cMode.Disabled -> Unit
 
-          ExternalDownloaders.FFmpegAsExternal -> { 
-          
+          externalDownloaders == ExternalDownloaders.FFmpegAsExternal -> {
                request.addOption("--hls-prefer-ffmpeg")
-
           }
-
-          ExternalDownloaders.YtdlpNativeDownloader -> { 
-               
-               request.addOption("--concurrent-fragments",hlsConcurrentFragments) 
-
+          externalDownloaders == ExternalDownloaders.YtdlpNativeDownloader -> {
+               request.addOption("--concurrent-fragments",hlsConcurrentFragments)
           }
-
-          ExternalDownloaders.TurnedOff -> {}
+          else -> Unit
      }
 
    //if (embedThumbnail && audioFormat != AudioFormat.OpusFormat) {
@@ -115,7 +111,7 @@ suspend fun downloaderLogic(
 
      musicQuality?.let {
           request.addOption("-x")
-          request.addOption("--audio-quality", "mp3")
+          request.addOption("--audio-format", "mp3")
 //          request.addOption("--audio-format", audioFormat.ytdlpFormat)
           request.addOption("--audio-quality", it.musicQuality)
      }

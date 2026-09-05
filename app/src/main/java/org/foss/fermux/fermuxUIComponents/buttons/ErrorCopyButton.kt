@@ -21,12 +21,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun ErrorCopyButton(
      modifier: Modifier = Modifier,
+     componentSize: Dp = 50.dp,
      onClick: () -> Unit
 ) {
 
@@ -53,13 +55,12 @@ fun ErrorCopyButton(
                scaleX = buttonAnimation
                scaleY = buttonAnimation
           }
-               .size(60.dp)
-               .padding(6.dp),
-          shape = RoundedCornerShape(8.dp),
+               .size(componentSize),
+          shape = RoundedCornerShape(16.dp),
           colors = ButtonDefaults.textButtonColors(
                containerColor = containerColor,
           ),
-          contentPadding = PaddingValues(5.dp),
+          contentPadding = PaddingValues(10.dp),
           interactionSource = interactionSource,
           onClick = onClick
      ) {

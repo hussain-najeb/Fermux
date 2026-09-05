@@ -108,7 +108,7 @@ fun DownloadContent(
                                    shape = RoundedCornerShape(8.dp),
                                    minLines = 1,
                                    maxLines = 7,
-                                   colors = OutlinedTextFieldDefaults.colors( // TODO. Add actual good colors here.
+                                   colors = OutlinedTextFieldDefaults.colors(
                                         focusedBorderColor = FermuxColors.fermuxSecondaryBorder,
                                         unfocusedBorderColor = FermuxColors.fermuxGenericBorder,
                                         focusedLabelColor = FermuxColors.fermuxPrimaryBorder,
@@ -135,7 +135,6 @@ fun DownloadContent(
                                         )
                                    },
                                    trailingIcon = {
-
                                         androidx.compose.animation.AnimatedVisibility(
                                              visible = downloaderViewModel.downloadUrl.isNotEmpty(),
                                              enter = expandVertically(tween(70)) + fadeIn(tween(100)),

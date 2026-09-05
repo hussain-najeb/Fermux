@@ -76,7 +76,10 @@ enum class AudioFormat(val ytdlpFormat: String) {
 enum class Aria2cMode {
      Disabled,
      EdgeCaseOnly,
-     Always
+     Always;
+
+     val externalDownloaderState: Boolean
+          get() = this == EdgeCaseOnly || this == Always
 }
 
 enum class YtdlpChannel {
