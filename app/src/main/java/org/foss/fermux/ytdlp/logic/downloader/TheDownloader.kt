@@ -31,7 +31,7 @@ suspend fun downloaderLogic(
      taskId: String,
      sleepRequest: Int = 0,
 //   audioFormat: AudioFormat,
-     playlistStatus: Boolean = true,
+     playlistStatus: Boolean = false,
      quickJs: Boolean = true,
      fingerprinting: Boolean = true,
      musicQuality: AudioQuality? = null,

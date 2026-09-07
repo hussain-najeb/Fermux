@@ -90,5 +90,4 @@ dependencies {
      implementation(libs.common)
      implementation(libs.jackson.annotations)
      implementation(files("libs/youtubedl-android-local.aar"))
-     implementation(files("libs/ffmpeg-android-local.aar"))
 }

@@ -35,7 +35,10 @@ suspend fun execution(
  */
 
 suspend fun fetchingTheMetadata(url: String): DownloadMetadata = withContext(Dispatchers.IO) {
-     val info = YoutubeDL.getInstance().getInfo(url)
+     val request = YoutubeDLRequest(url).apply {
+          addOption("--no-playlist")
+     }
+     val info = YoutubeDL.getInstance().getInfo(request)
      DownloadMetadata(
           title = info.title ?: "Unknown title",
           thumbnail = info.thumbnail ?: "",
