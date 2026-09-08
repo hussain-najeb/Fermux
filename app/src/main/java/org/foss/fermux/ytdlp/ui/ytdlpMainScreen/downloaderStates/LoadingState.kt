@@ -1,5 +1,6 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -11,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
@@ -35,7 +37,7 @@ fun LoadingCard(
                "Hold Your Breath...",
                "Calibrating...",
                "Hopefully This Works..",
-               "It's Close...",
+               "It's So Close...",
                "Just A Second...",
                "Something Is About To Happen...",
           )
@@ -44,6 +46,13 @@ fun LoadingCard(
      var index by remember { mutableIntStateOf(0) }
 
      Column(modifier = Modifier.fillMaxWidth()) {
+
+          CancelButton(
+               modifier = Modifier
+                    .align(Alignment.End),
+               onClick = { onCancel() }
+          )
+
           DownloaderCard {
                LaunchedEffect(Unit) {
                     while (true) {
@@ -73,12 +82,6 @@ fun LoadingCard(
 
                          Icon(imageVector = Icons.Default.Close, contentDescription = null)
                     }
-                    CancelButton(
-                         modifier = Modifier
-                              .align(alignment = Alignment.TopStart).padding(6.dp),
-                         onClick = { onCancel() }
-                    )
-
                }
           }
      }

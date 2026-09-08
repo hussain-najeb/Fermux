@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderQualityFormatState
+package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.formats
 
 
 import androidx.compose.animation.*

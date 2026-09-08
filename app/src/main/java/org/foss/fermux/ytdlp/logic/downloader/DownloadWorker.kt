@@ -112,7 +112,10 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                Result.success()
           } catch (e: Exception) {
                Log.d("downloadWorker", "download failed", e)
-               Result.failure(workDataOf("error" to (e.message ?: e.toString())))
+               val error = e.message
+                    ?.take(4_000)
+                    ?: "Download failed"
+               Result.failure(workDataOf("error" to error))
           }
      }
 }

@@ -37,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.foss.fermux.fermuxUIComponents.buttons.AppIconButton
 import org.foss.fermux.fermuxUIComponents.buttons.GlobalCancelButton
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.SideBar
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus

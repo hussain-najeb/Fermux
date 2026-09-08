@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderQualityFormatState
+package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.formats
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column

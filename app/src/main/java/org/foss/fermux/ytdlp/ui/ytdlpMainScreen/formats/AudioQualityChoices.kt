@@ -1,7 +1,6 @@
-package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderQualityFormatState
+package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.formats
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -9,7 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderCard
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderFormatList
 import org.foss.fermux.ytdlp.logic.downloader.AudioQuality
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel

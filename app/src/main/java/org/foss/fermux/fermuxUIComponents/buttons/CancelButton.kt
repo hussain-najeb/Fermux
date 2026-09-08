@@ -67,7 +67,7 @@ fun CancelButton(
                .size(componentSize),
           interactionSource = interactionSource,
           contentPadding = PaddingValues(10.dp),
-          border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxGenericBorder),
+          border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxHelperBorder),
           shape = RoundedCornerShape(16.dp),
           onClick = onClick,
           colors = ButtonDefaults.textButtonColors(

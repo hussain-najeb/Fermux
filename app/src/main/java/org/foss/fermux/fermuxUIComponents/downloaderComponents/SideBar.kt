@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
+package org.foss.fermux.fermuxUIComponents.downloaderComponents
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -33,6 +33,8 @@ import org.foss.fermux.utils.MainScreens
 import org.foss.fermux.utils.Miscellaneous
 import org.foss.fermux.ui.theme.FermuxColors
 
+
+// Continues to edit the cards ui and make it better, also add the name of the youtube video and time and title and channle and size of video
 
 private data class AppIcons (
      val image: Int,

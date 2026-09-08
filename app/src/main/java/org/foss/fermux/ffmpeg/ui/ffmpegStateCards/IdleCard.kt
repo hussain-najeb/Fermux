@@ -80,7 +80,7 @@ fun IdleCard(
                               contentPadding = PaddingValues(10.dp)
                          )
                     }
-               }
+               } // Add the crop and edit stuff in the same thing like the downloader, a sidebar type of thing.
           }
      }
 }

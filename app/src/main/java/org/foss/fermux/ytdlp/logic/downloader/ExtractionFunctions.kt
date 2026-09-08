@@ -15,19 +15,37 @@ import java.io.File
  */
 
 suspend fun execution(
-     downloadDir: File?, request: YoutubeDLRequest, taskId: String, onUpdate: (Float, String) -> Unit, context: Context
+     downloadDir: File?,
+     request: YoutubeDLRequest,
+     taskId: String,
+     onUpdate: (Float, String) -> Unit,
+     context: Context,
 ) {
      withContext(Dispatchers.IO) {
+          val response = try {
+               YoutubeDL.getInstance().execute(request, taskId) { progress, _, line ->
+                    onUpdate(progress, line)
+               }
+          } catch (error: Exception) {
+               val message = error.message.orEmpty()
+               val thumbnailEmbeddingFailed =
+                    "EmbedThumbnailPPError" in message ||
+                         "Unable to embed using ffprobe & ffmpeg" in message
 
-          val response = YoutubeDL.getInstance().execute(request, taskId) { progress, _, line ->
-               onUpdate(progress, line)
+               if (!thumbnailEmbeddingFailed) throw error
+
+               Log.w("downloadWorker", "Thumbnail embedding failed; keeping media without artwork")
+               onUpdate(100f, "[EmbedThumbnail] Failed; kept download without artwork")
+               null
           }
 
           fileCopyFilter(context, downloadDir, subfolderName = "downloader")
 
-          Log.d("fermux", "exit=${response.exitCode}")
-          Log.d("fermux", "out=${response.out}")
-          Log.d("fermux", "err=${response.err}")
+          response?.let {
+               Log.d("fermux", "exit=${it.exitCode}")
+               Log.d("fermux", "out=${it.out}")
+               Log.d("fermux", "err=${it.err}")
+          }
      }
 }
 /**

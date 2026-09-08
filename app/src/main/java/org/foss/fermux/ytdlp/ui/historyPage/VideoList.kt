@@ -22,9 +22,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
-import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.ui.theme.FermuxColors
-import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.SideBar
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.SideBar
 
 @SuppressLint("ContextCastToActivity")
 @Composable
