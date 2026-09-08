@@ -12,6 +12,7 @@ import java.io.File
 
 /**
  *  Use the information given by [downloaderLogic] to execute the given request and save it to the downloads folder on the phone.
+ *  The rest is copying the file from the main app's dir to the public dir.
  */
 
 suspend fun execution(
@@ -26,14 +27,11 @@ suspend fun execution(
                YoutubeDL.getInstance().execute(request, taskId) { progress, _, line ->
                     onUpdate(progress, line)
                }
-          } catch (error: Exception) {
-               val message = error.message.orEmpty()
+          } catch (e: Exception) {
+               val message = e.message.orEmpty()
                val thumbnailEmbeddingFailed =
-                    "EmbedThumbnailPPError" in message ||
-                         "Unable to embed using ffprobe & ffmpeg" in message
-
-               if (!thumbnailEmbeddingFailed) throw error
-
+                    "EmbedThumbnailPPError" in message || "Unable to embed using ffprobe & ffmpeg" in message
+               if (!thumbnailEmbeddingFailed) throw e
                Log.w("downloadWorker", "Thumbnail embedding failed; keeping media without artwork")
                onUpdate(100f, "[EmbedThumbnail] Failed; kept download without artwork")
                null

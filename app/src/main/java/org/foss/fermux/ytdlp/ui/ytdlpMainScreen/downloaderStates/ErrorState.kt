@@ -10,14 +10,17 @@ import androidx.compose.material.icons.rounded.Error
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
 import org.foss.fermux.fermuxUIComponents.buttons.ErrorCopyButton
@@ -30,7 +33,7 @@ import org.foss.fermux.utils.Miscellaneous
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun ErrorCard(
-     errorMessage: String,
+     flavourMessage: String,
      rawError: String,
      navController: NavController,
      onCancel: () -> Unit
@@ -40,22 +43,6 @@ fun ErrorCard(
 
      Column(modifier = Modifier.fillMaxSize()) {
 
-
-          Row(modifier = Modifier.fillMaxWidth()) {
-               LogImage(
-                    modifier = Modifier.padding(start = 18.dp),
-                    image = R.drawable.logs,
-                    onClick = { navController.navigate(Miscellaneous.DownloaderLogs.route) }
-               )
-               ErrorCopyButton(
-                    modifier = Modifier.padding(start = 15.dp),
-                    onClick = { clipboard.setText(AnnotatedString(rawError)) }
-               )
-               CancelButton(
-                    modifier = Modifier.padding(start = 210.dp),
-                    onClick = { onCancel() }
-               )
-          }
           DownloaderCard(
                errorBackground = true
           ) {
@@ -80,7 +67,7 @@ fun ErrorCard(
                                         .size(28.dp)
                               )
                               Text(
-                                   text = errorMessage,
+                                   text = flavourMessage,
                                    fontSize = 12.sp,
                                    fontStyle = FontStyle.Normal,
                                    fontFamily = JetbrainsMono,
@@ -99,5 +86,37 @@ fun ErrorCard(
                     }
                }
           }
+          Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
+               LogImage(
+                    modifier = Modifier
+                         .padding(start = 15.dp, end = 10.dp),
+                    image = R.drawable.logs,
+                    onClick = { navController.navigate(Miscellaneous.DownloaderLogs.route) }
+               )
+               ErrorCopyButton(
+                    modifier = Modifier
+                         .padding(end = 10.dp),
+                    onClick = { clipboard.setText(AnnotatedString(rawError)) }
+               )
+               CancelButton(
+                    modifier = Modifier
+                         .padding(start = 160.dp),
+                    onClick = { onCancel() }
+               )
+          }
      }
+}
+
+@Preview
+@Composable
+fun Test2() {
+     val navController = rememberNavController()
+
+
+     ErrorCard(
+          flavourMessage = ".....Something About an error??",
+          rawError = ".....Imagine This Is An Error.....Imagine This Is An Error.....Imagine This Is An Error.....Imagine This Is An Error.....Imagine This Is An Error.....Imagine This Is An Error.....Imagine This Is An Error",
+          onCancel = {},
+          navController = navController
+     )
 }

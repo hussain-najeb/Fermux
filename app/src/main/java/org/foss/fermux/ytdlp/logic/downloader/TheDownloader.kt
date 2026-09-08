@@ -46,7 +46,6 @@ suspend fun downloaderLogic(
      val outputPath = "${downloadDir?.absolutePath}/%(title)s.%(ext)s"
      val request = YoutubeDLRequest(url)
 
-
      if (quickJs) {
           request.addOption(
                "--js-runtimes",
@@ -54,7 +53,7 @@ suspend fun downloaderLogic(
           )
      }
 
-     // TODO. REBUILD ffmpeg with https support in yausername lib wrapper.
+     // TODO. REBUILD ffmpeg with https support in yausername lib wrapper. I think this is Done?
 
      if (fingerprinting) {
           request.addOption("--impersonate", "chrome")
@@ -67,6 +66,7 @@ suspend fun downloaderLogic(
      if (sponsorBlock && sponsorBlockCategories.isNotEmpty()) {
           request.addOption("--sponsorblock-remove", sponsorBlockCategories.joinToString(","))
      }
+
      if (showDetails) {
           request.addOption("-v")
      }
@@ -77,11 +77,12 @@ suspend fun downloaderLogic(
                Aria2cMode.Disabled -> false
      }
 
+     val aria2Argument = "aria2c:--summary-interval=1 -x 12 -s 12 -k 1M"
+
      if (shouldUseAria2c) {
           request.addOption("--downloader", "libaria2c.so")
           request.addOption(
-               "--external-downloader-args",
-               "aria2c:--summary-interval=1 -x 12 -s 12 -k 1M"
+               "--external-downloader-args", aria2Argument
           )
      }
 
@@ -120,10 +121,8 @@ suspend fun downloaderLogic(
           request.addOption("-f", it.videoQuality)
      }
 
-     request.addOption("--restrict-filenames")
      request.addOption("-i")
      request.addOption("--embed-metadata")
-
      request.addOption("-o", outputPath)
 
      execution(downloadDir, request, taskId, onUpdate, context)

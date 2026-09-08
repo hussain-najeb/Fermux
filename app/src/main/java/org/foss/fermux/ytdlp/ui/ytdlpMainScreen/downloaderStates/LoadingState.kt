@@ -1,6 +1,5 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -47,12 +46,6 @@ fun LoadingCard(
 
      Column(modifier = Modifier.fillMaxWidth()) {
 
-          CancelButton(
-               modifier = Modifier
-                    .align(Alignment.End),
-               onClick = { onCancel() }
-          )
-
           DownloaderCard {
                LaunchedEffect(Unit) {
                     while (true) {
@@ -61,7 +54,10 @@ fun LoadingCard(
                          loadingMessage = shuffledMessages[index]
                     }
                }
-               Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+               Box(modifier =
+                         Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+               ) {
                     Column(
                          horizontalAlignment = Alignment.CenterHorizontally,
                          verticalArrangement = Arrangement.Center
@@ -79,10 +75,24 @@ fun LoadingCard(
                          LoadingIndicator(color = FermuxColors.fermuxGenericBorder)
                     }
                     if (state is DownloadStatus.Idle) {
-
                          Icon(imageVector = Icons.Default.Close, contentDescription = null)
                     }
                }
           }
+          CancelButton(
+               modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(end = 15.dp),
+               onClick = { onCancel() }
+          )
      }
+}
+
+@Preview
+@Composable
+fun Test() {
+     LoadingCard(
+          state = DownloadStatus.Loading,
+          onCancel = {}
+     )
 }
