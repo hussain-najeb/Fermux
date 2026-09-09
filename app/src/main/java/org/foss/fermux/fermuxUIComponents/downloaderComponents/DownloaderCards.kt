@@ -1,7 +1,8 @@
 package org.foss.fermux.fermuxUIComponents.downloaderComponents
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -23,14 +24,13 @@ fun DownloaderCard(
 ) {
      Card(
           modifier = modifier
-               .padding(16.dp)
-               .aspectRatio(16f / 9f),
+               .padding(16.dp),
           shape = shape,
           colors = CardDefaults.cardColors(
                containerColor = if (errorBackground) color.fermuxErrorCardColor else color.fermuxSurface
           ),
-          border = BorderStroke(1.dp, FermuxColors.fermuxWhiteColor)
+          border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
      ) {
-          content()
+               content()
      }
 }

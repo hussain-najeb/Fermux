@@ -30,14 +30,13 @@ import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
-import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
+import org.foss.fermux.fermuxUIComponents.buttons.LogImage
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderCard
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.FermuxDownloadDescription
 import org.foss.fermux.utils.Miscellaneous
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.DownloadMetadata
-import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
 
 
 private enum class ProgressState { InProgress, Done }
@@ -54,95 +53,94 @@ fun FinishedCard(
 
 ) {
      val showYtdlpDetails by settingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
+
+     FinishedCardContent(
+          metadata = metadata,
+          progress = progress,
+          onCancel = onCancel,
+          navController = navController,
+          showYtdlpDetails = showYtdlpDetails
+     )
+}
+
+@Composable
+private fun FinishedCardContent(
+     metadata: DownloadMetadata,
+     progress: Float? = null,
+     onCancel: () -> Unit,
+     navController: NavController,
+     showYtdlpDetails: Boolean
+) {
      val downloadState = progress?.let {
           if (it >= 100f) ProgressState.Done else ProgressState.InProgress
      }
 
-     DownloaderCard {
-
-          Box(
-               modifier = Modifier
-                    .clip(RoundedCornerShape(bottomStart = 4.dp, bottomEnd = 4.dp))
-                    .background(FermuxColors.fermuxSurface)
-          ) {
-               AsyncImage(
-                    model = metadata.thumbnail,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
+     Column(modifier = Modifier.fillMaxSize()) {
+          DownloaderCard(modifier = Modifier.wrapContentSize()) {
+               Box(
                     modifier = Modifier
-                         .fillMaxSize()
-                         .aspectRatio(16f / 9f)
+                         .clip(RoundedCornerShape(bottomStart = 4.dp, bottomEnd = 4.dp))
                          .background(FermuxColors.fermuxSurface)
-               )
-               progress?.let {
-                    when (downloadState) {
-                         ProgressState.InProgress -> Column(
-                              modifier = Modifier
-                                   .align(Alignment.Center)
-                                   .size(50.dp)
-                                   .background(
-                                        color = FermuxColors.fermuxComponents.copy(alpha = 0.48f),
-                                        shape = RoundedCornerShape(10.dp)
-                                   )
-                         ) {
-                              CircularWavyProgressIndicator(
-                                   progress = { progress / 100f },
-                                   color = FermuxColors.fermuxGenericBorder,
-                                   trackColor = FermuxColors.fermuxTertiaryBorder,
+               ) {
+                    AsyncImage(
+                         model = metadata.thumbnail,
+                         contentDescription = null,
+                         contentScale = ContentScale.Crop,
+                         modifier = Modifier
+                              .aspectRatio(16f/9f)
+                              .background(FermuxColors.fermuxSurface)
+                    )
+                    progress?.let {
+                         when (downloadState) {
+                              ProgressState.InProgress -> Column(
                                    modifier = Modifier
-                                        .padding(8.dp)
-                                        .align(Alignment.CenterHorizontally)
-                              )
-                         }
-
-                         ProgressState.Done -> Column(
-                              modifier = Modifier
-                                   .align(Alignment.Center)
-                                   .background(
-                                        color = FermuxColors.fermuxComponents.copy(alpha = 0.48f),
-                                        shape = RoundedCornerShape(10.dp)
+                                        .align(Alignment.Center)
+                                        .size(50.dp)
+                                        .background(
+                                             color = FermuxColors.fermuxComponents.copy(alpha = 0.48f),
+                                             shape = RoundedCornerShape(8.dp)
+                                        )
+                              ) {
+                                   CircularWavyProgressIndicator(
+                                        progress = { progress / 100f },
+                                        color = FermuxColors.fermuxGenericBorder,
+                                        trackColor = FermuxColors.fermuxTertiaryBorder,
+                                        modifier = Modifier
+                                             .padding(8.dp)
+                                             .align(Alignment.CenterHorizontally)
                                    )
-                         ) {
-                              Icon(
-                                   Icons.Default.Check,
-                                   contentDescription = "Download Complete",
-                                   modifier = Modifier
-                                        .padding(8.dp)
-                                        .align(Alignment.CenterHorizontally),
-                                   tint = FermuxColors.fermuxWhiteColor
-                              )
-                         }
+                              }
 
-                         null -> Unit
+                              ProgressState.Done -> Column(
+                                   modifier = Modifier
+                                        .align(Alignment.Center)
+                                        .background(
+                                             color = FermuxColors.fermuxComponents.copy(alpha = 0.48f),
+                                             shape = RoundedCornerShape(10.dp)
+                                        )
+                              ) {
+                                   Icon(
+                                        Icons.Default.Check,
+                                        contentDescription = "Download Complete",
+                                        modifier = Modifier
+                                             .padding(8.dp)
+                                             .align(Alignment.CenterHorizontally),
+                                        tint = FermuxColors.fermuxWhiteColor
+                                   )
+                              }
+
+                              null -> Unit
+                         }
                     }
                }
-               CancelButton(
-                    modifier = Modifier
-                         .align(alignment = Alignment.TopStart).padding(10.dp),
-                    onClick = { onCancel() }
-               )
-               if (showYtdlpDetails) {
-                    ImageButton(
-                         modifier = Modifier
-                              .align(Alignment.BottomStart)
-                              .padding(10.dp),
-                         image = R.drawable.logs,
-                         onClick = { navController.navigate(Miscellaneous.DownloaderLogs.route) }
-                    )
-               }
-          }
-          FermuxDownloadDescription {
-               Column(
-                    modifier = Modifier
-                         .fillMaxSize()
-                         .background(FermuxColors.fermuxSurface)
+               FermuxDownloadDescription(modifier = Modifier
+                    .fillMaxWidth()
                ) {
                     Text(
                          text = metadata.title,
                          fontFamily = FontFamily.Default,
                          fontSize = 18.sp,
                          fontWeight = FontWeight.W400,
-                         color = Color.White,
                          modifier = Modifier
                               .padding(7.dp)
                     )
@@ -151,40 +149,50 @@ fun FinishedCard(
                               text = it,
                               fontFamily = FontFamily.Default,
                               fontSize = 13.sp,
-                              color = FermuxColors.fermuxTextColorBackground,
+
                               modifier = Modifier
                                    .padding(7.dp)
                          )
                     }
                }
           }
+
+          Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
+               if (showYtdlpDetails) {
+                    LogImage(
+                         modifier = Modifier
+                              .padding(start = 15.dp),
+                         image = R.drawable.logs,
+                         onClick = { navController.navigate(Miscellaneous.DownloaderLogs.route) }
+                    )
+               }
+               CancelButton(
+                    modifier = Modifier
+                         .padding(start = 280.dp),
+                    onClick = { onCancel() }
+               )
+          }
      }
 }
 
-@Preview
+@Preview(showBackground = true, backgroundColor = 0xFF181825)
 @Composable
 fun Test3() {
-
-     // metadata: DownloadMetadata,
-     //     progress: Float? = null,
-     //     onCancel: () -> Unit,
-     //     navController: NavController,
-     //     @SuppressLint("ContextCastToActivity") settingsViewModel: DownloaderSettingsViewModel = viewModel(
-     //          viewModelStoreOwner = LocalContext.current as ComponentActivity
-     //     )
      val navController = rememberNavController()
 
+     Column(modifier = Modifier.fillMaxSize()) {
 
-     FinishedCard(
-          metadata = DownloadMetadata(
-               title = "Example Video Title, TEST....TEST",
-               thumbnail = "",
-               duration = 0,
-               uploader = "Example uploader"
-          ),
-          onCancel = {},
-          navController = navController,
-          progress = 50F
-     )
-
+          FinishedCardContent(
+               metadata = DownloadMetadata(
+                    title = "Example Video Title, TEST....TEST",
+                    thumbnail = "/home/Hussain/Downloads/01_HistoryUniverse_Front_5aa6c115-6004-4508-9d43-41752d9cf891.jpg",
+                    duration = 10,
+                    uploader = "Example uploader"
+               ),
+               onCancel = {},
+               navController = navController,
+               progress = 100F,
+               showYtdlpDetails = true
+          )
+     }
 }

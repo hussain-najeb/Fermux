@@ -146,42 +146,42 @@ class DownloaderViewModel : ViewModel() {
                          requestedUrls.id
                     }
                     workManager.getWorkInfoByIdFlow(observedId)
-                    .onEach { workInfo ->
-                         workInfo ?: return@onEach
-                         when (workInfo.state) {
-                              WorkInfo.State.RUNNING -> {
-                                   if (ytdlpDetails) {
+                         .onEach { workInfo ->
+                              workInfo ?: return@onEach
+                              when (workInfo.state) {
+                                   WorkInfo.State.RUNNING -> {
+                                        if (ytdlpDetails) {
 
-                                        val logs = workInfo.progress.getString("text")
-                                        if (!logs.isNullOrBlank()) {
-                                             downloaderLogs = (downloaderLogs + logs)
+                                             val logs = workInfo.progress.getString("text")
+                                             if (!logs.isNullOrBlank()) {
+                                                  downloaderLogs = (downloaderLogs + logs)
+                                             }
                                         }
+                                        val progress = workInfo.progress.getFloat("progress", 0f).coerceIn(0f, 100f)
+                                        state = DownloadStatus.Downloading(progress, metadata)
                                    }
-                                   val progress = workInfo.progress.getFloat("progress", 0f).coerceIn(0f, 100f)
-                                   state = DownloadStatus.Downloading(progress, metadata)
-                              }
 
-                              WorkInfo.State.SUCCEEDED -> {
-                                   state = DownloadStatus.Completed(metadata)
-                                   activeProcess = null
-                              }
+                                   WorkInfo.State.SUCCEEDED -> {
+                                        state = DownloadStatus.Completed(metadata)
+                                        activeProcess = null
+                                   }
 
-                              WorkInfo.State.FAILED -> {
-                                   val error = workInfo.outputData.getString("error")
-                                   error?.let { state = DownloadStatus.Error(flavorError.random(), rawError = it) }
-                                   activeProcess = null
-                              }
+                                   WorkInfo.State.FAILED -> {
+                                        val error = workInfo.outputData.getString("error")
+                                        error?.let { state = DownloadStatus.Error(flavorError.random(), rawError = it) }
+                                        activeProcess = null
+                                   }
 
-                              WorkInfo.State.CANCELLED -> {
-                                   state = DownloadStatus.Idle
-                                   activeProcess = null
-                                   downloaderLogs = ""
-                              }
+                                   WorkInfo.State.CANCELLED -> {
+                                        state = DownloadStatus.Idle
+                                        activeProcess = null
+                                        downloaderLogs = ""
+                                   }
 
-                              else -> {}
+                                   else -> {}
+                              }
                          }
-                    }
-                    .launchIn(viewModelScope)
+                         .launchIn(viewModelScope)
                } catch (e: CancellationException) {
                     throw e
                } catch (e: Exception) {
@@ -210,7 +210,6 @@ class DownloaderViewModel : ViewModel() {
           }
           downloaderJob?.cancel()
           downloaderJob = null
-
           state = DownloadStatus.Idle
           downloadUrl = ""
           downloaderLogs = ""
