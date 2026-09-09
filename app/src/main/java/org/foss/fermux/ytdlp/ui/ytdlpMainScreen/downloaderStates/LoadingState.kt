@@ -1,5 +1,6 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -46,7 +47,9 @@ fun LoadingCard(
 
      Column(modifier = Modifier.fillMaxWidth()) {
 
-          DownloaderCard {
+          DownloaderCard(
+               modifier = Modifier.aspectRatio(16f/9f)
+          ) {
                LaunchedEffect(Unit) {
                     while (true) {
                          delay(4500.milliseconds)

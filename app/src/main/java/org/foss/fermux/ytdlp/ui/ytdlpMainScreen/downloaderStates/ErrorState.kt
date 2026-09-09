@@ -1,6 +1,7 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
@@ -43,7 +44,9 @@ fun ErrorCard(
      Column(modifier = Modifier.fillMaxSize()) {
 
           DownloaderCard(
-               errorBackground = true
+               errorBackground = true,
+               modifier = Modifier.aspectRatio(16f/9f),
+               border = BorderStroke(1.dp, FermuxColors.fermuxWhiteColor)
           ) {
                Box(
                     modifier = Modifier

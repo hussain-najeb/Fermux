@@ -1,8 +1,6 @@
 package org.foss.fermux.fermuxUIComponents.downloaderComponents
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -20,6 +18,7 @@ fun DownloaderCard(
      color: FermuxColor = FermuxColors,
      errorBackground: Boolean = false,
      shape: Shape = RoundedCornerShape(8.dp),
+     border: BorderStroke? = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),
      content: @Composable () -> Unit
 ) {
      Card(
@@ -29,7 +28,7 @@ fun DownloaderCard(
           colors = CardDefaults.cardColors(
                containerColor = if (errorBackground) color.fermuxErrorCardColor else color.fermuxSurface
           ),
-          border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
+          border = border
      ) {
                content()
      }

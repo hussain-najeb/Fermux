@@ -37,6 +37,7 @@ import org.foss.fermux.utils.Miscellaneous
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.DownloadMetadata
+import org.foss.fermux.ytdlp.logic.downloader.videoTime
 
 
 private enum class ProgressState { InProgress, Done }
@@ -79,7 +80,7 @@ private fun FinishedCardContent(
           DownloaderCard(modifier = Modifier.wrapContentSize()) {
                Box(
                     modifier = Modifier
-                         .clip(RoundedCornerShape(bottomStart = 4.dp, bottomEnd = 4.dp))
+                         .clip(RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp))
                          .background(FermuxColors.fermuxSurface)
                ) {
                     AsyncImage(
@@ -97,7 +98,7 @@ private fun FinishedCardContent(
                                         .align(Alignment.Center)
                                         .size(50.dp)
                                         .background(
-                                             color = FermuxColors.fermuxComponents.copy(alpha = 0.48f),
+                                             color = FermuxColors.fermuxComponents.copy(alpha = 0.70f),
                                              shape = RoundedCornerShape(8.dp)
                                         )
                               ) {
@@ -115,8 +116,8 @@ private fun FinishedCardContent(
                                    modifier = Modifier
                                         .align(Alignment.Center)
                                         .background(
-                                             color = FermuxColors.fermuxComponents.copy(alpha = 0.48f),
-                                             shape = RoundedCornerShape(10.dp)
+                                             color = FermuxColors.fermuxComponents.copy(alpha = 0.75f),
+                                             shape = RoundedCornerShape(8.dp)
                                         )
                               ) {
                                    Icon(
@@ -132,6 +133,21 @@ private fun FinishedCardContent(
                               null -> Unit
                          }
                     }
+                    Box(modifier = Modifier
+                         .padding(5.dp)
+                         .wrapContentSize()
+                         .background(
+                              color = FermuxColors.fermuxComponents.copy(alpha = 0.75f),
+                              shape = RoundedCornerShape(5.dp)
+                         )
+                         .padding(7.dp)
+                         .align(Alignment.BottomEnd)
+                    ) {
+                         Text(
+                              text = videoTime(seconds = metadata.duration),
+                              color = FermuxColors.fermuxWhiteColor
+                         )
+                    }
                }
                FermuxDownloadDescription(modifier = Modifier
                     .fillMaxWidth()
@@ -140,7 +156,7 @@ private fun FinishedCardContent(
                          Text(
                               text = metadata.title,
                               fontFamily = FontFamily.Default,
-                              fontSize = 18.sp,
+                              fontSize = 19.sp,
                               color = FermuxColors.fermuxWhiteColor,
                               maxLines = 1,
                               overflow = TextOverflow.Ellipsis,
@@ -192,8 +208,8 @@ fun Test3() {
           FinishedCardContent(
                metadata = DownloadMetadata(
                     title = "Example Video Title, TEST....TEST. This is a test",
-                    thumbnail = "/home/Hussain/Downloads/01_HistoryUniverse_Front_5aa6c115-6004-4508-9d43-41752d9cf891.jpg",
-                    duration = 10,
+                    thumbnail = "/home/Hussain/Downloads/01_HistoryUniverse_Front_5aa6c115-6004-4508-9d43-41752d9cf891.jpg\n",
+                    duration = 578,
                     uploader = "Example uploader, Youtube Channel, Or Null"
                ),
                onCancel = {},
