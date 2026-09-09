@@ -5,6 +5,7 @@ import android.util.Log
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLRequest
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.withContext
 import org.foss.fermux.utils.fileCopyFilter
 import java.io.File
@@ -22,8 +23,8 @@ suspend fun execution(
      onUpdate: (Float, String) -> Unit,
      context: Context,
 ) {
-     withContext(Dispatchers.IO) {
-          val response = try {
+     val response = runInterruptible(Dispatchers.IO) {
+          try {
                YoutubeDL.getInstance().execute(request, taskId) { progress, _, line ->
                     onUpdate(progress, line)
                }
@@ -36,14 +37,14 @@ suspend fun execution(
                onUpdate(100f, "[EmbedThumbnail] Failed; kept download without artwork")
                null
           }
+     }
 
-          fileCopyFilter(context, downloadDir, subfolderName = "downloader")
+     fileCopyFilter(context, downloadDir, subfolderName = "downloader")
 
-          response?.let {
-               Log.d("fermux", "exit=${it.exitCode}")
-               Log.d("fermux", "out=${it.out}")
-               Log.d("fermux", "err=${it.err}")
-          }
+     response?.let {
+          Log.d("fermux", "exit=${it.exitCode}")
+          Log.d("fermux", "out=${it.out}")
+          Log.d("fermux", "err=${it.err}")
      }
 }
 /**

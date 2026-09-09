@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.SettingsBackupRestore
 import androidx.compose.material.icons.filled.Update
@@ -71,6 +72,7 @@ fun SimpleDownloaderPage(
      val quickJS by downloaderSettingsViewModel.quickJS.collectAsStateWithLifecycle()
      val fingerprint by downloaderSettingsViewModel.fingerprint.collectAsStateWithLifecycle()
      val thumbnail by downloaderSettingsViewModel.embedThumbnail.collectAsStateWithLifecycle()
+     val debugLoggingEnabled by downloaderSettingsViewModel.debugLoggingEnabled.collectAsStateWithLifecycle()
 //   val notificationState by downloaderSettingsViewModel.notificationState.collectAsStateWithLifecycle() // TODO. Add this at some point.
      val playlist by downloaderSettingsViewModel.playlistState.collectAsStateWithLifecycle()
 
@@ -174,6 +176,18 @@ fun SimpleDownloaderPage(
                     )
                },
                position = TilePosition.TOP
+          ),
+          SettingListInfo(
+               title = if (debugLoggingEnabled) "Debug Logging On" else "Debug Logging Off",
+               description = "Write diagnostic messages to Logcat in debug builds",
+               icon = Icons.Default.BugReport,
+               content = {
+                    SettingsSwitch(
+                         checked = debugLoggingEnabled,
+                         onCheckedChange = downloaderSettingsViewModel::setDebugLoggingEnabled
+                    )
+               },
+               position = TilePosition.MIDDLE
           ),
           SettingListInfo(
                title = "SponsorBlock",

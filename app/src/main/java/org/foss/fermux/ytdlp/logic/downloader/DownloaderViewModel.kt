@@ -7,11 +7,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.yausername.youtubedl_android.YoutubeDL
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.first
@@ -30,6 +32,10 @@ import kotlin.time.Duration.Companion.milliseconds
 
 
 class DownloaderViewModel : ViewModel() {
+     companion object {
+          private const val DOWNLOAD_WORK_NAME = "fermux-active-download"
+     }
+
      var state by mutableStateOf<DownloadStatus>(DownloadStatus.Idle)
      var downloadUrl by mutableStateOf("")
      var downloaderLogs by mutableStateOf("")
@@ -82,6 +88,11 @@ class DownloaderViewModel : ViewModel() {
       * Used to handle The Downloader's states, settings, metadata, audio and video assignment, and for data to be assigned to [DownloadWorker] to make it work asynchronously and perform the downloading task.
       */
      fun startingDownload(context: Context, audio: AudioQuality?, video: VideoQuality?) {
+          if (activeProcess != null || state is DownloadStatus.Downloading) {
+               Log.d("DownloadAdmission", "Ignoring duplicate download request; active id=$activeProcess")
+               return
+          }
+
           val settingsTab = DownloaderSettingsTab(context.applicationContext)
           val metadata = when (val current = state) {
                is DownloadStatus.MidChoice -> current.metadata
@@ -89,31 +100,52 @@ class DownloaderViewModel : ViewModel() {
                else -> return
           }
 
-          downloaderJob = viewModelScope.launch {
-               val ytdlpDetails = settingsTab.ytdlpDetails.first()
-               showYtdlpDetails = ytdlpDetails
-
-               val requestedUrls = OneTimeWorkRequestBuilder<DownloadWorker>()
-                    .setInputData(
-                         workDataOf(
-                              "url" to downloadUrl,
-                              "audio" to audio?.name,
-                              "video" to video?.name,
-                              "title" to metadata.title,
-                              "thumbnail" to metadata.thumbnail,
-                              "duration" to metadata.duration,
-                              "uploader" to metadata.uploader
-                         )
+          val requestedUrls = OneTimeWorkRequestBuilder<DownloadWorker>()
+               .setInputData(
+                    workDataOf(
+                         "url" to downloadUrl,
+                         "audio" to audio?.name,
+                         "video" to video?.name,
+                         "title" to metadata.title,
+                         "thumbnail" to metadata.thumbnail,
+                         "duration" to metadata.duration,
+                         "uploader" to metadata.uploader
                     )
-                    .build()
+               )
+               .build()
 
-               activeProcess = requestedUrls.id
-               state = DownloadStatus.Downloading(0f, metadata)
+          // Close the tap race synchronously, before the coroutine's first suspension.
+          activeProcess = requestedUrls.id
+          state = DownloadStatus.Downloading(0f, metadata)
+          Log.d("DownloadAdmission", "Prepared download id=${requestedUrls.id}")
 
-               val workManager = WorkManager
-                    .getInstance(context)
-               workManager.enqueue(requestedUrls)
-               workManager.getWorkInfoByIdFlow(requestedUrls.id)
+          downloaderJob = viewModelScope.launch {
+               try {
+                    val ytdlpDetails = settingsTab.ytdlpDetails.first()
+                    showYtdlpDetails = ytdlpDetails
+
+                    val workManager = WorkManager.getInstance(context)
+                    val existingWork = workManager
+                         .getWorkInfosForUniqueWorkFlow(DOWNLOAD_WORK_NAME)
+                         .first()
+                         .firstOrNull { !it.state.isFinished }
+                    val observedId = if (existingWork != null) {
+                         activeProcess = existingWork.id
+                         Log.d(
+                              "DownloadAdmission",
+                              "Keeping existing download id=${existingWork.id} state=${existingWork.state}"
+                         )
+                         existingWork.id
+                    } else {
+                         Log.d("DownloadAdmission", "Enqueue unique download id=${requestedUrls.id}")
+                         workManager.enqueueUniqueWork(
+                              DOWNLOAD_WORK_NAME,
+                              ExistingWorkPolicy.KEEP,
+                              requestedUrls
+                         )
+                         requestedUrls.id
+                    }
+                    workManager.getWorkInfoByIdFlow(observedId)
                     .onEach { workInfo ->
                          workInfo ?: return@onEach
                          when (workInfo.state) {
@@ -150,6 +182,15 @@ class DownloaderViewModel : ViewModel() {
                          }
                     }
                     .launchIn(viewModelScope)
+               } catch (e: CancellationException) {
+                    throw e
+               } catch (e: Exception) {
+                    Log.e("DownloadAdmission", "Failed to enqueue id=${requestedUrls.id}", e)
+                    if (activeProcess == requestedUrls.id) {
+                         activeProcess = null
+                         downloadErrorHandler(e)
+                    }
+               }
           }
      }
 

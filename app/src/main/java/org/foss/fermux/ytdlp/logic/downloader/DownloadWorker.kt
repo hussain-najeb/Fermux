@@ -1,11 +1,17 @@
 package org.foss.fermux.ytdlp.logic.downloader
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import com.yausername.youtubedl_android.YoutubeDL
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.job
 import kotlinx.coroutines.runBlocking
 import org.foss.fermux.storage.DownloaderSettingsTab
 import org.foss.fermux.storage.JSONHistoryCards
@@ -16,7 +22,12 @@ import org.foss.fermux.storage.JSONHistoryCards
  */
 class DownloadWorker(context: Context, params: WorkerParameters) :
      CoroutineWorker(context, params) {
+     @RequiresApi(Build.VERSION_CODES.S)
      override suspend fun doWork(): Result {
+
+          val taskId = id.toString()
+          val workerJob = currentCoroutineContext().job
+          Log.d("DownloadWorker", "Started id=$taskId attempt=$runAttemptCount")
 
           val settingsTab = DownloaderSettingsTab(applicationContext)
           val sponsorBlock = settingsTab.sponsorBlock.first()
@@ -79,7 +90,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                downloaderLogic(
                     context = applicationContext,
                     url = url,
-                    taskId = id.toString(),
+                    taskId = taskId,
                     aria2cMode = aria2cMode,
                     externalDownloaders = externalDownloaders,
                     quickJs = quickJS,
@@ -93,6 +104,10 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                     sponsorBlockCategories = sponsorBlockCategories,
                     sleepRequest = sleepRequest,
                     onUpdate = { progress, line ->
+                         if (isStopped || !workerJob.isActive) {
+                              return@downloaderLogic
+                         }
+
                          val now = System.currentTimeMillis()
                          val currentProgress = progress.coerceIn(0f, 100f)
 
@@ -109,9 +124,16 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                          }
                     },
                )
+               Log.d("DownloadWorker", "Succeeded id=$taskId")
                Result.success()
+          } catch (e: CancellationException) {
+               val destroyed = YoutubeDL.destroyProcessById(taskId)
+
+               Log.d("DownloadWorker", "Cancelled id=$taskId stopReason=$stopReason destroyed=$destroyed", e)
+
+               throw e
           } catch (e: Exception) {
-               Log.d("downloadWorker", "download failed", e)
+               Log.d("DownloadWorker", "Failed id=$taskId attempt=$runAttemptCount", e)
                val error = e.message
                     ?.take(4_000)
                     ?: "Download failed"

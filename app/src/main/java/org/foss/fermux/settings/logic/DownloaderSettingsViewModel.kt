@@ -1,6 +1,7 @@
 package org.foss.fermux.settings.logic
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,7 +12,9 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.foss.fermux.BuildConfig
 import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
+import org.foss.fermux.ytdlp.logic.downloader.DebugLog
 import org.foss.fermux.storage.DownloaderSettingsTab
 import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
@@ -20,6 +23,17 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(application) {
      private val settingsTab = DownloaderSettingsTab(application.applicationContext)
+     private val sharedPreferences =
+          application.getSharedPreferences("settings", Context.MODE_PRIVATE)
+
+     private val _debugLoggingEnabled = MutableStateFlow(
+          BuildConfig.DEBUG && sharedPreferences.getBoolean("debug_logging", true)
+     )
+     val debugLoggingEnabled: StateFlow<Boolean> = _debugLoggingEnabled
+
+     init {
+          DebugLog.setEnabled(_debugLoggingEnabled.value)
+     }
 
      val downloadPath: StateFlow<String> = settingsTab.downloadPath
           .stateIn(viewModelScope, SharingStarted.Lazily, "")
@@ -111,6 +125,13 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
      fun setYtdlpDetails(value: Boolean) {
           viewModelScope.launch { settingsTab.setYtdlpDetails(value) }
+     }
+
+     fun setDebugLoggingEnabled(value: Boolean) {
+          val enabled = BuildConfig.DEBUG && value
+          sharedPreferences.edit().putBoolean("debug_logging", enabled).apply()
+          _debugLoggingEnabled.value = enabled
+          DebugLog.setEnabled(enabled)
      }
 
      fun setSponsorBlock(value: Boolean) {

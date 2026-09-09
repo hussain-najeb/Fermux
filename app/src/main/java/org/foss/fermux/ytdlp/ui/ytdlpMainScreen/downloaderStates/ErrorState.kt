@@ -111,8 +111,6 @@ fun ErrorCard(
 @Composable
 fun Test2() {
      val navController = rememberNavController()
-
-
      ErrorCard(
           flavourMessage = ".....Something About an error??",
           rawError = ".....Imagine This Is An Error.....Imagine This Is An Error.....Imagine This Is An Error.....Imagine This Is An Error.....Imagine This Is An Error.....Imagine This Is An Error.....Imagine This Is An Error",

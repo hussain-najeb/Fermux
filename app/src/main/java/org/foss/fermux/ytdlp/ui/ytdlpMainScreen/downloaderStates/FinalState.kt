@@ -20,11 +20,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
@@ -35,6 +37,7 @@ import org.foss.fermux.utils.Miscellaneous
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.DownloadMetadata
+import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
 
 
 private enum class ProgressState { InProgress, Done }
@@ -156,4 +159,32 @@ fun FinishedCard(
                }
           }
      }
+}
+
+@Preview
+@Composable
+fun Test3() {
+
+     // metadata: DownloadMetadata,
+     //     progress: Float? = null,
+     //     onCancel: () -> Unit,
+     //     navController: NavController,
+     //     @SuppressLint("ContextCastToActivity") settingsViewModel: DownloaderSettingsViewModel = viewModel(
+     //          viewModelStoreOwner = LocalContext.current as ComponentActivity
+     //     )
+     val navController = rememberNavController()
+
+
+     FinishedCard(
+          metadata = DownloadMetadata(
+               title = "Example Video Title, TEST....TEST",
+               thumbnail = "",
+               duration = 0,
+               uploader = "Example uploader"
+          ),
+          onCancel = {},
+          navController = navController,
+          progress = 50F
+     )
+
 }
