@@ -15,11 +15,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -136,23 +136,30 @@ private fun FinishedCardContent(
                FermuxDownloadDescription(modifier = Modifier
                     .fillMaxWidth()
                ) {
-                    Text(
-                         text = metadata.title,
-                         fontFamily = FontFamily.Default,
-                         fontSize = 18.sp,
-                         fontWeight = FontWeight.W400,
-                         modifier = Modifier
-                              .padding(7.dp)
-                    )
-                    metadata.uploader?.let {
+                    Column(modifier = Modifier.height(80.dp)) {
                          Text(
-                              text = it,
+                              text = metadata.title,
                               fontFamily = FontFamily.Default,
-                              fontSize = 13.sp,
-
+                              fontSize = 18.sp,
+                              color = FermuxColors.fermuxWhiteColor,
+                              maxLines = 1,
+                              overflow = TextOverflow.Ellipsis,
+                              fontWeight = FontWeight.W400,
                               modifier = Modifier
                                    .padding(7.dp)
                          )
+                         metadata.uploader?.let {
+                              Text(
+                                   text = it,
+                                   fontFamily = FontFamily.Default,
+                                   fontSize = 14.sp,
+                                   color = FermuxColors.fermuxGenericBorder,
+                                   maxLines = 1,
+                                   overflow = TextOverflow.Ellipsis,
+                                   modifier = Modifier
+                                        .padding(7.dp)
+                              )
+                         }
                     }
                }
           }
@@ -184,10 +191,10 @@ fun Test3() {
 
           FinishedCardContent(
                metadata = DownloadMetadata(
-                    title = "Example Video Title, TEST....TEST",
+                    title = "Example Video Title, TEST....TEST. This is a test",
                     thumbnail = "/home/Hussain/Downloads/01_HistoryUniverse_Front_5aa6c115-6004-4508-9d43-41752d9cf891.jpg",
                     duration = 10,
-                    uploader = "Example uploader"
+                    uploader = "Example uploader, Youtube Channel, Or Null"
                ),
                onCancel = {},
                navController = navController,
