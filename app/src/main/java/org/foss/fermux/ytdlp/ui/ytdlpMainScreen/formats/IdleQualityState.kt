@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderFormatList
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.FormatTiles
 import org.foss.fermux.ytdlp.logic.downloader.FormatKind
 
 
@@ -41,7 +41,7 @@ fun IdleQualityChoices(onPick: (FormatKind) -> Unit, onCancel: () -> Unit) {
                .fillMaxWidth()
      ) {
           formatOptions.forEach { option ->
-               DownloaderFormatList(
+               FormatTiles(
                     title = option.title,
                     description = option.description,
                     image = option.icon,

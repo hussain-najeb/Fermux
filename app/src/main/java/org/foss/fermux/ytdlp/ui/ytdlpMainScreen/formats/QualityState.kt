@@ -34,11 +34,21 @@ fun QualityState(downloaderViewModel: DownloaderViewModel) {
           contentKey = { it }
      ) { targetState ->
           when (targetState) {
-               FormatKind.Idle -> IdleQualityChoices(onPick = { pickedFormat = it }, onCancel = { downloaderViewModel.cancelButton(context) }
+               FormatKind.Idle -> IdleQualityChoices(
+                    onPick = { pickedFormat = it },
+                    onCancel = { downloaderViewModel.cancelButton(context) }
                )
-               FormatKind.Audio -> AudioQualityChoices(downloaderViewModel, onBack = { pickedFormat = FormatKind.Idle }
+               FormatKind.Audio -> AudioQualityChoices(
+                    onBack = { pickedFormat = FormatKind.Idle },
+                    onQualitySelected = { quality ->
+                         downloaderViewModel.startingDownload(context, audio = quality, video = null)
+                    }
                )
-               FormatKind.Video -> VideoQualityChoices(downloaderViewModel, onBack = { pickedFormat = FormatKind.Idle }
+               FormatKind.Video -> VideoQualityChoices(
+                    onBack = { pickedFormat = FormatKind.Idle },
+                    onQualitySelected = { quality ->
+                         downloaderViewModel.startingDownload(context, video = quality, audio = null)
+                    }
                )
           }
      }

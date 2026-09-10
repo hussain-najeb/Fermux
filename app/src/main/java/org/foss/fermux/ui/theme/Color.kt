@@ -61,7 +61,7 @@ data class FermuxColor(
      // Fermux text
      val fermuxWhiteColor: Color = Color.White,
      val fermuxTextColorBackground: Color = Color(0xFF727882),
-     val fermuxOffWhiteTextColor: Color = Color(0xFFA8ADB4),
+     val fermuxOffWhiteTextColor: Color = Color(0xFFC2C6C6),
      val fermuxLightErrorTextColor: Color = Color(0xFFf2b8b5),
      val fermuxInActiveTextColor: Color = Color(0xFFadc6ff),
      val fermuxActiveTextColor: Color = Color(0xFF102f60),

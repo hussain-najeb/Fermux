@@ -5,18 +5,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderFormatList
-import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.FormatTiles
 import org.foss.fermux.ytdlp.logic.downloader.VideoQuality
 
 
 @Composable
-fun VideoQualityChoices(downloaderViewModel: DownloaderViewModel, onBack: () -> Unit) {
-
-     val context = LocalContext.current
+fun VideoQualityChoices(
+     onQualitySelected: (VideoQuality) -> Unit,
+     onBack: () -> Unit
+) {
 
      val videoListOptions = listOf(
           DownloaderFormatLists(
@@ -28,51 +27,37 @@ fun VideoQualityChoices(downloaderViewModel: DownloaderViewModel, onBack: () -> 
           DownloaderFormatLists(
                title = "Best",
                description = "Highest available resolution",
-               onClick = {
-                    downloaderViewModel.startingDownload(context, null, VideoQuality.BEST)
-               }
+               onClick = { onQualitySelected(VideoQuality.BEST) }
           ),
           DownloaderFormatLists(
                title = "1080p",
                description = "Full HD",
-               onClick = {
-                    downloaderViewModel.startingDownload(context, null, VideoQuality.HD1080)
-               }
+               onClick = { onQualitySelected(VideoQuality.HD1080) }
           ),
           DownloaderFormatLists(
                title = "720p",
                description = "HD",
-               onClick = {
-                    downloaderViewModel.startingDownload(context, null, VideoQuality.HD720)
-               }
+               onClick = { onQualitySelected(VideoQuality.HD720) }
           ),
           DownloaderFormatLists(
                title = "480p",
                description = "SD",
-               onClick = {
-                    downloaderViewModel.startingDownload(context, null, VideoQuality.SD480)
-               }
+               onClick = { onQualitySelected(VideoQuality.SD480) }
           ),
           DownloaderFormatLists(
                title = "360p",
                description = "Lower quality, smaller size",
-               onClick = {
-                    downloaderViewModel.startingDownload(context, null, VideoQuality.Q360)
-               }
+               onClick = { onQualitySelected(VideoQuality.Q360) }
           ),
           DownloaderFormatLists(
                title = "240p",
                description = "Low quality",
-               onClick = {
-                    downloaderViewModel.startingDownload(context, null, VideoQuality.Q240)
-               }
+               onClick = { onQualitySelected(VideoQuality.Q240) }
           ),
           DownloaderFormatLists(
                title = "144p",
                description = "Lowest quality, smallest size",
-               onClick = {
-                    downloaderViewModel.startingDownload(context, null, VideoQuality.Q144)
-               }
+               onClick = { onQualitySelected(VideoQuality.Q144) }
           )
      )
      Column(
@@ -81,7 +66,7 @@ fun VideoQualityChoices(downloaderViewModel: DownloaderViewModel, onBack: () -> 
                .padding(8.dp)
      ) {
           videoListOptions.forEach { option ->
-               DownloaderFormatList(
+               FormatTiles(
                     title = option.title,
                     description = option.description,
                     image = option.icon,

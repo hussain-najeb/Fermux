@@ -1,67 +1,85 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.formats
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderFormatList
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.FormatTiles
+import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ytdlp.logic.downloader.AudioQuality
-import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 
 @Composable
-fun AudioQualityChoices(downloaderViewModel: DownloaderViewModel, onBack: () -> Unit) {
-
-
-     val context = LocalContext.current
-
+fun AudioQualityChoices(
+     onBack: () -> Unit,
+     onQualitySelected: (AudioQuality) -> Unit
+) {
      val audioListOptions = listOf(
-          DownloaderFormatLists(
+          SettingListInfo(
                title = "Back",
                description = "Choose a different format",
-               icon = R.drawable.back_arrow,
-               onClick = onBack
+               image = R.drawable.back_arrow,
+               onClick = onBack,
+               position = TilePosition.TOP
           ),
-          DownloaderFormatLists(
+          SettingListInfo(
                title = "Best Audio Quality",
-               description = "Highest available audio quality (~220-260 kbps)",
-               onClick = {
-                    downloaderViewModel.startingDownload(context, AudioQuality.BEST, null)
-               }
+               description = "Highest audio quality, ~220-260 kbps",
+               onClick = { onQualitySelected(AudioQuality.BEST) },
+               position = TilePosition.MIDDLE
           ),
-          DownloaderFormatLists(
+          SettingListInfo(
                title = "High",
                description = "~170-210 kbps",
-               onClick = {
-                    downloaderViewModel.startingDownload(context, AudioQuality.HIGH, null)
-               }
+               onClick = { onQualitySelected(AudioQuality.HIGH) },
+               position = TilePosition.MIDDLE
           ),
-          DownloaderFormatLists(
+          SettingListInfo(
                title = "Medium",
                description = "~100-140 kbps, yt-dlp default",
-               onClick = { downloaderViewModel.startingDownload(context, AudioQuality.MEDIUM, null) }
+               onClick = { onQualitySelected(AudioQuality.MEDIUM) },
+               position = TilePosition.MIDDLE
           ),
-          DownloaderFormatLists(
+          SettingListInfo(
                title = "Low",
                description = "Smallest file size (~65 kbps)",
-               onClick = { downloaderViewModel.startingDownload(context, AudioQuality.LOW, null) }
+               onClick = { onQualitySelected(AudioQuality.LOW) },
+               position = TilePosition.BOTTOM
           ),
      )
-          Column(
+     Column(
           modifier = Modifier
                .fillMaxWidth()
                .padding(8.dp)
      ) {
           audioListOptions.forEach { option ->
-               DownloaderFormatList(
+               FormatTiles(
                     title = option.title,
                     description = option.description,
-                    image = option.icon,
+                    image = option.image,
                     onClick = { option.onClick?.invoke() }
                )
           }
+     }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF181825)
+@Composable
+fun Test4() {
+     Column(modifier = Modifier
+          .padding(10.dp)
+          .fillMaxSize()
+     ) {
+          AudioQualityChoices(
+               onBack = {},
+               onQualitySelected = { quality ->
+                    println("Quality is $quality")
+               }
+          )
      }
 }

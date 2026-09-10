@@ -1,7 +1,6 @@
 package org.foss.fermux.settings.ui.converter
 
 import android.annotation.SuppressLint
-import android.widget.ExpandableListAdapter
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

@@ -156,7 +156,7 @@ private fun FinishedCardContent(
                          Text(
                               text = metadata.title,
                               fontFamily = FontFamily.Default,
-                              fontSize = 19.sp,
+                              fontSize = 15.sp,
                               color = FermuxColors.fermuxWhiteColor,
                               maxLines = 1,
                               overflow = TextOverflow.Ellipsis,
@@ -168,8 +168,8 @@ private fun FinishedCardContent(
                               Text(
                                    text = it,
                                    fontFamily = FontFamily.Default,
-                                   fontSize = 14.sp,
-                                   color = FermuxColors.fermuxGenericBorder,
+                                   fontSize = 13.sp,
+                                   color = FermuxColors.fermuxOffWhiteTextColor,
                                    maxLines = 1,
                                    overflow = TextOverflow.Ellipsis,
                                    modifier = Modifier
@@ -180,18 +180,20 @@ private fun FinishedCardContent(
                }
           }
 
-          Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
-               if (showYtdlpDetails) {
+          Row(
+               modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+               verticalAlignment = Alignment.CenterVertically
+          ) {
+               if (showYtdlpDetails) {2
                     LogImage(
-                         modifier = Modifier
-                              .padding(start = 15.dp),
                          image = R.drawable.logs,
                          onClick = { navController.navigate(Miscellaneous.DownloaderLogs.route) }
                     )
                }
+               Spacer(modifier = Modifier.weight(1f))
                CancelButton(
-                    modifier = Modifier
-                         .padding(start = 280.dp),
                     onClick = { onCancel() }
                )
           }
@@ -208,7 +210,7 @@ fun Test3() {
           FinishedCardContent(
                metadata = DownloadMetadata(
                     title = "Example Video Title, TEST....TEST. This is a test",
-                    thumbnail = "/home/Hussain/Downloads/01_HistoryUniverse_Front_5aa6c115-6004-4508-9d43-41752d9cf891.jpg\n",
+                    thumbnail = "/home/Hussain/Downloads/01_HistoryUniverse_Front_5aa6c115-6004-4508-9d43-41752d9cf891.jpg",
                     duration = 578,
                     uploader = "Example uploader, Youtube Channel, Or Null"
                ),
