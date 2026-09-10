@@ -8,6 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.FormatTiles
+import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ytdlp.logic.downloader.VideoQuality
 
 
@@ -18,58 +20,68 @@ fun VideoQualityChoices(
 ) {
 
      val videoListOptions = listOf(
-          DownloaderFormatLists(
+          SettingListInfo(
                title = "Back",
-               description = "Choose a different format",
-               icon = R.drawable.back_arrow,
-               onClick = onBack
+               description = "Back to previous page",
+               image = R.drawable.back_arrow,
+               onClick = onBack,
+               position = TilePosition.TOP
           ),
-          DownloaderFormatLists(
+          SettingListInfo(
                title = "Best",
                description = "Highest available resolution",
-               onClick = { onQualitySelected(VideoQuality.BEST) }
+               onClick = { onQualitySelected(VideoQuality.BEST) },
+               position = TilePosition.MIDDLE
           ),
-          DownloaderFormatLists(
+          SettingListInfo(
                title = "1080p",
-               description = "Full HD",
-               onClick = { onQualitySelected(VideoQuality.HD1080) }
+               description = "A 1080 × 1920 video",
+               onClick = { onQualitySelected(VideoQuality.HD1080) },
+               position = TilePosition.MIDDLE
           ),
-          DownloaderFormatLists(
+          SettingListInfo(
                title = "720p",
-               description = "HD",
-               onClick = { onQualitySelected(VideoQuality.HD720) }
+               description = "A 1280 × 720 video",
+               onClick = { onQualitySelected(VideoQuality.HD720) },
+               position = TilePosition.MIDDLE
           ),
-          DownloaderFormatLists(
+          SettingListInfo(
                title = "480p",
-               description = "SD",
-               onClick = { onQualitySelected(VideoQuality.SD480) }
+               description = "A 854 × 480 video",
+               onClick = { onQualitySelected(VideoQuality.SD480) },
+               position = TilePosition.MIDDLE
           ),
-          DownloaderFormatLists(
+          SettingListInfo(
                title = "360p",
-               description = "Lower quality, smaller size",
-               onClick = { onQualitySelected(VideoQuality.Q360) }
+               description = "A 640 × 360 video",
+               onClick = { onQualitySelected(VideoQuality.Q360) },
+               position = TilePosition.MIDDLE
           ),
-          DownloaderFormatLists(
+          SettingListInfo(
                title = "240p",
-               description = "Low quality",
-               onClick = { onQualitySelected(VideoQuality.Q240) }
+               description = "A 426 × 240 video",
+               onClick = { onQualitySelected(VideoQuality.Q240) },
+               position = TilePosition.MIDDLE
           ),
-          DownloaderFormatLists(
+          SettingListInfo(
                title = "144p",
-               description = "Lowest quality, smallest size",
-               onClick = { onQualitySelected(VideoQuality.Q144) }
+               description = "A 256 × 144 video",
+               onClick = { onQualitySelected(VideoQuality.Q144) },
+               position = TilePosition.BOTTOM
           )
      )
      Column(
           modifier = Modifier
                .fillMaxWidth()
-               .padding(8.dp)
+               .padding(start = 4.dp, end = 4.dp)
+
      ) {
           videoListOptions.forEach { option ->
                FormatTiles(
                     title = option.title,
                     description = option.description,
-                    image = option.icon,
+                    shape = option.position.toShape(),
+                    image = option.image,
                     onClick = { option.onClick?.invoke() }
                )
           }

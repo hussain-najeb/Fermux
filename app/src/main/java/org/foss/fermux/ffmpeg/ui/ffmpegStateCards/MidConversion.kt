@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,9 +18,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.video.videoFrameMillis
 import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
 import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FFmpegCard
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
@@ -35,7 +31,6 @@ fun MidConversionProcess(
           viewModelStoreOwner = LocalContext.current as ComponentActivity
      )
 ) {
-
      val context = LocalContext.current
 
      Column(
@@ -44,7 +39,7 @@ fun MidConversionProcess(
      ) {
           FFmpegCard(
                modifier = Modifier
-                    .padding(10.dp),
+                    .padding(5.dp),
                background = true
           ) {
                if (ffmpegViewModel.inputUri != null) {

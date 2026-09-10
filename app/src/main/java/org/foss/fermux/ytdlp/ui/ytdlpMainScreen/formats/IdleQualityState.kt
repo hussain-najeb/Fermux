@@ -1,50 +1,56 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.formats
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.FormatTiles
+import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ytdlp.logic.downloader.FormatKind
 
 
-@SuppressLint("SuspiciousIndentation")
 @Composable
 fun IdleQualityChoices(onPick: (FormatKind) -> Unit, onCancel: () -> Unit) {
 
 
      val formatOptions = listOf(
-          DownloaderFormatLists(
+          SettingListInfo(
                title = "Cancel",
                description = "Cancel this process",
-               onClick = {
-                    onCancel()
-               }
+               onClick = { onCancel() },
+               image = R.drawable.cancel_buttons,
+               position = TilePosition.TOP
           ),
-          DownloaderFormatLists(
+          SettingListInfo(
                title = "Audio",
                description = "Download just the audio track",
-               icon = R.drawable.audio,
-               onClick = { onPick(FormatKind.Audio) }
+               image = R.drawable.audio,
+               onClick = { onPick(FormatKind.Audio) },
+               position = TilePosition.MIDDLE
           ),
-          DownloaderFormatLists(
+          SettingListInfo(
                title = "Video",
                description = "Download the full video",
-               icon = R.drawable.video,
-               onClick = { onPick(FormatKind.Video) }
+               image = R.drawable.video,
+               onClick = { onPick(FormatKind.Video) },
+               position = TilePosition.BOTTOM
           )
      )
      Column(
           modifier = Modifier
                .fillMaxWidth()
+               .padding(start = 4.dp, end = 4.dp)
      ) {
           formatOptions.forEach { option ->
                FormatTiles(
                     title = option.title,
                     description = option.description,
-                    image = option.icon,
+                    shape = option.position.toShape(),
+                    image = option.image,
                     onClick = { option.onClick?.invoke() }
                )
           }

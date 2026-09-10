@@ -6,10 +6,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -55,10 +52,11 @@ fun FormatTiles(
      )
 
      Column(
-          modifier = Modifier.fillMaxSize().padding(start = 18.dp, end = 18.dp)
+          modifier = Modifier
+               .fillMaxWidth()
      ) {
           Surface(
-               modifier = Modifier.padding(2.dp),
+               modifier = Modifier.padding(1.dp),
                shape = shape,
                contentColor = contentColor,
                interactionSource = interactionSource,
@@ -68,7 +66,7 @@ fun FormatTiles(
                Row(
                     modifier = Modifier
                          .fillMaxWidth()
-                         .padding(horizontal = 16.dp, vertical = 20.dp),
+                         .padding(horizontal = 5.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                ) {
                     icon?.let {
@@ -86,7 +84,7 @@ fun FormatTiles(
                               painter = painterResource(id = image),
                               contentDescription = null,
                               modifier = Modifier
-                                   .padding(end = 16.dp)
+                                   .padding(start = 8.dp,end = 16.dp)
                                    .size(28.dp)
                          )
                     }
@@ -101,8 +99,6 @@ fun FormatTiles(
                               maxLines = 1,
                               style = MaterialTheme.typography.titleLarge
                          )
-                         Spacer(modifier = Modifier.height(2.dp))
-
                          Text(
                               text = description,
                               maxLines = 4,

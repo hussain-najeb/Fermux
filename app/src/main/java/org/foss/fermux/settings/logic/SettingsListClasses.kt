@@ -45,3 +45,4 @@ data class SettingListInfo(
     val content: @Composable (() -> Unit)? = null,
     val trailingContent: @Composable (() -> Unit)? = null
 )
+

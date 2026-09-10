@@ -1,6 +1,5 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
