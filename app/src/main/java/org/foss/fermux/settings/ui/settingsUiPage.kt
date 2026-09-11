@@ -48,7 +48,7 @@ fun SettingsScreen(
                SettingListInfo(
                     title = "Terminal Settings",
                     description = "Changing the settings for the Terminal",
-                    image = R.drawable.terminal_screen,
+                    image = R.drawable.terminal,
                     route = SettingsScreens.SimpleTerminal.route,
                     position = TilePosition.MIDDLE
                ),

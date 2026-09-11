@@ -73,12 +73,10 @@ fun SimpleDownloaderPage(
 //   val notificationState by downloaderSettingsViewModel.notificationState.collectAsStateWithLifecycle() // TODO. Add this at some point.
      val playlist by downloaderSettingsViewModel.playlistState.collectAsStateWithLifecycle()
 
-
-     val snackbarHostState = remember { SnackbarHostState() }
-     val scope = rememberCoroutineScope()
-
      val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
      val externalDownloadersEnabled = aria2cMode == Aria2cMode.Disabled
+     val snackbarHostState = remember { SnackbarHostState() }
+     val scope = rememberCoroutineScope()
 
      var expandedSetting by remember {
           mutableStateOf<ExpandableDownloaderSetting?>(null)
@@ -91,11 +89,7 @@ fun SimpleDownloaderPage(
      val simpleDownloaderSettings = listOf(
           SettingListInfo(
                title = "Update Yt-dlp",
-               description = if (isCheckingForUpdate) {
-                    ytdlpUpdateStatus ?: "Checking for update..."
-               } else {
-                    "Current version is $currentVersionName"
-               },
+               description = if (isCheckingForUpdate) ytdlpUpdateStatus ?: "Checking for update..." else "Current version is $currentVersionName",
                icon = Icons.Default.Update,
                onClick = { toggleDownloader(ExpandableDownloaderSetting.YtdlpUpdater) },
                trailingContent = {
@@ -269,7 +263,7 @@ fun SimpleDownloaderPage(
           ),
           SettingListInfo(
                title = "Impersonation",
-               description = "This setting enables curl_cffi, meaning it makes a request look like a real browser. Note that this is an EXPERIMENTAL feature",
+               description = "Enabling curl_cffi, this makes a yt-dlp request look like a real browser. This is EXPERIMENTAL",
                image = if (fingerprint) R.drawable.fingerprint_on else R.drawable.fingerprint_off,
                content = {
                     SettingsSwitch(
@@ -282,7 +276,7 @@ fun SimpleDownloaderPage(
           ),
           SettingListInfo(
                title = "Quick JS Framework",
-               description = "QuickJS is a JavaScript engine yt-dlp uses to solve YouTube's PO token challenges and bypass Google's anti-bot measures",
+               description = "QuickJS is a JavaScript engine yt-dlp uses to solve youtube JS challenges",
                image = if (quickJS) R.drawable.flash_on else R.drawable.flash_off,
                content = {
                     SettingsSwitch(
