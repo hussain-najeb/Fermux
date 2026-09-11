@@ -60,6 +60,7 @@ fun SimpleFFmpegSetting(
      val enableVideoCompression by ffmpegSettingsViewModel.enableVideoCompression.collectAsStateWithLifecycle()
      val useHardwareEncoder by ffmpegSettingsViewModel.useHardwareEncoder.collectAsStateWithLifecycle()
 
+     var snakebarVisibility by remember { mutableStateOf(false) }
 
      var expandedFFmpegSetting by remember {
           mutableStateOf<ExpandableFFmpegSetting?>(null)
@@ -147,7 +148,10 @@ fun SimpleFFmpegSetting(
                trailingContent = {
                     SettingsResetButton(
                          expanded = expandedFFmpegSetting == ExpandableFFmpegSetting.ResetFFmpeg,
-                         onClick = { ffmpegSettingsViewModel.setClearFFmpeg() } // TODO. Add toast here so the user knows its been done
+                         onClick = {
+                              ffmpegSettingsViewModel.setClearFFmpeg()
+
+                         }
                     )
                },
                position = TilePosition.TOP

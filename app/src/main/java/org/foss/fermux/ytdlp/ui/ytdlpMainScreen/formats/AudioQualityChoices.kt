@@ -22,7 +22,7 @@ fun AudioQualityChoices(
      val audioListOptions = listOf(
           SettingListInfo(
                title = "Back",
-               description = "Choose a different format",
+               description = "Back to the previous page",
                image = R.drawable.back_arrow,
                onClick = onBack,
                position = TilePosition.TOP

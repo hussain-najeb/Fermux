@@ -22,7 +22,7 @@ fun VideoQualityChoices(
      val videoListOptions = listOf(
           SettingListInfo(
                title = "Back",
-               description = "Back to previous page",
+               description = "Back to the previous page",
                image = R.drawable.back_arrow,
                onClick = onBack,
                position = TilePosition.TOP

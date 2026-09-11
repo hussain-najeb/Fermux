@@ -3,10 +3,12 @@ package org.foss.fermux.settings.ui.downloader
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BugReport
@@ -14,26 +16,21 @@ import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.SettingsBackupRestore
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.outlined.Flag
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.SettingsResetButton
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.Aria2cModeSelector
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderVersionSwap
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.ExternalDownloaderSelection
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.RequestTimeSlider
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.SponsorBlockChoices
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.*
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
 import org.foss.fermux.fermuxUIComponents.settingsComponents.TileOptions
@@ -76,6 +73,9 @@ fun SimpleDownloaderPage(
 //   val notificationState by downloaderSettingsViewModel.notificationState.collectAsStateWithLifecycle() // TODO. Add this at some point.
      val playlist by downloaderSettingsViewModel.playlistState.collectAsStateWithLifecycle()
 
+
+     val snackbarHostState = remember { SnackbarHostState() }
+     val scope = rememberCoroutineScope()
 
      val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
      val externalDownloadersEnabled = aria2cMode == Aria2cMode.Disabled
@@ -172,14 +172,22 @@ fun SimpleDownloaderPage(
                trailingContent = {
                     SettingsResetButton(
                          expanded = expandedSetting == ExpandableDownloaderSetting.ResetDownloader,
-                         onClick = { downloaderSettingsViewModel.setClearYtdlp() } //     TODO. Add toast here so the user knows its been done
+                         onClick = {
+                              downloaderSettingsViewModel.setClearYtdlp()
+                              scope.launch {
+                                   snackbarHostState.showSnackbar(
+                                        message = "Setting is back to default",
+                                        duration = SnackbarDuration.Short
+                                   )
+                              }
+                         } //     TODO. Add a way to undo the action
                     )
                },
                position = TilePosition.TOP
           ),
           SettingListInfo(
                title = if (debugLoggingEnabled) "Debug Logging On" else "Debug Logging Off",
-               description = "Write diagnostic messages to Logcat in debug builds",
+               description = "Write diagnostic messages to Logcat in debug builds", // TODO, make this work!
                icon = Icons.Default.BugReport,
                content = {
                     SettingsSwitch(
@@ -288,10 +296,57 @@ fun SimpleDownloaderPage(
      )
 
      LargeTopBarScaffold(
-          title = "Downloader Settings", onBack = { navController.popBackStack() }) { paddingValues ->
+          title = "Downloader Settings",
+          onBack = { navController.popBackStack() },
+          snackbarHost = {
+               SnackbarHost(hostState = snackbarHostState) { data ->
+                    val dismissBehavior = rememberSwipeToDismissBoxState(
+                         positionalThreshold = SwipeToDismissBoxDefaults.positionalThreshold
+                    )
+
+                    SwipeToDismissBox(
+                         state = dismissBehavior,
+                         backgroundContent = {},
+                         onDismiss = {
+                              data.dismiss()
+                         }
+                    ) {
+                         Snackbar(
+                              modifier = Modifier
+                                   .padding(12.dp)
+                                   .border(1.dp, FermuxColors.fermuxGenericBorder, RoundedCornerShape(8.dp)),
+                              shape = RoundedCornerShape(8.dp),
+                              containerColor = FermuxColors.something3,
+                              contentColor = FermuxColors.fermuxWhiteColor,
+                              action = data.visuals.actionLabel?.let { label ->
+                                   {
+                                        TextButton(onClick = { data.performAction() }) {
+                                             Text(
+                                                  label,
+                                                  color = FermuxColors.fermuxWhiteColor,
+                                                  textAlign = TextAlign.Center
+                                             )
+                                        }
+                                   }
+                              }
+                         ) {
+                              Text(
+                                   text = data.visuals.message,
+                                   fontSize = 14.sp,
+                                   fontFamily = FontFamily.Default
+                              )
+
+                         }
+                    }
+               }
+          }
+     ) { paddingValues ->
           Column(
-               modifier = Modifier.fillMaxSize().background(FermuxColors.fermuxBackground)
-                    .verticalScroll(rememberScrollState()).padding(paddingValues)
+               modifier = Modifier
+                    .fillMaxSize()
+                    .background(FermuxColors.fermuxBackground)
+                    .verticalScroll(rememberScrollState())
+                    .padding(paddingValues),
           ) {
                Text(
                     text = "General",

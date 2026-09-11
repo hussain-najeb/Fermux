@@ -20,14 +20,14 @@ fun IdleQualityChoices(onPick: (FormatKind) -> Unit, onCancel: () -> Unit) {
      val formatOptions = listOf(
           SettingListInfo(
                title = "Cancel",
-               description = "Cancel this process",
+               description = "Cancel this downloader process",
                onClick = { onCancel() },
                image = R.drawable.cancel_buttons,
                position = TilePosition.TOP
           ),
           SettingListInfo(
                title = "Audio",
-               description = "Download just the audio track",
+               description = "Only download the audio track",
                image = R.drawable.audio,
                onClick = { onPick(FormatKind.Audio) },
                position = TilePosition.MIDDLE

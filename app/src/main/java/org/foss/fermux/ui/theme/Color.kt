@@ -34,10 +34,13 @@ data class FermuxColor(
      // Fermux global components
      val fermuxComponents: Color = Color(0xFF3C3F68),
      val fermuxSaturatedComponents: Color = Color(0xFF22243E),
+     val something3: Color = Color(0xFF2D2F49),
      val fermuxBackground: Color = Color(0xFF181825),
      val fermuxSurface: Color = Color(0xFF1f2034),
      val fermuxErrorCardColor: Color = Color(0xFF8c1d18),
      val inActiveTextField: Color = Color(0xFF474968),
+     val something2: Color = Color(0xFFb9c2ff),
+     val something: Color = Color(0xFF3c4257),
 
      // Fermux FFmpeg crad colors
      val fermuxFFmpegGreen: Color = Color(0xFF388e3c),
@@ -56,7 +59,6 @@ data class FermuxColor(
      // Fermux slider
      val activeSliderColor: Color = Color(0xFF4D7DE5),
      val inActiveSliderColor: Color = Color(0xFFB5C1E8),
-     val something: Color = Color(0xFF3c4257),
 
      // Fermux text
      val fermuxWhiteColor: Color = Color.White,
