@@ -13,6 +13,45 @@ import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 import kotlinx.serialization.json.Json
 import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
 
+
+interface DownloaderSettings {
+
+     val downloadPath: Flow<String>
+     val notificationState: Flow<Boolean>
+     val sleepRequest: Flow<Int>
+     val embedThumbnail: Flow<Boolean>
+     val quickJS: Flow<Boolean>
+     val fingerprinting: Flow<Boolean>
+     val aria2cMode: Flow<Aria2cMode>
+     val externalDownloaders: Flow<ExternalDownloaders>
+     val ytdlpDetails: Flow<Boolean>
+     val sponsorBlock: Flow<Boolean>
+     val playlistStatus: Flow<Boolean>
+     val sponsorBlockCategories: Flow<Set<String>>
+     val audioHistory: Flow<Boolean>
+     val videoHistory: Flow<Boolean>
+     val jsonAudioCard: Flow<List<JSONHistoryCards>>
+     val jsonVideoCard: Flow<List<JSONHistoryCards>>
+
+     suspend fun setDownloadPath(value: String)
+     suspend fun setNotificationState(value: Boolean)
+     suspend fun setSleepRequest(value: Int)
+     suspend fun setAria2cMode(value: Aria2cMode)
+     suspend fun setExternalDownloader(value: ExternalDownloaders)
+     suspend fun setQuickJS(value: Boolean)
+     suspend fun setFingerprinting(value: Boolean)
+     suspend fun setEmbedThumbnail(value: Boolean)
+     suspend fun setAudioHistory(value: Boolean)
+     suspend fun setVideoHistory(value: Boolean)
+     suspend fun setPlaylistStatus(value: Boolean)
+     suspend fun setYtdlpDetails(value: Boolean)
+     suspend fun setSponsorBlock(value: Boolean)
+     suspend fun setSponsorBlockCategories(value: Set<String>)
+     suspend fun setJSONAudio(value: JSONHistoryCards)
+     suspend fun setJSONVideo(value: JSONHistoryCards)
+     suspend fun clearYtdlp()
+}
+
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings_tab")
 
 // ytdlp downloader tab.
@@ -35,67 +74,67 @@ val JSON_AUDIO_HISTORY = stringPreferencesKey("json_audio")
 val JSON_VIDEO_HISTORY = stringPreferencesKey("json_video")
 
 @Suppress("PropertyName")
-class DownloaderSettingsTab(private val context: Context) {
+class DataStoreDownloaderSettings(private val context: Context) : DownloaderSettings {
 
-     val downloadPath: Flow<String> = context.dataStore.data.map { preferences -> preferences[DOWNLOAD_PATH] ?: "" }
-     val notificationState: Flow<Boolean> =
+     override val downloadPath: Flow<String> = context.dataStore.data.map { preferences -> preferences[DOWNLOAD_PATH] ?: "" }
+     override val notificationState: Flow<Boolean> =
           context.dataStore.data.map { preferences -> preferences[DOWNLOAD_PROGRESS_NOTIFICATION] ?: true }
-     val sleepRequest: Flow<Int> = context.dataStore.data.map { preferences -> preferences[SLEEP_REQUEST_KEY] ?: 0 }
-     val embedThumbnail: Flow<Boolean> =
+     override val sleepRequest: Flow<Int> = context.dataStore.data.map { preferences -> preferences[SLEEP_REQUEST_KEY] ?: 0 }
+     override val embedThumbnail: Flow<Boolean> =
           context.dataStore.data.map { preferences -> preferences[EMBED_THUMBNAIL] ?: true }
-     val quickJS: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[QUICK_JS] ?: true }
-     val fingerprinting: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[FINGERPRINT] ?: true }
-     val aria2cMode: Flow<Aria2cMode> = context.dataStore.data.map { preferences ->
+     override val quickJS: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[QUICK_JS] ?: true }
+     override val fingerprinting: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[FINGERPRINT] ?: true }
+     override val aria2cMode: Flow<Aria2cMode> = context.dataStore.data.map { preferences ->
           preferences[ARIA2C_MODE_KEY]
                ?.let { runCatching { Aria2cMode.valueOf(it) }.getOrNull() }
                ?: Aria2cMode.Always
      }
 
-     val externalDownloaders: Flow<ExternalDownloaders> = context.dataStore.data.map { preferences -> 
+     override val externalDownloaders: Flow<ExternalDownloaders> = context.dataStore.data.map { preferences ->
           preferences[EXTERNAL_DOWNLOADER]
                ?.let { runCatching { ExternalDownloaders.valueOf(it) }.getOrNull() } 
                ?: ExternalDownloaders.TurnedOff
      }
 
-     val audioHistory: Flow<Boolean> =
+     override val audioHistory: Flow<Boolean> =
           context.dataStore.data.map { preferences -> preferences[SHOW_YTDLP_AUDIO_HISTORY] ?: true }
-     val videoHistory: Flow<Boolean> =
+     override val videoHistory: Flow<Boolean> =
           context.dataStore.data.map { preferences -> preferences[SHOW_YTDLP_VIDEO_HISTORY] ?: true }
-     val ytdlpDetails: Flow<Boolean> =
+     override val ytdlpDetails: Flow<Boolean> =
           context.dataStore.data.map { preferences -> preferences[DOWNLOADING_DETAILS] ?: true }
-     val sponsorBlock: Flow<Boolean> =
+     override val sponsorBlock: Flow<Boolean> =
           context.dataStore.data.map { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] ?: true }
-     val playlistStatus: Flow<Boolean> =
+     override val playlistStatus: Flow<Boolean> =
           context.dataStore.data.map { preferences -> preferences[PLAYLIST_STATUS] ?: false }
-     val sponsorBlockCategories: Flow<Set<String>> = context.dataStore.data.map { preferences ->
+     override val sponsorBlockCategories: Flow<Set<String>> = context.dataStore.data.map { preferences ->
           preferences[SPONSOR_BLOCK_CATEGORIES] ?: DEFAULT_SPONSOR_BLOCK_CATEGORIES
      }
-     val JSONAudioCard: Flow<List<JSONHistoryCards>> = context.dataStore.data.map { preferences ->
+     override val jsonAudioCard: Flow<List<JSONHistoryCards>> = context.dataStore.data.map { preferences ->
           val json =
                preferences[JSON_AUDIO_HISTORY] ?: "[]"
           Json.decodeFromString<List<JSONHistoryCards>>(json)
      }
 
-     val JSONVideoCard: Flow<List<JSONHistoryCards>> = context.dataStore.data.map { preferences ->
+     override val jsonVideoCard: Flow<List<JSONHistoryCards>> = context.dataStore.data.map { preferences ->
           val json =
                preferences[JSON_VIDEO_HISTORY] ?: "[]"
           Json.decodeFromString<List<JSONHistoryCards>>(json)
      }
 
-     suspend fun setDownloadPath(value: String) {
+     override suspend fun setDownloadPath(value: String) {
           context.dataStore.edit { preferences -> preferences[DOWNLOAD_PATH] = value }
      }
 
-     suspend fun setNotificationState(value: Boolean) {
+     override suspend fun setNotificationState(value: Boolean) {
           context.dataStore.edit { preferences -> preferences[DOWNLOAD_PROGRESS_NOTIFICATION] = value }
      }
 
      @SuppressLint("SuspiciousIndentation")
-     suspend fun setSleepRequest(value: Int) {
+     override suspend fun setSleepRequest(value: Int) {
           context.dataStore.edit { preferences -> preferences[SLEEP_REQUEST_KEY] = value }
      }
 
-     suspend fun setAria2cMode(value: Aria2cMode) {
+     override suspend fun setAria2cMode(value: Aria2cMode) {
           context.dataStore.edit { preferences ->
                preferences[ARIA2C_MODE_KEY] = value.name
                if (value != Aria2cMode.Disabled) {
@@ -104,7 +143,7 @@ class DownloaderSettingsTab(private val context: Context) {
           }
      }
 
-     suspend fun setExternalDownloader(value: ExternalDownloaders) {
+     override suspend fun setExternalDownloader(value: ExternalDownloaders) {
           context.dataStore.edit { preferences ->
                preferences[EXTERNAL_DOWNLOADER] = value.name
                if (value != ExternalDownloaders.TurnedOff) {
@@ -113,43 +152,43 @@ class DownloaderSettingsTab(private val context: Context) {
           }
      }
 
-     suspend fun setQuickJS(value: Boolean) {
+     override suspend fun setQuickJS(value: Boolean) {
           context.dataStore.edit { preferences -> preferences[QUICK_JS] = value }
      }
 
-     suspend fun setFingerprinting(value: Boolean) {
+     override suspend fun setFingerprinting(value: Boolean) {
           context.dataStore.edit { preferences -> preferences[FINGERPRINT] = value }     
      }
 
-     suspend fun setEmbedThumbnail(value: Boolean) {
+     override suspend fun setEmbedThumbnail(value: Boolean) {
           context.dataStore.edit { preferences -> preferences[EMBED_THUMBNAIL] = value }
      }
 
-     suspend fun setAudioHistory(value: Boolean) {
+     override suspend fun setAudioHistory(value: Boolean) {
           context.dataStore.edit { preferences -> preferences[SHOW_YTDLP_AUDIO_HISTORY] = value }
      }
 
-     suspend fun setPlaylistStatus(value: Boolean) {
+     override suspend fun setPlaylistStatus(value: Boolean) {
           context.dataStore.edit { preferences -> preferences[PLAYLIST_STATUS] = value }
      }
 
-     suspend fun setVideoHistory(value: Boolean) {
+     override suspend fun setVideoHistory(value: Boolean) {
           context.dataStore.edit { preferences -> preferences[SHOW_YTDLP_VIDEO_HISTORY] = value }
      }
 
-     suspend fun setYtdlpDetails(value: Boolean) {
+     override suspend fun setYtdlpDetails(value: Boolean) {
           context.dataStore.edit { preferences -> preferences[DOWNLOADING_DETAILS] = value }
      }
 
-     suspend fun setSponsorBlock(value: Boolean) {
+     override suspend fun setSponsorBlock(value: Boolean) {
           context.dataStore.edit { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] = value }
      }
 
-     suspend fun setSponsorBlockCategories(value: Set<String>) {
+     override suspend fun setSponsorBlockCategories(value: Set<String>) {
           context.dataStore.edit { preferences -> preferences[SPONSOR_BLOCK_CATEGORIES] = value }
      }
 
-     suspend fun setJSONAudio(value: JSONHistoryCards) {
+     override suspend fun setJSONAudio(value: JSONHistoryCards) {
           context.dataStore.edit { preferences ->
                val currentJson = preferences[JSON_AUDIO_HISTORY] ?: "[]"
                val currentList = Json.decodeFromString<List<JSONHistoryCards>>(currentJson)
@@ -158,7 +197,7 @@ class DownloaderSettingsTab(private val context: Context) {
           }
      }
 
-     suspend fun setJSONVideo(value: JSONHistoryCards) {
+     override suspend fun setJSONVideo(value: JSONHistoryCards) {
           context.dataStore.edit { preferences ->
                val currentJson = preferences[JSON_VIDEO_HISTORY] ?: "[]"
                val currentList = Json.decodeFromString<List<JSONHistoryCards>>(currentJson)
@@ -167,7 +206,7 @@ class DownloaderSettingsTab(private val context: Context) {
           }
      }
 
-     suspend fun clearYtdlp() {
+     override suspend fun clearYtdlp() {
           context.dataStore.edit { preferences ->
                preferences.remove(DOWNLOAD_PATH)
                preferences.remove(DOWNLOAD_PROGRESS_NOTIFICATION)

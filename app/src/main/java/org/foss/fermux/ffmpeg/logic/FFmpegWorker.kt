@@ -13,7 +13,7 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import org.foss.fermux.utils.copyFileToDownloads
-import org.foss.fermux.settings.logic.BuildDynamicFFmpegArgs
+import org.foss.fermux.settings.logic.buildDynamicFFmpegArgs
 import org.foss.fermux.storage.FFmpegSettingsTab
 import java.io.BufferedReader
 import java.io.File
@@ -46,7 +46,7 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
           val baseName = originalName.substringBeforeLast(".")
           val displayName = "$baseName.${targetFormat.workerFile}"
 
-          val args = BuildDynamicFFmpegArgs(targetFormat, prefs)
+          val args = buildDynamicFFmpegArgs(targetFormat, prefs)
 
 
           return try {

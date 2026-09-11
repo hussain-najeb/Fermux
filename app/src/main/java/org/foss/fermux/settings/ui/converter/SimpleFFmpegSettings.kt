@@ -202,7 +202,7 @@ fun SimpleFFmpegSetting(
                position = TilePosition.MIDDLE
           ),
           SettingListInfo(
-               title = "Hardware Endcoding",
+               title = "Hardware Encoding",
                description = "Uses the hardware chip for ffmpeg encoding instead of CPU. It's much faster and saves battery, but files are slightly larger",
                image = R.drawable.hardware_encoding,
                content = {

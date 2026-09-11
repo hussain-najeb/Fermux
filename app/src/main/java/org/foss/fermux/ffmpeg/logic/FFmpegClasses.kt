@@ -18,48 +18,86 @@ sealed class FFmpegStatus {
 
 enum class MediaKind { IDLE, VIDEO, AUDIO, IMAGE }
 
+data class VideoEncodingProfile(
+     val softwareVideoArgs: List<String>,
+     val hardwareVideoArgs: List<String>,
+     val audioArgs: List<String>,
+     val softwareQualityOption: String? = null,
+)
+
 enum class FFmpegTargetFormat(
      val workerFile: String,
      val category: MediaKind,
      val mimeType: String,
      val ffmpegExtraArgs: List<String>,
-     val descriptor: String
+     val descriptor: String,
+     val videoEncodingProfile: VideoEncodingProfile? = null,
 ) {
 
      MP4(
           "mp4",
           category = MediaKind.VIDEO,
           mimeType = "video/mp4",
-          ffmpegExtraArgs = listOf("-c:v", "copy", "-c:a", "copy"),
-          descriptor = "video(mp4)"
+          ffmpegExtraArgs = emptyList(),
+          descriptor = "video(mp4)",
+          videoEncodingProfile = VideoEncodingProfile(
+               softwareVideoArgs = listOf("-c:v", "mpeg4"),
+               hardwareVideoArgs = listOf("-c:v", "h264_mediacodec", "-b:v", "4M"),
+               audioArgs = listOf("-c:a", "aac"),
+               softwareQualityOption = "-q:v",
+          ),
      ),
      MKV(
           "mkv",
           category = MediaKind.VIDEO,
           mimeType = "video/x-matroska",
-          ffmpegExtraArgs = listOf("-c:v", "copy", "-c:a", "copy"),
-          descriptor = "video(mkv)"
+          ffmpegExtraArgs = emptyList(),
+          descriptor = "video(mkv)",
+          videoEncodingProfile = VideoEncodingProfile(
+               softwareVideoArgs = listOf("-c:v", "mpeg4"),
+               hardwareVideoArgs = listOf("-c:v", "h264_mediacodec", "-b:v", "4M"),
+               audioArgs = listOf("-c:a", "aac"),
+               softwareQualityOption = "-q:v",
+          ),
      ),
      MOV(
           "mov",
           category = MediaKind.VIDEO,
           mimeType = "video/quicktime",
-          ffmpegExtraArgs = listOf("-c:v", "copy", "-c:a", "copy"),
-          descriptor = "video(mov)"
+          ffmpegExtraArgs = emptyList(),
+          descriptor = "video(mov)",
+          videoEncodingProfile = VideoEncodingProfile(
+               softwareVideoArgs = listOf("-c:v", "mpeg4"),
+               hardwareVideoArgs = listOf("-c:v", "h264_mediacodec", "-b:v", "4M"),
+               audioArgs = listOf("-c:a", "aac"),
+               softwareQualityOption = "-q:v",
+          ),
      ),
      AVI(
           "avi",
           category = MediaKind.VIDEO,
           mimeType = "video/x-msvideo",
-          ffmpegExtraArgs = listOf("-c:v", "copy", "-c:a", "copy"),
-          descriptor = "video(avi)"
+          ffmpegExtraArgs = emptyList(),
+          descriptor = "video(avi)",
+          videoEncodingProfile = VideoEncodingProfile(
+               softwareVideoArgs = listOf("-c:v", "mpeg4"),
+               hardwareVideoArgs = listOf("-c:v", "mpeg4_mediacodec", "-b:v", "4M"),
+               audioArgs = listOf("-c:a", "libmp3lame"),
+               softwareQualityOption = "-q:v",
+          ),
      ),
      WEBM(
           "webm",
           category = MediaKind.VIDEO,
           mimeType = "video/webm",
-          ffmpegExtraArgs = listOf("-c:v", "copy", "-c:a", "copy"),
-          descriptor = "video(webm)"
+          ffmpegExtraArgs = emptyList(),
+          descriptor = "video(webm)",
+          videoEncodingProfile = VideoEncodingProfile(
+               // This build has MediaCodec VP8 but was not built with libvpx.
+               softwareVideoArgs = listOf("-c:v", "vp8_mediacodec", "-b:v", "4M"),
+               hardwareVideoArgs = listOf("-c:v", "vp8_mediacodec", "-b:v", "4M"),
+               audioArgs = listOf("-c:a", "opus", "-strict", "experimental"),
+          ),
      ),
 
      WAV(
