@@ -7,23 +7,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
-import androidx.work.workDataOf
+import androidx.work.*
 import com.yausername.youtubedl_android.YoutubeDL
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
-import org.foss.fermux.storage.DownloaderSettingsTab
+import org.foss.fermux.storage.DataStoreDownloaderSettings
 import java.net.UnknownHostException
-import java.util.UUID
+import java.util.*
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
@@ -93,7 +85,7 @@ class DownloaderViewModel : ViewModel() {
                return
           }
 
-          val settingsTab = DownloaderSettingsTab(context.applicationContext)
+          val settingsTab = DataStoreDownloaderSettings(context.applicationContext)
           val metadata = when (val current = state) {
                is DownloadStatus.MidChoice -> current.metadata
                is DownloadStatus.Loaded -> current.metadata

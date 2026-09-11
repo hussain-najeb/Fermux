@@ -13,16 +13,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.foss.fermux.BuildConfig
+import org.foss.fermux.storage.DataStoreDownloaderSettings
+import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 import org.foss.fermux.ytdlp.logic.downloader.DebugLog
-import org.foss.fermux.storage.DownloaderSettingsTab
-import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
 import org.foss.fermux.ytdlp.logic.downloader.YtdlpChannel
 import java.util.concurrent.atomic.AtomicBoolean
 
 class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(application) {
-     private val settingsTab = DownloaderSettingsTab(application.applicationContext)
+     private val settingsTab = DataStoreDownloaderSettings(application.applicationContext)
      private val sharedPreferences =
           application.getSharedPreferences("settings", Context.MODE_PRIVATE)
 
@@ -77,10 +77,10 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      val sponsorBlockCategories: StateFlow<Set<String>> = settingsTab.sponsorBlockCategories
           .stateIn(viewModelScope, SharingStarted.Lazily, setOf("sponsor", "selfpromo", "interaction"))
 
-     val audioHistoryList: StateFlow<List<JSONHistoryCards>> = settingsTab.JSONAudioCard
+     val audioHistoryList: StateFlow<List<JSONHistoryCards>> = settingsTab.jsonAudioCard
           .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-     val videoHistoryList: StateFlow<List<JSONHistoryCards>> = settingsTab.JSONVideoCard
+     val videoHistoryList: StateFlow<List<JSONHistoryCards>> = settingsTab.jsonVideoCard
           .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
      fun setNotificationState(value: Boolean) {

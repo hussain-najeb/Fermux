@@ -9,12 +9,12 @@ import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 import kotlinx.serialization.json.Json
+import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
 
 
-interface DownloaderSettings {
+interface DownloaderSettingsRepo {
 
      val downloadPath: Flow<String>
      val notificationState: Flow<Boolean>
@@ -26,8 +26,8 @@ interface DownloaderSettings {
      val externalDownloaders: Flow<ExternalDownloaders>
      val ytdlpDetails: Flow<Boolean>
      val sponsorBlock: Flow<Boolean>
-     val playlistStatus: Flow<Boolean>
      val sponsorBlockCategories: Flow<Set<String>>
+     val playlistStatus: Flow<Boolean>
      val audioHistory: Flow<Boolean>
      val videoHistory: Flow<Boolean>
      val jsonAudioCard: Flow<List<JSONHistoryCards>>
@@ -73,8 +73,7 @@ val SPONSOR_BLOCK_CATEGORIES = stringSetPreferencesKey("sponsor_block_categories
 val JSON_AUDIO_HISTORY = stringPreferencesKey("json_audio")
 val JSON_VIDEO_HISTORY = stringPreferencesKey("json_video")
 
-@Suppress("PropertyName")
-class DataStoreDownloaderSettings(private val context: Context) : DownloaderSettings {
+class DataStoreDownloaderSettings(private val context: Context) : DownloaderSettingsRepo {
 
      override val downloadPath: Flow<String> = context.dataStore.data.map { preferences -> preferences[DOWNLOAD_PATH] ?: "" }
      override val notificationState: Flow<Boolean> =

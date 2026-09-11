@@ -13,7 +13,7 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.job
 import kotlinx.coroutines.runBlocking
-import org.foss.fermux.storage.DownloaderSettingsTab
+import org.foss.fermux.storage.DataStoreDownloaderSettings
 import org.foss.fermux.storage.JSONHistoryCards
 
 
@@ -29,7 +29,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
           val workerJob = currentCoroutineContext().job
           Log.d("DownloadWorker", "Started id=$taskId attempt=$runAttemptCount")
 
-          val settingsTab = DownloaderSettingsTab(applicationContext)
+          val settingsTab = DataStoreDownloaderSettings(applicationContext)
           val sponsorBlock = settingsTab.sponsorBlock.first()
           val showDetails = settingsTab.ytdlpDetails.first()
           val sponsorBlockCategories = settingsTab.sponsorBlockCategories.first()
