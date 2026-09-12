@@ -3,17 +3,13 @@ package org.foss.fermux.fermuxUIComponents.downloaderComponents
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderColors
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,9 +29,15 @@ fun RequestTimeSlider(
           viewModelStoreOwner = LocalContext.current as ComponentActivity
      )
 ) {
-
      val sleepRequest by settingsViewModel.sleepRequest.collectAsStateWithLifecycle()
-
+     val sliderState = rememberSliderState(
+          value = sleepRequest.coerceIn(0, 5).toFloat(),
+          steps = 4,
+          trackRange = 0f..5f
+     )
+     LaunchedEffect(sleepRequest) {
+          sliderState.value = sleepRequest.coerceIn(0, 5).toFloat()
+     }
 
      AnimatedVisibility(
           visible = expanded,
@@ -59,16 +61,13 @@ fun RequestTimeSlider(
                          modifier = Modifier.padding(top = 8.dp, start = 8.dp)
                     )
                     Slider(
-                         value = sleepRequest.coerceIn(0, 5).toFloat(),
-                         onValueChange = { value ->
+                         state = sliderState,
+                         onValueChange = { value -> sliderState.value = value
                               settingsViewModel.setSleepRequest(value.roundToInt())
                          },
-                         valueRange = 0f..5f,
-                         steps = 4,
                          thumb = {
                               Box(
                                    modifier = Modifier
-
                                         .size(25.dp)
                                         .background(
                                              color = FermuxColors.fermuxGenericBorder,

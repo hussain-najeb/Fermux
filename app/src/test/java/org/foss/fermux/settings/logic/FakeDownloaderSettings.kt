@@ -44,11 +44,9 @@ class FakeDownloaderSettings : DownloaderSettingsRepo {
      override val jsonAudioCard: Flow<List<JSONHistoryCards>> = _jsonAudioCard
      override val jsonVideoCard: Flow<List<JSONHistoryCards>> = _jsonVideoCard
 
-
      override suspend fun setDownloadPath(value: String) {
          _downloadPath.value = value
      }
-
 
      override suspend fun setNotificationState(value: Boolean) {
           _notificationState.value = value

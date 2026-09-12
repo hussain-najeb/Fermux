@@ -3,17 +3,13 @@ package org.foss.fermux.fermuxUIComponents.ffmpegComponents
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderColors
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,7 +29,14 @@ fun CrfSlider(
 ) {
 
      val videoCrf by settingsViewModel.videoCrf.collectAsStateWithLifecycle()
-
+     val sliderState = rememberSliderState(
+          value = videoCrf.coerceIn(18, 28).toFloat(),
+          steps = 9,
+          trackRange = 18f..28f
+     )
+     LaunchedEffect(videoCrf) {
+          sliderState.value = videoCrf.coerceIn(18, 28).toFloat()
+     }
 
      AnimatedVisibility(
           visible = expanded,
@@ -59,12 +62,10 @@ fun CrfSlider(
                     )
 
                     Slider(
-                         value = videoCrf.coerceIn(18, 28).toFloat(),
-                         onValueChange = { value ->
+                         state = sliderState,
+                         onValueChange = { value -> sliderState.value = value
                               settingsViewModel.setVideoCrf(value.roundToInt())
                          },
-                         valueRange = 18f..28f,
-                         steps = 9,
                          thumb = {
                               Box(
                                    modifier = Modifier
