@@ -16,11 +16,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.ContentPaste
+import androidx.compose.material.icons.filled.FileDownload
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,16 +36,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.launch
 import org.foss.fermux.fermuxUIComponents.buttons.AppIconButton
 import org.foss.fermux.fermuxUIComponents.buttons.GlobalCancelButton
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.SideBar
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxSnackBar
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates.DownloaderCards
-
-
 
 
 @Composable
@@ -58,17 +59,17 @@ fun DownloadContent(
      navController: NavController
 ) {
 
+     val snackbarHostState = remember { SnackbarHostState() }
+     val scope = rememberCoroutineScope()
 
-     val doingTask =
-          downloaderViewModel.state is DownloadStatus.Loading || downloaderViewModel.state is DownloadStatus.Downloading
+     val doingTask = downloaderViewModel.state is DownloadStatus.Loading || downloaderViewModel.state is DownloadStatus.Downloading
      val isError = downloaderViewModel.state is DownloadStatus.Error
      val clipboard = LocalClipboardManager.current
 
      LargeTopBarScaffold(
           title = "Downloader",
-          onBack = {
-               navController.popBackStack()
-          },
+          onBack = { navController.popBackStack() },
+          snackbarHost = { FermuxSnackBar(snackbarHostState) }
      ) { innerPadding ->
           Box(
                modifier = Modifier
@@ -178,7 +179,15 @@ fun DownloadContent(
                                    icon = Icons.Default.FileDownload,
                                    enabled = !doingTask,
                                    modifier = Modifier.size(70.dp).padding(3.dp),
-                                   onClick = { downloaderViewModel.fetchedMetadata(downloaderViewModel.downloadUrl) }
+                                   onClick = {
+                                        downloaderViewModel.fetchedMetadata(downloaderViewModel.downloadUrl)
+                                        scope.launch {
+                                             snackbarHostState.showSnackbar(
+                                                  message = "Downloading Media",
+                                                  duration = SnackbarDuration.Short
+                                             )
+                                        }
+                                   }
                               )
                          }
                          SideBar(navController = navController, modifier = Modifier.padding(3.dp))

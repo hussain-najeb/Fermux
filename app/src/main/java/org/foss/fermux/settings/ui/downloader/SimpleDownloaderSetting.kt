@@ -3,12 +3,10 @@ package org.foss.fermux.settings.ui.downloader
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BugReport
@@ -16,14 +14,14 @@ import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.SettingsBackupRestore
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.outlined.Flag
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -31,6 +29,7 @@ import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.SettingsResetButton
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.*
+import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxSnackBar
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
 import org.foss.fermux.fermuxUIComponents.settingsComponents.TileOptions
@@ -292,48 +291,7 @@ fun SimpleDownloaderPage(
      LargeTopBarScaffold(
           title = "Downloader Settings",
           onBack = { navController.popBackStack() },
-          snackbarHost = {
-               SnackbarHost(hostState = snackbarHostState) { data ->
-                    val dismissBehavior = rememberSwipeToDismissBoxState(
-                         positionalThreshold = SwipeToDismissBoxDefaults.positionalThreshold
-                    )
-
-                    SwipeToDismissBox(
-                         state = dismissBehavior,
-                         backgroundContent = {},
-                         onDismiss = {
-                              data.dismiss()
-                         }
-                    ) {
-                         Snackbar(
-                              modifier = Modifier
-                                   .padding(12.dp)
-                                   .border(1.dp, FermuxColors.fermuxGenericBorder, RoundedCornerShape(8.dp)),
-                              shape = RoundedCornerShape(8.dp),
-                              containerColor = FermuxColors.something3,
-                              contentColor = FermuxColors.fermuxWhiteColor,
-                              action = data.visuals.actionLabel?.let { label ->
-                                   {
-                                        TextButton(onClick = { data.performAction() }) {
-                                             Text(
-                                                  label,
-                                                  color = FermuxColors.fermuxWhiteColor,
-                                                  textAlign = TextAlign.Center
-                                             )
-                                        }
-                                   }
-                              }
-                         ) {
-                              Text(
-                                   text = data.visuals.message,
-                                   fontSize = 14.sp,
-                                   fontFamily = FontFamily.Default
-                              )
-
-                         }
-                    }
-               }
-          }
+          snackbarHost = { FermuxSnackBar(snackbarHostState) }
      ) { paddingValues ->
           Column(
                modifier = Modifier
