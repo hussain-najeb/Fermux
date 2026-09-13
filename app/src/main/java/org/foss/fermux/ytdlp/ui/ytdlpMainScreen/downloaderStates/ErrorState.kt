@@ -3,7 +3,6 @@ package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -38,7 +37,8 @@ fun ErrorCard(
      navController: NavController,
      onCancel: () -> Unit
 ) {
-     @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
+     @Suppress("DEPRECATION")
+     val clipboard = LocalClipboardManager.current
      val scrollState = rememberScrollState()
 
      Column(modifier = Modifier.fillMaxSize()) {

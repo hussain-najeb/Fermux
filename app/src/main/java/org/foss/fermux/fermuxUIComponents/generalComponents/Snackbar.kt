@@ -7,7 +7,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.foss.fermux.ui.theme.FermuxColors
@@ -35,17 +34,6 @@ fun FermuxSnackBar(
                     shape = RoundedCornerShape(8.dp),
                     containerColor = FermuxColors.something3,
                     contentColor = FermuxColors.fermuxWhiteColor,
-                    action = data.visuals.actionLabel?.let { label ->
-                         {
-                              TextButton(onClick = { data.performAction() }) {
-                                   Text(
-                                        label,
-                                        color = FermuxColors.fermuxWhiteColor,
-                                        textAlign = TextAlign.Center
-                                   )
-                              }
-                         }
-                    }
                ) {
                     Text(
                          text = data.visuals.message,

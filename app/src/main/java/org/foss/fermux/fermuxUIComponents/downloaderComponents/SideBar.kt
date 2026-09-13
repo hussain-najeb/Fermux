@@ -1,27 +1,12 @@
 package org.foss.fermux.fermuxUIComponents.downloaderComponents
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,9 +14,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
+import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.MainScreens
 import org.foss.fermux.utils.Miscellaneous
-import org.foss.fermux.ui.theme.FermuxColors
 
 
 // Continues to edit the cards ui and make it better, also add the name of the youtube video and time and title and channle and size of video
@@ -81,7 +66,7 @@ fun SideBar(
           ) {
                Column(
                     modifier = Modifier
-                         .padding(start = 5.dp)
+                         .padding(start = 2.dp)
                          .clip(RoundedCornerShape(8.dp))
                          .border(1.0.dp, FermuxColors.fermuxHelperBorder, RoundedCornerShape(8.dp))
                          .width(70.dp)
@@ -92,6 +77,7 @@ fun SideBar(
                          ImageButton(
                               modifier = Modifier
                                    .size(60.dp)
+                                   .padding(2.dp)
                                    .align(Alignment.CenterHorizontally),
                               image = option.image,
                               onClick = option.onClick
