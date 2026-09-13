@@ -56,6 +56,12 @@ android {
           buildConfig = true
           compose = true
      }
+
+     testOptions {
+          unitTests.all {
+               it.useJUnitPlatform()
+          }
+     }
 }
 
 dependencies {
@@ -82,6 +88,7 @@ dependencies {
      implementation(libs.androidx.room.ktx)
      implementation(libs.androidx.media3.exoplayer)
      testImplementation(libs.junit.jupiter)
+     testRuntimeOnly(libs.junit.platform.launcher)
      testImplementation(libs.kotlinx.coroutines.test)
      androidTestImplementation(libs.androidx.junit)
      androidTestImplementation(libs.androidx.espresso.core)

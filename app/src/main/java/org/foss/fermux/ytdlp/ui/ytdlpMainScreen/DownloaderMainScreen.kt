@@ -77,8 +77,6 @@ fun DownloadContent(
                     .padding(innerPadding)
                     .background(FermuxColors.fermuxBackground),
           ) {
-
-               Box(modifier = Modifier.fillMaxSize()) {
                     Column(
                          modifier = Modifier
                               .verticalScroll(rememberScrollState())
@@ -169,7 +167,7 @@ fun DownloadContent(
 
                          Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
                               // ClipBoard Button
-                              AppIconButton(
+                              if (doingTask)  null else AppIconButton(
                                    icon = Icons.Default.ContentPaste,
                                    modifier = Modifier.size(70.dp).padding(3.dp),
                                    onClick = { clipboard.getText()?.text?.let { downloaderViewModel.downloadUrl = it } }
@@ -194,5 +192,4 @@ fun DownloadContent(
                     }
                }
           }
-     }
 }

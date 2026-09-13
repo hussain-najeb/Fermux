@@ -73,68 +73,68 @@ val SPONSOR_BLOCK_CATEGORIES = stringSetPreferencesKey("sponsor_block_categories
 val JSON_AUDIO_HISTORY = stringPreferencesKey("json_audio")
 val JSON_VIDEO_HISTORY = stringPreferencesKey("json_video")
 
-class DataStoreDownloaderSettings(private val context: Context) : DownloaderSettingsRepo {
+class DataStoreDownloaderSettings(private val settingStore: DataStore<Preferences>) : DownloaderSettingsRepo {
 
-     override val downloadPath: Flow<String> = context.dataStore.data.map { preferences -> preferences[DOWNLOAD_PATH] ?: "" }
+     constructor(context: Context) : this(context.dataStore)
+
+     override val downloadPath: Flow<String> = settingStore.data.map { preferences -> preferences[DOWNLOAD_PATH] ?: "" }
      override val notificationState: Flow<Boolean> =
-          context.dataStore.data.map { preferences -> preferences[DOWNLOAD_PROGRESS_NOTIFICATION] ?: true }
-     override val sleepRequest: Flow<Int> = context.dataStore.data.map { preferences -> preferences[SLEEP_REQUEST_KEY] ?: 0 }
+          settingStore.data.map { preferences -> preferences[DOWNLOAD_PROGRESS_NOTIFICATION] ?: true }
+     override val sleepRequest: Flow<Int> = settingStore.data.map { preferences -> preferences[SLEEP_REQUEST_KEY] ?: 0 }
      override val embedThumbnail: Flow<Boolean> =
-          context.dataStore.data.map { preferences -> preferences[EMBED_THUMBNAIL] ?: true }
-     override val quickJS: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[QUICK_JS] ?: true }
-     override val fingerprinting: Flow<Boolean> = context.dataStore.data.map { preferences -> preferences[FINGERPRINT] ?: true }
-     override val aria2cMode: Flow<Aria2cMode> = context.dataStore.data.map { preferences ->
+          settingStore.data.map { preferences -> preferences[EMBED_THUMBNAIL] ?: true }
+     override val quickJS: Flow<Boolean> = settingStore.data.map { preferences -> preferences[QUICK_JS] ?: true }
+     override val fingerprinting: Flow<Boolean> = settingStore.data.map { preferences -> preferences[FINGERPRINT] ?: true }
+     override val aria2cMode: Flow<Aria2cMode> = settingStore.data.map { preferences ->
           preferences[ARIA2C_MODE_KEY]
                ?.let { runCatching { Aria2cMode.valueOf(it) }.getOrNull() }
                ?: Aria2cMode.Always
      }
-
-     override val externalDownloaders: Flow<ExternalDownloaders> = context.dataStore.data.map { preferences ->
+     override val externalDownloaders: Flow<ExternalDownloaders> = settingStore.data.map { preferences ->
           preferences[EXTERNAL_DOWNLOADER]
                ?.let { runCatching { ExternalDownloaders.valueOf(it) }.getOrNull() } 
                ?: ExternalDownloaders.TurnedOff
      }
-
      override val audioHistory: Flow<Boolean> =
-          context.dataStore.data.map { preferences -> preferences[SHOW_YTDLP_AUDIO_HISTORY] ?: true }
+          settingStore.data.map { preferences -> preferences[SHOW_YTDLP_AUDIO_HISTORY] ?: true }
      override val videoHistory: Flow<Boolean> =
-          context.dataStore.data.map { preferences -> preferences[SHOW_YTDLP_VIDEO_HISTORY] ?: true }
+          settingStore.data.map { preferences -> preferences[SHOW_YTDLP_VIDEO_HISTORY] ?: true }
      override val ytdlpDetails: Flow<Boolean> =
-          context.dataStore.data.map { preferences -> preferences[DOWNLOADING_DETAILS] ?: true }
+          settingStore.data.map { preferences -> preferences[DOWNLOADING_DETAILS] ?: true }
      override val sponsorBlock: Flow<Boolean> =
-          context.dataStore.data.map { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] ?: true }
+          settingStore.data.map { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] ?: true }
      override val playlistStatus: Flow<Boolean> =
-          context.dataStore.data.map { preferences -> preferences[PLAYLIST_STATUS] ?: false }
-     override val sponsorBlockCategories: Flow<Set<String>> = context.dataStore.data.map { preferences ->
+          settingStore.data.map { preferences -> preferences[PLAYLIST_STATUS] ?: false }
+     override val sponsorBlockCategories: Flow<Set<String>> = settingStore.data.map { preferences ->
           preferences[SPONSOR_BLOCK_CATEGORIES] ?: DEFAULT_SPONSOR_BLOCK_CATEGORIES
      }
-     override val jsonAudioCard: Flow<List<JSONHistoryCards>> = context.dataStore.data.map { preferences ->
+     override val jsonAudioCard: Flow<List<JSONHistoryCards>> = settingStore.data.map { preferences ->
           val json =
                preferences[JSON_AUDIO_HISTORY] ?: "[]"
           Json.decodeFromString<List<JSONHistoryCards>>(json)
      }
 
-     override val jsonVideoCard: Flow<List<JSONHistoryCards>> = context.dataStore.data.map { preferences ->
+     override val jsonVideoCard: Flow<List<JSONHistoryCards>> = settingStore.data.map { preferences ->
           val json =
                preferences[JSON_VIDEO_HISTORY] ?: "[]"
           Json.decodeFromString<List<JSONHistoryCards>>(json)
      }
 
      override suspend fun setDownloadPath(value: String) {
-          context.dataStore.edit { preferences -> preferences[DOWNLOAD_PATH] = value }
+          settingStore.edit { preferences -> preferences[DOWNLOAD_PATH] = value }
      }
 
      override suspend fun setNotificationState(value: Boolean) {
-          context.dataStore.edit { preferences -> preferences[DOWNLOAD_PROGRESS_NOTIFICATION] = value }
+          settingStore.edit { preferences -> preferences[DOWNLOAD_PROGRESS_NOTIFICATION] = value }
      }
 
      @SuppressLint("SuspiciousIndentation")
      override suspend fun setSleepRequest(value: Int) {
-          context.dataStore.edit { preferences -> preferences[SLEEP_REQUEST_KEY] = value }
+          settingStore.edit { preferences -> preferences[SLEEP_REQUEST_KEY] = value }
      }
 
      override suspend fun setAria2cMode(value: Aria2cMode) {
-          context.dataStore.edit { preferences ->
+          settingStore.edit { preferences ->
                preferences[ARIA2C_MODE_KEY] = value.name
                if (value != Aria2cMode.Disabled) {
                     preferences[EXTERNAL_DOWNLOADER] = ExternalDownloaders.TurnedOff.name
@@ -143,7 +143,7 @@ class DataStoreDownloaderSettings(private val context: Context) : DownloaderSett
      }
 
      override suspend fun setExternalDownloader(value: ExternalDownloaders) {
-          context.dataStore.edit { preferences ->
+          settingStore.edit { preferences ->
                preferences[EXTERNAL_DOWNLOADER] = value.name
                if (value != ExternalDownloaders.TurnedOff) {
                     preferences[ARIA2C_MODE_KEY] = Aria2cMode.Disabled.name
@@ -152,43 +152,43 @@ class DataStoreDownloaderSettings(private val context: Context) : DownloaderSett
      }
 
      override suspend fun setQuickJS(value: Boolean) {
-          context.dataStore.edit { preferences -> preferences[QUICK_JS] = value }
+          settingStore.edit { preferences -> preferences[QUICK_JS] = value }
      }
 
      override suspend fun setFingerprinting(value: Boolean) {
-          context.dataStore.edit { preferences -> preferences[FINGERPRINT] = value }     
+          settingStore.edit { preferences -> preferences[FINGERPRINT] = value }
      }
 
      override suspend fun setEmbedThumbnail(value: Boolean) {
-          context.dataStore.edit { preferences -> preferences[EMBED_THUMBNAIL] = value }
+          settingStore.edit { preferences -> preferences[EMBED_THUMBNAIL] = value }
      }
 
      override suspend fun setAudioHistory(value: Boolean) {
-          context.dataStore.edit { preferences -> preferences[SHOW_YTDLP_AUDIO_HISTORY] = value }
+          settingStore.edit { preferences -> preferences[SHOW_YTDLP_AUDIO_HISTORY] = value }
      }
 
      override suspend fun setPlaylistStatus(value: Boolean) {
-          context.dataStore.edit { preferences -> preferences[PLAYLIST_STATUS] = value }
+          settingStore.edit { preferences -> preferences[PLAYLIST_STATUS] = value }
      }
 
      override suspend fun setVideoHistory(value: Boolean) {
-          context.dataStore.edit { preferences -> preferences[SHOW_YTDLP_VIDEO_HISTORY] = value }
+          settingStore.edit { preferences -> preferences[SHOW_YTDLP_VIDEO_HISTORY] = value }
      }
 
      override suspend fun setYtdlpDetails(value: Boolean) {
-          context.dataStore.edit { preferences -> preferences[DOWNLOADING_DETAILS] = value }
+          settingStore.edit { preferences -> preferences[DOWNLOADING_DETAILS] = value }
      }
 
      override suspend fun setSponsorBlock(value: Boolean) {
-          context.dataStore.edit { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] = value }
+          settingStore.edit { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] = value }
      }
 
      override suspend fun setSponsorBlockCategories(value: Set<String>) {
-          context.dataStore.edit { preferences -> preferences[SPONSOR_BLOCK_CATEGORIES] = value }
+          settingStore.edit { preferences -> preferences[SPONSOR_BLOCK_CATEGORIES] = value }
      }
 
      override suspend fun setJSONAudio(value: JSONHistoryCards) {
-          context.dataStore.edit { preferences ->
+          settingStore.edit { preferences ->
                val currentJson = preferences[JSON_AUDIO_HISTORY] ?: "[]"
                val currentList = Json.decodeFromString<List<JSONHistoryCards>>(currentJson)
                val updatedList = currentList + value
@@ -197,16 +197,16 @@ class DataStoreDownloaderSettings(private val context: Context) : DownloaderSett
      }
 
      override suspend fun setJSONVideo(value: JSONHistoryCards) {
-          context.dataStore.edit { preferences ->
+          settingStore.edit { preferences ->
                val currentJson = preferences[JSON_VIDEO_HISTORY] ?: "[]"
                val currentList = Json.decodeFromString<List<JSONHistoryCards>>(currentJson)
                val updatedList = currentList + value
                preferences[JSON_VIDEO_HISTORY] = Json.encodeToString(updatedList)
-          }
+          } // TODO. Add a button to remove or reset the history of both of these
      }
 
      override suspend fun clearYtdlp() {
-          context.dataStore.edit { preferences ->
+          settingStore.edit { preferences ->
                preferences.remove(DOWNLOAD_PATH)
                preferences.remove(DOWNLOAD_PROGRESS_NOTIFICATION)
                preferences.remove(SLEEP_REQUEST_KEY)
@@ -220,6 +220,7 @@ class DataStoreDownloaderSettings(private val context: Context) : DownloaderSett
                preferences.remove(SPONSOR_BLOCK_CATEGORIES)
                preferences.remove(QUICK_JS)
                preferences.remove(FINGERPRINT)
+               preferences.remove(EXTERNAL_DOWNLOADER)
           }
      }
 }
