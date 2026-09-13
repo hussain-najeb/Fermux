@@ -9,9 +9,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FormatLists
+import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FFmpegTiles
 import org.foss.fermux.ffmpeg.logic.FFmpegTargetFormat
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
+import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.TilePosition
 
 @Composable
 fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
@@ -24,13 +26,14 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
      }
 
      val audioOptions = listOf(
-          FormatListItem(
+          SettingListInfo(
                title = "Back",
                description = "Choose a different media kind",
                image = R.drawable.back_arrow,
-               onClick = onBack
+               onClick = onBack,
+               position = TilePosition.MIDDLE
           ),
-          FormatListItem(
+          SettingListInfo(
                title = "MP3",
                description = "Best compatible format",
                image = R.drawable.mp3,
@@ -39,9 +42,10 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                     ffmpegViewModel.inputUri?.let { uri ->
                          ffmpegViewModel.startingConversion(context, uri, FFmpegTargetFormat.MP3)
                     }
-               }
+               },
+               position = TilePosition.MIDDLE
           ),
-          FormatListItem(
+          SettingListInfo(
                title = "FLAC",
                description = "Flac is a lossless audio format with a big files size",
                image = R.drawable.flac,
@@ -54,9 +58,10 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                               targetFormat = FFmpegTargetFormat.FLAC
                          )
                     }
-               }
+               },
+               position = TilePosition.MIDDLE
           ),
-          FormatListItem(
+          SettingListInfo(
                title = "WAV",
                description = "A WAV file gives the highest possible audio quality, but a MASSIVE file size",
                image = R.drawable.wav,
@@ -69,9 +74,10 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                               targetFormat = FFmpegTargetFormat.WAV
                          )
                     }
-               }
+               },
+               position = TilePosition.MIDDLE
           ),
-          FormatListItem(
+          SettingListInfo(
                title = "OGG",
                description = "OGG is a lower quality format, with a much lower file size",
                image = R.drawable.ogg,
@@ -84,9 +90,10 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                               targetFormat = FFmpegTargetFormat.OGG
                          )
                     }
-               }
+               },
+               position = TilePosition.MIDDLE
           ),
-          FormatListItem(
+          SettingListInfo(
                title = "M4A",
                description = "M4A is a modern, high-efficiency format that is smaller than WAV and FLAC and better quality than OGG",
                image = R.drawable.m4p,
@@ -99,7 +106,8 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                               targetFormat = FFmpegTargetFormat.M4A
                          )
                     }
-               }
+               },
+               position = TilePosition.MIDDLE
           ),
      )
      Column(
@@ -108,11 +116,12 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                .verticalScroll(scrollState)
      ) {
           audioOptions.forEach { option ->
-               FormatLists(
+               FFmpegTiles(
                     title = option.title,
                     description = option.description,
                     image = option.image,
-                    onClick = option.onClick
+                    onClick = option.onClick,
+                    shape = option.position.TileShaper()
                )
           }
      }

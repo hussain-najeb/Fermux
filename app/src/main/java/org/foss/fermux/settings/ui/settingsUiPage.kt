@@ -19,10 +19,10 @@ import androidx.navigation.NavHostController
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.fermuxUIComponents.settingsComponents.TileOptions
-import org.foss.fermux.utils.SettingsScreens
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
+import org.foss.fermux.utils.SettingsScreens
 
 
 @Composable
@@ -91,7 +91,7 @@ fun SettingsScreen(
                     TileOptions(
                          title = settingsList.title,
                          description = settingsList.description,
-                         shape = settingsList.position.toShape(),
+                         shape = settingsList.position.TileShaper(),
                          image = settingsList.image,
                          icon = settingsList.icon,
                          onClick = {

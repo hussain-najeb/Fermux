@@ -9,9 +9,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FormatLists
+import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FFmpegTiles
 import org.foss.fermux.ffmpeg.logic.FFmpegTargetFormat
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
+import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.TilePosition
 
 @Composable
 fun VideoConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
@@ -26,16 +28,17 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
 
      val videoOption = buildList {
           add(
-               FormatListItem(
+               SettingListInfo(
                     title = "Back",
                     description = "Choose a different media kind",
                     image = R.drawable.back_arrow,
-                    onClick = onBack
+                    onClick = onBack,
+                    position = TilePosition.MIDDLE
                )
           )
           if (ffmpegViewModel.isVideoTargetSupported(FFmpegTargetFormat.MP4)) {
                add(
-                    FormatListItem(
+                    SettingListInfo(
                          title = "MP4",
                          description = "Best over all format for video and size",
                          image = R.drawable.mp4,
@@ -48,12 +51,13 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                                         targetFormat = FFmpegTargetFormat.MP4
                                    )
                               }
-                         }
+                         },
+                         position = TilePosition.MIDDLE
                     )
                )
           }
           add(
-               FormatListItem(
+               SettingListInfo(
                     title = "MKV",
                     description = "MKV is a video container that holds movies, tv shows, and all their audio tracks together",
                     image = R.drawable.mkv,
@@ -66,12 +70,13 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                                    targetFormat = FFmpegTargetFormat.MKV
                               )
                          }
-                    }
+                    },
+                    position = TilePosition.MIDDLE
                )
           )
           if (ffmpegViewModel.isVideoTargetSupported(FFmpegTargetFormat.MOV)) {
                add(
-                    FormatListItem(
+                    SettingListInfo(
                          title = "MOV",
                          description = "MOV is Apple’s equivalent to MKV, it is a video container",
                          image = R.drawable.mov,
@@ -84,13 +89,14 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                                         targetFormat = FFmpegTargetFormat.MOV
                                    )
                               }
-                         }
+                         },
+                         position = TilePosition.MIDDLE
                     )
                )
           }
           if (ffmpegViewModel.isVideoTargetSupported(FFmpegTargetFormat.AVI)) {
                add(
-                    FormatListItem(
+                    SettingListInfo(
                          title = "AVI",
                          description = "AVI is Microsoft's old-school equivalent to MKV and MOV, it is a video container from 1992",
                          image = R.drawable.avi,
@@ -103,13 +109,14 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                                         targetFormat = FFmpegTargetFormat.AVI
                                    )
                               }
-                         }
+                         },
+                         position = TilePosition.MIDDLE
                     )
                )
           }
           if (ffmpegViewModel.isVideoTargetSupported(FFmpegTargetFormat.WEBM)) {
                add(
-                    FormatListItem(
+                    SettingListInfo(
                          title = "WEBM",
                          description = "WEBM is a modern, royalty-free video container created by Google specifically for the web",
                          image = R.drawable.webm,
@@ -122,7 +129,8 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                                         targetFormat = FFmpegTargetFormat.WEBM
                                    )
                               }
-                         }
+                         },
+                         position = TilePosition.MIDDLE
                     )
                )
           }
@@ -134,11 +142,12 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                .verticalScroll(scrollState)
      ) {
           videoOption.forEach { option ->
-               FormatLists(
+               FFmpegTiles(
                     title = option.title,
                     description = option.description,
                     image = option.image,
-                    onClick = option.onClick
+                    onClick = option.onClick,
+                    shape = option.position.TileShaper()
                )
           }
      }

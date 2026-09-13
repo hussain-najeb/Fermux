@@ -69,18 +69,16 @@ fun IdleCard(
                               color = FermuxColors.fermuxWhiteColor,
                          )
 
-                         Spacer(modifier = Modifier.height(15.dp))
+                         Spacer(modifier = Modifier.height(20.dp))
 
                          ImageButton(
                               image = R.drawable.upload,
-                              modifier = Modifier
-                                   .size(85.dp)
-                                   .padding(8.dp),
-                              onClick = { fileLauncher.launch("*/*") },
-                              contentPadding = PaddingValues(10.dp)
+                              componentSize = 60.dp,
+                              contentPadding = PaddingValues(13.dp),
+                              onClick = { fileLauncher.launch("*/*") }
                          )
                     }
-               } // Add the crop and edit stuff in the same thing like the downloader, a sidebar type of thing.
+               } // TODO. Add the crop and edit stuff in the same thing like the downloader, a sidebar type of thing.
           }
      }
 }

@@ -13,7 +13,7 @@ enum class TilePosition {
     BOTTOM,
     SOLO;
 
-    fun toShape(
+    fun TileShaper(
         outerRadius: Dp = 12.dp,
         innerRadius: Dp = 1.dp
     ): Shape = when (this) {

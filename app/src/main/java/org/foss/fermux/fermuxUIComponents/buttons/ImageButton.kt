@@ -7,7 +7,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
@@ -19,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
@@ -35,6 +35,7 @@ fun ImageButton(
      imageRotation: Float = 0f,
      enabled: Boolean = true,
      componentSize: Dp = 50.dp,
+     shape: Shape = RoundedCornerShape(8.dp),
      color: FermuxColor = FermuxColors,
      border: BorderStroke? = BorderStroke(1.dp, color.fermuxGenericBorder),
      contentPadding: PaddingValues = PaddingValues(4.dp),
@@ -80,7 +81,7 @@ fun ImageButton(
                scaleY = buttonAnimation
           }
                .size(componentSize),
-          shape = RoundedCornerShape(16.dp),
+          shape = shape,
           border = border,
           colors = ButtonDefaults.textButtonColors(
                containerColor = containerColor,

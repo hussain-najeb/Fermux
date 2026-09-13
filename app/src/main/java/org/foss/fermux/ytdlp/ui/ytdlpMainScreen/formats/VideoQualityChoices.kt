@@ -80,7 +80,7 @@ fun VideoQualityChoices(
                FormatTiles(
                     title = option.title,
                     description = option.description,
-                    shape = option.position.toShape(),
+                    shape = option.position.TileShaper(),
                     image = option.image,
                     onClick = { option.onClick?.invoke() }
                )

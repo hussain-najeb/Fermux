@@ -3,12 +3,7 @@ package org.foss.fermux.ffmpeg.ui
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.util.Log
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -47,7 +42,7 @@ fun MediaThumbnailImage(
                     null
                 } finally {
                     try { retriever.release() } catch (e: Exception) {
-                        Log.e("coil error ffmpeg", "error with loading the thumbnail to ffmpeg from coil", e)
+                        Log.e("coil ffmpeg error", "error with loading the thumbnail to ffmpeg from coil", e)
                     }
                 }
             }

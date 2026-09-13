@@ -231,7 +231,7 @@ fun SimpleFFmpegSetting(
                     TileOptions(
                          title = option.title,
                          description = option.description,
-                         shape = option.position.toShape(),
+                         shape = option.position.TileShaper(),
                          image = option.image,
                          icon = option.icon,
                          onClick = {
@@ -258,7 +258,7 @@ fun SimpleFFmpegSetting(
                     TileOptions(
                          title = option.title,
                          description = option.description,
-                         shape = option.position.toShape(),
+                         shape = option.position.TileShaper(),
                          image = option.image,
                          icon = option.icon,
                          onClick = {

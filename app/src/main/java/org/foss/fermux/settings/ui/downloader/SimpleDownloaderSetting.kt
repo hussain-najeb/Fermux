@@ -313,7 +313,7 @@ fun SimpleDownloaderPage(
                     TileOptions(
                          title = setting.title,
                          description = setting.description,
-                         shape = setting.position.toShape(),
+                         shape = setting.position.TileShaper(),
                          icon = setting.icon,
                          image = setting.image,
                          content = setting.content,
@@ -338,7 +338,7 @@ fun SimpleDownloaderPage(
                     TileOptions(
                          title = setting.title,
                          description = setting.description,
-                         shape = setting.position.toShape(),
+                         shape = setting.position.TileShaper(),
                          icon = setting.icon,
                          image = setting.image,
                          content = setting.content,

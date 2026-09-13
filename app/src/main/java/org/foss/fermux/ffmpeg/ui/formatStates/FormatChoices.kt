@@ -7,14 +7,6 @@ import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.logic.MediaKind
 
 
-data class FormatListItem(
-     val title: String,
-     val description: String,
-     val image: Int? = null,
-     val onClick: () -> Unit
-)
-
-
 @Composable
 fun FormatList(ffmpegViewModel: FFmpegViewModel) {
 

@@ -9,9 +9,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FormatLists
+import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FFmpegTiles
 import org.foss.fermux.ffmpeg.logic.FFmpegTargetFormat
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
+import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.TilePosition
 
 @Composable
 fun ImageConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
@@ -26,13 +28,14 @@ fun ImageConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
 
 
      val imageOptions = listOf(
-          FormatListItem(
+          SettingListInfo(
                title = "Back",
                description = "Choose a different media kind",
                image = R.drawable.back_arrow,
-               onClick = onBack
+               onClick = onBack,
+               position = TilePosition.MIDDLE
           ),
-          FormatListItem(
+          SettingListInfo(
                title = "GIF",
                description = "it is a short, animated image file that plays on an endless loop without any sound",
                image = R.drawable.gif,
@@ -45,9 +48,10 @@ fun ImageConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                               targetFormat = FFmpegTargetFormat.GIF
                          )
                     }
-               }
+               },
+               position = TilePosition.MIDDLE
           ),
-          FormatListItem(
+          SettingListInfo(
                title = "JPEG",
                description = "JPEG is a compressed digital image format designed to balance small file sizes with high photo quality",
                image = R.drawable.jpg,
@@ -60,9 +64,10 @@ fun ImageConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                               targetFormat = FFmpegTargetFormat.JPG
                          )
                     }
-               }
+               },
+               position = TilePosition.MIDDLE
           ),
-          FormatListItem(
+          SettingListInfo(
                title = "PNG",
                description = "PNG is an uncompressed image format that supports sharp detail, crisp text, and transparent backgrounds",
                image = R.drawable.png,
@@ -75,7 +80,8 @@ fun ImageConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                               targetFormat = FFmpegTargetFormat.PNG
                          )
                     }
-               }
+               },
+               position = TilePosition.MIDDLE
           )
      )
      Column(
@@ -84,11 +90,12 @@ fun ImageConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                .verticalScroll(scrollState)
      ) {
           imageOptions.forEach { option ->
-               FormatLists(
+               FFmpegTiles(
                     title = option.title,
                     description = option.description,
                     image = option.image,
-                    onClick = option.onClick
+                    onClick = option.onClick,
+                    shape = option.position.TileShaper()
                )
           }
      }

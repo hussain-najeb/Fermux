@@ -12,11 +12,11 @@
      import androidx.compose.ui.Modifier
      import androidx.compose.ui.platform.LocalContext
      import androidx.navigation.NavController
-     import org.foss.fermux.settings.logic.SettingListInfo
-     import org.foss.fermux.settings.logic.TilePosition
      import org.foss.fermux.R
      import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
      import org.foss.fermux.fermuxUIComponents.settingsComponents.TileOptions
+     import org.foss.fermux.settings.logic.SettingListInfo
+     import org.foss.fermux.settings.logic.TilePosition
      import org.foss.fermux.ui.theme.FermuxColors
      import org.foss.fermux.utils.openUrl
 
@@ -76,7 +76,7 @@
                          TileOptions(
                               title = aboutList.title,
                               description = aboutList.description,
-                              shape = aboutList.position.toShape(),
+                              shape = aboutList.position.TileShaper(),
                               icon = aboutList.icon,
                               image = aboutList.image,
                               onClick = {
