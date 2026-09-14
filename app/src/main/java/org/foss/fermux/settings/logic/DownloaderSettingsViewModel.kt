@@ -1,39 +1,20 @@
 package org.foss.fermux.settings.logic
 
 import android.app.Application
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.yausername.youtubedl_android.YoutubeDL
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import org.foss.fermux.BuildConfig
 import org.foss.fermux.storage.DataStoreDownloaderSettings
 import org.foss.fermux.storage.JSONHistoryCards
-import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
-import org.foss.fermux.ytdlp.logic.downloader.DebugLog
-import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
-import org.foss.fermux.ytdlp.logic.downloader.YtdlpChannel
+import org.foss.fermux.ytdlp.logic.downloader.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(application) {
      private val settingsTab = DataStoreDownloaderSettings(application.applicationContext)
-     private val sharedPreferences =
-          application.getSharedPreferences("settings", Context.MODE_PRIVATE)
-
-     private val _debugLoggingEnabled = MutableStateFlow(
-          BuildConfig.DEBUG && sharedPreferences.getBoolean("debug_logging", true)
-     )
-     val debugLoggingEnabled: StateFlow<Boolean> = _debugLoggingEnabled
-
-     init {
-          DebugLog.setEnabled(_debugLoggingEnabled.value)
-     }
 
      val downloadPath: StateFlow<String> = settingsTab.downloadPath
           .stateIn(viewModelScope, SharingStarted.Lazily, "")
@@ -127,13 +108,6 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           viewModelScope.launch { settingsTab.setYtdlpDetails(value) }
      }
 
-     fun setDebugLoggingEnabled(value: Boolean) {
-          val enabled = BuildConfig.DEBUG && value
-          sharedPreferences.edit().putBoolean("debug_logging", enabled).apply()
-          _debugLoggingEnabled.value = enabled
-          DebugLog.setEnabled(enabled)
-     }
-
      fun setSponsorBlock(value: Boolean) {
           viewModelScope.launch { settingsTab.setSponsorBlock(value) }
      }
@@ -183,23 +157,82 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
                          appContext = getApplication(),
                          updateChannel = updateChannel
                     )
+
                     _ytdlpUpdateStatus.value = when (result) {
                          YoutubeDL.UpdateStatus.DONE -> "yt-dlp updated successfully"
-                         YoutubeDL.UpdateStatus.ALREADY_UP_TO_DATE ->
-                              "yt-dlp is already up to date"
+                         YoutubeDL.UpdateStatus.ALREADY_UP_TO_DATE -> "yt-dlp is already up to date"
                          null -> "yt-dlp update completed"
                     }
-                    _currentVersionName.value =
-                         YoutubeDL.getInstance().versionName(getApplication()) ?: "Unknown"
+
+                    _currentVersionName.value = YoutubeDL.getInstance().versionName(getApplication()) ?: "Unknown"
                     _upToDate.value = true
                } catch (e: Exception) {
                     Log.e("fermuxYtdlpUpdater", "yt-dlp update failed", e)
-                    _ytdlpUpdateStatus.value = "Update failed"
+                    _ytdlpUpdateStatus.value = "Update failed" // TODO, Add this to a snackbar when downloading, and make each snackbar smaller!
                     _upToDate.value = false
                } finally {
                     _isCheckingForUpdate.value = false
                     isUpdatingYtdlp.set(false)
                }
+          }
+     }
+
+     val downloaderLogcat = DebugLog.log
+
+     fun clearDownloaderLogs() {
+          DebugLog.clearLogs()
+     }
+
+     object DebugLog {
+          private val _enabled = MutableStateFlow(false)
+          val enabled = _enabled.asStateFlow()
+
+          private val _log = MutableStateFlow<List<DebugClass>>(emptyList())
+          val log: StateFlow<List<DebugClass>> = _log.asStateFlow()
+
+          fun setEnable(value: Boolean) {
+               _enabled.value = value
+          }
+
+          fun debug(tag: String, message: String) {
+               if (!enabled.value) return
+
+               Log.d(tag, message)
+
+               addLogs(
+                    DebugClass(
+                         tag = tag,
+                         message = message,
+                         level = DebugKind.DownloaderDebug
+                    )
+               )
+          }
+
+          fun error(
+               tag: String,
+               message: String,
+               throwable: Throwable?
+          ) {
+               if (!enabled.value) return
+
+               Log.e(tag, message, throwable)
+
+               addLogs(
+                    DebugClass(
+                         tag = tag,
+                         message = message,
+                         level = DebugKind.DownloaderError,
+                         throwable = throwable
+                    )
+               )
+          }
+          private fun addLogs(entry: DebugClass) {
+               _log.update { currentLogs ->
+                    currentLogs + entry
+               }
+          }
+          fun clearLogs() {
+               _log.value = emptyList()
           }
      }
 }

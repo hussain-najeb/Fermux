@@ -1,6 +1,5 @@
 package org.foss.fermux.ffmpeg.ui
 
-
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
@@ -15,7 +14,6 @@ import androidx.navigation.NavController
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ui.theme.FermuxColors
-
 
 @Composable
 fun ConverterScreen(

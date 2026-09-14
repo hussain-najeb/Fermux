@@ -132,10 +132,9 @@ enum class FFmpegTargetFormat(
           "ogg",
           category = MediaKind.AUDIO,
           mimeType = "audio/ogg",
-          ffmpegExtraArgs = listOf("-vn", "-c:a", "libvorbis"),
+          ffmpegExtraArgs = listOf("-vn", "-c:a", "vorbis","-strict", "-2"),
           descriptor = "audio(ogg)"
      ),
-
      GIF(
           "gif",
           category = MediaKind.IMAGE,
@@ -156,9 +155,8 @@ enum class FFmpegTargetFormat(
           mimeType = "image/png",
           ffmpegExtraArgs = listOf("-frames:v", "1"),
           descriptor = "image(png)"
-     ),
-
-} // TODO. Video/Audio cutting and effects is planned here as well.
+     )
+}
 
 data class FFmpegUserPrefs(
      val audioBitrate: String? = null,

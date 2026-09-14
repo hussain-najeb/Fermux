@@ -26,7 +26,8 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun IdleCard(
-     @SuppressLint("ContextCastToActivity") ffmpegViewModel: FFmpegViewModel = viewModel(
+     @SuppressLint("ContextCastToActivity")
+     ffmpegViewModel: FFmpegViewModel = viewModel(
           viewModelStoreOwner = LocalContext.current as ComponentActivity
      )
 ) {

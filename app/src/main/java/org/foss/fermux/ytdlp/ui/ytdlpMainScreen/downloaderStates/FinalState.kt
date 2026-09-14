@@ -33,9 +33,9 @@ import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
 import org.foss.fermux.fermuxUIComponents.buttons.LogImage
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderCard
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.FermuxDownloadDescription
-import org.foss.fermux.utils.Miscellaneous
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
+import org.foss.fermux.utils.Miscellaneous
 import org.foss.fermux.ytdlp.logic.downloader.DownloadMetadata
 import org.foss.fermux.ytdlp.logic.downloader.videoTime
 
@@ -212,7 +212,11 @@ fun Test3() {
                     title = "Example Video Title, TEST....TEST. This is a test",
                     thumbnail = "/home/Hussain/Downloads/01_HistoryUniverse_Front_5aa6c115-6004-4508-9d43-41752d9cf891.jpg",
                     duration = 578,
-                    uploader = "Example uploader, Youtube Channel, Or Null"
+                    uploader = "Example uploader, Youtube Channel, Or Null",
+                    size = 3535,
+                    resolution = "720p",
+                    dislikeCount = "35256",
+                    like = "54784" // TODO. Add this to the ui
                ),
                onCancel = {},
                navController = navController,

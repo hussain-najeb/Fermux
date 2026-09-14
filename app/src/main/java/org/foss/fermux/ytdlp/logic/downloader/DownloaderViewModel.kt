@@ -1,7 +1,6 @@
 package org.foss.fermux.ytdlp.logic.downloader
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,6 +12,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.storage.DataStoreDownloaderSettings
 import java.net.UnknownHostException
 import java.util.*
@@ -68,9 +68,11 @@ class DownloaderViewModel : ViewModel() {
       * Used as a helper function for error handling.
       */
      private fun downloadErrorHandler(e: Exception) {
-          Log.e("MetadataFetch", "Fetch failed: ${e.javaClass.simpleName}", e)
+
+          DownloaderSettingsViewModel.DebugLog.error("MetadataFetch", "Fetch failed: ${e.javaClass.simpleName}", e)
+
           val raw = when (e) {
-               is TimeoutCancellationException -> "Timed out waiting for a response"
+               is TimeoutCancellationException -> "Timed out waiting for a response, retry the download"
                else -> e.message ?: e.toString()
           }
           state = DownloadStatus.Error(flavorError.random(), raw)
@@ -81,7 +83,9 @@ class DownloaderViewModel : ViewModel() {
       */
      fun startingDownload(context: Context, audio: AudioQuality?, video: VideoQuality?) {
           if (activeProcess != null || state is DownloadStatus.Downloading) {
-               Log.d("DownloadAdmission", "Ignoring duplicate download request; active id=$activeProcess")
+
+               DownloaderSettingsViewModel.DebugLog.debug("DownloadAdmission", "Ignoring duplicate download request; active id=$activeProcess")
+
                return
           }
 
@@ -109,7 +113,8 @@ class DownloaderViewModel : ViewModel() {
           // Close the tap race synchronously, before the coroutine's first suspension.
           activeProcess = requestedUrls.id
           state = DownloadStatus.Downloading(0f, metadata)
-          Log.d("DownloadAdmission", "Prepared download id=${requestedUrls.id}")
+
+          DownloaderSettingsViewModel.DebugLog.debug("DownloadAdmission", "Prepared download id=${requestedUrls.id}")
 
           downloaderJob = viewModelScope.launch {
                try {
@@ -123,13 +128,14 @@ class DownloaderViewModel : ViewModel() {
                          .firstOrNull { !it.state.isFinished }
                     val observedId = if (existingWork != null) {
                          activeProcess = existingWork.id
-                         Log.d(
-                              "DownloadAdmission",
-                              "Keeping existing download id=${existingWork.id} state=${existingWork.state}"
-                         )
+
+                         DownloaderSettingsViewModel.DebugLog.debug("DownloadAdmission","Keeping existing download id=${existingWork.id} state=${existingWork.state}")
+
                          existingWork.id
                     } else {
-                         Log.d("DownloadAdmission", "Enqueue unique download id=${requestedUrls.id}")
+
+                         DownloaderSettingsViewModel.DebugLog.debug("DownloadAdmission", "Enqueue unique download id=${requestedUrls.id}")
+
                          workManager.enqueueUniqueWork(
                               DOWNLOAD_WORK_NAME,
                               ExistingWorkPolicy.KEEP,
@@ -177,7 +183,7 @@ class DownloaderViewModel : ViewModel() {
                } catch (e: CancellationException) {
                     throw e
                } catch (e: Exception) {
-                    Log.e("DownloadAdmission", "Failed to enqueue id=${requestedUrls.id}", e)
+                    DownloaderSettingsViewModel.DebugLog.error("DownloadAdmission", "Failed to enqueue id=${requestedUrls.id}", e)
                     if (activeProcess == requestedUrls.id) {
                          activeProcess = null
                          downloadErrorHandler(e)

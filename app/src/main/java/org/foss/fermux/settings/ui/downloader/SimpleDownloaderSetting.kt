@@ -1,3 +1,4 @@
+@file:Suppress("unused")
 package org.foss.fermux.settings.ui.downloader
 
 import android.annotation.SuppressLint
@@ -45,7 +46,7 @@ private enum class ExpandableDownloaderSetting {
      SponsorBlock,
      Aria2c,
      SleepRequest,
-     ExternalDownloaders,
+     ExternalDownloader,
      ResetDownloader
 }
 
@@ -68,12 +69,14 @@ fun SimpleDownloaderPage(
      val quickJS by downloaderSettingsViewModel.quickJS.collectAsStateWithLifecycle()
      val fingerprint by downloaderSettingsViewModel.fingerprint.collectAsStateWithLifecycle()
      val thumbnail by downloaderSettingsViewModel.embedThumbnail.collectAsStateWithLifecycle()
-     val debugLoggingEnabled by downloaderSettingsViewModel.debugLoggingEnabled.collectAsStateWithLifecycle()
 //   val notificationState by downloaderSettingsViewModel.notificationState.collectAsStateWithLifecycle() // TODO. Add this at some point.
      val playlist by downloaderSettingsViewModel.playlistState.collectAsStateWithLifecycle()
-
      val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
-     val externalDownloadersEnabled = aria2cMode == Aria2cMode.Disabled
+     val logcat by DownloaderSettingsViewModel.DebugLog.enabled.collectAsStateWithLifecycle()
+
+
+
+     val externalDownloaderEnabled = aria2cMode == Aria2cMode.Disabled
      val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
 
@@ -179,13 +182,13 @@ fun SimpleDownloaderPage(
                position = TilePosition.TOP
           ),
           SettingListInfo(
-               title = if (debugLoggingEnabled) "Debug Logging On" else "Debug Logging Off",
+               title = if (logcat) "Debug Logging On" else "Debug Logging Off",
                description = "Write diagnostic messages to Logcat in debug builds", // TODO, make this work!
                icon = Icons.Default.BugReport,
                content = {
                     SettingsSwitch(
-                         checked = debugLoggingEnabled,
-                         onCheckedChange = downloaderSettingsViewModel::setDebugLoggingEnabled
+                         checked = logcat,
+                         onCheckedChange = { DownloaderSettingsViewModel.DebugLog.setEnable(it) }
                     )
                },
                position = TilePosition.MIDDLE
@@ -224,11 +227,11 @@ fun SimpleDownloaderPage(
                title = "Yt-dlp HLS Options",
                description = "Fallback options instead of Aria2, check the one you like if Aria2 is having issues, especially with m3u8 since yt-dlp prefers it's own options over Aria2 recently over security issues",
                image = R.drawable.hls_on,
-               onClick = { toggleDownloader(ExpandableDownloaderSetting.ExternalDownloaders) },
+               onClick = { toggleDownloader(ExpandableDownloaderSetting.ExternalDownloader) },
                trailingContent = {
                    ExternalDownloaderSelection(
-                         enabled = externalDownloadersEnabled,
-                         expanded = expandedSetting == ExpandableDownloaderSetting.ExternalDownloaders,
+                         enabled = externalDownloaderEnabled,
+                         expanded = expandedSetting == ExpandableDownloaderSetting.ExternalDownloader,
                          downloaderSettingsViewModel = downloaderSettingsViewModel
                          )
                     },

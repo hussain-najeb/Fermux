@@ -1,8 +1,5 @@
 package org.foss.fermux.ytdlp.logic.downloader
 
-import android.util.Log
-import org.foss.fermux.BuildConfig
-
 
 /**
  * This class is used as a template class for the metadata shape that later gets used in the [org.foss.fermux.ytdlp.ui.historyPage.HistoryCards] and information on the [org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates.FinishedCard] during download.
@@ -12,6 +9,10 @@ data class DownloadMetadata(
      val thumbnail: String,
      val duration: Int,
      val uploader: String?,
+     val size: Long?,
+     val resolution: String?,
+     val dislikeCount: String?,
+     val like: String?
 )
 
 /**
@@ -74,15 +75,12 @@ enum class AudioFormat(val ytdlpFormat: String) {
 } // TODO. add UI to this
 
 /**
- * Enum class used by the [org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage] and the [downloaderLogic] to manage aria2c.
+ * Enum class used by the [org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage] and the [downloaderLogic] to manage aria2.
  */
 enum class Aria2cMode {
      Disabled,
      EdgeCaseOnly,
      Always;
-
-     val externalDownloaderState: Boolean
-          get() = this == EdgeCaseOnly || this == Always
 }
 
 enum class YtdlpChannel {
@@ -97,25 +95,16 @@ enum class ExternalDownloaders {
      YtdlpNativeDownloader
 }
 
+data class DebugClass(
+     val tag: String,
+     val message: String,
+     val level: DebugKind,
+     val throwable: Throwable? = null,
+     val timestamp: Long = System.currentTimeMillis()
+)
 
-object DebugLog { // TODO. Work on the UI for this, add an entry in the settings to toggle this on and off in the logs button, and figure out what the fuck this code is in the first place
-     @Volatile
-     var enabled: Boolean = BuildConfig.DEBUG
-          private set
-
-     fun setEnabled(value: Boolean) {
-          enabled = BuildConfig.DEBUG && value
-     }
-
-     fun d(tag: String, message: String) {
-          if (enabled) {
-               Log.d(tag, message)
-          }
-     }
-
-     fun e(tag: String, message: String, throwable: Throwable? = null) {
-          if (enabled) {
-               Log.e(tag, message, throwable)
-          }
-     }
+enum class DebugKind {
+     DownloaderDebug,
+     DownloaderError,
+     // TODO, add this to ffmpeg and the terminal stuff as well
 }

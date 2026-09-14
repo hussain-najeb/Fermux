@@ -1,12 +1,12 @@
 package org.foss.fermux.ytdlp.logic.downloader
 
 import android.content.Context
-import android.util.Log
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.withContext
+import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.utils.fileCopyFilter
 import java.io.File
 
@@ -33,8 +33,10 @@ suspend fun execution(
                val thumbnailEmbeddingFailed =
                     "EmbedThumbnailPPError" in message || "Unable to embed using ffprobe & ffmpeg" in message
                if (!thumbnailEmbeddingFailed) throw e
-               Log.w("downloadWorker", "Thumbnail embedding failed; keeping media without artwork")
-               onUpdate(100f, "[EmbedThumbnail] Failed; kept download without artwork")
+
+               DownloaderSettingsViewModel.DebugLog.debug("downloadWorker", "Thumbnail embedding failed; keeping media without artwork")
+
+               onUpdate(100f, "[EmbedThumbnail] Failed; kept download without the thumbnail")
                null
           }
      }
@@ -42,9 +44,9 @@ suspend fun execution(
      fileCopyFilter(context, downloadDir, subfolderName = "downloader")
 
      response?.let {
-          Log.d("fermux", "exit=${it.exitCode}")
-          Log.d("fermux", "out=${it.out}")
-          Log.d("fermux", "err=${it.err}")
+          DownloaderSettingsViewModel.DebugLog.debug("fermux", "exit=${it.exitCode}")
+          DownloaderSettingsViewModel.DebugLog.debug("fermux", "out=${it.out}")
+          DownloaderSettingsViewModel.DebugLog.debug("fermux", "err=${it.err}")
      }
 }
 /**
@@ -60,6 +62,10 @@ suspend fun fetchingTheMetadata(url: String): DownloadMetadata = withContext(Dis
           title = info.title ?: "Unknown title",
           thumbnail = info.thumbnail ?: "",
           duration = info.duration,
-          uploader = info.uploader
+          uploader = info.uploader,
+          size = info.fileSize, // TODO, Add all of this in the UI, make it look LIKE the time/size of the app.
+          resolution = info.resolution,
+          dislikeCount = info.dislikeCount,
+          like = info.likeCount
      )
 }

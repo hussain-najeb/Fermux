@@ -35,7 +35,8 @@ fun DownloaderLogs(
 ) {
      val downloaderViewModel: DownloaderViewModel =
           viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
-     @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
+     @Suppress("DEPRECATION")
+     val clipboard = LocalClipboardManager.current
      val logScrollState = rememberScrollState()
 
      Column(
@@ -86,7 +87,7 @@ fun DownloaderLogs(
                          }
                     }
                     Text(
-                         text = "Note*: This is the log page for the downloader output during download, it doesnt display errors",
+                         text = "Note*: This is the log page for the downloader output during download, it doesn't display errors",
                          color = FermuxColors.fermuxBackgroundTextColor,
                          fontSize = 16.sp,
                          fontStyle = FontStyle.Normal,

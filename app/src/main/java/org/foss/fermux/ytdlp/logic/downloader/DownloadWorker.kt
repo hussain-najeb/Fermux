@@ -13,6 +13,7 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.job
 import kotlinx.coroutines.runBlocking
+import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.storage.DataStoreDownloaderSettings
 import org.foss.fermux.storage.JSONHistoryCards
 
@@ -27,7 +28,8 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
 
           val taskId = id.toString()
           val workerJob = currentCoroutineContext().job
-          Log.d("DownloadWorker", "Started id=$taskId attempt=$runAttemptCount")
+
+          DownloaderSettingsViewModel.DebugLog.debug("DownloadWorker", "Started id=$taskId attempt=$runAttemptCount")
 
           val settingsTab = DataStoreDownloaderSettings(applicationContext)
           val sponsorBlock = settingsTab.sponsorBlock.first()
@@ -82,8 +84,8 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                     )
                }
           } catch (e: Exception) {
-               Log.e("fermux", "failed to save audio JSON", e)
-               Log.e("fermux", "failed to save video JSON", e)
+               DownloaderSettingsViewModel.DebugLog.error("fermux", "failed to save audio JSON", e)
+               DownloaderSettingsViewModel.DebugLog.error("fermux", "failed to save video JSON", e)
           }
 
           return try {
@@ -124,12 +126,15 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                          }
                     },
                )
-               Log.d("DownloadWorker", "Succeeded id=$taskId")
+
+               DownloaderSettingsViewModel.DebugLog.debug("DownloadWorker", "Succeeded id=$taskId")
+
                Result.success()
+
           } catch (e: CancellationException) {
                val destroyed = YoutubeDL.destroyProcessById(taskId)
 
-               Log.d("DownloadWorker", "Cancelled id=$taskId stopReason=$stopReason destroyed=$destroyed", e)
+               DownloaderSettingsViewModel.DebugLog.error("DownloadWorker", "Cancelled id=$taskId stopReason=$stopReason destroyed=$destroyed", e)
 
                throw e
           } catch (e: Exception) {
