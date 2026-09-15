@@ -60,7 +60,11 @@ fun DownloadContent(
      val scope = rememberCoroutineScope()
 
      val doingTask =
-          downloaderViewModel.state is DownloadStatus.Loading || downloaderViewModel.state is DownloadStatus.Downloading
+                  downloaderViewModel.state is DownloadStatus.Loading ||
+                  downloaderViewModel.state is DownloadStatus.Downloading ||
+                  downloaderViewModel.state is DownloadStatus.MidChoice
+
+
      val isError = downloaderViewModel.state is DownloadStatus.Error
      val clipboard = LocalClipboardManager.current
 
@@ -77,7 +81,7 @@ fun DownloadContent(
                ) {
 
                     Text(
-                         text = "Note: always update your version of the downloader in the settings. It's recommended to use the nightly version",
+                         text = "Note: Always update your version of Yt-dlp in the settings. It's recommended to use the nightly version",
                          color = FermuxColors.fermuxOffWhiteTextColor,
                          fontSize = 16.sp,
                          fontStyle = FontStyle.Normal,
@@ -163,12 +167,13 @@ fun DownloadContent(
                                    downloaderViewModel.fetchedMetadata(downloaderViewModel.downloadUrl)
                                    scope.launch {
                                         snackbarHostState.showSnackbar(
-                                             message = "Downloading Media", duration = SnackbarDuration.Short
+                                             message = "Downloading....", duration = SnackbarDuration.Short
                                         )
                                    }
-                              })
+                              }
+                         )
                     }
-                    SideBar(navController = navController, modifier = Modifier.padding(3.dp))
+                    SideBar(navController = navController)
                }
           }
      }

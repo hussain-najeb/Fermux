@@ -21,7 +21,12 @@ import com.yausername.youtubedl_android.YoutubeDLRequest
  *   6- cookies expire!
  */
 
+/*
+TODO. I probably need BG-Utils with deno JS runtime with ytdlp PO solver in the main yausername lib, could be a PR and some change, just chuck in the whole thing
+THEMOSTCOMPLETEYTDLPCLIENTINTHEWORLD
+ */
 
+// TODO. Recompile ffmpeg to not include a screen shot of your file system, dumbass
 suspend fun downloaderLogic(
      context: Context,
      showDetails: Boolean,

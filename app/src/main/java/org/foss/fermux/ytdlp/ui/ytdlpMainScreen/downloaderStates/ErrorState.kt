@@ -30,7 +30,7 @@ import org.foss.fermux.ui.theme.JetbrainsMono
 import org.foss.fermux.utils.Miscellaneous
 
 @SuppressLint("SuspiciousIndentation")
-@Composable
+@Composable // TODO. On my phone, this button is pushed too much, and looks squiched and distorted, fix it.
 fun ErrorCard(
      flavourMessage: String,
      rawError: String,

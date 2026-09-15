@@ -53,7 +53,7 @@ fun AppIconButton(
      )
 
      val iconColor by animateColorAsState(
-          targetValue = if (isPressed) color.fermuxActiveIcon else color.fermuxInActiveIcon,
+          targetValue = if (isPressed) color.fermuxActiveIcon else color.fermuxWhiteColor,
           animationSpec = tween(durationMillis = 200),
           label = "Fermux Icon Colors"
      )

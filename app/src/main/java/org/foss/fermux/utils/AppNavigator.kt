@@ -10,8 +10,8 @@ import org.foss.fermux.ffmpeg.ui.ConverterScreen
 import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.FFmpegLogs
 import org.foss.fermux.main.HomeScreen
 import org.foss.fermux.settings.ui.AboutPage
-import org.foss.fermux.settings.ui.aboutPage.LibraryPage
 import org.foss.fermux.settings.ui.SettingsScreen
+import org.foss.fermux.settings.ui.aboutPage.LibraryPage
 import org.foss.fermux.settings.ui.converter.SimpleFFmpegSetting
 import org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage
 import org.foss.fermux.terminal.main.ui.FermuxTerminalScreen
@@ -40,11 +40,14 @@ sealed class SettingsScreens(val route: String, val descriptor: String?) {
 
 // Miscellaneous navigation
 sealed class Miscellaneous(val route: String) {
-     object FFmpegLog : Miscellaneous(route = "FFmpegLogs")
+
+     // FFmpeg Screens
+     object FFmpegLog : Miscellaneous(route = "FFmpeg Logs")
+     object FFmpegLogcat : Miscellaneous(route = "FFmpeg Logcat")
 
      // Downloader Screens
      object DownloaderLogs : Miscellaneous(route = "YtdlpLog")
-
+     object DownloaderLogcat : Miscellaneous(route = "Logcat For Downloader")
      object DownloaderVideosList : Miscellaneous(route = "History Video List")
      object DownloaderMusicList : Miscellaneous(route = "History Audio List")
 }
@@ -77,9 +80,11 @@ fun FermuxAppMainScreen() {
 
           // FFmpeg
           composable(route = Miscellaneous.FFmpegLog.route) { FFmpegLogs(navController) }
+          composable(route = Miscellaneous.FFmpegLogcat.route) { FFmpegLogs(navController) }
 
           // Ytdlp
           composable(route = Miscellaneous.DownloaderLogs.route) { DownloaderLogs(navController) }
+          composable(route = Miscellaneous.DownloaderLogcat.route) { DownloaderLogs(navController) }
           composable(route = Miscellaneous.DownloaderMusicList.route) { DownloadedAudioScreen(navController) }
           composable(route = Miscellaneous.DownloaderVideosList.route) { DownloadVideoList(navController) }
      }

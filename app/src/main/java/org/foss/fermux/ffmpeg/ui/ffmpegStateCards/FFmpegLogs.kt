@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import org.foss.fermux.fermuxUIComponents.buttons.LogCopy
+import org.foss.fermux.fermuxUIComponents.buttons.ErrorCopyButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ui.theme.FermuxColors
@@ -35,7 +35,9 @@ fun FFmpegLogs(
      navController: NavHostController
 ) {
      val ffmpegViewModel: FFmpegViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
-     @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
+     @Suppress("DEPRECATION")
+     val clipboard = LocalClipboardManager.current
+      val logs = ffmpegViewModel.FFmpegLogs
      val logScrollState = rememberScrollState()
 
      Column(
@@ -68,7 +70,7 @@ fun FFmpegLogs(
                                    .padding(horizontal = 10.dp, vertical = 12.dp)
                          ) {
                               Text(
-                                   text = ffmpegViewModel.FFmpegLogs,
+                                   text = logs,
                                    color = FermuxColors.fermuxWhiteColor,
                                    fontFamily = JetbrainsMono,
                                    modifier = Modifier
@@ -76,12 +78,12 @@ fun FFmpegLogs(
                                         .verticalScroll(logScrollState)
                                         .padding(bottom = 40.dp)
                               )
-                              LogCopy(
+                              ErrorCopyButton(
                                    modifier = Modifier
                                         .align(Alignment.BottomEnd)
                                         .padding(8.dp)
                                         .size(50.dp),
-                                   onClick = { clipboard.setText(AnnotatedString(ffmpegViewModel.FFmpegLogs)) }
+                                   onClick = { clipboard.setText(AnnotatedString(logs)) }
                               )
                          }
                     }
