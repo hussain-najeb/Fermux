@@ -33,9 +33,9 @@ import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.ErrorCopyButton
 import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
-import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
+import org.foss.fermux.utils.DebugLog
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 
 @SuppressLint("ContextCastToActivity")
@@ -45,14 +45,13 @@ fun DownloaderLogs(
 ) {
      val downloaderViewModel: DownloaderViewModel =
           viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
-     val downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel()
 
      val clipboard = LocalClipboardManager.current
      val logs = downloaderViewModel.downloaderLogs
      val pageScrollState = rememberScrollState()
      val logScrollState = rememberScrollState()
-     val debug by DownloaderSettingsViewModel.DebugLog.enabled.collectAsStateWithLifecycle()
-     val logcat by downloaderSettingsViewModel.downloaderLogcat.collectAsStateWithLifecycle()
+     val debug by DebugLog.enabled.collectAsStateWithLifecycle()
+     val logcat by DebugLog.downloaderLogcat.collectAsStateWithLifecycle()
      var debugEnabledSurface by remember { mutableStateOf(false) }
 
 

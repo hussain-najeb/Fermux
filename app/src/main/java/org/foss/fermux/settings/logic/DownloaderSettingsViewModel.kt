@@ -6,12 +6,14 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.yausername.youtubedl_android.YoutubeDL
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.foss.fermux.storage.DataStoreDownloaderSettings
 import org.foss.fermux.storage.JSONHistoryCards
-import org.foss.fermux.utils.DebugClass
-import org.foss.fermux.utils.DebugKind
+import org.foss.fermux.utils.DebugLog
 import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
 import org.foss.fermux.ytdlp.logic.downloader.YtdlpChannel
@@ -187,109 +189,13 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
                     _upToDate.value = true
                } catch (e: Exception) {
                     Log.e("fermuxYtdlpUpdater", "yt-dlp update failed", e)
-                    _ytdlpUpdateStatus.value = "Update failed" // TODO, Add this to a snackbar when downloading, and make each snackbar smaller!
+                    _ytdlpUpdateStatus.value =
+                         "Update failed" // TODO, Add this to a snackbar when downloading, and make each snackbar smaller!
                     _upToDate.value = false
                } finally {
                     _isCheckingForUpdate.value = false
                     isUpdatingYtdlp.set(false)
                }
           }
-     }
-
-     val downloaderLogcat = DebugLog.downloaderLog
-     val ffmpegLogcat = DebugLog.ffmpegLog
-
-     object DebugLog {
-          private val _enabled = MutableStateFlow(false)
-          val enabled = _enabled.asStateFlow()
-
-          private val _downloaderLog = MutableStateFlow<List<DebugClass>>(emptyList())
-          val downloaderLog: StateFlow<List<DebugClass>> = _downloaderLog.asStateFlow()
-
-          private val _ffmpegLog = MutableStateFlow<List<DebugClass>>(emptyList())
-          val ffmpegLog: StateFlow<List<DebugClass>> = _ffmpegLog.asStateFlow()
-
-          fun setEnable(value: Boolean) {
-               _enabled.value = value
-          }
-
-          fun debugDownloader(tag: String, message: String) {
-               if (!enabled.value) return
-
-               Log.d(tag, message)
-
-               addDownloaderLogs(
-                    DebugClass(
-                         tag = tag,
-                         message = message,
-                         level = DebugKind.DownloaderDebug
-                    )
-               )
-          }
-          fun errorDownloader(
-               tag: String,
-               message: String,
-               throwable: Throwable?
-          ) {
-               if (!enabled.value) return
-
-               Log.e(tag, message, throwable)
-
-               addDownloaderLogs(
-                    DebugClass(
-                         tag = tag,
-                         message = message,
-                         level = DebugKind.DownloaderError,
-                         throwable = throwable
-                    )
-               )
-          }
-
-          private fun addDownloaderLogs(entry: DebugClass) {
-               _downloaderLog.update { currentLogs ->
-                    currentLogs + entry
-               }
-          }
-
-          fun debugFFmpeg(
-               tag: String,
-               message: String
-          ) {
-               if (!enabled.value) return
-
-               Log.d(tag, message)
-
-               addFFmpegLog(DebugClass(
-                    tag = tag,
-                    message = message,
-                    level = DebugKind.FFmpegDebug
-                    )
-               )
-          }
-
-          fun errorFFmpeg(
-               tag: String,
-               message: String,
-               throwable: Throwable?
-          ) {
-               if (!enabled.value) return
-
-               Log.e(tag, message, throwable)
-
-               addFFmpegLog(DebugClass(
-                    tag = tag,
-                    message = message,
-                    level = DebugKind.FFmpegError,
-                    throwable = throwable
-                    )
-               )
-          }
-
-          private fun addFFmpegLog(entry: DebugClass) {
-               _ffmpegLog.update { currentLog ->
-                    currentLog + entry
-               }
-          } // TODO. Separate both ffmpeg and this one to be separate
-     // TODO. Make the user later turn off one and keep the other, since if the debug option is on, it will enable both debug stuff. maybe a FilterChips
      }
 }

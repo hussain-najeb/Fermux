@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.outlined.ThumbDown
+import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -37,13 +39,15 @@ import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.Miscellaneous
 import org.foss.fermux.ytdlp.logic.downloader.DownloadMetadata
+import org.foss.fermux.ytdlp.logic.downloader.likeFormatting
+import org.foss.fermux.ytdlp.logic.downloader.sizeFormatting
 import org.foss.fermux.ytdlp.logic.downloader.videoTime
 
 
 private enum class ProgressState { InProgress, Done }
 
 @Composable
-fun FinishedCard(
+fun FinishedDownloadCard(
      metadata: DownloadMetadata,
      progress: Float? = null,
      onCancel: () -> Unit,
@@ -140,19 +144,72 @@ private fun FinishedCardContent(
                               color = FermuxColors.fermuxComponents.copy(alpha = 0.75f),
                               shape = RoundedCornerShape(5.dp)
                          )
-                         .padding(7.dp)
+                         .wrapContentSize()
                          .align(Alignment.BottomEnd)
                     ) {
-                         Text(
-                              text = videoTime(seconds = metadata.duration),
-                              color = FermuxColors.fermuxWhiteColor
+                         Row(modifier = Modifier.wrapContentSize()) {
+                              metadata.size?.let {
+                                   Text(
+                                        text = sizeFormatting(it),
+                                        color = FermuxColors.fermuxWhiteColor,
+                                        fontSize = 16.sp,
+                                        modifier = Modifier.padding(3.dp)
+                                   )
+                              }
+                              Text(
+                                   text = videoTime(seconds = metadata.duration),
+                                   color = FermuxColors.fermuxWhiteColor,
+                                   fontSize = 16.sp,
+                                   modifier = Modifier.padding(3.dp)
+                              )
+                         }
+                    }
+                    Box(modifier = Modifier
+                         .padding(5.dp)
+                         .wrapContentSize()
+                         .background(
+                              color = FermuxColors.fermuxComponents.copy(alpha = 0.75f),
+                              shape = RoundedCornerShape(5.dp)
                          )
+                         .wrapContentSize()
+                         .align(Alignment.BottomStart)
+                    ) {
+                         Row(modifier = Modifier.wrapContentSize()) {
+                              Icon(
+                                   imageVector = Icons.Outlined.ThumbUp,
+                                   tint = FermuxColors.fermuxWhiteColor,
+                                   contentDescription = null,
+                                   modifier = Modifier
+                                        .padding(3.dp)
+                                        .size(20.dp)
+                              )
+                              Text(
+                                   text = likeFormatting(like = metadata.like),
+                                   color = FermuxColors.fermuxWhiteColor,
+                                   fontSize = 15.sp,
+                                   modifier = Modifier.padding(3.dp)
+                              )
+                              Icon(
+                                   imageVector = Icons.Outlined.ThumbDown,
+                                   tint = FermuxColors.fermuxWhiteColor,
+                                   contentDescription = null,
+                                   modifier = Modifier
+                                        .padding(3.dp)
+                                        .size(20.dp)
+                              )
+                              Text(
+                                   text = likeFormatting(like = metadata.dislikeCount),
+                                   color = FermuxColors.fermuxWhiteColor,
+                                   fontSize = 15.sp,
+                                   modifier = Modifier.padding(3.dp)
+                              )
+                         }
                     }
                }
-               FermuxDownloadDescription(modifier = Modifier
-                    .fillMaxWidth()
+
+               FermuxDownloadDescription(modifier = Modifier.fillMaxWidth()
                ) {
-                    Column(modifier = Modifier.height(80.dp)) {
+                    Column(modifier = Modifier.height(100.dp)) {
                          Text(
                               text = metadata.title,
                               fontFamily = FontFamily.Default,
@@ -176,6 +233,18 @@ private fun FinishedCardContent(
                                         .padding(7.dp)
                               )
                          }
+                         metadata.resolution?.let {
+                              Text(
+                                   text = it,
+                                   fontFamily = FontFamily.Default,
+                                   fontSize = 15.sp,
+                                   color = FermuxColors.fermuxOffWhiteTextColor,
+                                   maxLines = 1,
+                                   overflow = TextOverflow.Ellipsis,
+                                   modifier = Modifier
+                                        .padding(7.dp)
+                              )
+                         }
                     }
                }
           }
@@ -186,7 +255,7 @@ private fun FinishedCardContent(
                     .padding(horizontal = 16.dp),
                verticalAlignment = Alignment.CenterVertically
           ) {
-               if (showYtdlpDetails) {2
+               if (showYtdlpDetails) {
                     LogImage(
                          image = R.drawable.logs,
                          onClick = { navController.navigate(Miscellaneous.DownloaderLogs.route) }
@@ -213,7 +282,7 @@ fun Test3() {
                     thumbnail = "/home/Hussain/Downloads/01_HistoryUniverse_Front_5aa6c115-6004-4508-9d43-41752d9cf891.jpg",
                     duration = 578,
                     uploader = "Example uploader, Youtube Channel, Or Null",
-                    size = 3535,
+                    size = 35345455,
                     resolution = "720p",
                     dislikeCount = "35256",
                     like = "54784" // TODO. Add this to the ui

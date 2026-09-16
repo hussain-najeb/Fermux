@@ -32,9 +32,9 @@ import org.foss.fermux.fermuxUIComponents.buttons.ErrorCopyButton
 import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
-import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
+import org.foss.fermux.utils.DebugLog
 
 
 @SuppressLint("ContextCastToActivity")
@@ -43,14 +43,12 @@ fun FFmpegLogs(
      navController: NavHostController
 ) {
      val ffmpegViewModel: FFmpegViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
-     val ffmpegSettingsViewModel: DownloaderSettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
-
      val clipboard = LocalClipboardManager.current
      val logs = ffmpegViewModel.FFmpegLogs
      val logScrollState = rememberScrollState()
      val pageScrollState = rememberScrollState()
-     val debug by DownloaderSettingsViewModel.DebugLog.enabled.collectAsStateWithLifecycle()
-     val logcat by ffmpegSettingsViewModel.ffmpegLogcat.collectAsStateWithLifecycle()
+     val debug by DebugLog.enabled.collectAsStateWithLifecycle()
+     val logcat by DebugLog.ffmpegLogcat.collectAsStateWithLifecycle()
      var debugEnabledSurface by remember { mutableStateOf(false) }
 
      Column(
@@ -65,6 +63,7 @@ fun FFmpegLogs(
                Column(
                     modifier = Modifier
                          .padding(paddingValues)
+                         .verticalScroll(pageScrollState)
                          .fillMaxWidth()
                          .padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally

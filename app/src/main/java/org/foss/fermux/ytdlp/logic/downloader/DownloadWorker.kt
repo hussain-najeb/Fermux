@@ -13,9 +13,9 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.job
 import kotlinx.coroutines.runBlocking
-import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.storage.DataStoreDownloaderSettings
 import org.foss.fermux.storage.JSONHistoryCards
+import org.foss.fermux.utils.DebugLog
 
 
 /**
@@ -29,7 +29,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
           val taskId = id.toString()
           val workerJob = currentCoroutineContext().job
 
-          DownloaderSettingsViewModel.DebugLog.debugDownloader("DownloadWorker", "Started id=$taskId attempt=$runAttemptCount")
+          DebugLog.debugDownloader("DownloadWorker", "Started id=$taskId attempt=$runAttemptCount")
 
           val settingsTab = DataStoreDownloaderSettings(applicationContext)
           val sponsorBlock = settingsTab.sponsorBlock.first()
@@ -84,8 +84,8 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                     )
                }
           } catch (e: Exception) {
-               DownloaderSettingsViewModel.DebugLog.errorDownloader("fermux", "failed to save audio JSON", e)
-               DownloaderSettingsViewModel.DebugLog.errorDownloader("fermux", "failed to save video JSON", e)
+               DebugLog.errorDownloader("fermux", "failed to save audio JSON", e)
+               DebugLog.errorDownloader("fermux", "failed to save video JSON", e)
           }
 
           return try {
@@ -127,14 +127,14 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                     },
                )
 
-               DownloaderSettingsViewModel.DebugLog.debugDownloader("DownloadWorker", "Succeeded id=$taskId")
+               DebugLog.debugDownloader("DownloadWorker", "Succeeded id=$taskId")
 
                Result.success()
 
           } catch (e: CancellationException) {
                val destroyed = YoutubeDL.destroyProcessById(taskId)
 
-               DownloaderSettingsViewModel.DebugLog.errorDownloader("DownloadWorker", "Cancelled id=$taskId stopReason=$stopReason destroyed=$destroyed", e)
+               DebugLog.errorDownloader("DownloadWorker", "Cancelled id=$taskId stopReason=$stopReason destroyed=$destroyed", e)
 
                throw e
           } catch (e: Exception) {

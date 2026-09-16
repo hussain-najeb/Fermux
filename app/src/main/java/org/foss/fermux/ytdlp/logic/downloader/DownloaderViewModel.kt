@@ -12,8 +12,8 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.storage.DataStoreDownloaderSettings
+import org.foss.fermux.utils.DebugLog
 import java.net.UnknownHostException
 import java.util.*
 import kotlin.time.Duration.Companion.milliseconds
@@ -69,7 +69,7 @@ class DownloaderViewModel : ViewModel() {
       */
      private fun downloadErrorHandler(e: Exception) {
 
-          DownloaderSettingsViewModel.DebugLog.errorDownloader("MetadataFetch", "Fetch failed: ${e.javaClass.simpleName}", e)
+          DebugLog.errorDownloader("MetadataFetch", "Fetch failed: ${e.javaClass.simpleName}", e)
 
           val raw = when (e) {
                is TimeoutCancellationException -> "Timed out waiting for a response, retry the download"
@@ -84,7 +84,7 @@ class DownloaderViewModel : ViewModel() {
      fun startingDownload(context: Context, audio: AudioQuality?, video: VideoQuality?) {
           if (activeProcess != null || state is DownloadStatus.Downloading) {
 
-               DownloaderSettingsViewModel.DebugLog.debugDownloader("DownloadAdmission", "Ignoring duplicate download request; active id=$activeProcess")
+               DebugLog.debugDownloader("DownloadAdmission", "Ignoring duplicate download request; active id=$activeProcess")
 
                return
           }
@@ -114,7 +114,7 @@ class DownloaderViewModel : ViewModel() {
           activeProcess = requestedUrls.id
           state = DownloadStatus.Downloading(0f, metadata)
 
-          DownloaderSettingsViewModel.DebugLog.debugDownloader("DownloadAdmission", "Prepared download id=${requestedUrls.id}")
+          DebugLog.debugDownloader("DownloadAdmission", "Prepared download id=${requestedUrls.id}")
 
           downloaderJob = viewModelScope.launch {
                try {
@@ -129,12 +129,12 @@ class DownloaderViewModel : ViewModel() {
                     val observedId = if (existingWork != null) {
                          activeProcess = existingWork.id
 
-                         DownloaderSettingsViewModel.DebugLog.debugDownloader("DownloadAdmission","Keeping existing download id=${existingWork.id} state=${existingWork.state}")
+                         DebugLog.debugDownloader("DownloadAdmission","Keeping existing download id=${existingWork.id} state=${existingWork.state}")
 
                          existingWork.id
                     } else {
 
-                         DownloaderSettingsViewModel.DebugLog.debugDownloader("DownloadAdmission", "Enqueue unique download id=${requestedUrls.id}")
+                         DebugLog.debugDownloader("DownloadAdmission", "Enqueue unique download id=${requestedUrls.id}")
 
                          workManager.enqueueUniqueWork(
                               DOWNLOAD_WORK_NAME,
@@ -183,7 +183,7 @@ class DownloaderViewModel : ViewModel() {
                } catch (e: CancellationException) {
                     throw e
                } catch (e: Exception) {
-                    DownloaderSettingsViewModel.DebugLog.errorDownloader("DownloadAdmission", "Failed to enqueue id=${requestedUrls.id}", e)
+                    DebugLog.errorDownloader("DownloadAdmission", "Failed to enqueue id=${requestedUrls.id}", e)
                     if (activeProcess == requestedUrls.id) {
                          activeProcess = null
                          downloadErrorHandler(e)

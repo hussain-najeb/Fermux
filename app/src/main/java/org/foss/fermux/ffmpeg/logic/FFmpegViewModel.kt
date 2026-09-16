@@ -20,7 +20,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
+import org.foss.fermux.utils.DebugLog
 import java.util.*
 
 
@@ -77,7 +77,7 @@ class FFmpegViewModel : ViewModel() {
                          }
                     }
                } catch (e: Exception) {
-                    DownloaderSettingsViewModel.DebugLog.errorFFmpeg("fermux ffmpeg error update input kind", "failed for some reason", e)
+                    DebugLog.errorFFmpeg("fermux ffmpeg error update input kind", "failed for some reason", e)
                } finally {
                     extractor.release()
                }

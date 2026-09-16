@@ -46,7 +46,7 @@ fun DownloaderCards(
                }
 
                is DownloadStatus.Downloading -> {
-                    FinishedCard(
+                    FinishedDownloadCard(
                          targetState.metadata,
                          targetState.downloadProgress,
                          onCancel = { downloaderViewModel.cancelButton(context) },
@@ -55,7 +55,7 @@ fun DownloaderCards(
                }
 
                is DownloadStatus.Loaded -> {
-                    FinishedCard(
+                    FinishedDownloadCard(
                          targetState.metadata,
                          onCancel = { downloaderViewModel.cancelButton(context) },
                          navController = navController
@@ -67,7 +67,7 @@ fun DownloaderCards(
                }
 
                is DownloadStatus.Completed -> {
-                    FinishedCard(
+                    FinishedDownloadCard(
                          targetState.metadata,
                          progress = 100f,
                          onCancel = { downloaderViewModel.cancelButton(context) },

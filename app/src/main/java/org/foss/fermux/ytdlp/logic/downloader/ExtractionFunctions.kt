@@ -6,7 +6,7 @@ import com.yausername.youtubedl_android.YoutubeDLRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.withContext
-import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
+import org.foss.fermux.utils.DebugLog
 import org.foss.fermux.utils.fileCopyFilter
 import java.io.File
 
@@ -34,7 +34,7 @@ suspend fun execution(
                     "EmbedThumbnailPPError" in message || "Unable to embed using ffprobe & ffmpeg" in message
                if (!thumbnailEmbeddingFailed) throw e
 
-               DownloaderSettingsViewModel.DebugLog.debugDownloader("downloadWorker", "Thumbnail embedding failed; keeping media without artwork")
+               DebugLog.debugDownloader("downloadWorker", "Thumbnail embedding failed; keeping media without artwork")
 
                onUpdate(100f, "[EmbedThumbnail] Failed; kept download without the thumbnail")
                null
@@ -44,9 +44,9 @@ suspend fun execution(
      fileCopyFilter(context, downloadDir, subfolderName = "downloader")
 
      response?.let {
-          DownloaderSettingsViewModel.DebugLog.debugDownloader("fermux", "exit=${it.exitCode}")
-          DownloaderSettingsViewModel.DebugLog.debugDownloader("fermux", "out=${it.out}")
-          DownloaderSettingsViewModel.DebugLog.debugDownloader("fermux", "err=${it.err}")
+          DebugLog.debugDownloader("fermux", "exit=${it.exitCode}")
+          DebugLog.debugDownloader("fermux", "out=${it.out}")
+          DebugLog.debugDownloader("fermux", "err=${it.err}")
      }
 }
 /**
