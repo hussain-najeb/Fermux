@@ -12,9 +12,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
-import org.foss.fermux.utils.copyFileToDownloads
+import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.settings.logic.buildDynamicFFmpegArgs
 import org.foss.fermux.storage.FFmpegSettingsTab
+import org.foss.fermux.utils.copyFileToDownloads
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
@@ -67,7 +68,7 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                val ffmpegBinary = File(nativeLibDir, "libfermux_ffmpeg.so")
 
                if (!ffmpegBinary.exists()) {
-                    Log.d("FFmpegWorkManager", "FFmpeg binary not found at: $ffmpegBinary")
+                    DownloaderSettingsViewModel.DebugLog.debugFFmpeg("FFmpegWorkManager", "FFmpeg binary not found at: $ffmpegBinary")
                     return Result.failure(
                          workDataOf("error" to "FFmpeg binary not found")
                     )
@@ -130,11 +131,11 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                     }
                } else {
                     val logs = output.toString()
-                    Log.e("fermux", "FFmpeg failed with rc: $exitCode\n$logs")
+                    Log.e("fermuxFFmpeg", "FFmpeg failed with rc: $exitCode\n$logs", )
                     Result.failure(workDataOf("error" to logs))
                }
           } catch (e: Exception) {
-               Log.e("fermuxFFmpeg", "FFmpeg worker crashed", e)
+               DownloaderSettingsViewModel.DebugLog.errorFFmpeg("fermuxFFmpeg", "FFmpeg worker crashed", e)
                Result.failure(workDataOf("error" to (e.message ?: "unknown error")))
           } finally {
                if (tempFile.exists()) tempFile.delete()

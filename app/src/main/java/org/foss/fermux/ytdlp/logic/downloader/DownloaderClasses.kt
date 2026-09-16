@@ -94,17 +94,3 @@ enum class ExternalDownloaders {
      FFmpegAsExternal,
      YtdlpNativeDownloader
 }
-
-data class DebugClass(
-     val tag: String,
-     val message: String,
-     val level: DebugKind,
-     val throwable: Throwable? = null,
-     val timestamp: Long = System.currentTimeMillis()
-)
-
-enum class DebugKind {
-     DownloaderDebug,
-     DownloaderError,
-     // TODO, add this to ffmpeg and the terminal stuff as well
-}

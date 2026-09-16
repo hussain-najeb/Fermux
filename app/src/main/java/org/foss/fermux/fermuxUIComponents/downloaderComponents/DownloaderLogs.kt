@@ -113,7 +113,10 @@ fun DownloaderLogs(
                          modifier = Modifier.padding(7.dp)
                     )
 
-                    Row(modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                         modifier = Modifier.fillMaxWidth()
+
+                    ) {
                          ErrorCopyButton(
                               modifier = Modifier
                                    .padding(2.dp)
@@ -121,9 +124,11 @@ fun DownloaderLogs(
                               onClick = {
                                    val formattedClipboard = logcat.joinToString(separator = "\n\n") { log ->
                                         buildString {
-                                             append("${log.timestamp} ${log.tag} ${log.level} ${log.message} ${log.throwable?.let { 
-                                                       appendLine()
-                                                       append(it.stackTraceToString())
+                                             append(
+                                                  "${log.timestamp} ${log.tag} ${log.level} ${log.message} ${
+                                                       log.throwable?.let {
+                                                            appendLine()
+                                                            append(it.stackTraceToString())
                                                        }
                                                   }"
                                              )
@@ -168,7 +173,7 @@ fun DownloaderLogs(
                                         item {
                                              Text(
                                                   text = "No downloader debug logs captured yet",
-                                                  color = FermuxColors.fermuxBackgroundTextColor,
+                                                  color = FermuxColors.fermuxWhiteColor,
                                                   fontFamily = JetbrainsMono,
                                                   modifier = Modifier.fillMaxWidth()
                                              )

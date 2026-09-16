@@ -10,7 +10,11 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.foss.fermux.storage.DataStoreDownloaderSettings
 import org.foss.fermux.storage.JSONHistoryCards
-import org.foss.fermux.ytdlp.logic.downloader.*
+import org.foss.fermux.utils.DebugClass
+import org.foss.fermux.utils.DebugKind
+import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
+import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
+import org.foss.fermux.ytdlp.logic.downloader.YtdlpChannel
 import java.util.concurrent.atomic.AtomicBoolean
 
 class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(application) {
@@ -192,18 +196,18 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           }
      }
 
-     val downloaderLogcat = DebugLog.log
-
-     fun clearDownloaderLogs() {
-          DebugLog.clearLogs()
-     }
+     val downloaderLogcat = DebugLog.downloaderLog
+     val ffmpegLogcat = DebugLog.ffmpegLog
 
      object DebugLog {
           private val _enabled = MutableStateFlow(false)
           val enabled = _enabled.asStateFlow()
 
-          private val _log = MutableStateFlow<List<DebugClass>>(emptyList())
-          val log: StateFlow<List<DebugClass>> = _log.asStateFlow()
+          private val _downloaderLog = MutableStateFlow<List<DebugClass>>(emptyList())
+          val downloaderLog: StateFlow<List<DebugClass>> = _downloaderLog.asStateFlow()
+
+          private val _ffmpegLog = MutableStateFlow<List<DebugClass>>(emptyList())
+          val ffmpegLog: StateFlow<List<DebugClass>> = _ffmpegLog.asStateFlow()
 
           fun setEnable(value: Boolean) {
                _enabled.value = value
@@ -214,7 +218,7 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
                Log.d(tag, message)
 
-               addLogs(
+               addDownloaderLogs(
                     DebugClass(
                          tag = tag,
                          message = message,
@@ -222,7 +226,6 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
                     )
                )
           }
-
           fun errorDownloader(
                tag: String,
                message: String,
@@ -232,7 +235,7 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
                Log.e(tag, message, throwable)
 
-               addLogs(
+               addDownloaderLogs(
                     DebugClass(
                          tag = tag,
                          message = message,
@@ -241,13 +244,52 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
                     )
                )
           }
-          private fun addLogs(entry: DebugClass) {
-               _log.update { currentLogs ->
+
+          private fun addDownloaderLogs(entry: DebugClass) {
+               _downloaderLog.update { currentLogs ->
                     currentLogs + entry
                }
           }
-          fun clearLogs() {
-               _log.value = emptyList()
+
+          fun debugFFmpeg(
+               tag: String,
+               message: String
+          ) {
+               if (!enabled.value) return
+
+               Log.d(tag, message)
+
+               addFFmpegLog(DebugClass(
+                    tag = tag,
+                    message = message,
+                    level = DebugKind.FFmpegDebug
+                    )
+               )
           }
+
+          fun errorFFmpeg(
+               tag: String,
+               message: String,
+               throwable: Throwable?
+          ) {
+               if (!enabled.value) return
+
+               Log.e(tag, message, throwable)
+
+               addFFmpegLog(DebugClass(
+                    tag = tag,
+                    message = message,
+                    level = DebugKind.FFmpegError,
+                    throwable = throwable
+                    )
+               )
+          }
+
+          private fun addFFmpegLog(entry: DebugClass) {
+               _ffmpegLog.update { currentLog ->
+                    currentLog + entry
+               }
+          } // TODO. Separate both ffmpeg and this one to be separate
+     // TODO. Make the user later turn off one and keep the other, since if the debug option is on, it will enable both debug stuff. maybe a FilterChips
      }
 }
