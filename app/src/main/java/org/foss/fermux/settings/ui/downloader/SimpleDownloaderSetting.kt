@@ -72,7 +72,7 @@ fun SimpleDownloaderPage(
 //   val notificationState by downloaderSettingsViewModel.notificationState.collectAsStateWithLifecycle() // TODO. Add this at some point.
      val playlist by downloaderSettingsViewModel.playlistState.collectAsStateWithLifecycle()
      val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
-     val logcat by DownloaderSettingsViewModel.DebugLog.enabled.collectAsStateWithLifecycle()
+     val logcat by downloaderSettingsViewModel.debug.collectAsStateWithLifecycle()
 
 
 
@@ -188,7 +188,7 @@ fun SimpleDownloaderPage(
                content = {
                     SettingsSwitch(
                          checked = logcat,
-                         onCheckedChange = { DownloaderSettingsViewModel.DebugLog.setEnable(it) }
+                         onCheckedChange = { downloaderSettingsViewModel.setDebug(it) }
                     )
                },
                position = TilePosition.MIDDLE

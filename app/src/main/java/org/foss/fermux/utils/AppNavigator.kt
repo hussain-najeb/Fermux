@@ -40,14 +40,10 @@ sealed class SettingsScreens(val route: String, val descriptor: String?) {
 
 // Miscellaneous navigation
 sealed class Miscellaneous(val route: String) {
-
      // FFmpeg Screens
      object FFmpegLog : Miscellaneous(route = "FFmpeg Logs")
-     object FFmpegLogcat : Miscellaneous(route = "FFmpeg Logcat")
-
      // Downloader Screens
      object DownloaderLogs : Miscellaneous(route = "YtdlpLog")
-     object DownloaderLogcat : Miscellaneous(route = "Logcat For Downloader")
      object DownloaderVideosList : Miscellaneous(route = "History Video List")
      object DownloaderMusicList : Miscellaneous(route = "History Audio List")
 }
@@ -58,7 +54,6 @@ fun FermuxAppMainScreen() {
      val navController = rememberNavController()
 
      NavHost(
-
           navController = navController,
           startDestination = MainScreens.Home.route
 
@@ -80,11 +75,9 @@ fun FermuxAppMainScreen() {
 
           // FFmpeg
           composable(route = Miscellaneous.FFmpegLog.route) { FFmpegLogs(navController) }
-          composable(route = Miscellaneous.FFmpegLogcat.route) { FFmpegLogs(navController) }
 
           // Ytdlp
           composable(route = Miscellaneous.DownloaderLogs.route) { DownloaderLogs(navController) }
-          composable(route = Miscellaneous.DownloaderLogcat.route) { DownloaderLogs(navController) }
           composable(route = Miscellaneous.DownloaderMusicList.route) { DownloadedAudioScreen(navController) }
           composable(route = Miscellaneous.DownloaderVideosList.route) { DownloadVideoList(navController) }
      }

@@ -4,14 +4,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -98,6 +91,7 @@ fun TileOptions(
                     ) {
                          Text(
                               text = title,
+                              modifier = Modifier.padding(2.dp),
                               maxLines = 1,
                               style = MaterialTheme.typography.titleLarge
                          )
@@ -105,6 +99,7 @@ fun TileOptions(
 
                          Text(
                               text = description,
+                              modifier = Modifier.padding(2.dp),
                               maxLines = 4,
                               style = MaterialTheme.typography.bodyMedium
                          )

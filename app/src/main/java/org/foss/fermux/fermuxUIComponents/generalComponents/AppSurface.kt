@@ -27,11 +27,12 @@ fun AppSurface(
      padding: PaddingValues = PaddingValues(0.dp),
      content: @Composable ColumnScope.() -> Unit
 ) {
+     val animation = MaterialTheme.motionScheme
 
      AnimatedVisibility(
           visible = expanded,
-          enter = expandVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeIn(),
-          exit = shrinkVertically(MaterialTheme.motionScheme.fastSpatialSpec()) + fadeOut()
+          enter = expandVertically(animation.fastSpatialSpec()) + fadeIn(),
+          exit = shrinkVertically(animation.fastSpatialSpec()) + fadeOut()
      ) {
           Surface(
                modifier = modifier,

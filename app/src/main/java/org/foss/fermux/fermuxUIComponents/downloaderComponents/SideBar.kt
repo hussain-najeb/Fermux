@@ -18,9 +18,6 @@ import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.MainScreens
 import org.foss.fermux.utils.Miscellaneous
 
-
-// Continues to edit the cards ui and make it better, also add the name of the youtube video and time and title and channle and size of video
-
 private data class AppIcons (
      val image: Int,
      val onClick: () -> Unit
@@ -89,8 +86,7 @@ fun SideBar(
           ImageButton(
                modifier = Modifier.size(70.dp).align(Alignment.BottomStart),
                imageModifier = Modifier.size(32.dp),
-               imageRotation = if (isSideBarOpen) 180f else 0f,
-               image = if (isSideBarOpen) R.drawable.sidebar_hide else R.drawable.sidebar_show,
+               image = if (isSideBarOpen) R.drawable.sidebar_right else R.drawable.sidebar_left,
                onClick = { isSideBarOpen = !isSideBarOpen },
           )
      }

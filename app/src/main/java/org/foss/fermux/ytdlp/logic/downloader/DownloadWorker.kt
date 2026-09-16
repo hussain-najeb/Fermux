@@ -29,7 +29,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
           val taskId = id.toString()
           val workerJob = currentCoroutineContext().job
 
-          DownloaderSettingsViewModel.DebugLog.debug("DownloadWorker", "Started id=$taskId attempt=$runAttemptCount")
+          DownloaderSettingsViewModel.DebugLog.debugDownloader("DownloadWorker", "Started id=$taskId attempt=$runAttemptCount")
 
           val settingsTab = DataStoreDownloaderSettings(applicationContext)
           val sponsorBlock = settingsTab.sponsorBlock.first()
@@ -84,8 +84,8 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                     )
                }
           } catch (e: Exception) {
-               DownloaderSettingsViewModel.DebugLog.error("fermux", "failed to save audio JSON", e)
-               DownloaderSettingsViewModel.DebugLog.error("fermux", "failed to save video JSON", e)
+               DownloaderSettingsViewModel.DebugLog.errorDownloader("fermux", "failed to save audio JSON", e)
+               DownloaderSettingsViewModel.DebugLog.errorDownloader("fermux", "failed to save video JSON", e)
           }
 
           return try {
@@ -127,14 +127,14 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                     },
                )
 
-               DownloaderSettingsViewModel.DebugLog.debug("DownloadWorker", "Succeeded id=$taskId")
+               DownloaderSettingsViewModel.DebugLog.debugDownloader("DownloadWorker", "Succeeded id=$taskId")
 
                Result.success()
 
           } catch (e: CancellationException) {
                val destroyed = YoutubeDL.destroyProcessById(taskId)
 
-               DownloaderSettingsViewModel.DebugLog.error("DownloadWorker", "Cancelled id=$taskId stopReason=$stopReason destroyed=$destroyed", e)
+               DownloaderSettingsViewModel.DebugLog.errorDownloader("DownloadWorker", "Cancelled id=$taskId stopReason=$stopReason destroyed=$destroyed", e)
 
                throw e
           } catch (e: Exception) {

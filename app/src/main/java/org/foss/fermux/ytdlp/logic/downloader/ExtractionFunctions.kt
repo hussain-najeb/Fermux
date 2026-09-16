@@ -34,7 +34,7 @@ suspend fun execution(
                     "EmbedThumbnailPPError" in message || "Unable to embed using ffprobe & ffmpeg" in message
                if (!thumbnailEmbeddingFailed) throw e
 
-               DownloaderSettingsViewModel.DebugLog.debug("downloadWorker", "Thumbnail embedding failed; keeping media without artwork")
+               DownloaderSettingsViewModel.DebugLog.debugDownloader("downloadWorker", "Thumbnail embedding failed; keeping media without artwork")
 
                onUpdate(100f, "[EmbedThumbnail] Failed; kept download without the thumbnail")
                null
@@ -44,9 +44,9 @@ suspend fun execution(
      fileCopyFilter(context, downloadDir, subfolderName = "downloader")
 
      response?.let {
-          DownloaderSettingsViewModel.DebugLog.debug("fermux", "exit=${it.exitCode}")
-          DownloaderSettingsViewModel.DebugLog.debug("fermux", "out=${it.out}")
-          DownloaderSettingsViewModel.DebugLog.debug("fermux", "err=${it.err}")
+          DownloaderSettingsViewModel.DebugLog.debugDownloader("fermux", "exit=${it.exitCode}")
+          DownloaderSettingsViewModel.DebugLog.debugDownloader("fermux", "out=${it.out}")
+          DownloaderSettingsViewModel.DebugLog.debugDownloader("fermux", "err=${it.err}")
      }
 }
 /**

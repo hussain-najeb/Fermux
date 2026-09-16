@@ -16,11 +16,22 @@ import java.util.concurrent.atomic.AtomicBoolean
 class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(application) {
      private val settingsTab = DataStoreDownloaderSettings(application.applicationContext)
 
+     init {
+          viewModelScope.launch {
+               settingsTab.debug.collect {
+                    DebugLog.setEnable(it)
+               }
+          }
+     }
+
      val downloadPath: StateFlow<String> = settingsTab.downloadPath
           .stateIn(viewModelScope, SharingStarted.Lazily, "")
 
      val quickJS: StateFlow<Boolean> = settingsTab.quickJS
           .stateIn(viewModelScope, SharingStarted.Lazily, true )
+
+     val debug: StateFlow<Boolean> = settingsTab.debug
+          .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
      val fingerprint: StateFlow<Boolean> = settingsTab.fingerprinting
           .stateIn(viewModelScope, SharingStarted.Lazily, true)
@@ -100,6 +111,11 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           viewModelScope.launch { settingsTab.setQuickJS(value) }
      }
 
+     fun setDebug(value: Boolean) {
+          DebugLog.setEnable(value)
+          viewModelScope.launch { settingsTab.setDebug(value) }
+     }
+
      fun setFingerprint(value: Boolean) {
           viewModelScope.launch { settingsTab.setFingerprinting(value) }
      }
@@ -120,7 +136,6 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           viewModelScope.launch { settingsTab.setDownloadPath(value) }
      }
 
-
      fun setClearYtdlp() {
           viewModelScope.launch { settingsTab.clearYtdlp() }
      }
@@ -130,7 +145,7 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      val isCheckingForUpdate: StateFlow<Boolean> = _isCheckingForUpdate
      private val _ytdlpUpdateStatus = MutableStateFlow<String?>(null)
      private val _upToDate = MutableStateFlow<Boolean?>(null)
-     val upToDate: StateFlow<Boolean?> = _upToDate
+     val upToDate: StateFlow<Boolean?> = _upToDate // TODO. Add this in the UI
      val ytdlpUpdateStatus: StateFlow<String?> = _ytdlpUpdateStatus
      private val _currentVersionName = MutableStateFlow(
           YoutubeDL.getInstance().versionName(getApplication()) ?: "Unknown"
@@ -194,7 +209,7 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
                _enabled.value = value
           }
 
-          fun debug(tag: String, message: String) {
+          fun debugDownloader(tag: String, message: String) {
                if (!enabled.value) return
 
                Log.d(tag, message)
@@ -208,7 +223,7 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
                )
           }
 
-          fun error(
+          fun errorDownloader(
                tag: String,
                message: String,
                throwable: Throwable?
