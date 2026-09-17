@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -28,7 +29,7 @@ import org.foss.fermux.ui.theme.FermuxColors
 fun BackButton(
      modifier: Modifier = Modifier,
      color: FermuxColor = FermuxColors,
-     border: BorderStroke? = BorderStroke(0.8.dp, color.fermuxTertiaryBorder),
+     border: BorderStroke? = BorderStroke(1.dp, Color.Transparent),
      contentPadding: PaddingValues = PaddingValues(4.dp),
      onClick: () -> Unit
 ) {
@@ -37,30 +38,8 @@ fun BackButton(
      val isPressed by interactionSource.collectIsPressedAsState()
      var isClickable by remember { mutableStateOf(true) }
 
-
-     val containerColor by animateColorAsState(
-          targetValue = when {
-               isPressed -> color.fermuxActiveButton
-               else -> color.fermuxInActiveBackButton
-          },
-          animationSpec = tween(200),
-          label = "Fermux Button Colors",
-     )
-
-     val contentColor by animateColorAsState(
-          targetValue = when {
-               isPressed -> color.fermuxActiveTextColor
-               else -> color.fermuxInActiveTextColor
-          },
-          animationSpec = tween(200),
-          label = "Fermux Text Colors",
-     )
-
      val iconColor by animateColorAsState(
-          targetValue = when {
-               isPressed -> color.fermuxActiveIcon
-               else -> color.fermuxInActiveIcon
-          },
+          targetValue = if (isPressed) color.fermuxActiveIcon else color.fermuxWhiteColor,
           animationSpec = tween(durationMillis = 150),
           label = "Fermux Icon Colors"
      )
@@ -82,8 +61,8 @@ fun BackButton(
           shape = RoundedCornerShape(8.dp),
           border = border,
           colors = ButtonDefaults.textButtonColors(
-               containerColor = containerColor,
-               contentColor = contentColor
+               containerColor = Color.Transparent,
+               contentColor = Color.Transparent
           ),
           contentPadding = contentPadding,
           interactionSource = interactionSource,
