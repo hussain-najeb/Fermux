@@ -8,15 +8,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.*
 import com.yausername.youtubedl_android.YoutubeDL
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.foss.fermux.storage.DataStoreDownloaderSettings
 import org.foss.fermux.utils.DebugLog
-import java.net.UnknownHostException
 import java.util.*
-import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * The downloader ViewModel used to manage state, cancel tasks, and to handle network and ytdlp related errors.
@@ -33,6 +34,7 @@ class DownloaderViewModel : ViewModel() {
      var downloaderLogs by mutableStateOf("")
      private var activeProcess by mutableStateOf<UUID?>(null)
      private var downloaderJob: Job? = null
+     private var currentMetadata: DownloadMetadata? = null
 
      var showYtdlpDetails by mutableStateOf(false)
      val flavorError = listOf(
@@ -46,22 +48,9 @@ class DownloaderViewModel : ViewModel() {
      /**
       * Uses the url to start a metadata collection task, assign the correct state, and handling errors with [downloadErrorHandler].
       */
-     fun fetchedMetadata(downloadUrl: String) {
-          downloaderJob = viewModelScope.launch {
-               state = DownloadStatus.Loading
-               try {
-                    val metadata = withTimeout(60000L.milliseconds) {
-                         fetchingTheMetadata(downloadUrl)
-                    }
-                    state = DownloadStatus.MidChoice(metadata)
-               } catch (e: UnknownHostException) {
-                    downloadErrorHandler(e)
-               } catch (e: TimeoutCancellationException) {
-                    downloadErrorHandler(e)
-               } catch (e: Exception) {
-                    downloadErrorHandler(e)
-               }
-          }
+     fun userPickedArgs() {
+          if (downloadUrl.isBlank()) return
+          state = DownloadStatus.UserArgs
      }
 
      /**
@@ -82,37 +71,28 @@ class DownloaderViewModel : ViewModel() {
       * Used to handle The Downloader's states, settings, metadata, audio and video assignment, and for data to be assigned to [DownloadWorker] to make it work asynchronously and perform the downloading task.
       */
      fun startingDownload(context: Context, audio: AudioQuality?, video: VideoQuality?) {
-          if (activeProcess != null || state is DownloadStatus.Downloading) {
+          if (activeProcess != null || state !is DownloadStatus.UserArgs) {
 
                DebugLog.debugDownloader("DownloadAdmission", "Ignoring duplicate download request; active id=$activeProcess")
 
                return
           }
+          state = DownloadStatus.LoadingMetadata
+          currentMetadata = null
 
           val settingsTab = DataStoreDownloaderSettings(context.applicationContext)
-          val metadata = when (val current = state) {
-               is DownloadStatus.MidChoice -> current.metadata
-               is DownloadStatus.Loaded -> current.metadata
-               else -> return
-          }
 
           val requestedUrls = OneTimeWorkRequestBuilder<DownloadWorker>()
                .setInputData(
                     workDataOf(
                          "url" to downloadUrl,
                          "audio" to audio?.name,
-                         "video" to video?.name,
-                         "title" to metadata.title,
-                         "thumbnail" to metadata.thumbnail,
-                         "duration" to metadata.duration,
-                         "uploader" to metadata.uploader
+                         "video" to video?.name
                     )
                )
                .build()
 
-          // Close the tap race synchronously, before the coroutine's first suspension.
           activeProcess = requestedUrls.id
-          state = DownloadStatus.Downloading(0f, metadata)
 
           DebugLog.debugDownloader("DownloadAdmission", "Prepared download id=${requestedUrls.id}")
 
@@ -149,18 +129,41 @@ class DownloaderViewModel : ViewModel() {
                               when (workInfo.state) {
                                    WorkInfo.State.RUNNING -> {
                                         if (ytdlpDetails) {
-
                                              val logs = workInfo.progress.getString("text")
                                              if (!logs.isNullOrBlank()) {
                                                   downloaderLogs = (downloaderLogs + logs)
                                              }
                                         }
-                                        val progress = workInfo.progress.getFloat("progress", 0f).coerceIn(0f, 100f)
-                                        state = DownloadStatus.Downloading(progress, metadata)
+
+                                        if (currentMetadata == null) {
+                                             workInfo.progress.getString("metadataJson")?.let { json ->
+                                                  currentMetadata = parseYtdlpMetadataJson(json)
+                                             }
+                                        }
+                                        val progress = workInfo.progress.getFloat("progress", 0f)
+                                        currentMetadata?.let { metadata ->
+                                             if (progress > 0f) {
+                                                  state = DownloadStatus.Downloading(progress, metadata)
+                                             }
+                                        }
                                    }
 
                                    WorkInfo.State.SUCCEEDED -> {
-                                        state = DownloadStatus.Completed(metadata)
+                                        val metadata = currentMetadata
+                                             ?: workInfo.outputData
+                                                  .getString("metadataJson")
+                                                  ?.let { parseYtdlpMetadataJson(it) }
+
+                                        state = DownloadStatus.Completed(
+                                             metadata ?: DownloadMetadata(
+                                                  title = "Download complete",
+                                                  thumbnail = "",
+                                                  duration = 0,
+                                                  uploader = null,
+                                                  size = null,
+                                                  resolution = null
+                                             )
+                                        )
                                         activeProcess = null
                                    }
 
@@ -168,18 +171,22 @@ class DownloaderViewModel : ViewModel() {
                                         val error = workInfo.outputData.getString("error")
                                         error?.let { state = DownloadStatus.Error(flavorError.random(), rawError = it) }
                                         activeProcess = null
+                                        currentMetadata = null
                                    }
 
                                    WorkInfo.State.CANCELLED -> {
                                         state = DownloadStatus.Idle
                                         activeProcess = null
                                         downloaderLogs = ""
+                                        currentMetadata = null
                                    }
 
                                    else -> {}
                               }
                          }
                          .launchIn(viewModelScope)
+
+
                } catch (e: CancellationException) {
                     throw e
                } catch (e: Exception) {
@@ -212,5 +219,6 @@ class DownloaderViewModel : ViewModel() {
           downloadUrl = ""
           downloaderLogs = ""
           activeProcess = null
+          currentMetadata = null
      }
 }

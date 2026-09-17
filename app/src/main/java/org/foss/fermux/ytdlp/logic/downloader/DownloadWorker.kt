@@ -56,37 +56,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
           val uploader = inputData.getString("uploader") ?: "unknown uploader"
 
           var lastProgressUpdateAt = 0L
-
-          try {
-               if (settingsTab.audioHistory.first() && audio != null) {
-                    settingsTab.setJSONAudio(
-                         JSONHistoryCards(
-                              title,
-                              thumbnail,
-                              url,
-                              uploader,
-                              duration,
-                              System.currentTimeMillis(),
-                         )
-                    )
-               }
-
-               if (settingsTab.videoHistory.first() && video != null) {
-                    settingsTab.setJSONVideo(
-                         JSONHistoryCards(
-                              title,
-                              thumbnail,
-                              url,
-                              uploader,
-                              duration,
-                              System.currentTimeMillis()
-                         )
-                    )
-               }
-          } catch (e: Exception) {
-               DebugLog.errorDownloader("fermux", "failed to save audio JSON", e)
-               DebugLog.errorDownloader("fermux", "failed to save video JSON", e)
-          }
+          var capturedMetadataJson: String? = null
 
           return try {
                downloaderLogic(
@@ -110,6 +80,13 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                               return@downloaderLogic
                          }
 
+                         if (capturedMetadataJson == null) {
+                              val markerIndex = line.indexOf(FERMUX_METADATA_MARKER)
+                              if (markerIndex != -1) {
+                                   capturedMetadataJson = line.substring(markerIndex + FERMUX_METADATA_MARKER.length).trim()
+                              }
+                         }
+
                          val now = System.currentTimeMillis()
                          val currentProgress = progress.coerceIn(0f, 100f)
 
@@ -119,7 +96,8 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                                    setProgress(
                                         workDataOf(
                                              "progress" to currentProgress,
-                                             "text" to line
+                                             "text" to line,
+                                             "metadataJson" to capturedMetadataJson
                                         )
                                    )
                               }
@@ -129,7 +107,46 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
 
                DebugLog.debugDownloader("DownloadWorker", "Succeeded id=$taskId")
 
-               Result.success()
+               val metadata = capturedMetadataJson?.let { parseYtdlpMetadataJson(it) }
+               val historyTitle = metadata?.title ?: title
+               val historyThumbnail = metadata?.thumbnail ?: thumbnail
+               val historyDuration = metadata?.duration?.toLong() ?: duration
+               val historyUploader = metadata?.uploader ?: uploader
+
+               try {
+                    if (settingsTab.audioHistory.first() && audio != null) {
+                         settingsTab.setJSONAudio(
+                              JSONHistoryCards(
+                                   historyTitle,
+                                   historyThumbnail,
+                                   url,
+                                   historyUploader,
+                                   historyDuration,
+                                   System.currentTimeMillis(),
+                              )
+                         )
+                    }
+
+                    if (settingsTab.videoHistory.first() && video != null) {
+                         settingsTab.setJSONVideo(
+                              JSONHistoryCards(
+                                   historyTitle,
+                                   historyThumbnail,
+                                   url,
+                                   historyUploader,
+                                   historyDuration,
+                                   System.currentTimeMillis()
+                              )
+                         )
+                    }
+               } catch (e: Exception) {
+                    DebugLog.errorDownloader("fermux", "failed to save audio JSON", e)
+                    DebugLog.errorDownloader("fermux", "failed to save video JSON", e)
+               }
+
+               capturedMetadataJson?.let {
+                    Result.success(workDataOf("metadataJson" to it))
+               } ?: Result.success()
 
           } catch (e: CancellationException) {
                val destroyed = YoutubeDL.destroyProcessById(taskId)

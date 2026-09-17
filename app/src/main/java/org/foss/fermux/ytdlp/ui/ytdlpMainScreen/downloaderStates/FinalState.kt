@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.outlined.ThumbDown
-import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -39,7 +37,6 @@ import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.Miscellaneous
 import org.foss.fermux.ytdlp.logic.downloader.DownloadMetadata
-import org.foss.fermux.ytdlp.logic.downloader.likeFormatting
 import org.foss.fermux.ytdlp.logic.downloader.sizeFormatting
 import org.foss.fermux.ytdlp.logic.downloader.videoTime
 
@@ -164,47 +161,6 @@ private fun FinishedCardContent(
                               )
                          }
                     }
-                    Box(modifier = Modifier
-                         .padding(5.dp)
-                         .wrapContentSize()
-                         .background(
-                              color = FermuxColors.fermuxComponents.copy(alpha = 0.75f),
-                              shape = RoundedCornerShape(5.dp)
-                         )
-                         .wrapContentSize()
-                         .align(Alignment.BottomStart)
-                    ) {
-                         Row(modifier = Modifier.wrapContentSize()) {
-                              Icon(
-                                   imageVector = Icons.Outlined.ThumbUp,
-                                   tint = FermuxColors.fermuxWhiteColor,
-                                   contentDescription = null,
-                                   modifier = Modifier
-                                        .padding(3.dp)
-                                        .size(20.dp)
-                              )
-                              Text(
-                                   text = likeFormatting(like = metadata.like),
-                                   color = FermuxColors.fermuxWhiteColor,
-                                   fontSize = 15.sp,
-                                   modifier = Modifier.padding(3.dp)
-                              )
-                              Icon(
-                                   imageVector = Icons.Outlined.ThumbDown,
-                                   tint = FermuxColors.fermuxWhiteColor,
-                                   contentDescription = null,
-                                   modifier = Modifier
-                                        .padding(3.dp)
-                                        .size(20.dp)
-                              )
-                              Text(
-                                   text = likeFormatting(like = metadata.dislikeCount),
-                                   color = FermuxColors.fermuxWhiteColor,
-                                   fontSize = 15.sp,
-                                   modifier = Modifier.padding(3.dp)
-                              )
-                         }
-                    }
                }
 
                FermuxDownloadDescription(modifier = Modifier.fillMaxWidth()
@@ -283,9 +239,7 @@ fun Test3() {
                     duration = 578,
                     uploader = "Example uploader, Youtube Channel, Or Null",
                     size = 35345455,
-                    resolution = "720p",
-                    dislikeCount = "35256",
-                    like = "54784" // TODO. Add this to the ui
+                    resolution = "720p"
                ),
                onCancel = {},
                navController = navController,

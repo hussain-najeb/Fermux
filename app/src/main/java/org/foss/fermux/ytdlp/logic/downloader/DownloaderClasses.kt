@@ -1,5 +1,6 @@
 package org.foss.fermux.ytdlp.logic.downloader
 
+const val FERMUX_METADATA_MARKER = "FERMUX_METADATA_JSON:"
 
 /**
  * This class is used as a template class for the metadata shape that later gets used in the [org.foss.fermux.ytdlp.ui.historyPage.HistoryCards] and information on the [org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates.FinishedCard] during download.
@@ -10,9 +11,7 @@ data class DownloadMetadata(
      val duration: Int,
      val uploader: String?,
      val size: Long?,
-     val resolution: String?,
-     val dislikeCount: String?,
-     val like: String?
+     val resolution: String?
 )
 
 /**
@@ -20,12 +19,11 @@ data class DownloadMetadata(
  */
 sealed class DownloadStatus {
      data object Idle : DownloadStatus()
-     data object Loading : DownloadStatus()
-     data class MidChoice(val metadata: DownloadMetadata) : DownloadStatus()
-     data class Loaded(val metadata: DownloadMetadata) :  DownloadStatus()
+     data object UserArgs : DownloadStatus()
+     data object LoadingMetadata : DownloadStatus()
+     data class Downloading(val downloadProgress: Float, val metadata: DownloadMetadata) : DownloadStatus()
      data class Completed(val metadata: DownloadMetadata) : DownloadStatus()
      data class Error(val errorMessage: String, val rawError: String) : DownloadStatus()
-     data class Downloading(val downloadProgress: Float, val metadata: DownloadMetadata) : DownloadStatus()
 }
 
 /**

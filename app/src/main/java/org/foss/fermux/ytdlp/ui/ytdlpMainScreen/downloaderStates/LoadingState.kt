@@ -94,7 +94,7 @@ fun LoadingCard(
 @Composable
 fun Test() {
      LoadingCard(
-          state = DownloadStatus.Loading,
+          state = DownloadStatus.LoadingMetadata,
           onCancel = {}
      )
 }

@@ -58,11 +58,18 @@ suspend fun downloaderLogic(
           )
      }
 
-     // TODO. REBUILD ffmpeg with https support in yausername lib wrapper. I think this is Done?
 
      if (fingerprinting) {
           request.addOption("--impersonate", "chrome")
      }
+
+
+     request.addOption("--no-simulate")
+     request.addOption(
+          "--print",
+          "before_dl:$FERMUX_METADATA_MARKER%(.{title,thumbnail,duration,uploader,filesize,filesize_approx,resolution})j"
+     )
+     request.addOption("--progress")
 
      if (sleepRequest > 0) {
           request.addOption("--sleep-requests", sleepRequest)

@@ -8,6 +8,7 @@ import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.withContext
 import org.foss.fermux.utils.DebugLog
 import org.foss.fermux.utils.fileCopyFilter
+import org.json.JSONObject
 import java.io.File
 
 
@@ -63,9 +64,34 @@ suspend fun fetchingTheMetadata(url: String): DownloadMetadata = withContext(Dis
           thumbnail = info.thumbnail ?: "",
           duration = info.duration,
           uploader = info.uploader,
-          size = info.fileSize, // TODO, Add all of this in the UI, make it look LIKE the time/size of the app.
-          resolution = info.resolution,
-          dislikeCount = info.dislikeCount,
-          like = info.likeCount
+          size = info.fileSizeApproximate,
+          resolution = info.resolution
      )
+}
+
+fun parseYtdlpMetadataJson(json: String): DownloadMetadata? {
+     return try {
+          val obj = JSONObject(json)
+
+          fun optStringOrNull(key: String): String? {
+               if (!obj.has(key) || obj.isNull(key)) return null
+               return obj.optString(key).ifBlank { null }
+          }
+
+          val approxSize = obj.optDouble("filesize_approx")
+               .takeIf { !it.isNaN() && it > 0 }
+               ?.toLong()
+
+          DownloadMetadata(
+               title = optStringOrNull("title") ?: "Unknown title",
+               thumbnail = optStringOrNull("thumbnail") ?: "",
+               duration = obj.optInt("duration", 0),
+               uploader = optStringOrNull("uploader"),
+               size = approxSize,
+               resolution = optStringOrNull("resolution")
+          )
+     } catch (e: Exception) {
+          DebugLog.errorDownloader("downloader JSON metadata parsing", "JSON metadata failed to be parsed in some way", e)
+          null
+     }
 }

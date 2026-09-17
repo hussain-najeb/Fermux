@@ -21,12 +21,6 @@ fun videoTime(seconds: Int): String {
      }
 }
 
-fun likeFormatting(like: String?): String {
-     return like?.toLongOrNull()?.let {
-          DecimalFormat("#,###").format(it)
-     } ?: "0"
-}
-
 fun sizeFormatting(byte: Long): String {
 
      val kb = 1024.0

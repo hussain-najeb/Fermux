@@ -60,9 +60,9 @@ fun DownloadContent(
      val scope = rememberCoroutineScope()
 
      val doingTask =
-                  downloaderViewModel.state is DownloadStatus.Loading ||
+                  downloaderViewModel.state is DownloadStatus.LoadingMetadata ||
                   downloaderViewModel.state is DownloadStatus.Downloading ||
-                  downloaderViewModel.state is DownloadStatus.MidChoice
+                  downloaderViewModel.state is DownloadStatus.UserArgs
 
 
      val isError = downloaderViewModel.state is DownloadStatus.Error
@@ -164,7 +164,7 @@ fun DownloadContent(
                               enabled = !doingTask,
                               modifier = Modifier.size(70.dp).padding(3.dp),
                               onClick = {
-                                   downloaderViewModel.fetchedMetadata(downloaderViewModel.downloadUrl)
+                                   downloaderViewModel.userPickedArgs()
                                    scope.launch {
                                         snackbarHostState.showSnackbar(
                                              message = "Downloading....", duration = SnackbarDuration.Short
