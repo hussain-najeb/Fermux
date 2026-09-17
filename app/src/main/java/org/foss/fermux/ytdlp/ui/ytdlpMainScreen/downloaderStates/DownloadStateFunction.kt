@@ -2,6 +2,7 @@ package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates
 
 import androidx.compose.animation.*
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
@@ -13,7 +14,8 @@ import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.formats.QualityState
 fun DownloaderCards(
      state: DownloadStatus,
      downloaderViewModel: DownloaderViewModel,
-     navController: NavController
+     navController: NavController,
+     snackbarHostState: SnackbarHostState
 ) {
 
      val context = LocalContext.current

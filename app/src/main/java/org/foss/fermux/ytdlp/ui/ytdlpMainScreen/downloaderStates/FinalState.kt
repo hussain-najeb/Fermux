@@ -7,10 +7,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.CircularWavyProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,12 +48,22 @@ fun FinishedDownloadCard(
      progress: Float? = null,
      onCancel: () -> Unit,
      navController: NavController,
+     snackbarHostState: SnackbarHostState,
      @SuppressLint("ContextCastToActivity") settingsViewModel: DownloaderSettingsViewModel = viewModel(
           viewModelStoreOwner = LocalContext.current as ComponentActivity
      )
 
 ) {
      val showYtdlpDetails by settingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
+
+     val task = progress != null && progress >= 100
+
+     LaunchedEffect(task) {
+          snackbarHostState.showSnackbar(
+               message = if (task) "Download Complete" else "Downloading...",
+               duration = SnackbarDuration.Short
+          )
+     }
 
      FinishedCardContent(
           metadata = metadata,
@@ -78,7 +87,8 @@ private fun FinishedCardContent(
      }
 
      Column(modifier = Modifier.fillMaxSize()) {
-          DownloaderCard(modifier = Modifier.wrapContentSize()) {
+          DownloaderCard(modifier = Modifier.wrapContentSize(),
+          ) {
                Box(
                     modifier = Modifier
                          .clip(RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp))

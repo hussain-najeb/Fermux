@@ -18,10 +18,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material.icons.filled.FileDownload
-import androidx.compose.material3.*
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import kotlinx.coroutines.launch
 import org.foss.fermux.fermuxUIComponents.buttons.AppIconButton
 import org.foss.fermux.fermuxUIComponents.buttons.GlobalCancelButton
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.SideBar
@@ -57,7 +58,6 @@ fun DownloadContent(
 ) {
 
      val snackbarHostState = remember { SnackbarHostState() }
-     val scope = rememberCoroutineScope()
 
      val doingTask =
                   downloaderViewModel.state is DownloadStatus.LoadingMetadata ||
@@ -71,7 +71,8 @@ fun DownloadContent(
      LargeTopBarScaffold(
           title = "Downloader",
           onBack = { navController.popBackStack() },
-          snackbarHost = { FermuxSnackBar(snackbarHostState) }) { innerPadding ->
+          snackbarHost = { FermuxSnackBar(snackbarHostState) }
+     ) { innerPadding ->
           Box(
                modifier = Modifier.fillMaxSize().padding(innerPadding).background(FermuxColors.fermuxBackground),
           ) {
@@ -89,7 +90,12 @@ fun DownloadContent(
                          modifier = Modifier.padding(7.dp)
                     )
 
-                    DownloaderCards(downloaderViewModel.state, downloaderViewModel, navController = navController)
+                    DownloaderCards(
+                         downloaderViewModel.state,
+                         downloaderViewModel,
+                         navController = navController,
+                         snackbarHostState = snackbarHostState
+                    )
 
                     Spacer(modifier = Modifier.padding(top = 16.dp))
 
@@ -165,11 +171,6 @@ fun DownloadContent(
                               modifier = Modifier.size(70.dp).padding(3.dp),
                               onClick = {
                                    downloaderViewModel.userPickedArgs()
-                                   scope.launch {
-                                        snackbarHostState.showSnackbar(
-                                             message = "Downloading....", duration = SnackbarDuration.Short
-                                        )
-                                   }
                               }
                          )
                     }
