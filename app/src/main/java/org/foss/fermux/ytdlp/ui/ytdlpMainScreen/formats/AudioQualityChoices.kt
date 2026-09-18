@@ -1,20 +1,13 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.formats
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Build
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.FormatTiles
 import org.foss.fermux.settings.logic.SettingListInfo
@@ -26,33 +19,6 @@ fun AudioQualityChoices(
      onBack: () -> Unit,
      onQualitySelected: (AudioQuality) -> Unit
 ) {
-
-     val context = LocalContext.current
-
-     var downloadNotifAllow by remember { mutableStateOf<(() -> Unit)?>(null) }
-
-
-     val notificationPermissionManager = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
-          downloadNotifAllow?.invoke()
-          downloadNotifAllow = null
-     }
-
-     fun startingDownloadWithPermissions(download: () -> Unit) {
-          val permissionAlreadyGranted = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || ContextCompat.checkSelfPermission(
-               context,
-               Manifest.permission.POST_NOTIFICATIONS
-          ) == PackageManager.PERMISSION_GRANTED
-
-          if (permissionAlreadyGranted) {
-               download()
-          } else {
-               downloadNotifAllow = download
-               notificationPermissionManager.launch(
-                    Manifest.permission.POST_NOTIFICATIONS
-               )
-          }
-     }
-
      val audioListOptions = listOf(
           SettingListInfo(
                title = "Back",

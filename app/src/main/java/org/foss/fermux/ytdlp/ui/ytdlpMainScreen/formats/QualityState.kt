@@ -1,10 +1,16 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.formats
 
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 import org.foss.fermux.ytdlp.logic.downloader.FormatKind
 
@@ -15,6 +21,30 @@ fun QualityState(downloaderViewModel: DownloaderViewModel) {
      var pickedFormat by remember { mutableStateOf(FormatKind.Idle) }
      val spatialSpec = MaterialTheme.motionScheme
      val context = LocalContext.current
+
+     var downloadNotifAllow by remember { mutableStateOf<(() -> Unit)?>(null) }
+
+
+     val notificationPermissionManager = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
+          downloadNotifAllow?.invoke()
+          downloadNotifAllow = null
+     }
+
+     fun startingDownloadWithPermissions(download: () -> Unit) {
+          val permissionAlreadyGranted = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || ContextCompat.checkSelfPermission(
+               context,
+               Manifest.permission.POST_NOTIFICATIONS
+          ) == PackageManager.PERMISSION_GRANTED
+
+          if (permissionAlreadyGranted) {
+               download()
+          } else {
+               downloadNotifAllow = download
+               notificationPermissionManager.launch(
+                    Manifest.permission.POST_NOTIFICATIONS
+               )
+          }
+     }
 
      AnimatedContent(
           targetState = pickedFormat,
@@ -41,7 +71,7 @@ fun QualityState(downloaderViewModel: DownloaderViewModel) {
                FormatKind.Audio -> AudioQualityChoices(
                     onBack = { pickedFormat = FormatKind.Idle },
                     onQualitySelected = { quality ->
-                         startingDownloadWithPermissions() {
+                         startingDownloadWithPermissions {
                               downloaderViewModel.startingDownload(context, audio = quality, video = null)
                          }
                     }
@@ -49,7 +79,9 @@ fun QualityState(downloaderViewModel: DownloaderViewModel) {
                FormatKind.Video -> VideoQualityChoices(
                     onBack = { pickedFormat = FormatKind.Idle },
                     onQualitySelected = { quality ->
-                         downloaderViewModel.startingDownload(context, video = quality, audio = null)
+                         startingDownloadWithPermissions {
+                              downloaderViewModel.startingDownload(context, video = quality, audio = null)
+                         }
                     }
                )
           }
