@@ -62,8 +62,6 @@ fun SimpleDownloaderPage(
      val ytdlpDetails by downloaderSettingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
      val audioHistory by downloaderSettingsViewModel.audioHistory.collectAsStateWithLifecycle()
      val videoHistory by downloaderSettingsViewModel.videoHistory.collectAsStateWithLifecycle()
-     val isCheckingForUpdate by downloaderSettingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
-     val ytdlpUpdateStatus by downloaderSettingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
      val currentVersionName by downloaderSettingsViewModel.currentVersionName.collectAsStateWithLifecycle()
      val sponsorBlock by downloaderSettingsViewModel.sponsorBlock.collectAsStateWithLifecycle()
      val quickJS by downloaderSettingsViewModel.quickJS.collectAsStateWithLifecycle()
@@ -75,6 +73,8 @@ fun SimpleDownloaderPage(
      val logcat by downloaderSettingsViewModel.debug.collectAsStateWithLifecycle()
 
 
+     val isCheckingForUpdate by downloaderSettingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
+     val ytdlpUpdateStatus by downloaderSettingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
 
      val externalDownloaderEnabled = aria2cMode == Aria2cMode.Disabled
      val snackbarHostState = remember { SnackbarHostState() }
@@ -93,7 +93,8 @@ fun SimpleDownloaderPage(
                title = "Update Yt-dlp",
                description = if (isCheckingForUpdate) ytdlpUpdateStatus ?: "Checking for update..." else "Current version is $currentVersionName",
                icon = Icons.Default.Update,
-               onClick = { toggleDownloader(ExpandableDownloaderSetting.YtdlpUpdater) },
+               onClick = { toggleDownloader(ExpandableDownloaderSetting.YtdlpUpdater)
+               },
                trailingContent = {
                     DownloaderVersionSwap(
                          downloaderSettingsViewModel = downloaderSettingsViewModel,
@@ -183,7 +184,7 @@ fun SimpleDownloaderPage(
           ),
           SettingListInfo(
                title = if (logcat) "Debug Logging On" else "Debug Logging Off",
-               description = "Write diagnostic messages to Logcat in debug builds", // TODO, make this work!
+               description = "Write diagnostic messages to Logcat in debug builds",
                icon = Icons.Default.BugReport,
                content = {
                     SettingsSwitch(

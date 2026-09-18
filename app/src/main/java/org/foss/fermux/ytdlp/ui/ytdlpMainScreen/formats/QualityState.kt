@@ -41,7 +41,9 @@ fun QualityState(downloaderViewModel: DownloaderViewModel) {
                FormatKind.Audio -> AudioQualityChoices(
                     onBack = { pickedFormat = FormatKind.Idle },
                     onQualitySelected = { quality ->
-                         downloaderViewModel.startingDownload(context, audio = quality, video = null)
+                         startingDownloadWithPermissions() {
+                              downloaderViewModel.startingDownload(context, audio = quality, video = null)
+                         }
                     }
                )
                FormatKind.Video -> VideoQualityChoices(

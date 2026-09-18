@@ -18,12 +18,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material.icons.filled.FileDownload
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.launch
 import org.foss.fermux.fermuxUIComponents.buttons.AppIconButton
 import org.foss.fermux.fermuxUIComponents.buttons.GlobalCancelButton
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.SideBar
@@ -58,6 +57,8 @@ fun DownloadContent(
 ) {
 
      val snackbarHostState = remember { SnackbarHostState() }
+     val scope = rememberCoroutineScope()
+
 
      val doingTask =
                   downloaderViewModel.state is DownloadStatus.LoadingMetadata ||
@@ -142,7 +143,8 @@ fun DownloadContent(
                                         GlobalCancelButton(
                                              modifier = Modifier.size(40.dp).padding(end = 3.dp), onClick = {
                                                   downloaderViewModel.downloadUrl = ""
-                                             })
+                                             }
+                                        )
                                    }
                               },
                               keyboardOptions = KeyboardOptions(
@@ -171,6 +173,14 @@ fun DownloadContent(
                               modifier = Modifier.size(70.dp).padding(3.dp),
                               onClick = {
                                    downloaderViewModel.userPickedArgs()
+                                   if (downloaderViewModel.downloadUrl.isEmpty()) {
+                                        scope.launch {
+                                             snackbarHostState.showSnackbar(
+                                                  message = "Please enter a URL",
+                                                  duration = SnackbarDuration.Short
+                                             )
+                                        }
+                                   }
                               }
                          )
                     }

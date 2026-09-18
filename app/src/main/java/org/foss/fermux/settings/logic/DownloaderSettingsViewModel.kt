@@ -190,7 +190,7 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
                } catch (e: Exception) {
                     Log.e("fermuxYtdlpUpdater", "yt-dlp update failed", e)
                     _ytdlpUpdateStatus.value =
-                         "Update failed" // TODO, Add this to a snackbar when downloading, and make each snackbar smaller!
+                         "Update failed"
                     _upToDate.value = false
                } finally {
                     _isCheckingForUpdate.value = false

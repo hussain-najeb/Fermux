@@ -1,30 +1,107 @@
 package org.foss.fermux.ytdlp.logic.downloader
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.ServiceInfo
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.work.CoroutineWorker
-import androidx.work.WorkerParameters
-import androidx.work.workDataOf
+import androidx.core.app.NotificationCompat
+import androidx.work.*
 import com.yausername.youtubedl_android.YoutubeDL
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.job
 import kotlinx.coroutines.runBlocking
+import org.foss.fermux.R
 import org.foss.fermux.storage.DataStoreDownloaderSettings
 import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.utils.DebugLog
-
+import kotlin.math.roundToInt
 
 /**
- * The downloads worker for background, asynchronous work. This class handles most of the settings work for the [org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage] page and [DownloaderSettingsTab] as well as handling the JSON history cards.
+ * The downloads worker for background, asynchronous work.
+ * This class handles most of the settings work for the [org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage]
+ * page and [DownloaderSettingsTab] as well as handling the JSON history cards.
  */
+
 class DownloadWorker(context: Context, params: WorkerParameters) :
      CoroutineWorker(context, params) {
+
+     private val downloaderWorkNotif: NotificationManager
+          get() = applicationContext.getSystemService(
+               Context.NOTIFICATION_SERVICE
+          ) as NotificationManager
+
+     private fun createForegroundInfo(): ForegroundInfo {
+          return ForegroundInfo(
+               DOWNLOAD_NOTIFICATION_ID,
+               createDownloadNotif(
+                    progress = null,
+                    text = "Preparing Download..."
+               ),
+               ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+          )
+     }
+
+     private fun createDownloadNotif(
+          progress: Int?,
+          text: String
+     ): Notification {
+          createNotifChannel()
+
+          val canceller = WorkManager
+               .getInstance(applicationContext)
+               .createCancelPendingIntent(id)
+
+          return NotificationCompat.Builder(
+               applicationContext,
+               DOWNLOAD_CHANNEL_ID
+          )
+               .setSmallIcon(R.drawable.download_notif)
+               .setContentTitle("Downloading...")
+               .setContentText(text.take(120))
+               .setProgress(
+                    100,
+                    progress ?: 0,
+                    progress == null
+               )
+               .setOnlyAlertOnce(true)
+               .setOngoing(true)
+               .addAction(
+                    R.drawable.download_notif_cancel,
+                    "Cancel",
+                    canceller
+               )
+               .build()
+     }
+
+     private fun createNotifChannel() {
+          val channel = NotificationChannel(
+               DOWNLOAD_CHANNEL_ID,
+               "downloads",
+               NotificationManager.IMPORTANCE_DEFAULT
+          ).apply {
+               description = "Shows current downloads"
+          }
+          downloaderWorkNotif.createNotificationChannel(channel)
+     }
+
+     companion object {
+          private const val DOWNLOAD_CHANNEL_ID = "Downloader_Notifs"
+          private const val DOWNLOAD_NOTIFICATION_ID = 1001
+     }
+
      @RequiresApi(Build.VERSION_CODES.S)
      override suspend fun doWork(): Result {
+
+
+          setForeground(
+               createForegroundInfo()
+          )
 
           val taskId = id.toString()
           val workerJob = currentCoroutineContext().job
@@ -101,6 +178,13 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                                         )
                                    )
                               }
+                              downloaderWorkNotif.notify(
+                                   DOWNLOAD_NOTIFICATION_ID,
+                                   createDownloadNotif(
+                                        progress = currentProgress.roundToInt(),
+                                        text = line
+                                   )
+                              )
                          }
                     },
                )
