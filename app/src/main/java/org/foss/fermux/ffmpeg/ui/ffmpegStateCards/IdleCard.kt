@@ -1,6 +1,7 @@
 package org.foss.fermux.ffmpeg.ui.ffmpegStateCards
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -34,10 +35,14 @@ fun IdleCard(
      val context = LocalContext.current
 
      val fileLauncher = rememberLauncherForActivityResult(
-          contract = ActivityResultContracts.GetContent()
+          contract = ActivityResultContracts.OpenDocument()
      ) { uri ->
           ffmpegViewModel.inputUri = uri
           if (uri != null) {
+               context.contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+               )
                ffmpegViewModel.updateInputKind(context)
                if (ffmpegViewModel.inputKind == null) {
                     ffmpegViewModel.typeErrorClarification(context)
@@ -46,6 +51,7 @@ fun IdleCard(
                }
           }
      }
+
 
      Column(
           modifier = Modifier
@@ -76,7 +82,7 @@ fun IdleCard(
                               image = R.drawable.upload,
                               componentSize = 60.dp,
                               contentPadding = PaddingValues(13.dp),
-                              onClick = { fileLauncher.launch("*/*") }
+                              onClick = { fileLauncher.launch(arrayOf("*/*")) }
                          )
                     }
                } // TODO. Add the crop and edit stuff in the same thing like the downloader, a sidebar type of thing.

@@ -108,11 +108,6 @@ class FFmpegViewModel : ViewModel() {
           return videoOk && audioOk
      }
 
-
-     fun isSheetFormat(format: FFmpegTargetFormat, sheet: MediaKind): Boolean {
-          return format.category == sheet && isConversionAllowed(format)
-     }
-
      private fun isConversionAllowed(target: FFmpegTargetFormat): Boolean {
           val input = inputKind ?: return false
           return when (input) {
@@ -124,9 +119,7 @@ class FFmpegViewModel : ViewModel() {
      }
 
      fun startingConversion(context: Context, inputUri: Uri, targetFormat: FFmpegTargetFormat) {
-
           updateInputKind(context)
-
           if (!isConversionAllowed(targetFormat)) {
                fail(
                     flavourFailMessage = flavourMessage.random(),

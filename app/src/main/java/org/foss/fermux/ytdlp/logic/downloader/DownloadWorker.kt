@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.ServiceInfo
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.work.*
@@ -239,7 +238,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
 
                throw e
           } catch (e: Exception) {
-               Log.d("DownloadWorker", "Failed id=$taskId attempt=$runAttemptCount", e)
+               DebugLog.errorDownloader("DownloadWorker", "Failed id=$taskId attempt=$runAttemptCount", e)
                val error = e.message
                     ?.take(4_000)
                     ?: "Download failed"
