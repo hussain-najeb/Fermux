@@ -67,7 +67,6 @@ fun SimpleDownloaderPage(
      val quickJS by downloaderSettingsViewModel.quickJS.collectAsStateWithLifecycle()
      val fingerprint by downloaderSettingsViewModel.fingerprint.collectAsStateWithLifecycle()
      val thumbnail by downloaderSettingsViewModel.embedThumbnail.collectAsStateWithLifecycle()
-//   val notificationState by downloaderSettingsViewModel.notificationState.collectAsStateWithLifecycle() // TODO. Add this at some point.
      val playlist by downloaderSettingsViewModel.playlistState.collectAsStateWithLifecycle()
      val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
      val logcat by downloaderSettingsViewModel.debug.collectAsStateWithLifecycle()
@@ -103,17 +102,6 @@ fun SimpleDownloaderPage(
                },
                position = TilePosition.TOP
           ),
-//          SettingListInfo(
-//               title = "Download Notifications",
-//               description = "Notify me when the downloaded files finish downloading",
-//               image = if (notificationState) R.drawable.bell_on else R.drawable.bell_off,
-//               content = {
-//                    SettingsSwitch(
-//                         checked = notificationState,
-//                         onCheckedChange = { downloaderSettingsViewModel.setNotificationState(it) }
-//                    )
-//               }
-//          ),
           SettingListInfo(
                title = "Audio History",
                description = "Enable/Disable audio history",

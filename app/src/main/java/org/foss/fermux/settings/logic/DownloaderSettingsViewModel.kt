@@ -42,9 +42,6 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      val fingerprint: StateFlow<Boolean> = settingsTab.fingerprinting
           .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
-     val notificationState: StateFlow<Boolean> = settingsTab.notificationState
-          .stateIn(viewModelScope, SharingStarted.Lazily, true)
-
      val sleepRequest: StateFlow<Int> = settingsTab.sleepRequest
           .stateIn(viewModelScope, SharingStarted.Lazily, 0)
 
@@ -80,10 +77,6 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
      val videoHistoryList: StateFlow<List<JSONHistoryCards>> = settingsTab.jsonVideoCard
           .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
-
-     fun setNotificationState(value: Boolean) {
-          viewModelScope.launch { settingsTab.setNotificationState(value) }
-     }
 
      fun setSleepRequest(value: Int) {
           viewModelScope.launch { settingsTab.setSleepRequest(value) }
