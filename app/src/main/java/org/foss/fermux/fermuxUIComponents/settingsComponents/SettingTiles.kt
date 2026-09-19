@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.foss.fermux.ui.theme.FermuxColors
 
 
@@ -91,7 +92,8 @@ fun TileOptions(
                     ) {
                          Text(
                               text = title,
-                              modifier = Modifier.padding(2.dp),
+                              fontSize = 18.sp,
+                              modifier = Modifier.padding(1.dp),
                               maxLines = 1,
                               style = MaterialTheme.typography.titleLarge
                          )
@@ -99,7 +101,7 @@ fun TileOptions(
 
                          Text(
                               text = description,
-                              modifier = Modifier.padding(2.dp),
+                              modifier = Modifier.padding(1.dp),
                               maxLines = 4,
                               style = MaterialTheme.typography.bodyMedium
                          )

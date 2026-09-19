@@ -35,7 +35,7 @@ import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
-import org.foss.fermux.utils.DebugLog
+import org.foss.fermux.utils.DebugLogDownloader
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 
 @SuppressLint("ContextCastToActivity")
@@ -50,8 +50,8 @@ fun DownloaderLogs(
      val logs = downloaderViewModel.downloaderLogs
      val pageScrollState = rememberScrollState()
      val logScrollState = rememberScrollState()
-     val debug by DebugLog.enabled.collectAsStateWithLifecycle()
-     val logcat by DebugLog.downloaderLogcat.collectAsStateWithLifecycle()
+     val debug by DebugLogDownloader.enabled.collectAsStateWithLifecycle()
+     val logcat by DebugLogDownloader.downloaderLogcat.collectAsStateWithLifecycle()
      var debugEnabledSurface by remember { mutableStateOf(false) }
 
 

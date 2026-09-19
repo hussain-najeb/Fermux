@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.foss.fermux.storage.DataStoreDownloaderSettings
 import org.foss.fermux.storage.JSONHistoryCards
-import org.foss.fermux.utils.DebugLog
+import org.foss.fermux.utils.DebugLogDownloader
 import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
 import org.foss.fermux.ytdlp.logic.downloader.YtdlpChannel
@@ -24,8 +24,8 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
      init {
           viewModelScope.launch {
-               settingsTab.debug.collect {
-                    DebugLog.setEnable(it)
+               settingsTab.downloaderDebug.collect {
+                    DebugLogDownloader.setEnable(it)
                }
           }
      }
@@ -39,7 +39,7 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      val quickJS: StateFlow<Boolean> = settingsTab.quickJS
           .stateIn(viewModelScope, SharingStarted.Lazily, true )
 
-     val debug: StateFlow<Boolean> = settingsTab.debug
+     val downloaderDebug: StateFlow<Boolean> = settingsTab.downloaderDebug
           .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
      val fingerprint: StateFlow<Boolean> = settingsTab.fingerprinting
@@ -113,9 +113,9 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           viewModelScope.launch { settingsTab.setQuickJS(value) }
      }
 
-     fun setDebug(value: Boolean) {
-          DebugLog.setEnable(value)
-          viewModelScope.launch { settingsTab.setDebug(value) }
+     fun setDownloaderDebug(value: Boolean) {
+          DebugLogDownloader.setEnable(value)
+          viewModelScope.launch { settingsTab.setDownloaderDebug(value) }
      }
 
      fun setFingerprint(value: Boolean) {

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
@@ -60,6 +61,8 @@ fun SimpleFFmpegSetting(
      val monoDownmix by ffmpegSettingsViewModel.monoDownmix.collectAsStateWithLifecycle()
      val enableVideoCompression by ffmpegSettingsViewModel.enableVideoCompression.collectAsStateWithLifecycle()
      val useHardwareEncoder by ffmpegSettingsViewModel.useHardwareEncoder.collectAsStateWithLifecycle()
+     val logcat by ffmpegSettingsViewModel.ffmpegDebug.collectAsStateWithLifecycle()
+
 
      val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
@@ -171,6 +174,18 @@ fun SimpleFFmpegSetting(
                trailingContent = {
                     CrfSlider(
                          expanded = expandedFFmpegSetting == ExpandableFFmpegSetting.Crf
+                    )
+               },
+               position = TilePosition.MIDDLE
+          ),
+          SettingListInfo(
+               title = if (logcat) "Debug Logging On" else "Debug Logging Off",
+               description = "Write diagnostic messages to Logcat in any builds",
+               icon = Icons.Default.BugReport,
+               content = {
+                    SettingsSwitch(
+                         checked = logcat,
+                         onCheckedChange = { ffmpegSettingsViewModel.setFFmpegDebug(it) }
                     )
                },
                position = TilePosition.MIDDLE

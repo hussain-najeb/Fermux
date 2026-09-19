@@ -18,7 +18,7 @@ import kotlinx.coroutines.runBlocking
 import org.foss.fermux.R
 import org.foss.fermux.storage.DataStoreDownloaderSettings
 import org.foss.fermux.storage.JSONHistoryCards
-import org.foss.fermux.utils.DebugLog
+import org.foss.fermux.utils.DebugLogDownloader
 import kotlin.math.roundToInt
 
 /**
@@ -104,7 +104,7 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
           val taskId = id.toString()
           val workerJob = currentCoroutineContext().job
 
-          DebugLog.debugDownloader("DownloadWorker", "Started id=$taskId attempt=$runAttemptCount")
+          DebugLogDownloader.debugDownloader("DownloadWorker", "Started id=$taskId attempt=$runAttemptCount")
 
           val settingsTab = DataStoreDownloaderSettings(applicationContext)
           val sponsorBlock = settingsTab.sponsorBlock.first()
@@ -187,7 +187,7 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
                     },
                )
 
-               DebugLog.debugDownloader("DownloadWorker", "Succeeded id=$taskId")
+               DebugLogDownloader.debugDownloader("DownloadWorker", "Succeeded id=$taskId")
 
                val metadata = capturedMetadataJson?.let { parseYtdlpMetadataJson(it) }
                val historyTitle = metadata?.title ?: title
@@ -210,8 +210,8 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
                     if (settingsTab.audioHistory.first() && audio != null) settingsTab.setJSONAudio(history)
 
                } catch (e: Exception) {
-                    DebugLog.errorDownloader("fermux", "failed to save audio JSON", e)
-                    DebugLog.errorDownloader("fermux", "failed to save video JSON", e)
+                    DebugLogDownloader.errorDownloader("fermux", "failed to save audio JSON", e)
+                    DebugLogDownloader.errorDownloader("fermux", "failed to save video JSON", e)
                }
 
                capturedMetadataJson?.let {
@@ -220,10 +220,10 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
 
           } catch (e: CancellationException) {
                val destroyed = YoutubeDL.destroyProcessById(taskId)
-               DebugLog.errorDownloader("DownloadWorker", "Cancelled id=$taskId stopReason=$stopReason destroyed=$destroyed", e)
+               DebugLogDownloader.errorDownloader("DownloadWorker", "Cancelled id=$taskId stopReason=$stopReason destroyed=$destroyed", e)
                throw e
           } catch (e: Exception) {
-               DebugLog.errorDownloader("DownloadWorker", "Failed id=$taskId attempt=$runAttemptCount", e)
+               DebugLogDownloader.errorDownloader("DownloadWorker", "Failed id=$taskId attempt=$runAttemptCount", e)
                val error = e.message
                     ?.take(4_000)
                     ?: "Download failed"

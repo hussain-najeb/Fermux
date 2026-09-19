@@ -1,5 +1,3 @@
-@file:Suppress("PropertyName")
-
 package org.foss.fermux.ffmpeg.logic
 
 import android.content.Context
@@ -20,7 +18,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.foss.fermux.utils.DebugLog
+import org.foss.fermux.utils.DebugLogFFmpeg
 import java.util.*
 
 
@@ -53,8 +51,7 @@ class FFmpegViewModel : ViewModel() {
 
           fail(
                flavourFailMessage = flavourMessage.random(),
-               rawError = "This input is unsupported, check this info:\n" +
-                       "uri = $uri\n" + "mime = ${mime ?: "Unknown"}\n" + "extension = ${extension?.takeIf { it.isNotBlank() } ?: "Unknown"}"
+               rawError = "This input is unsupported, check this info:\n" + "uri = $uri\n" + "mime = ${mime ?: "Unknown"}\n" + "extension = ${extension?.takeIf { it.isNotBlank() } ?: "Unknown"}"
           )
      }
 
@@ -77,7 +74,7 @@ class FFmpegViewModel : ViewModel() {
                          }
                     }
                } catch (e: Exception) {
-                    DebugLog.errorFFmpeg("fermux ffmpeg error update input kind", "failed for some reason", e)
+                    DebugLogFFmpeg.errorFFmpeg("fermux ffmpeg error update input kind", "failed for some reason", e)
                } finally {
                     extractor.release()
                }

@@ -34,7 +34,7 @@ import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
-import org.foss.fermux.utils.DebugLog
+import org.foss.fermux.utils.DebugLogFFmpeg
 
 
 @SuppressLint("ContextCastToActivity")
@@ -47,8 +47,8 @@ fun FFmpegLogs(
      val logs = ffmpegViewModel.FFmpegLogs
      val logScrollState = rememberScrollState()
      val pageScrollState = rememberScrollState()
-     val debug by DebugLog.enabled.collectAsStateWithLifecycle()
-     val logcat by DebugLog.ffmpegLogcat.collectAsStateWithLifecycle()
+     val debug by DebugLogFFmpeg.enabled.collectAsStateWithLifecycle()
+     val logcat by DebugLogFFmpeg.ffmpegLogcat.collectAsStateWithLifecycle()
      var debugEnabledSurface by remember { mutableStateOf(false) }
 
      Column(

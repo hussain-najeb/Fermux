@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.foss.fermux.storage.DataStoreFFmpegSettings
 import org.foss.fermux.storage.FFmpegSettingsRepo
+import org.foss.fermux.utils.DebugLogDownloader
 
 
 class FFmpegSettingsViewModel(application: Application) : AndroidViewModel(application) {
@@ -19,6 +20,8 @@ class FFmpegSettingsViewModel(application: Application) : AndroidViewModel(appli
 
      val audioBitrate: StateFlow<String> = ffmpegSettings.audioBitrate
           .stateIn(viewModelScope, SharingStarted.Lazily, "")
+     val ffmpegDebug: StateFlow<Boolean> = ffmpegSettings.ffmpegDebug
+          .stateIn(viewModelScope, SharingStarted.Lazily, false)
      val normalizeAudio: StateFlow<Boolean> = ffmpegSettings.normalizeAudio
           .stateIn(viewModelScope, SharingStarted.Lazily, false)
      val monoDownmix: StateFlow<Boolean> = ffmpegSettings.monoDownmix
@@ -37,6 +40,11 @@ class FFmpegSettingsViewModel(application: Application) : AndroidViewModel(appli
 
      fun setAudioBitrate(value: String) {
           viewModelScope.launch { ffmpegSettings.setAudioBitrate(value) }
+     }
+
+     fun setFFmpegDebug(value: Boolean) {
+          DebugLogDownloader.setEnable(value)
+          viewModelScope.launch { ffmpegSettings.setFFmpegDebug(value) }
      }
 
      fun setNormalizeAudio(value: Boolean) {

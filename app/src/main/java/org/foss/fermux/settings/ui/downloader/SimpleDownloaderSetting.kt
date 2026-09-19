@@ -69,7 +69,7 @@ fun SimpleDownloaderPage(
      val thumbnail by downloaderSettingsViewModel.embedThumbnail.collectAsStateWithLifecycle()
      val playlist by downloaderSettingsViewModel.playlistState.collectAsStateWithLifecycle()
      val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
-     val logcat by downloaderSettingsViewModel.debug.collectAsStateWithLifecycle()
+     val logcat by downloaderSettingsViewModel.downloaderDebug.collectAsStateWithLifecycle()
      val bellState by downloaderSettingsViewModel.bellState.collectAsStateWithLifecycle()
 
      val isCheckingForUpdate by downloaderSettingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
@@ -189,12 +189,12 @@ fun SimpleDownloaderPage(
           ),
           SettingListInfo(
                title = if (logcat) "Debug Logging On" else "Debug Logging Off",
-               description = "Write diagnostic messages to Logcat in debug builds",
+               description = "Write diagnostic messages to Logcat in any builds",
                icon = Icons.Default.BugReport,
                content = {
                     SettingsSwitch(
                          checked = logcat,
-                         onCheckedChange = { downloaderSettingsViewModel.setDebug(it) }
+                         onCheckedChange = { downloaderSettingsViewModel.setDownloaderDebug(it) }
                     )
                },
                position = TilePosition.MIDDLE

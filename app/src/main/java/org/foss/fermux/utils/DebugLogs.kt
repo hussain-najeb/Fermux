@@ -22,13 +22,11 @@ enum class DebugKind {
 }
 
 
-object DebugLog {
+object DebugLogDownloader {
      private val _enabled = MutableStateFlow(false)
      val enabled = _enabled.asStateFlow()
      private val _downloaderLog = MutableStateFlow<List<DebugClass>>(emptyList())
      val downloaderLog: StateFlow<List<DebugClass>> = _downloaderLog.asStateFlow()
-     private val _ffmpegLog = MutableStateFlow<List<DebugClass>>(emptyList())
-     val ffmpegLog: StateFlow<List<DebugClass>> = _ffmpegLog.asStateFlow()
 
      fun setEnable(value: Boolean) {
           _enabled.value = value
@@ -72,19 +70,34 @@ object DebugLog {
           }
      }
 
+     val downloaderLogcat = downloaderLog
+}
+
+object DebugLogFFmpeg {
+     private val _enabled = MutableStateFlow(false)
+     val enabled = _enabled.asStateFlow()
+
+     fun setEnable(value: Boolean) {
+          DebugLogFFmpeg._enabled.value = value
+     }
+
+     private val _ffmpegLog = MutableStateFlow<List<DebugClass>>(emptyList())
+     val ffmpegLog: StateFlow<List<DebugClass>> = _ffmpegLog.asStateFlow()
+
      fun debugFFmpeg(
           tag: String,
           message: String
      ) {
-          if (!enabled.value) return
+          if (!DebugLogFFmpeg.enabled.value) return
 
           Log.d(tag, message)
 
-          addFFmpegLog(DebugClass(
-               tag = tag,
-               message = message,
-               level = DebugKind.FFmpegDebug
-          )
+          DebugLogFFmpeg.addFFmpegLog(
+               DebugClass(
+                    tag = tag,
+                    message = message,
+                    level = DebugKind.FFmpegDebug
+               )
           )
      }
 
@@ -93,16 +106,17 @@ object DebugLog {
           message: String,
           throwable: Throwable?
      ) {
-          if (!enabled.value) return
+          if (!DebugLogFFmpeg.enabled.value) return
 
           Log.e(tag, message, throwable)
 
-          addFFmpegLog(DebugClass(
-               tag = tag,
-               message = message,
-               level = DebugKind.FFmpegError,
-               throwable = throwable
-          )
+          DebugLogFFmpeg.addFFmpegLog(
+               DebugClass(
+                    tag = tag,
+                    message = message,
+                    level = DebugKind.FFmpegError,
+                    throwable = throwable
+               )
           )
      }
 
@@ -110,11 +124,8 @@ object DebugLog {
           _ffmpegLog.update { currentLog ->
                currentLog + entry
           }
-     } // TODO. Separate both ffmpeg and this one to be separate
-     // TODO. Make the user later turn off one and keep the other, since if the debug option is on, it will enable both debug stuff. maybe a FilterChips
+     }
 
-
-     val downloaderLogcat = downloaderLog
      val ffmpegLogcat = ffmpegLog
 
 

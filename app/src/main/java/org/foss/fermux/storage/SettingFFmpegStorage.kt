@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.map
 interface FFmpegSettingsRepo {
 
      val audioBitrate: Flow<String>
+     val ffmpegDebug: Flow<Boolean>
      val normalizeAudio: Flow<Boolean>
      val monoDownmix: Flow<Boolean>
      val enableVideoCompression: Flow<Boolean>
@@ -19,6 +20,7 @@ interface FFmpegSettingsRepo {
      val threadLimit: Flow<Int>
 
      suspend fun setAudioBitrate(value: String)
+     suspend fun setFFmpegDebug(value: Boolean)
      suspend fun setNormalizeAudio(value: Boolean)
      suspend fun setMonoDownmix(value: Boolean)
      suspend fun setEnableVideoCompression(value: Boolean)
@@ -30,6 +32,7 @@ interface FFmpegSettingsRepo {
 }
 
 val AUDIO_BITRATE_KEY = stringPreferencesKey("ffmpeg_audio_bitrate")
+val FFMPEG_DEBUG = booleanPreferencesKey("debug_switch")
 val NORMALIZE_AUDIO_KEY = booleanPreferencesKey("ffmpeg_normalize_audio")
 val MONO_DOWNMIX_KEY = booleanPreferencesKey("ffmpeg_mono_downmix")
 val ENABLE_VIDEO_COMPRESSION_KEY = booleanPreferencesKey("ffmpeg_enable_video_compression")
@@ -45,6 +48,9 @@ class DataStoreFFmpegSettings(private val settingStore: DataStore<Preferences>) 
 
      override val audioBitrate: Flow<String> =
           settingStore.data.map { preferences -> preferences[AUDIO_BITRATE_KEY] ?: "" }
+
+     override val ffmpegDebug: Flow<Boolean> =
+          settingStore.data.map { preferences -> preferences[FFMPEG_DEBUG] ?: false }
      override val normalizeAudio: Flow<Boolean> =
           settingStore.data.map { preferences -> preferences[NORMALIZE_AUDIO_KEY] ?: false }
      override val monoDownmix: Flow<Boolean> = settingStore.data.map { it[MONO_DOWNMIX_KEY] ?: false }
@@ -57,6 +63,10 @@ class DataStoreFFmpegSettings(private val settingStore: DataStore<Preferences>) 
 
      override suspend fun setAudioBitrate(value: String) {
           settingStore.edit { preferences -> preferences[AUDIO_BITRATE_KEY] = value }
+     }
+
+     override suspend fun setFFmpegDebug(value: Boolean) {
+          settingStore.edit { preferences -> preferences[FFMPEG_DEBUG] = value }
      }
 
 
@@ -98,6 +108,7 @@ class DataStoreFFmpegSettings(private val settingStore: DataStore<Preferences>) 
      override suspend fun clearFFmpeg() {
           settingStore.edit { preferences ->
                preferences.remove(AUDIO_BITRATE_KEY)
+               preferences.remove(DOWNLOADER_DEBUG)
                preferences.remove(NORMALIZE_AUDIO_KEY)
                preferences.remove(MONO_DOWNMIX_KEY)
                preferences.remove(ENABLE_VIDEO_COMPRESSION_KEY)

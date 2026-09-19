@@ -20,7 +20,7 @@ interface DownloaderSettingsRepo {
      val sleepRequest: Flow<Int>
      val embedThumbnail: Flow<Boolean>
      val quickJS: Flow<Boolean>
-     val debug: Flow<Boolean>
+     val downloaderDebug: Flow<Boolean>
      val fingerprinting: Flow<Boolean>
      val aria2cMode: Flow<Aria2cMode>
      val externalDownloaders: Flow<ExternalDownloaders>
@@ -39,7 +39,7 @@ interface DownloaderSettingsRepo {
      suspend fun setAria2cMode(value: Aria2cMode)
      suspend fun setExternalDownloader(value: ExternalDownloaders)
      suspend fun setQuickJS(value: Boolean)
-     suspend fun setDebug(value: Boolean)
+     suspend fun setDownloaderDebug(value: Boolean)
      suspend fun setFingerprinting(value: Boolean)
      suspend fun setEmbedThumbnail(value: Boolean)
      suspend fun setAudioHistory(value: Boolean)
@@ -64,7 +64,7 @@ val EXTERNAL_DOWNLOADER = stringPreferencesKey("set external downloaders for ytd
 val DOWNLOADING_DETAILS = booleanPreferencesKey("download_details")
 val SHOW_YTDLP_VIDEO_HISTORY = booleanPreferencesKey("video_history")
 val QUICK_JS = booleanPreferencesKey("quick js")
-val DEBUG = booleanPreferencesKey("debug_button")
+val DOWNLOADER_DEBUG = booleanPreferencesKey("debug_button")
 val FINGERPRINT = booleanPreferencesKey("fingerprint")
 val SHOW_YTDLP_AUDIO_HISTORY = booleanPreferencesKey("audio_history")
 val EMBED_THUMBNAIL = booleanPreferencesKey("embed_thumbnail")
@@ -85,7 +85,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
      override val embedThumbnail: Flow<Boolean> =
           settingStore.data.map { preferences -> preferences[EMBED_THUMBNAIL] ?: true }
      override val quickJS: Flow<Boolean> = settingStore.data.map { preferences -> preferences[QUICK_JS] ?: true }
-     override val debug: Flow<Boolean> = settingStore.data.map { preferences -> preferences[DEBUG] ?: false }
+     override val downloaderDebug: Flow<Boolean> = settingStore.data.map { preferences -> preferences[DOWNLOADER_DEBUG] ?: false }
      override val fingerprinting: Flow<Boolean> = settingStore.data.map { preferences -> preferences[FINGERPRINT] ?: true }
      override val aria2cMode: Flow<Aria2cMode> = settingStore.data.map { preferences ->
           preferences[ARIA2C_MODE_KEY]
@@ -156,8 +156,8 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
           settingStore.edit { preferences -> preferences[QUICK_JS] = value }
      }
 
-     override suspend fun setDebug(value: Boolean) {
-          settingStore.edit { preferences -> preferences[DEBUG] = value }
+     override suspend fun setDownloaderDebug(value: Boolean) {
+          settingStore.edit { preferences -> preferences[FFMPEG_DEBUG] = value }
      }
 
      override suspend fun setFingerprinting(value: Boolean) {
@@ -224,7 +224,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                preferences.remove(key = SPONSOR_BLOCK_IMPLEMENTATION)
                preferences.remove(key = SPONSOR_BLOCK_CATEGORIES)
                preferences.remove(key = QUICK_JS)
-               preferences.remove(key = DEBUG)
+               preferences.remove(key = DOWNLOADER_DEBUG)
                preferences.remove(key = FINGERPRINT)
                preferences.remove(key = EXTERNAL_DOWNLOADER)
           }
