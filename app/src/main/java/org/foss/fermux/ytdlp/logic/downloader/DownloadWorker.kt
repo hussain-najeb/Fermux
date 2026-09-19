@@ -71,7 +71,7 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
                .setOngoing(true)
                .addAction(
                     R.drawable.download_notif_cancel,
-                    "Cancel",
+                    "Cancel Download",
                     canceller
                )
                .build()
@@ -80,7 +80,7 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
      private fun createDownloaderNotifChannel() {
           val channel = NotificationChannel(
                DOWNLOAD_CHANNEL_ID,
-               "downloads",
+               "Downloader",
                NotificationManager.IMPORTANCE_DEFAULT
           ).apply {
                description = "Shows current downloads"

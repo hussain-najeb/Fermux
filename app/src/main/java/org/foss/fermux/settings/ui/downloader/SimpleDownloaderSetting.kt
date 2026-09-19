@@ -38,6 +38,7 @@ import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
+import org.foss.fermux.utils.rememberNotificationPermissionRequest
 import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 
 
@@ -71,14 +72,12 @@ fun SimpleDownloaderPage(
      val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
      val logcat by downloaderSettingsViewModel.debug.collectAsStateWithLifecycle()
 
-
      val isCheckingForUpdate by downloaderSettingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
      val ytdlpUpdateStatus by downloaderSettingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
 
      val externalDownloaderEnabled = aria2cMode == Aria2cMode.Disabled
      val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
-
      var expandedSetting by remember {
           mutableStateOf<ExpandableDownloaderSetting?>(null)
      }
@@ -86,6 +85,17 @@ fun SimpleDownloaderPage(
           expandedSetting =
                if (expandedSetting == setting) null else setting
      }
+     val requestNotificationPermission = rememberNotificationPermissionRequest(
+          onGranted = {
+               scope.launch {
+                    snackbarHostState.showSnackbar(
+                         message = "Permission already granted",
+                         duration = SnackbarDuration.Short
+                    )
+               }
+          }
+     )
+
 
      val simpleDownloaderSettings = listOf(
           SettingListInfo(
@@ -101,6 +111,12 @@ fun SimpleDownloaderPage(
                     )
                },
                position = TilePosition.TOP
+          ),
+          SettingListInfo(
+               title = "Notifications",
+               description = "Press to enable notifications",
+               image =  R.drawable.bell_on,
+               onClick = requestNotificationPermission
           ),
           SettingListInfo(
                title = "Audio History",

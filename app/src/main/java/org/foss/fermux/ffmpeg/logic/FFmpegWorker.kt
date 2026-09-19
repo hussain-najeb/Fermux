@@ -53,7 +53,7 @@ private fun createFFmpegNotif(
      return NotificationCompat.Builder(
           applicationContext,
           FFMPEG_CHANNEL_ID
-     ).setSmallIcon(R.drawable.sidebar_right)
+     ).setSmallIcon(R.drawable.ffmpeg)
           .setContentTitle("Converting...")
           .setContentText(text.take(120))
           .setProgress(
@@ -64,15 +64,15 @@ private fun createFFmpegNotif(
           .setOnlyAlertOnce(true)
           .setOngoing(true)
           .addAction(
-               R.drawable.video,
-               "Cancel",
+               R.drawable.cancel_buttons,
+               "Cancel Conversion",
                canceller
           ).build()
 }
      private fun createFFmpegNotifChannel() {
           val channel = NotificationChannel(
                FFMPEG_CHANNEL_ID,
-               "Conversions",
+               "Converter",
                NotificationManager.IMPORTANCE_DEFAULT
           ).apply {
                description = "Shows the current conversion"

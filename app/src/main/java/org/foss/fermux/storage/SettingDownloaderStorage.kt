@@ -2,7 +2,6 @@
 
 package org.foss.fermux.storage
 
-import android.annotation.SuppressLint
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
@@ -56,6 +55,7 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings_
 
 // ytdlp downloader tab.
 val DOWNLOAD_PATH = stringPreferencesKey("download_path")
+
 val SLEEP_REQUEST_KEY = intPreferencesKey("sleep_request_seconds")
 val ARIA2C_MODE_KEY = stringPreferencesKey("aria2c_mode")
 val EXTERNAL_DOWNLOADER = stringPreferencesKey("set external downloaders for ytdlp")
@@ -123,7 +123,6 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
           settingStore.edit { preferences -> preferences[DOWNLOAD_PATH] = value }
      }
 
-     @SuppressLint("SuspiciousIndentation")
      override suspend fun setSleepRequest(value: Int) {
           settingStore.edit { preferences -> preferences[SLEEP_REQUEST_KEY] = value }
      }
@@ -206,20 +205,20 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
 
      override suspend fun clearYtdlp() {
           settingStore.edit { preferences ->
-               preferences.remove(DOWNLOAD_PATH)
-               preferences.remove(SLEEP_REQUEST_KEY)
-               preferences.remove(ARIA2C_MODE_KEY)
-               preferences.remove(DOWNLOADING_DETAILS)
-               preferences.remove(SHOW_YTDLP_VIDEO_HISTORY)
-               preferences.remove(SHOW_YTDLP_AUDIO_HISTORY)
-               preferences.remove(EMBED_THUMBNAIL)
-               preferences.remove(PLAYLIST_STATUS)
-               preferences.remove(SPONSOR_BLOCK_IMPLEMENTATION)
-               preferences.remove(SPONSOR_BLOCK_CATEGORIES)
-               preferences.remove(QUICK_JS)
-               preferences.remove(DEBUG)
-               preferences.remove(FINGERPRINT)
-               preferences.remove(EXTERNAL_DOWNLOADER)
+               preferences.remove(key = DOWNLOAD_PATH)
+               preferences.remove(key = SLEEP_REQUEST_KEY)
+               preferences.remove(key = ARIA2C_MODE_KEY)
+               preferences.remove(key = DOWNLOADING_DETAILS)
+               preferences.remove(key = SHOW_YTDLP_VIDEO_HISTORY)
+               preferences.remove(key = SHOW_YTDLP_AUDIO_HISTORY)
+               preferences.remove(key = EMBED_THUMBNAIL)
+               preferences.remove(key = PLAYLIST_STATUS)
+               preferences.remove(key = SPONSOR_BLOCK_IMPLEMENTATION)
+               preferences.remove(key = SPONSOR_BLOCK_CATEGORIES)
+               preferences.remove(key = QUICK_JS)
+               preferences.remove(key = DEBUG)
+               preferences.remove(key = FINGERPRINT)
+               preferences.remove(key = EXTERNAL_DOWNLOADER)
           }
      }
 }
