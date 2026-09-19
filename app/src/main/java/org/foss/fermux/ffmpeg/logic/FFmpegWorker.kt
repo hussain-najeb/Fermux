@@ -16,7 +16,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import org.foss.fermux.R
 import org.foss.fermux.settings.logic.buildDynamicFFmpegArgs
-import org.foss.fermux.storage.FFmpegSettingsTab
+import org.foss.fermux.storage.DataStoreFFmpegSettings
+import org.foss.fermux.storage.FFmpegSettingsRepo
 import org.foss.fermux.utils.DebugLog
 import org.foss.fermux.utils.copyFileToDownloads
 import java.io.BufferedReader
@@ -92,7 +93,7 @@ private fun createFFmpegNotif(
 
           return try {
 
-               val ffmpegSettings = FFmpegSettingsTab(applicationContext)
+               val ffmpegSettings: FFmpegSettingsRepo = DataStoreFFmpegSettings(applicationContext)
                val prefs = FFmpegUserPrefs(
                     audioBitrate = ffmpegSettings.audioBitrate.first().takeIf { it.isNotBlank() },
                     normalizeAudio = ffmpegSettings.normalizeAudio.first(),

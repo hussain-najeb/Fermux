@@ -8,12 +8,13 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.foss.fermux.storage.FFmpegSettingsTab
+import org.foss.fermux.storage.DataStoreFFmpegSettings
+import org.foss.fermux.storage.FFmpegSettingsRepo
 
 
 class FFmpegSettingsViewModel(application: Application) : AndroidViewModel(application) {
 
-     private val ffmpegSettings = FFmpegSettingsTab(application.applicationContext)
+     private val ffmpegSettings: FFmpegSettingsRepo = DataStoreFFmpegSettings(application.applicationContext)
 
 
      val audioBitrate: StateFlow<String> = ffmpegSettings.audioBitrate

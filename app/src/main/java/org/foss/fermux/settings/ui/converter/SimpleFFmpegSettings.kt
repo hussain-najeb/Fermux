@@ -50,7 +50,8 @@ private enum class ExpandableFFmpegSetting {
 @Composable
 fun SimpleFFmpegSetting(
      navController: NavHostController,
-     @SuppressLint("ContextCastToActivity") ffmpegSettingsViewModel: FFmpegSettingsViewModel = viewModel(
+     @SuppressLint("ContextCastToActivity")
+     ffmpegSettingsViewModel: FFmpegSettingsViewModel = viewModel(
           viewModelStoreOwner = LocalContext.current as ComponentActivity
      )
 ) {
@@ -127,7 +128,7 @@ fun SimpleFFmpegSetting(
           ),
           SettingListInfo(
                title = "Video Compression",
-               description = "Video compression re-encodes the video instead of copying it as-is, trading conversion speed for a smaller file size",
+               description = "This re-encodes the video instead of copying it as-is, trading speed for a smaller file size",
                image = R.drawable.video_compression,
                content = {
                     SettingsSwitch(

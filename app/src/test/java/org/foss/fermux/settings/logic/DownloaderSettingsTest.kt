@@ -59,7 +59,7 @@ class DownloaderSettingsTest {
           setting.setQuickJS(false)
           setting.setEmbedThumbnail(false)
           setting.setSleepRequest(1)
-          setting.setNotificationState(false)
+          setting.setBellState(false)
 
           assertEquals("/downloads", setting.downloadPath.first())
           assertEquals(listOf(jsonInfo), setting.jsonVideoCard.first())
@@ -74,7 +74,7 @@ class DownloaderSettingsTest {
           assertFalse(setting.quickJS.first())
           assertFalse(setting.embedThumbnail.first())
           assertEquals(1, setting.sleepRequest.first())
-          assertFalse(setting.notificationState.first())
+          assertFalse(setting.bellState.first())
      }
 
      @ParameterizedTest
@@ -110,7 +110,7 @@ class DownloaderSettingsTest {
           val setting = newFixture().repositoryOfTheProdCode
 
           setting.setDownloadPath("/downloads")
-          setting.setNotificationState(false)
+          setting.setBellState(false)
           setting.setSleepRequest(10)
           setting.setExternalDownloader(ExternalDownloaders.FFmpegAsExternal)
           setting.setYtdlpDetails(false)
@@ -128,7 +128,7 @@ class DownloaderSettingsTest {
 
 
           assertEquals("", setting.downloadPath.first())
-          assertTrue(setting.notificationState.first())
+          assertFalse(setting.bellState.first())
           assertEquals(0, setting.sleepRequest.first())
           assertEquals(Aria2cMode.Always, setting.aria2cMode.first())
           assertEquals(ExternalDownloaders.TurnedOff, setting.externalDownloaders.first())
