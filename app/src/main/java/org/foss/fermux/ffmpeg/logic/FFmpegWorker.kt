@@ -1,15 +1,20 @@
 package org.foss.fermux.ffmpeg.logic
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.ServiceInfo
+import androidx.core.app.NotificationCompat
 import androidx.core.net.toUri
-import androidx.work.CoroutineWorker
-import androidx.work.WorkerParameters
-import androidx.work.workDataOf
+import androidx.work.*
+import androidx.work.ListenableWorker.Result.failure
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import org.foss.fermux.R
 import org.foss.fermux.settings.logic.buildDynamicFFmpegArgs
 import org.foss.fermux.storage.FFmpegSettingsTab
 import org.foss.fermux.utils.DebugLog
@@ -18,11 +23,72 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.math.roundToInt
 
 class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
+     private val ffmpegWorkNotif: NotificationManager
+          get() = applicationContext.getSystemService(
+               Context.NOTIFICATION_SERVICE
+          ) as NotificationManager
+private fun createFFmpegForegroundInfo(): ForegroundInfo {
 
-     override suspend fun doWork(): Result {  //TODO. Make this forground and with notif, same as downloader.
-          // TODO. Add proper linux pid cancelling, maybe something that looks like the yt-dlp yausername change
+     return ForegroundInfo(
+          FFMPEG_NOTIFICATION_ID,
+          createFFmpegNotif(
+               progress = null,
+               text = "Conversion started..."
+          ),
+          ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+     )
+}
+private fun createFFmpegNotif(
+     progress: Int?,
+     text: String
+): Notification {
+     createFFmpegNotifChannel()
+     val canceller = WorkManager
+          .getInstance(applicationContext)
+          .createCancelPendingIntent(id)
+
+     return NotificationCompat.Builder(
+          applicationContext,
+          FFMPEG_CHANNEL_ID
+     ).setSmallIcon(R.drawable.sidebar_right)
+          .setContentTitle("Converting...")
+          .setContentText(text.take(120))
+          .setProgress(
+               100,
+               progress ?: 0,
+               progress == null
+          )
+          .setOnlyAlertOnce(true)
+          .setOngoing(true)
+          .addAction(
+               R.drawable.video,
+               "Cancel",
+               canceller
+          ).build()
+}
+     private fun createFFmpegNotifChannel() {
+          val channel = NotificationChannel(
+               FFMPEG_CHANNEL_ID,
+               "Conversions",
+               NotificationManager.IMPORTANCE_DEFAULT
+          ).apply {
+               description = "Shows the current conversion"
+          }
+          ffmpegWorkNotif.createNotificationChannel(channel)
+     }
+     companion object {
+          private const val FFMPEG_NOTIFICATION_ID = 1002
+          private const val FFMPEG_CHANNEL_ID = "Converter_Notif"
+     }
+
+     override suspend fun doWork(): Result {
+
+          setForeground(
+               createFFmpegForegroundInfo()
+          )
 
           return try {
 
@@ -39,7 +105,7 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                )
 
                val targetFormatName = inputData.getString("TARGET_FORMAT")
-                    ?: return Result.failure(workDataOf("error" to "Missing TARGET_FORMAT in input data"))
+                    ?: return failure(workDataOf("error" to "Missing TARGET_FORMAT in input data"))
                val targetFormat = FFmpegTargetFormat.valueOf(targetFormatName)
 
                val tempFile = File(applicationContext.cacheDir, "input_${id}.tmp")
@@ -49,7 +115,7 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                try {
 
                     val fileUriInput = inputData.getString("FFMPEG_URI_FILE")
-                         ?: return Result.failure(workDataOf("error" to "Missing FFMPEG_URI_FILE in input data"))
+                         ?: return failure(workDataOf("error" to "Missing FFMPEG_URI_FILE in input data"))
 
 
                     val originalName = inputData.getString("ORIGINAL_FILE_NAME") ?: "Converted_to_$id"
@@ -65,7 +131,7 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                               inputStream.copyTo(outputStream)
                          }
                     }
-                         ?: return Result.failure(workDataOf("error" to "Could not open input stream for $uriFile, permission may have been lost"))
+                         ?: return failure(workDataOf("error" to "Could not open input stream for $uriFile, permission may have been lost"))
 
                     val nativeLibDir = applicationContext.applicationInfo.nativeLibraryDir
                     val ffmpegBinary = File(nativeLibDir, "libfermux_ffmpeg.so")
@@ -73,7 +139,7 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
 
                     if (!ffmpegBinary.exists() || !ffprobeBinary.exists()) {
                          DebugLog.debugFFmpeg("ffmpegBinary", "FFmpeg lib binaries not found at: $ffmpegBinary, $ffprobeBinary"  )
-                         return Result.failure(
+                         return failure(
                               workDataOf("error" to "ffmpeg lib binary not found")
                          )
                     }
@@ -156,6 +222,13 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                                                   "line" to logOutput,
                                              )
                                         )
+                                        ffmpegWorkNotif.notify(
+                                             FFMPEG_NOTIFICATION_ID,
+                                             createFFmpegNotif(
+                                                  progress = currentProgress.roundToInt(),
+                                                  text = logOutput
+                                             )
+                                        )
                                    }
                               }
                          }
@@ -177,7 +250,7 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                     } else {
                          val logs = output.toString().take(4_000)
                          DebugLog.debugFFmpeg("fermuxFFmpeg", "FFmpeg failed with rc: $exitCode\n$logs")
-                         Result.failure(workDataOf("error" to logs))
+                         failure(workDataOf("error" to logs))
                     }
                } catch (e: CancellationException) {
                     DebugLog.errorFFmpeg("", "", e) // TODO. Add the messages
@@ -191,7 +264,7 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                val error = e.message
                     ?.take(4_000)
                     ?: "FFmpeg logging failed"
-               Result.failure(workDataOf("error" to error))
+               failure(workDataOf("error" to error))
           }
      }
 }

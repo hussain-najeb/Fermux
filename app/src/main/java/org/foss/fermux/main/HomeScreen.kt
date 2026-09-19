@@ -1,13 +1,7 @@
 package org.foss.fermux.main
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -50,7 +44,7 @@ fun HomeScreen(navigationController: NavHostController) {
                         .weight(0.25f)
                         .padding(4.dp),
                     pressable = true,
-                    onClick = { navigationController.navigate(screen.route) }
+                    onClick = { navigationController.navigate(screen.route) } // TODO. Make this look better, and this code sucks ass, also link this to... when the user clicks a card, make them enable notifs when they press any card if it needed to be be enabled, code is in each tab, just get it from there, maybe even abstract it
                 ) {
                     screen.descriptor?.let {
                         Text(

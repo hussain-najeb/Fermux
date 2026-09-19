@@ -27,15 +27,14 @@ import kotlin.math.roundToInt
  * page and [DownloaderSettingsTab] as well as handling the JSON history cards.
  */
 
-class DownloadWorker(context: Context, params: WorkerParameters) :
-     CoroutineWorker(context, params) {
+class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorker(context, params) {
 
      private val downloaderWorkNotif: NotificationManager
           get() = applicationContext.getSystemService(
                Context.NOTIFICATION_SERVICE
           ) as NotificationManager
 
-     private fun createForegroundInfo(): ForegroundInfo {
+     private fun createDownloaderForegroundInfo(): ForegroundInfo {
           return ForegroundInfo(
                DOWNLOAD_NOTIFICATION_ID,
                createDownloadNotif(
@@ -50,7 +49,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
           progress: Int?,
           text: String
      ): Notification {
-          createNotifChannel()
+          createDownloaderNotifChannel()
 
           val canceller = WorkManager
                .getInstance(applicationContext)
@@ -78,7 +77,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                .build()
      }
 
-     private fun createNotifChannel() {
+     private fun createDownloaderNotifChannel() {
           val channel = NotificationChannel(
                DOWNLOAD_CHANNEL_ID,
                "downloads",
@@ -99,7 +98,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
 
 
           setForeground(
-               createForegroundInfo()
+               createDownloaderForegroundInfo()
           )
 
           val taskId = id.toString()
@@ -118,7 +117,6 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
           val externalDownloaders = settingsTab.externalDownloaders.first()
           val quickJS = settingsTab.quickJS.first()
           val fingerprinting = settingsTab.fingerprinting.first()
-
 
 
           val audioName = inputData.getString("audio")
@@ -152,6 +150,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                     sponsorBlockCategories = sponsorBlockCategories,
                     sleepRequest = sleepRequest,
                     onUpdate = { progress, line ->
+
                          if (isStopped || !workerJob.isActive) {
                               return@downloaderLogic
                          }
@@ -197,31 +196,19 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                val historyUploader = metadata?.uploader ?: uploader
 
                try {
-                    if (settingsTab.audioHistory.first() && audio != null) {
-                         settingsTab.setJSONAudio(
-                              JSONHistoryCards(
-                                   historyTitle,
-                                   historyThumbnail,
-                                   url,
-                                   historyUploader,
-                                   historyDuration,
-                                   System.currentTimeMillis(),
-                              )
+                    val history by lazy {
+                         JSONHistoryCards(
+                              historyTitle,
+                              historyThumbnail,
+                              url,
+                              historyUploader,
+                              historyDuration,
+                              System.currentTimeMillis()
                          )
                     }
+                    if (settingsTab.videoHistory.first() && video != null) settingsTab.setJSONVideo(history)
+                    if (settingsTab.audioHistory.first() && audio != null) settingsTab.setJSONAudio(history)
 
-                    if (settingsTab.videoHistory.first() && video != null) {
-                         settingsTab.setJSONVideo(
-                              JSONHistoryCards(
-                                   historyTitle,
-                                   historyThumbnail,
-                                   url,
-                                   historyUploader,
-                                   historyDuration,
-                                   System.currentTimeMillis()
-                              )
-                         )
-                    }
                } catch (e: Exception) {
                     DebugLog.errorDownloader("fermux", "failed to save audio JSON", e)
                     DebugLog.errorDownloader("fermux", "failed to save video JSON", e)
@@ -233,9 +220,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
 
           } catch (e: CancellationException) {
                val destroyed = YoutubeDL.destroyProcessById(taskId)
-
                DebugLog.errorDownloader("DownloadWorker", "Cancelled id=$taskId stopReason=$stopReason destroyed=$destroyed", e)
-
                throw e
           } catch (e: Exception) {
                DebugLog.errorDownloader("DownloadWorker", "Failed id=$taskId attempt=$runAttemptCount", e)
