@@ -26,8 +26,8 @@ import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
 import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FFmpegCard
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.ui.MediaThumbnailImage
-import org.foss.fermux.utils.Miscellaneous
 import org.foss.fermux.ui.theme.FermuxColors
+import org.foss.fermux.utils.Miscellaneous
 
 
 private enum class ProgressState { InProgress, Done }
@@ -76,7 +76,7 @@ fun ConversionCard(
                                         .align(Alignment.Center)
                                         .size(50.dp)
                                         .background(
-                                             color = FermuxColors.fermuxComponents.copy(alpha = 0.48f),
+                                             color = FermuxColors.fermuxComponents.copy(alpha = 0.70f),
                                              shape = RoundedCornerShape(10.dp)
                                         )
                               ) {
@@ -94,7 +94,7 @@ fun ConversionCard(
                                    modifier = Modifier
                                         .align(Alignment.Center)
                                         .background(
-                                             color = FermuxColors.fermuxComponents.copy(alpha = 0.48f),
+                                             color = FermuxColors.fermuxComponents.copy(alpha = 0.75f),
                                              shape = RoundedCornerShape(10.dp)
                                         )
                               ) {

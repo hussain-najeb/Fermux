@@ -9,7 +9,6 @@ sealed class FFmpegStatus {
      data class Error(val flavourMessage: String, val rawError: String) : FFmpegStatus()
      data class Converting(
           val progress: Float,
-          val duration: Long,
           val filePicked: FFmpegTargetFormat,
           val inputUri: Uri,
           val ffmpegLogs: String

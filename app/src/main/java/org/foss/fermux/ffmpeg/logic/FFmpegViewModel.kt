@@ -148,7 +148,7 @@ class FFmpegViewModel : ViewModel() {
 
                activeProcess = request.id
 
-               state = FFmpegStatus.Converting(0f, 0L, targetFormat, inputUri, FFmpegLogs)
+               state = FFmpegStatus.Converting( 0f, targetFormat, inputUri, FFmpegLogs)
 
                workManager.getWorkInfoByIdFlow(request.id).onEach { workInfo ->
                     workInfo ?: return@onEach
@@ -156,13 +156,12 @@ class FFmpegViewModel : ViewModel() {
                          WorkInfo.State.RUNNING -> {
 
                               val progress = workInfo.progress.getFloat("progress", 0f)
-                              val duration = workInfo.progress.getLong("duration", 0)
                               val logs = workInfo.progress.getString("line")
 
                               if (!logs.isNullOrBlank()) {
                                    FFmpegLogs = (FFmpegLogs + "\n" + logs)
                               }
-                              state = FFmpegStatus.Converting(progress, duration, targetFormat, inputUri, FFmpegLogs)
+                              state = FFmpegStatus.Converting(progress, targetFormat, inputUri, FFmpegLogs)
                          }
 
                          WorkInfo.State.SUCCEEDED -> {

@@ -16,7 +16,6 @@ import org.foss.fermux.utils.DebugLog
 import org.foss.fermux.utils.copyFileToDownloads
 import java.io.BufferedReader
 import java.io.File
-import java.io.IOException
 import java.io.InputStreamReader
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -133,14 +132,13 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
 
                                         when(progressKey) {
                                              "out_time_us", "out_time_ms" -> {
-                                                  val processedTime = progressKey.toLongOrNull()
+                                                  val processedTime = progressValue.toLongOrNull()
                                                   if (processedTime != null && ffprobeInfo != null && ffprobeInfo > 0L) {
                                                        currentProgress = (
                                                                processedTime.toDouble() / ffprobeInfo.toDouble() * 100.0
                                                                ).toFloat().coerceIn(0f, 99.9f)
                                                   }
                                              }
-
                                              "progress" -> {
                                                   if (progressValue == "end") {
                                                        currentProgress = 100f
@@ -195,49 +193,5 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                     ?: "FFmpeg logging failed"
                Result.failure(workDataOf("error" to error))
           }
-     }
-}
-
-private suspend fun ffprobeProgress(
-     ffprobeBin: File,
-     inputFile: File,
-     nativeDir: String
-): Long? {
-
-     return withContext(Dispatchers.IO) {
-
-          try {
-               val progressProcess = ProcessBuilder(
-                    ffprobeBin.absolutePath,
-                    "-v",
-                    "error",
-                    "-show_entries",
-                    "format=duration",
-                    "-of",
-                    "default=noprint_wrappers=1:nokey=1",
-                    inputFile.absolutePath
-               ).apply {
-                    environment()["LD_LIBRARY_PATH"] = nativeDir
-                    redirectErrorStream(true)
-               }.start()
-
-               val output = progressProcess.inputStream.bufferedReader().use { it.readText() }
-               val exitCode = progressProcess.waitFor()
-               if (exitCode != 0) {
-                    DebugLog.debugFFmpeg("ffprobe progress error", "failed to parse progress at: $exitCode")
-                    return@withContext null
-               }
-
-               output
-                    .lineSequence()
-                    .mapNotNull { it.trim().toDoubleOrNull() }
-                    .firstOrNull { it.isFinite() && it > 0.0 }
-                    ?.let { (it * 1_000_000.0).toLong()}
-
-          } catch (e: IOException) {
-               DebugLog.errorFFmpeg("FFmpegWorkManager", "Could not probe input duration", e)
-               null
-          }
-
      }
 }
