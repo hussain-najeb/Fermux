@@ -16,6 +16,7 @@ import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
 interface DownloaderSettingsRepo {
 
      val downloadPath: Flow<String>
+     val bellState: Flow<Boolean>
      val sleepRequest: Flow<Int>
      val embedThumbnail: Flow<Boolean>
      val quickJS: Flow<Boolean>
@@ -33,6 +34,7 @@ interface DownloaderSettingsRepo {
      val jsonVideoCard: Flow<List<JSONHistoryCards>>
 
      suspend fun setDownloadPath(value: String)
+     suspend fun setBellState(value: Boolean)
      suspend fun setSleepRequest(value: Int)
      suspend fun setAria2cMode(value: Aria2cMode)
      suspend fun setExternalDownloader(value: ExternalDownloaders)
@@ -55,7 +57,7 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings_
 
 // ytdlp downloader tab.
 val DOWNLOAD_PATH = stringPreferencesKey("download_path")
-
+val BELLSTATE = booleanPreferencesKey("bellState")
 val SLEEP_REQUEST_KEY = intPreferencesKey("sleep_request_seconds")
 val ARIA2C_MODE_KEY = stringPreferencesKey("aria2c_mode")
 val EXTERNAL_DOWNLOADER = stringPreferencesKey("set external downloaders for ytdlp")
@@ -78,6 +80,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
      constructor(context: Context) : this(context.dataStore)
 
      override val downloadPath: Flow<String> = settingStore.data.map { preferences -> preferences[DOWNLOAD_PATH] ?: "" }
+     override val bellState: Flow<Boolean> = settingStore.data.map { preferences -> preferences[BELLSTATE] ?: false }
      override val sleepRequest: Flow<Int> = settingStore.data.map { preferences -> preferences[SLEEP_REQUEST_KEY] ?: 0 }
      override val embedThumbnail: Flow<Boolean> =
           settingStore.data.map { preferences -> preferences[EMBED_THUMBNAIL] ?: true }
@@ -121,6 +124,10 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
 
      override suspend fun setDownloadPath(value: String) {
           settingStore.edit { preferences -> preferences[DOWNLOAD_PATH] = value }
+     }
+
+     override suspend fun setBellState(value: Boolean) {
+          settingStore.edit { preferences -> preferences[BELLSTATE] = value }
      }
 
      override suspend fun setSleepRequest(value: Int) {
@@ -206,6 +213,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
      override suspend fun clearYtdlp() {
           settingStore.edit { preferences ->
                preferences.remove(key = DOWNLOAD_PATH)
+               preferences.remove(key = BELLSTATE)
                preferences.remove(key = SLEEP_REQUEST_KEY)
                preferences.remove(key = ARIA2C_MODE_KEY)
                preferences.remove(key = DOWNLOADING_DETAILS)

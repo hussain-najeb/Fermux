@@ -54,9 +54,8 @@ private enum class ExpandableDownloaderSetting {
 @Composable
 fun SimpleDownloaderPage(
      navController: NavHostController,
-     @SuppressLint("ContextCastToActivity") downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel(
-          viewModelStoreOwner = LocalContext.current as ComponentActivity
-     )
+     @SuppressLint("ContextCastToActivity")
+     downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
 ) {
 
      val sleepRequest by downloaderSettingsViewModel.sleepRequest.collectAsStateWithLifecycle()
@@ -71,6 +70,7 @@ fun SimpleDownloaderPage(
      val playlist by downloaderSettingsViewModel.playlistState.collectAsStateWithLifecycle()
      val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
      val logcat by downloaderSettingsViewModel.debug.collectAsStateWithLifecycle()
+     val bellState by downloaderSettingsViewModel.bellState.collectAsStateWithLifecycle()
 
      val isCheckingForUpdate by downloaderSettingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
      val ytdlpUpdateStatus by downloaderSettingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
@@ -93,6 +93,7 @@ fun SimpleDownloaderPage(
                          duration = SnackbarDuration.Short
                     )
                }
+               downloaderSettingsViewModel.setBellState(true)
           }
      )
 
@@ -115,7 +116,7 @@ fun SimpleDownloaderPage(
           SettingListInfo(
                title = "Notifications",
                description = "Press to enable notifications",
-               image =  R.drawable.bell_on,
+               image = if (bellState) R.drawable.bell_on else R.drawable.bell_off,
                onClick = requestNotificationPermission
           ),
           SettingListInfo(
