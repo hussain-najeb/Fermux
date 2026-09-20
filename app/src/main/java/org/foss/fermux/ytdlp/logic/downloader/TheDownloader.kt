@@ -26,7 +26,6 @@ TODO. I probably need BG-Utils with deno JS runtime with ytdlp PO solver in the 
 THEMOSTCOMPLETEYTDLPCLIENTINTHEWORLD
  */
 
-// TODO. Recompile ffmpeg to not include a screen shot of your file system, dumbass
 suspend fun downloaderLogic(
      context: Context,
      showDetails: Boolean,

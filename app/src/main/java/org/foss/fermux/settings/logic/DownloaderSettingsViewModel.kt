@@ -142,7 +142,11 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           viewModelScope.launch { settingsTab.setBellState(value) }
      }
 
-     fun setClearYtdlp() {
+     fun clearHistory() {
+          viewModelScope.launch { settingsTab.clearHistory() }
+     }
+
+     fun clearYtdlp() {
           viewModelScope.launch { settingsTab.clearYtdlp() }
      }
 

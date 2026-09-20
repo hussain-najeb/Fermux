@@ -50,6 +50,7 @@ interface DownloaderSettingsRepo {
      suspend fun setSponsorBlockCategories(value: Set<String>)
      suspend fun setJSONAudio(value: JSONHistoryCards)
      suspend fun setJSONVideo(value: JSONHistoryCards)
+     suspend fun clearHistory()
      suspend fun clearYtdlp()
 }
 
@@ -207,7 +208,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                val currentList = Json.decodeFromString<List<JSONHistoryCards>>(currentJson)
                val updatedList = currentList + value
                preferences[JSON_VIDEO_HISTORY] = Json.encodeToString(updatedList)
-          } // TODO. Add a button to remove or reset the history of both of these
+          }
      }
 
      override suspend fun clearYtdlp() {
@@ -229,4 +230,13 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                preferences.remove(key = EXTERNAL_DOWNLOADER)
           }
      }
+
+     override suspend fun clearHistory() {
+          settingStore.edit { preferences ->
+               preferences.remove(key = JSON_AUDIO_HISTORY)
+               preferences.remove(key = JSON_VIDEO_HISTORY)
+          }
+     }
 }
+
+

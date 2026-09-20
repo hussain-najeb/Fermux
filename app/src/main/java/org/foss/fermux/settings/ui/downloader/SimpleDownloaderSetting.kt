@@ -48,6 +48,7 @@ private enum class ExpandableDownloaderSetting {
      Aria2c,
      SleepRequest,
      ExternalDownloader,
+     ResetHistory,
      ResetDownloader
 }
 
@@ -150,6 +151,19 @@ fun SimpleDownloaderPage(
                position = TilePosition.MIDDLE
           ),
           SettingListInfo(
+               title = "Reset History",
+               description = "Reset both of the history cards",
+               icon = Icons.Default.SettingsBackupRestore,
+               trailingContent = {
+                    SettingsResetButton(
+                         expanded = expandedSetting == ExpandableDownloaderSetting.ResetHistory,
+                         onClick = {
+                              downloaderSettingsViewModel.clearHistory()
+                         }
+                    )
+               }
+          ),
+          SettingListInfo(
                title = if (ytdlpDetails) "Shown Logs" else "Hidden Logs",
                description = if (ytdlpDetails) "Shown the downloader Logs" else "Hidden the downloader Logs",
                image = if (ytdlpDetails) R.drawable.eye_open else R.drawable.eye_closed,
@@ -157,6 +171,12 @@ fun SimpleDownloaderPage(
                     SettingsSwitch(
                          checked = ytdlpDetails, onCheckedChange = {
                               downloaderSettingsViewModel.setYtdlpDetails(it)
+                              scope.launch {
+                                   snackbarHostState.showSnackbar(
+                                        message = "History settings cleared",
+                                        duration = SnackbarDuration.Short
+                                   )
+                              }
                          }
                     )
                },
@@ -175,14 +195,14 @@ fun SimpleDownloaderPage(
                     SettingsResetButton(
                          expanded = expandedSetting == ExpandableDownloaderSetting.ResetDownloader,
                          onClick = {
-                              downloaderSettingsViewModel.setClearYtdlp()
+                              downloaderSettingsViewModel.clearYtdlp()
                               scope.launch {
                                    snackbarHostState.showSnackbar(
                                         message = "Setting is back to default",
                                         duration = SnackbarDuration.Short
                                    )
                               }
-                         } //     TODO. Add a way to undo the action
+                         } //     TODO. Add a way to undo the actions
                     )
                },
                position = TilePosition.TOP
