@@ -70,7 +70,7 @@ fun FinishedDownloadCard(
           progress = progress,
           onCancel = onCancel,
           navController = navController,
-          showYtdlpDetails = showYtdlpDetails
+          showYtdlpDetails = showYtdlpDetails // TODO. This is borked on my phone, the cancel button is squished, soultion? add a box, then have two rows one for the logs and copy, the other, for cancel
      )
 }
 

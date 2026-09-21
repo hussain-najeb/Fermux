@@ -108,7 +108,7 @@ class DataStoreFFmpegSettings(private val settingStore: DataStore<Preferences>) 
      override suspend fun clearFFmpeg() {
           settingStore.edit { preferences ->
                preferences.remove(AUDIO_BITRATE_KEY)
-               preferences.remove(DOWNLOADER_DEBUG)
+               preferences.remove(FFMPEG_DEBUG)
                preferences.remove(NORMALIZE_AUDIO_KEY)
                preferences.remove(MONO_DOWNMIX_KEY)
                preferences.remove(ENABLE_VIDEO_COMPRESSION_KEY)

@@ -158,7 +158,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
      }
 
      override suspend fun setDownloaderDebug(value: Boolean) {
-          settingStore.edit { preferences -> preferences[FFMPEG_DEBUG] = value }
+          settingStore.edit { preferences -> preferences[DOWNLOADER_DEBUG] = value }
      }
 
      override suspend fun setFingerprinting(value: Boolean) {
@@ -215,6 +215,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
           settingStore.edit { preferences ->
                preferences.remove(key = DOWNLOAD_PATH)
                preferences.remove(key = BELLSTATE)
+               preferences.remove(key = DOWNLOADER_DEBUG)
                preferences.remove(key = SLEEP_REQUEST_KEY)
                preferences.remove(key = ARIA2C_MODE_KEY)
                preferences.remove(key = DOWNLOADING_DETAILS)
