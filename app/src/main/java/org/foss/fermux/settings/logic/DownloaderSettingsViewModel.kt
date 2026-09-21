@@ -25,7 +25,7 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      init {
           viewModelScope.launch {
                settingsTab.downloaderDebug.collect {
-                    DebugLogDownloader.setEnable(it)
+                    DebugLogDownloader.setDownloaderEnable(it)
                }
           }
      }
@@ -114,7 +114,7 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      }
 
      fun setDownloaderDebug(value: Boolean) {
-          DebugLogDownloader.setEnable(value)
+          DebugLogDownloader.setDownloaderEnable(value)
           viewModelScope.launch { settingsTab.setDownloaderDebug(value) }
      }
 

@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.foss.fermux.storage.DataStoreFFmpegSettings
 import org.foss.fermux.storage.FFmpegSettingsRepo
-import org.foss.fermux.utils.DebugLogDownloader
+import org.foss.fermux.utils.DebugLogFFmpeg
 
 
 class FFmpegSettingsViewModel(application: Application) : AndroidViewModel(application) {
@@ -43,7 +43,7 @@ class FFmpegSettingsViewModel(application: Application) : AndroidViewModel(appli
      }
 
      fun setFFmpegDebug(value: Boolean) {
-          DebugLogDownloader.setEnable(value)
+          DebugLogFFmpeg.setFFmpegDebug(value)
           viewModelScope.launch { ffmpegSettings.setFFmpegDebug(value) }
      }
 
