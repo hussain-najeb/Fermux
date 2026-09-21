@@ -116,6 +116,7 @@ fun DownloaderLogs(
                          modifier = Modifier.fillMaxWidth()
 
                     ) {
+                         if (debug) {
                          ErrorCopyButton(
                               modifier = Modifier
                                    .padding(2.dp)
@@ -136,7 +137,6 @@ fun DownloaderLogs(
                                    clipboard.setText(AnnotatedString(formattedClipboard))
                               }
                          )
-                         if (debug) {
                               ImageButton(
                                    modifier = Modifier
                                         .padding(2.dp)

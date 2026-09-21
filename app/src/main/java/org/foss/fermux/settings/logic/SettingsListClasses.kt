@@ -15,18 +15,18 @@ enum class TilePosition {
 
     fun TileShaper(
         outerRadius: Dp = 12.dp,
-        innerRadius: Dp = 1.dp
+        innerRadius: Dp = 3.dp
     ): Shape = when (this) {
         TOP -> RoundedCornerShape(
             topStart = outerRadius,
             topEnd = outerRadius,
-            bottomStart = 1.dp,
-            bottomEnd = 1.dp
+            bottomStart = 4.dp,
+            bottomEnd = 4.dp
         )
         MIDDLE -> RoundedCornerShape(innerRadius)
         BOTTOM -> RoundedCornerShape(
-            topStart = 1.dp,
-            topEnd = 1.dp,
+            topStart = 4.dp,
+            topEnd = 4.dp,
             bottomStart = outerRadius,
             bottomEnd = outerRadius
         )

@@ -153,6 +153,7 @@ fun SimpleFFmpegSetting(
                trailingContent = {
                     SettingsResetButton(
                          expanded = expandedFFmpegSetting == ExpandableFFmpegSetting.ResetFFmpeg,
+                         settingText = "Reset FFmpeg Settings",
                          onClick = {
                               ffmpegSettingsViewModel.setClearFFmpeg()
                               scope.launch {

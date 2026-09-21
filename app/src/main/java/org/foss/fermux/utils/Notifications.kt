@@ -1,35 +1,70 @@
 package org.foss.fermux.utils
 
 import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
+import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 
 @Composable
-fun rememberNotificationPermissionRequest(onGranted: () -> Unit): () -> Unit {
+fun rememberNotificationPermissionRequest(
+     onGranted: () -> Unit, onPermissionDenied: () -> Unit
+): () -> Unit {
+
+     fun Context.findActivity(): Activity? = when (this) {
+          is Activity -> this
+          is ContextWrapper -> baseContext.findActivity()
+          else -> null
+     }
+
+
      val context = LocalContext.current
+     val activity = context.findActivity()
+
+
+     val downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel()
 
      val launcher = rememberLauncherForActivityResult(
           ActivityResultContracts.RequestPermission()
      ) { isGranted ->
-               if (isGranted) onGranted()
-     }
-
-     return {
-          if (
-               Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-               ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.POST_NOTIFICATIONS
-               ) != PackageManager.PERMISSION_GRANTED
-          ) {
-               launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
-          } else {
+          if (isGranted) {
                onGranted()
+               downloaderSettingsViewModel.setBellState(true)
+          } else {
+               downloaderSettingsViewModel.setBellState(false)
+               val canAskAgain = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || activity?.let {
+                    ActivityCompat.shouldShowRequestPermissionRationale(
+                         it, Manifest.permission.POST_NOTIFICATIONS
+                    )
+               } == true
+               if (!canAskAgain) onPermissionDenied()
+          }
+     }
+     return {
+          if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+               downloaderSettingsViewModel.setBellState(true)
+               onGranted()
+          } else {
+               val granted = ContextCompat.checkSelfPermission(
+                    context, Manifest.permission.POST_NOTIFICATIONS
+               ) == PackageManager.PERMISSION_GRANTED
+
+
+               if (granted) {
+                    downloaderSettingsViewModel.setBellState(true)
+                    onGranted()
+               } else {
+                    launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+               }
           }
      }
 }

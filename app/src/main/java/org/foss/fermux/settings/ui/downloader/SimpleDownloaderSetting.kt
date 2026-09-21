@@ -1,4 +1,5 @@
 @file:Suppress("unused")
+
 package org.foss.fermux.settings.ui.downloader
 
 import android.annotation.SuppressLint
@@ -82,29 +83,40 @@ fun SimpleDownloaderPage(
      var expandedSetting by remember {
           mutableStateOf<ExpandableDownloaderSetting?>(null)
      }
+
      fun toggleDownloader(setting: ExpandableDownloaderSetting) {
           expandedSetting =
                if (expandedSetting == setting) null else setting
      }
+
      val requestNotificationPermission = rememberNotificationPermissionRequest(
           onGranted = {
                scope.launch {
                     snackbarHostState.showSnackbar(
-                         message = "Permission already granted",
+                         message = "Notifications enabled",
                          duration = SnackbarDuration.Short
                     )
                }
-               downloaderSettingsViewModel.setBellState(true)
+          },
+          onPermissionDenied = {
+               downloaderSettingsViewModel.setBellState(false)
+               scope.launch {
+                    snackbarHostState.showSnackbar(
+                         message = "Permission denied",
+                         duration = SnackbarDuration.Short
+                    )
+               }
           }
      )
-
 
      val simpleDownloaderSettings = listOf(
           SettingListInfo(
                title = "Update Yt-dlp",
-               description = if (isCheckingForUpdate) ytdlpUpdateStatus ?: "Checking for update..." else "Current version is $currentVersionName",
+               description = if (isCheckingForUpdate) ytdlpUpdateStatus
+                    ?: "Checking for update..." else "Current version is $currentVersionName",
                icon = Icons.Default.Update,
-               onClick = { toggleDownloader(ExpandableDownloaderSetting.YtdlpUpdater)
+               onClick = {
+                    toggleDownloader(ExpandableDownloaderSetting.YtdlpUpdater)
                },
                trailingContent = {
                     DownloaderVersionSwap(
@@ -154,11 +166,21 @@ fun SimpleDownloaderPage(
                title = "Reset History",
                description = "Reset both of the history cards",
                icon = Icons.Default.SettingsBackupRestore,
+               onClick = {
+                    toggleDownloader(setting = ExpandableDownloaderSetting.ResetHistory)
+               },
                trailingContent = {
                     SettingsResetButton(
                          expanded = expandedSetting == ExpandableDownloaderSetting.ResetHistory,
+                         settingText = "Reset History Cards",
                          onClick = {
                               downloaderSettingsViewModel.clearHistory()
+                              scope.launch {
+                                   snackbarHostState.showSnackbar(
+                                        message = "History settings cleared",
+                                        duration = SnackbarDuration.Short
+                                   )
+                              }
                          }
                     )
                }
@@ -171,12 +193,6 @@ fun SimpleDownloaderPage(
                     SettingsSwitch(
                          checked = ytdlpDetails, onCheckedChange = {
                               downloaderSettingsViewModel.setYtdlpDetails(it)
-                              scope.launch {
-                                   snackbarHostState.showSnackbar(
-                                        message = "History settings cleared",
-                                        duration = SnackbarDuration.Short
-                                   )
-                              }
                          }
                     )
                },
@@ -187,27 +203,6 @@ fun SimpleDownloaderPage(
 
      val advancedSettings = listOf(
           SettingListInfo(
-               title = "Reset Downloader Settings",
-               description = "Reset the downloader settings to there original state",
-               icon = Icons.Default.SettingsBackupRestore,
-               onClick = { toggleDownloader(ExpandableDownloaderSetting.ResetDownloader) },
-               trailingContent = {
-                    SettingsResetButton(
-                         expanded = expandedSetting == ExpandableDownloaderSetting.ResetDownloader,
-                         onClick = {
-                              downloaderSettingsViewModel.clearYtdlp()
-                              scope.launch {
-                                   snackbarHostState.showSnackbar(
-                                        message = "Setting is back to default",
-                                        duration = SnackbarDuration.Short
-                                   )
-                              }
-                         } //     TODO. Add a way to undo the actions
-                    )
-               },
-               position = TilePosition.TOP
-          ),
-          SettingListInfo(
                title = if (logcat) "Debug Logging On" else "Debug Logging Off",
                description = "Write diagnostic messages to Logcat in any builds",
                icon = Icons.Default.BugReport,
@@ -217,7 +212,7 @@ fun SimpleDownloaderPage(
                          onCheckedChange = { downloaderSettingsViewModel.setDownloaderDebug(it) }
                     )
                },
-               position = TilePosition.MIDDLE
+               position = TilePosition.TOP
           ),
           SettingListInfo(
                title = "SponsorBlock",
@@ -243,26 +238,26 @@ fun SimpleDownloaderPage(
                onClick = { toggleDownloader(ExpandableDownloaderSetting.Aria2c) },
                trailingContent = {
                     Aria2cModeSelector(
-                         expanded = expandedSetting == ExpandableDownloaderSetting.Aria2c ,
+                         expanded = expandedSetting == ExpandableDownloaderSetting.Aria2c,
                          downloaderSettingsViewModel = downloaderSettingsViewModel
                     )
                },
                position = TilePosition.MIDDLE
-          ), 
+          ),
           SettingListInfo(
                title = "Yt-dlp HLS Options",
                description = "Fallback options instead of Aria2, check the one you like if Aria2 is having issues, especially with m3u8 since yt-dlp prefers it's own options over Aria2 recently over security issues",
                image = R.drawable.hls_on,
                onClick = { toggleDownloader(ExpandableDownloaderSetting.ExternalDownloader) },
                trailingContent = {
-                   ExternalDownloaderSelection(
+                    ExternalDownloaderSelection(
                          enabled = externalDownloaderEnabled,
                          expanded = expandedSetting == ExpandableDownloaderSetting.ExternalDownloader,
                          downloaderSettingsViewModel = downloaderSettingsViewModel
-                         )
-                    },
-                    position = TilePosition.MIDDLE
-               ),
+                    )
+               },
+               position = TilePosition.MIDDLE
+          ),
           SettingListInfo(
                title = if (thumbnail) "Uncut Thumbnail" else "Cut Thumbnail",
                description = if (thumbnail) "The thumbnail of the downloaded media will be embedded and will be saved"
@@ -276,7 +271,7 @@ fun SimpleDownloaderPage(
                     )
                },
                position = TilePosition.MIDDLE
-          ), 
+          ),
           SettingListInfo(
                title = "Sleep Request Yt-dlp Flag",
                description = "Sleep request is a flag for delayed download between each request, each number represents a second. 0 means the flag is off",
@@ -315,7 +310,31 @@ fun SimpleDownloaderPage(
                },
                position = TilePosition.BOTTOM
           ),
+          SettingListInfo(
+               title = "Reset Downloader Settings",
+               description = "Reset the downloader settings to there original state",
+               icon = Icons.Default.SettingsBackupRestore,
+               onClick = { toggleDownloader(ExpandableDownloaderSetting.ResetDownloader) },
+               trailingContent = {
+                    SettingsResetButton(
+                         expanded = expandedSetting == ExpandableDownloaderSetting.ResetDownloader,
+                         settingText = "Reset Downloader Settings",
+                         onClick = {
+                              downloaderSettingsViewModel.clearYtdlp()
+                              scope.launch {
+                                   snackbarHostState.showSnackbar(
+                                        message = "Setting is back to default",
+                                        duration = SnackbarDuration.Short
+                                   )
+                              }
+                         } //     TODO. Add a way to undo the actions
+                    )
+               },
+               position = TilePosition.BOTTOM
+          )
      )
+
+
 
      LargeTopBarScaffold(
           title = "Downloader Settings",
