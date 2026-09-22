@@ -72,7 +72,7 @@ fun SimpleDownloaderPage(
      val playlist by downloaderSettingsViewModel.playlistState.collectAsStateWithLifecycle()
      val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
      val logcat by downloaderSettingsViewModel.downloaderDebug.collectAsStateWithLifecycle()
-     val bellState by downloaderSettingsViewModel.bellState.collectAsStateWithLifecycle()
+     val bellState by downloaderSettingsViewModel.downloaderBellState.collectAsStateWithLifecycle()
 
      val isCheckingForUpdate by downloaderSettingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
      val ytdlpUpdateStatus by downloaderSettingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
@@ -99,7 +99,7 @@ fun SimpleDownloaderPage(
                }
           },
           onPermissionDenied = {
-               downloaderSettingsViewModel.setBellState(false)
+               downloaderSettingsViewModel.setDownloaderBellState(false)
                scope.launch {
                     snackbarHostState.showSnackbar(
                          message = "Permission denied",

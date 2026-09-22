@@ -33,7 +33,7 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      val downloadPath: StateFlow<String> = settingsTab.downloadPath
           .stateIn(viewModelScope, SharingStarted.Lazily, "")
 
-     val bellState: StateFlow<Boolean> = settingsTab.bellState
+     val downloaderBellState: StateFlow<Boolean> = settingsTab.downloaderBellState
           .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
      val quickJS: StateFlow<Boolean> = settingsTab.quickJS
@@ -138,8 +138,8 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           viewModelScope.launch { settingsTab.setDownloadPath(value) }
      }
 
-     fun setBellState(value: Boolean) {
-          viewModelScope.launch { settingsTab.setBellState(value) }
+     fun setDownloaderBellState(value: Boolean) {
+          viewModelScope.launch { settingsTab.setDownloaderBellState(value) }
      }
 
      fun clearHistory() {

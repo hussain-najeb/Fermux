@@ -20,6 +20,9 @@ class FFmpegSettingsViewModel(application: Application) : AndroidViewModel(appli
 
      val audioBitrate: StateFlow<String> = ffmpegSettings.audioBitrate
           .stateIn(viewModelScope, SharingStarted.Lazily, "")
+
+     val ffmpegBellState: StateFlow<Boolean> = ffmpegSettings.ffmpegBellState
+          .stateIn(viewModelScope, SharingStarted.Lazily, false)
      val ffmpegDebug: StateFlow<Boolean> = ffmpegSettings.ffmpegDebug
           .stateIn(viewModelScope, SharingStarted.Lazily, false)
      val normalizeAudio: StateFlow<Boolean> = ffmpegSettings.normalizeAudio
@@ -40,6 +43,10 @@ class FFmpegSettingsViewModel(application: Application) : AndroidViewModel(appli
 
      fun setAudioBitrate(value: String) {
           viewModelScope.launch { ffmpegSettings.setAudioBitrate(value) }
+     }
+
+     fun setFFmpegBellState(value: Boolean) {
+          viewModelScope.launch { ffmpegSettings.setFFmpegBellState(value) }
      }
 
      fun setFFmpegDebug(value: Boolean) {

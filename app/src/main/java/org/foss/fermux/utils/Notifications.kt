@@ -14,33 +14,36 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
+import org.foss.fermux.settings.logic.FFmpegSettingsViewModel
 
 @Composable
 fun rememberNotificationPermissionRequest(
      onGranted: () -> Unit, onPermissionDenied: () -> Unit
 ): () -> Unit {
 
-     fun Context.findActivity(): Activity? = when (this) {
-          is Activity -> this
-          is ContextWrapper -> baseContext.findActivity()
-          else -> null
-     }
-
+     val downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel()
+     val ffmpegSettingsViewModel: FFmpegSettingsViewModel = viewModel()
 
      val context = LocalContext.current
      val activity = context.findActivity()
 
 
-     val downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel()
 
      val launcher = rememberLauncherForActivityResult(
           ActivityResultContracts.RequestPermission()
      ) { isGranted ->
           if (isGranted) {
                onGranted()
-               downloaderSettingsViewModel.setBellState(true)
+
+               downloaderSettingsViewModel.setDownloaderBellState(true)
+               ffmpegSettingsViewModel.setFFmpegBellState(true)
+
           } else {
-               downloaderSettingsViewModel.setBellState(false)
+
+               ffmpegSettingsViewModel.setFFmpegBellState(false)
+               downloaderSettingsViewModel.setDownloaderBellState(false)
+
+
                val canAskAgain = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || activity?.let {
                     ActivityCompat.shouldShowRequestPermissionRationale(
                          it, Manifest.permission.POST_NOTIFICATIONS
@@ -51,7 +54,10 @@ fun rememberNotificationPermissionRequest(
      }
      return {
           if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-               downloaderSettingsViewModel.setBellState(true)
+
+               downloaderSettingsViewModel.setDownloaderBellState(true)
+               ffmpegSettingsViewModel.setFFmpegBellState(true)
+
                onGranted()
           } else {
                val granted = ContextCompat.checkSelfPermission(
@@ -60,11 +66,20 @@ fun rememberNotificationPermissionRequest(
 
 
                if (granted) {
-                    downloaderSettingsViewModel.setBellState(true)
+
+                    downloaderSettingsViewModel.setDownloaderBellState(true)
+                    ffmpegSettingsViewModel.setFFmpegBellState(true)
+
                     onGranted()
                } else {
                     launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
                }
           }
      }
+}
+
+fun Context.findActivity(): Activity? = when (this) {
+     is Activity -> this
+     is ContextWrapper -> baseContext.findActivity()
+     else -> null
 }

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.map
 interface FFmpegSettingsRepo {
 
      val audioBitrate: Flow<String>
+     val ffmpegBellState: Flow<Boolean>
      val ffmpegDebug: Flow<Boolean>
      val normalizeAudio: Flow<Boolean>
      val monoDownmix: Flow<Boolean>
@@ -20,6 +21,7 @@ interface FFmpegSettingsRepo {
      val threadLimit: Flow<Int>
 
      suspend fun setAudioBitrate(value: String)
+     suspend fun setFFmpegBellState(value: Boolean)
      suspend fun setFFmpegDebug(value: Boolean)
      suspend fun setNormalizeAudio(value: Boolean)
      suspend fun setMonoDownmix(value: Boolean)
@@ -32,6 +34,7 @@ interface FFmpegSettingsRepo {
 }
 
 val AUDIO_BITRATE_KEY = stringPreferencesKey("ffmpeg_audio_bitrate")
+val FFMPEG_BELL_STATE = booleanPreferencesKey("ffmpeg_notifs")
 val FFMPEG_DEBUG = booleanPreferencesKey("debug_switch")
 val NORMALIZE_AUDIO_KEY = booleanPreferencesKey("ffmpeg_normalize_audio")
 val MONO_DOWNMIX_KEY = booleanPreferencesKey("ffmpeg_mono_downmix")
@@ -48,6 +51,8 @@ class DataStoreFFmpegSettings(private val settingStore: DataStore<Preferences>) 
 
      override val audioBitrate: Flow<String> =
           settingStore.data.map { preferences -> preferences[AUDIO_BITRATE_KEY] ?: "" }
+     override val ffmpegBellState: Flow<Boolean> =
+               settingStore.data.map { preferences -> preferences[FFMPEG_BELL_STATE] ?: false }
 
      override val ffmpegDebug: Flow<Boolean> =
           settingStore.data.map { preferences -> preferences[FFMPEG_DEBUG] ?: false }
@@ -63,6 +68,10 @@ class DataStoreFFmpegSettings(private val settingStore: DataStore<Preferences>) 
 
      override suspend fun setAudioBitrate(value: String) {
           settingStore.edit { preferences -> preferences[AUDIO_BITRATE_KEY] = value }
+     }
+
+     override suspend fun setFFmpegBellState(value: Boolean) {
+          settingStore.edit { preferences -> preferences[FFMPEG_BELL_STATE] = value }
      }
 
      override suspend fun setFFmpegDebug(value: Boolean) {

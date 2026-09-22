@@ -37,6 +37,7 @@ import org.foss.fermux.settings.logic.FFmpegSettingsViewModel
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
+import org.foss.fermux.utils.rememberNotificationPermissionRequest
 
 
 private enum class ExpandableFFmpegSetting {
@@ -61,11 +62,33 @@ fun SimpleFFmpegSetting(
      val monoDownmix by ffmpegSettingsViewModel.monoDownmix.collectAsStateWithLifecycle()
      val enableVideoCompression by ffmpegSettingsViewModel.enableVideoCompression.collectAsStateWithLifecycle()
      val useHardwareEncoder by ffmpegSettingsViewModel.useHardwareEncoder.collectAsStateWithLifecycle()
+     val bellState by ffmpegSettingsViewModel.ffmpegBellState.collectAsStateWithLifecycle()
      val logcat by ffmpegSettingsViewModel.ffmpegDebug.collectAsStateWithLifecycle()
 
 
      val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
+
+
+     val requestNotificationPermission = rememberNotificationPermissionRequest(
+          onGranted = {
+               scope.launch {
+                    snackbarHostState.showSnackbar(
+                         message = "Notifications enabled",
+                         duration = SnackbarDuration.Short
+                    )
+               }
+          },
+          onPermissionDenied = {
+               ffmpegSettingsViewModel.setFFmpegBellState(false)
+               scope.launch {
+                    snackbarHostState.showSnackbar(
+                         message = "Permission denied",
+                         duration = SnackbarDuration.Short
+                    )
+               }
+          }
+     )
 
      var expandedFFmpegSetting by remember {
           mutableStateOf<ExpandableFFmpegSetting?>(null)
@@ -90,6 +113,12 @@ fun SimpleFFmpegSetting(
                     )
                },
                position = TilePosition.TOP
+          ),
+          SettingListInfo(
+               title = "Notifications",
+               description = "Press to enable notifications",
+               image = if (bellState) R.drawable.bell_on else R.drawable.bell_off,
+               onClick = requestNotificationPermission
           ),
           SettingListInfo(
                title = "Normalize Audio",
