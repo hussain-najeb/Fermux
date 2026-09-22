@@ -22,13 +22,13 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import org.foss.fermux.R
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun LogImage(
      modifier: Modifier = Modifier,
      imageModifier: Modifier = Modifier,
-     image: Int,
      contentDescription: String? = null,
      imageRotation: Float = 0f,
      enabled: Boolean = true,
@@ -89,7 +89,7 @@ fun LogImage(
           onClick = onClick
      ) {
           Icon(
-               painter = painterResource(id = image),
+               painter = painterResource(id = R.drawable.logs),
                tint = iconColor,
                contentDescription = contentDescription,
                modifier = imageModifier.rotate(iconRotate)

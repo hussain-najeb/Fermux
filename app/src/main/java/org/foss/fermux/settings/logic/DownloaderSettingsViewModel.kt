@@ -154,8 +154,6 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      private val _isCheckingForUpdate = MutableStateFlow(false)
      val isCheckingForUpdate: StateFlow<Boolean> = _isCheckingForUpdate
      private val _ytdlpUpdateStatus = MutableStateFlow<String?>(null)
-     private val _upToDate = MutableStateFlow<Boolean?>(null)
-     val upToDate: StateFlow<Boolean?> = _upToDate // TODO. Add this in the UI
      val ytdlpUpdateStatus: StateFlow<String?> = _ytdlpUpdateStatus
      private val _currentVersionName = MutableStateFlow(
           YoutubeDL.getInstance().versionName(getApplication()) ?: "Unknown"
@@ -166,7 +164,6 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           if (!isUpdatingYtdlp.compareAndSet(false, true)) return
 
           _isCheckingForUpdate.value = true
-          _upToDate.value = null
 
           viewModelScope.launch(Dispatchers.IO) {
                _ytdlpUpdateStatus.value = "Updating yt-dlp..."
@@ -190,12 +187,10 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
                     }
 
                     _currentVersionName.value = YoutubeDL.getInstance().versionName(getApplication()) ?: "Unknown"
-                    _upToDate.value = true
                } catch (e: Exception) {
                     Log.e("fermuxYtdlpUpdater", "yt-dlp update failed", e)
                     _ytdlpUpdateStatus.value =
                          "Update failed"
-                    _upToDate.value = false
                } finally {
                     _isCheckingForUpdate.value = false
                     isUpdatingYtdlp.set(false)

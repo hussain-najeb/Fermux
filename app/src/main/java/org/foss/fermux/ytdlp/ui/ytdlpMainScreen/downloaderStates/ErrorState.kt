@@ -1,6 +1,5 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -20,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
 import org.foss.fermux.fermuxUIComponents.buttons.ErrorCopyButton
 import org.foss.fermux.fermuxUIComponents.buttons.LogImage
@@ -29,8 +27,7 @@ import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
 import org.foss.fermux.utils.Miscellaneous
 
-@SuppressLint("SuspiciousIndentation")
-@Composable // TODO. On my phone, this button is pushed too much, and looks squiched and distorted, fix it.
+@Composable
 fun ErrorCard(
      flavourMessage: String,
      rawError: String,
@@ -45,7 +42,7 @@ fun ErrorCard(
 
           DownloaderCard(
                errorBackground = true,
-               modifier = Modifier.aspectRatio(16f/9f),
+               modifier = Modifier.aspectRatio(16f / 9f),
                border = BorderStroke(1.dp, FermuxColors.fermuxWhiteColor)
           ) {
                Box(
@@ -88,22 +85,29 @@ fun ErrorCard(
                     }
                }
           }
-          Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
-               LogImage(
-                    modifier = Modifier
-                         .padding(start = 15.dp, end = 10.dp),
-                    image = R.drawable.logs,
-                    onClick = { navController.navigate(Miscellaneous.DownloaderLogs.route) }
-               )
-               ErrorCopyButton(
-                    modifier = Modifier
-                         .padding(end = 10.dp),
-                    onClick = { clipboard.setText(AnnotatedString(rawError)) }
-               )
+          Row(
+               modifier = Modifier.fillMaxWidth(),
+               horizontalArrangement = Arrangement.SpaceBetween,
+          ) {
+               Row {
+                    LogImage(
+                         modifier = Modifier.padding(start = 15.dp, end = 10.dp),
+                         onClick = {
+                              navController.navigate(Miscellaneous.DownloaderLogs.route)
+                         }
+                    )
+
+                    ErrorCopyButton(
+                         modifier = Modifier.padding(end = 10.dp),
+                         onClick = {
+                              clipboard.setText(AnnotatedString(rawError))
+                         }
+                    )
+               }
+
                CancelButton(
-                    modifier = Modifier
-                         .padding(start = 214.dp),
-                    onClick = { onCancel() }
+                    modifier = Modifier.padding(end = 15.dp),
+                    onClick = onCancel
                )
           }
      }

@@ -27,7 +27,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
-import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
 import org.foss.fermux.fermuxUIComponents.buttons.LogImage
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderCard
@@ -70,7 +69,7 @@ fun FinishedDownloadCard(
           progress = progress,
           onCancel = onCancel,
           navController = navController,
-          showYtdlpDetails = showYtdlpDetails // TODO. This is borked on my phone, the cancel button is squished, soultion? add a box, then have two rows one for the logs and copy, the other, for cancel
+          showYtdlpDetails = showYtdlpDetails
      )
 }
 
@@ -223,7 +222,6 @@ private fun FinishedCardContent(
           ) {
                if (showYtdlpDetails) {
                     LogImage(
-                         image = R.drawable.logs,
                          onClick = { navController.navigate(Miscellaneous.DownloaderLogs.route) }
                     )
                }

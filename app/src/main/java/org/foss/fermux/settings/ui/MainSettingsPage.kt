@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Brush
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -53,13 +52,6 @@ fun SettingsScreen(
                     position = TilePosition.MIDDLE
                ),
                SettingListInfo(
-                    title = "Themes",
-                    description = "Changing the theme of the app",
-                    icon = Icons.Default.Brush,
-                    route = SettingsScreens.Themes.route,
-                    position = TilePosition.MIDDLE
-               ),
-               SettingListInfo(
                     title = "About",
                     description = "About page of the app",
                     icon = Icons.Default.Info,
@@ -80,9 +72,7 @@ fun SettingsScreen(
                     .background(FermuxColors.fermuxBackground),
                contentPadding = paddingValues
           ) {
-               item { 
-                         Spacer(modifier = Modifier.height(17.dp))
-                    }
+               item { Spacer(modifier = Modifier.height(17.dp)) }
 
                items(
                     items = generalSettings,

@@ -74,6 +74,7 @@ fun SimpleDownloaderPage(
      val logcat by downloaderSettingsViewModel.downloaderDebug.collectAsStateWithLifecycle()
      val bellState by downloaderSettingsViewModel.downloaderBellState.collectAsStateWithLifecycle()
 
+
      val isCheckingForUpdate by downloaderSettingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
      val ytdlpUpdateStatus by downloaderSettingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
 
