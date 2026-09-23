@@ -14,10 +14,7 @@ import kotlinx.coroutines.launch
 import org.foss.fermux.storage.DataStoreDownloaderSettings
 import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.utils.DebugLogDownloader
-import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
-import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
-import org.foss.fermux.ytdlp.logic.downloader.ThumbnailFormat
-import org.foss.fermux.ytdlp.logic.downloader.YtdlpChannel
+import org.foss.fermux.ytdlp.logic.downloader.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(application) {
@@ -58,6 +55,9 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      val thumbnailFormat: StateFlow<ThumbnailFormat> = settingsTab.thumbnailFormat
           .stateIn(viewModelScope, SharingStarted.Lazily, ThumbnailFormat.Png)
 
+     val audioFormats: StateFlow<AudioFormat> = settingsTab.audioFormat
+          .stateIn(viewModelScope, SharingStarted.Lazily, AudioFormat.Mp3Format)
+
      val externalDownloaders: StateFlow<ExternalDownloaders> = settingsTab.externalDownloaders
           .stateIn(viewModelScope, SharingStarted.Lazily, ExternalDownloaders.TurnedOff)
 
@@ -95,6 +95,10 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
      fun setThumbnailFormat(value: ThumbnailFormat) {
           viewModelScope.launch { settingsTab.setThumbnail(value) }
+     }
+
+     fun setAudioFormat(value: AudioFormat) {
+          viewModelScope.launch { settingsTab.setAudioFormat(value) }
      }
 
      fun setExternalDownloaders(value: ExternalDownloaders) {

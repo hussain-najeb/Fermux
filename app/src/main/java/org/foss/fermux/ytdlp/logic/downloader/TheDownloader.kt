@@ -30,6 +30,8 @@ suspend fun downloaderLogic(
      context: Context,
      showDetails: Boolean,
      aria2cMode: Aria2cMode = Aria2cMode.Always,
+     thumbnail: ThumbnailFormat = ThumbnailFormat.Png,
+     audioFormats: AudioFormat = AudioFormat.Mp3Format,
      externalDownloaders: ExternalDownloaders = ExternalDownloaders.TurnedOff,
      url: String,
      taskId: String,
@@ -109,7 +111,7 @@ suspend fun downloaderLogic(
           else -> Unit
      }
 
-     if (embedThumbnail) {
+     if (embedThumbnail && thumbnail != ThumbnailFormat.Off) {
           request.addOption("--embed-thumbnail")
      }
 
@@ -121,13 +123,41 @@ suspend fun downloaderLogic(
 
      musicQuality?.let {
           request.addOption("-x")
-          request.addOption("--audio-format", "mp3")
           request.addOption("--audio-quality", it.audioQuality)
      }
      videoQuality?.let {
           request.addOption("--merge-output-format", "mp4")
           request.addOption("-f", it.videoQuality)
      }
+
+     when (audioFormats) {
+          AudioFormat.Mp3Format -> {
+               request.addOption("--audio-format", argument = audioFormats.audioFormats )
+          }
+          AudioFormat.FlacFormat -> {
+               request.addOption("--audio-format", argument = audioFormats.audioFormats)
+          }
+          AudioFormat.M4aFormat -> {
+               request.addOption("--audio-format", argument = audioFormats.audioFormats)
+          }
+          AudioFormat.OpusFormat -> {
+               request.addOption("--audio-format", argument = audioFormats.audioFormats)
+          }
+     }
+
+     when (thumbnail) {
+          ThumbnailFormat.Png -> {
+               request.addOption("--convert-thumbnails", argument = thumbnail.thumbnailFormat)
+          }
+          ThumbnailFormat.Jpeg -> {
+               request.addOption("--convert-thumbnails", argument = thumbnail.thumbnailFormat)
+          }
+          ThumbnailFormat.WebP -> {
+               request.addOption("--convert-thumbnails", argument = thumbnail.thumbnailFormat)
+          }
+          ThumbnailFormat.Off -> {}
+     }
+
 
      request.addOption("-i")
      request.addOption("--embed-metadata")

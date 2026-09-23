@@ -15,25 +15,24 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
-import org.foss.fermux.ytdlp.logic.downloader.ThumbnailFormat
+import org.foss.fermux.ytdlp.logic.downloader.AudioFormat
 
 @Composable
-fun ThumbnailSelector(
+fun AudioFormatSelector(
      expanded: Boolean,
 ) {
 
      val downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel()
 
-     val thumbnailOptions = listOf(
-          ThumbnailFormat.Off to "off",
-          ThumbnailFormat.Jpeg to "jpeg",
-          ThumbnailFormat.Png to "png",
-          ThumbnailFormat.WebP to "webp",
+     val audioFormatOptions = listOf(
+          AudioFormat.Mp3Format to "mp3",
+          AudioFormat.OpusFormat to "opus",
+          AudioFormat.FlacFormat to "flac",
+          AudioFormat.M4aFormat to "m4a"
      )
 
 
-     val thumbnailFormats by downloaderSettingsViewModel.thumbnailFormat.collectAsStateWithLifecycle()
-     val thumbnail by downloaderSettingsViewModel.embedThumbnail.collectAsStateWithLifecycle()
+     val audioFormat by downloaderSettingsViewModel.audioFormats.collectAsStateWithLifecycle()
 
      AnimatedVisibility(
           visible = expanded,
@@ -53,16 +52,15 @@ fun ThumbnailSelector(
                          .padding(7.dp)
                          .fillMaxWidth()
                ) {
-                    thumbnailOptions.forEachIndexed { index, (format, label) ->
+                    audioFormatOptions.forEachIndexed { index, (format, label) ->
                          SegmentedButton(
-                              selected = thumbnailFormats == format,
-                              onClick = { downloaderSettingsViewModel.setThumbnailFormat(format) },
+                              selected = audioFormat == format,
+                              onClick = { downloaderSettingsViewModel.setAudioFormat(format) },
                               shape = SegmentedButtonDefaults.itemShape(
                                    index = index,
-                                   count = thumbnailOptions.size,
+                                   count = audioFormatOptions.size,
                                    baseShape = RoundedCornerShape(8.dp)
                               ),
-                              enabled = thumbnail,
                               colors = SegmentedButtonDefaults.colors(
                                    activeContainerColor = FermuxColors.activeContainer,
                                    activeContentColor = FermuxColors.activeContent,

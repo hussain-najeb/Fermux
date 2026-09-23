@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
 import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
+import org.foss.fermux.ytdlp.logic.downloader.AudioFormat
 import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
 import org.foss.fermux.ytdlp.logic.downloader.ThumbnailFormat
 
@@ -25,6 +26,7 @@ interface DownloaderSettingsRepo {
      val fingerprinting: Flow<Boolean>
      val aria2cMode: Flow<Aria2cMode>
      val thumbnailFormat: Flow<ThumbnailFormat>
+     val audioFormat: Flow<AudioFormat>
      val externalDownloaders: Flow<ExternalDownloaders>
      val ytdlpDetails: Flow<Boolean>
      val sponsorBlock: Flow<Boolean>
@@ -40,6 +42,7 @@ interface DownloaderSettingsRepo {
      suspend fun setSleepRequest(value: Int)
      suspend fun setAria2cMode(value: Aria2cMode)
      suspend fun setThumbnail(value: ThumbnailFormat)
+     suspend fun setAudioFormat(value: AudioFormat)
      suspend fun setExternalDownloader(value: ExternalDownloaders)
      suspend fun setQuickJS(value: Boolean)
      suspend fun setDownloaderDebug(value: Boolean)
@@ -81,6 +84,7 @@ val DOWNLOADER_BELL_STATE = booleanPreferencesKey("bellState")
 val SLEEP_REQUEST_KEY = intPreferencesKey("sleep_request_seconds")
 val ARIA2C_MODE_KEY = stringPreferencesKey("aria2c_mode")
 val THUMBNAIL_FORMATS = stringPreferencesKey("thumbnail_selection")
+val AUDIO_FORMATS = stringPreferencesKey("audio_formats")
 val EXTERNAL_DOWNLOADER = stringPreferencesKey("set external downloaders for ytdlp")
 val DOWNLOADING_DETAILS = booleanPreferencesKey("download_details")
 val SHOW_YTDLP_VIDEO_HISTORY = booleanPreferencesKey("video_history")
@@ -117,6 +121,12 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
           preferences[THUMBNAIL_FORMATS]
                ?.let { runCatching { ThumbnailFormat.valueOf(it) }.getOrNull() }
                ?: ThumbnailFormat.Png
+     }
+
+     override val audioFormat: Flow<AudioFormat> = settingStore.data.map { preferences ->
+          preferences[AUDIO_FORMATS]
+               ?.let { runCatching { AudioFormat.valueOf(it) }.getOrNull() }
+               ?: AudioFormat.Mp3Format
      }
      override val externalDownloaders: Flow<ExternalDownloaders> = settingStore.data.map { preferences ->
           preferences[EXTERNAL_DOWNLOADER]
@@ -172,6 +182,12 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
      override suspend fun setThumbnail(value: ThumbnailFormat) {
           settingStore.edit { preferences ->
                preferences[THUMBNAIL_FORMATS] = value.name
+          }
+     }
+
+     override suspend fun setAudioFormat(value: AudioFormat) {
+          settingStore.edit { preferences ->
+               preferences[AUDIO_FORMATS] = value.name
           }
      }
 
@@ -247,7 +263,8 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                preferences.remove(key = SLEEP_REQUEST_KEY)
                preferences.remove(key =  EMBED_THUMBNAIL)
                preferences.remove(key = PLAYLIST_STATUS)
-               preferences.remove(key = THUMBNAIL_FORMATS )
+               preferences.remove(key = THUMBNAIL_FORMATS)
+               preferences.remove(key = AUDIO_FORMATS)
           }
      }
 

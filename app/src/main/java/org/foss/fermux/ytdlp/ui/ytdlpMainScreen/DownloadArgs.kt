@@ -7,7 +7,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.SettingsBackupRestore
-import androidx.compose.material.icons.filled.Speaker
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -19,6 +18,7 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.SettingsResetButton
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.AudioFormatSelector
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.RequestTimeSlider
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.ThumbnailSelector
 import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxSnackBar
@@ -29,10 +29,10 @@ import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
-import org.foss.fermux.ytdlp.logic.downloader.AudioFormat
 
 private enum class ExpandableOptionList {
-     Formats,
+     ThumbnailFormats,
+     AudioFormats,
      SleepRequest,
      ResetArgs,
 }
@@ -51,7 +51,8 @@ fun DownloaderArgs(navController: NavController) {
      val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
 
-     var audioFormats by remember { mutableStateOf<AudioFormat?>(AudioFormat.Mp3Format) }
+     val audioFormats by downloaderSettingsViewModel.audioFormats.collectAsStateWithLifecycle()
+     val thumbnailFormat by downloaderSettingsViewModel.thumbnailFormat.collectAsStateWithLifecycle()
      var expandedSetting by remember { mutableStateOf<ExpandableOptionList?>(null) }
 
 
@@ -61,16 +62,28 @@ fun DownloaderArgs(navController: NavController) {
 
      val args = listOf(
           SettingListInfo(
-               title = "Set Audio Format",
-               description = "This option sets the format of the audio when downloading. current format is $audioFormats",
-               icon = Icons.Default.Speaker,
-               onClick = { toggleExpansion(setting = ExpandableOptionList.Formats) },
+               title = "Set Audio Formats",
+               description = "This option sets the format of the audio when downloading, current format is $audioFormats",
+               image = R.drawable.audio_file,
+               onClick = { toggleExpansion(setting = ExpandableOptionList.AudioFormats) },
                trailingContent = {
-                    ThumbnailSelector(
-                         expanded = expandedSetting == ExpandableOptionList.Formats
+                    AudioFormatSelector(
+                         expanded = expandedSetting == ExpandableOptionList.AudioFormats
                     )
                },
                position = TilePosition.TOP
+          ),
+          SettingListInfo(
+               title = "Set Thumbnail Format",
+               description = "This option sets the format of the thumbnail when downloading. current format is $thumbnailFormat",
+               image = R.drawable.file_image,
+               onClick = { toggleExpansion(setting = ExpandableOptionList.ThumbnailFormats) },
+               trailingContent = {
+                    ThumbnailSelector(
+                         expanded = expandedSetting == ExpandableOptionList.ThumbnailFormats
+                    )
+               },
+               position = TilePosition.MIDDLE
           ),
           SettingListInfo(
                title = if (thumbnail) "Uncut Thumbnail" else "Cut Thumbnail",
@@ -150,6 +163,7 @@ fun DownloaderArgs(navController: NavController) {
                               title = option.title,
                               description = option.description,
                               image = option.image,
+                              icon = option.icon,
                               onClick = { option.onClick?.invoke() },
                               content = option.content,
                               trailingContent = option.trailingContent ,

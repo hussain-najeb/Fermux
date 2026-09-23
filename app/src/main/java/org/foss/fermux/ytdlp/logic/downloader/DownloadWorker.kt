@@ -114,6 +114,8 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
           val embedThumbnail = settingsTab.embedThumbnail.first()
           val playlistStatus = settingsTab.playlistStatus.first()
           val aria2cMode = settingsTab.aria2cMode.first()
+          val thumbnailFormat = settingsTab.thumbnailFormat.first()
+          val audioFormat = settingsTab.audioFormat.first()
           val externalDownloaders = settingsTab.externalDownloaders.first()
           val quickJS = settingsTab.quickJS.first()
           val fingerprinting = settingsTab.fingerprinting.first()
@@ -138,6 +140,8 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
                     url = url,
                     taskId = taskId,
                     aria2cMode = aria2cMode,
+                    audioFormats = audioFormat,
+                    thumbnail = thumbnailFormat,
                     externalDownloaders = externalDownloaders,
                     quickJs = quickJS,
                     fingerprinting = fingerprinting,

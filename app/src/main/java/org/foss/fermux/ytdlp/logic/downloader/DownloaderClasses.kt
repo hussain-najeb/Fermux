@@ -70,10 +70,9 @@ enum class AudioFormat(val audioFormats: String) {
 
 enum class ThumbnailFormat(val thumbnailFormat: String) {
      Png("png"),
-     Jpeg("Jpeg"),
-     WebP("WebP"),
-     Avfi("Avfi"),
-     Off("turned ff")
+     Jpeg("jpg"),
+     WebP("webp"),
+     Off("")
 }
 
 /**
