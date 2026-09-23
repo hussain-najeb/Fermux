@@ -24,6 +24,7 @@ import org.foss.fermux.fermuxUIComponents.downloaderComponents.ThumbnailSelector
 import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxSnackBar
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
+import org.foss.fermux.fermuxUIComponents.settingsComponents.TileOptions
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.TilePosition
@@ -32,7 +33,6 @@ import org.foss.fermux.ytdlp.logic.downloader.AudioFormat
 
 private enum class ExpandableOptionList {
      Formats,
-     ThumbnailFormats,
      SleepRequest,
      ResetArgs,
 }
@@ -65,8 +65,26 @@ fun DownloaderArgs(navController: NavController) {
                description = "This option sets the format of the audio when downloading. current format is $audioFormats",
                icon = Icons.Default.Speaker,
                onClick = { toggleExpansion(setting = ExpandableOptionList.Formats) },
-               trailingContent = {},
+               trailingContent = {
+                    ThumbnailSelector(
+                         expanded = expandedSetting == ExpandableOptionList.Formats
+                    )
+               },
                position = TilePosition.TOP
+          ),
+          SettingListInfo(
+               title = if (thumbnail) "Uncut Thumbnail" else "Cut Thumbnail",
+               description = if (thumbnail) "The thumbnail of the downloaded media will be embedded and will be saved"
+               else "The thumbnail of the downloaded media will be removed and won't be saved",
+               image = if (thumbnail) R.drawable.scissors_off else R.drawable.scissors_on,
+               content = {
+                    SettingsSwitch(
+                         checked = thumbnail, onCheckedChange = {
+                              downloaderSettingsViewModel.setEmbedThumbnail(it)
+                         }
+                    )
+               },
+               position = TilePosition.MIDDLE
           ),
           SettingListInfo(
                title = if (playlist) "Playlist On" else "Playlist Off",
@@ -86,25 +104,6 @@ fun DownloaderArgs(navController: NavController) {
                trailingContent = {
                     RequestTimeSlider(
                          expanded = expandedSetting == ExpandableOptionList.SleepRequest
-                    )
-               },
-               position = TilePosition.MIDDLE
-          ),
-          SettingListInfo(
-               title = if (thumbnail) "Uncut Thumbnail" else "Cut Thumbnail",
-               description = if (thumbnail) "The thumbnail of the downloaded media will be embedded and will be saved"
-               else "The thumbnail of the downloaded media will be removed and won't be saved",
-               image = if (thumbnail) R.drawable.scissors_off else R.drawable.scissors_on,
-               content = {
-                    SettingsSwitch(
-                         checked = thumbnail, onCheckedChange = {
-                              downloaderSettingsViewModel.setEmbedThumbnail(it)
-                         }
-                    )
-               },
-               trailingContent = {
-                    ThumbnailSelector(
-                         expanded = expandedSetting == ExpandableOptionList.ThumbnailFormats,
                     )
                },
                position = TilePosition.MIDDLE
@@ -134,8 +133,6 @@ fun DownloaderArgs(navController: NavController) {
      )
 
 
-
-
      LargeTopBarScaffold(
           title = "Arguments",
           onBack = { navController.popBackStack() },
@@ -148,8 +145,18 @@ fun DownloaderArgs(navController: NavController) {
                     modifier = Modifier.verticalScroll(rememberScrollState()).fillMaxSize().imePadding()
                          .background(FermuxColors.fermuxBackground)
                ) {
-
-
+                    args.forEach { option ->
+                         TileOptions(
+                              title = option.title,
+                              description = option.description,
+                              image = option.image,
+                              onClick = { option.onClick?.invoke() },
+                              content = option.content,
+                              trailingContent = option.trailingContent ,
+                              shape = option.position.TileShaper()
+                         )
+                    }
+               }
+          }
      }
-
 }
