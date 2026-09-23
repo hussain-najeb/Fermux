@@ -5,6 +5,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.ServiceInfo
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.net.toUri
 import androidx.work.*
@@ -27,6 +29,9 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.roundToInt
 
 class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
+
+
+     // TODO. Add in a way to kill the ffmpeg process when canceled by the user, the downloader viewmodel and the yauusername work can be written verbatim here maybe.
      private val ffmpegWorkNotif: NotificationManager
           get() = applicationContext.getSystemService(
                Context.NOTIFICATION_SERVICE
@@ -85,6 +90,7 @@ private fun createFFmpegNotif(
           private const val FFMPEG_CHANNEL_ID = "Converter_Notif"
      }
 
+     @RequiresApi(Build.VERSION_CODES.S)
      override suspend fun doWork(): Result {
 
           setForeground(

@@ -61,6 +61,9 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      val videoFormats: StateFlow<VideoFormat> = settingsTab.videoFormat
           .stateIn(viewModelScope, SharingStarted.Lazily, VideoFormat.Mp4Format)
 
+     val videoComp: StateFlow<Boolean> = settingsTab.videoComp
+          .stateIn(viewModelScope, SharingStarted.Lazily, false)
+
      val externalDownloaders: StateFlow<ExternalDownloaders> = settingsTab.externalDownloaders
           .stateIn(viewModelScope, SharingStarted.Lazily, ExternalDownloaders.TurnedOff)
 
@@ -106,6 +109,10 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
      fun setVideoFormat(value: VideoFormat) {
           viewModelScope.launch { settingsTab.setVideoFormat(value) }
+     }
+
+     fun setVideoComp(value: Boolean) {
+          viewModelScope.launch { settingsTab.setVideoComp(value) }
      }
 
      fun setExternalDownloaders(value: ExternalDownloaders) {

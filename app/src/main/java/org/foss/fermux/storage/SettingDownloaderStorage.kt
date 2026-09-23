@@ -25,6 +25,7 @@ interface DownloaderSettingsRepo {
      val thumbnailFormat: Flow<ThumbnailFormat>
      val audioFormat: Flow<AudioFormat>
      val videoFormat: Flow<VideoFormat>
+     val videoComp: Flow<Boolean>
      val externalDownloaders: Flow<ExternalDownloaders>
      val ytdlpDetails: Flow<Boolean>
      val sponsorBlock: Flow<Boolean>
@@ -42,6 +43,7 @@ interface DownloaderSettingsRepo {
      suspend fun setThumbnail(value: ThumbnailFormat)
      suspend fun setAudioFormat(value: AudioFormat)
      suspend fun setVideoFormat(value: VideoFormat)
+     suspend fun setVideoComp(value: Boolean)
      suspend fun setExternalDownloader(value: ExternalDownloaders)
      suspend fun setQuickJS(value: Boolean)
      suspend fun setDownloaderDebug(value: Boolean)
@@ -85,6 +87,7 @@ val ARIA2C_MODE_KEY = stringPreferencesKey("aria2c_mode")
 val THUMBNAIL_FORMATS = stringPreferencesKey("thumbnail_selection")
 val AUDIO_FORMATS = stringPreferencesKey("audio_formats")
 val VIDEO_FORMATS = stringPreferencesKey("video_formats")
+val VIDEO_COMP = booleanPreferencesKey("video_comp")
 val EXTERNAL_DOWNLOADER = stringPreferencesKey("set external downloaders for ytdlp")
 val DOWNLOADING_DETAILS = booleanPreferencesKey("download_details")
 val SHOW_YTDLP_VIDEO_HISTORY = booleanPreferencesKey("video_history")
@@ -133,6 +136,10 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
           preferences[VIDEO_FORMATS]
                ?.let { runCatching { VideoFormat.valueOf(it) }.getOrNull() }
                ?: VideoFormat.Mp4Format
+     }
+
+     override val videoComp: Flow<Boolean> = settingStore.data.map { preferences ->
+          preferences[VIDEO_COMP] ?: false
      }
 
      override val externalDownloaders: Flow<ExternalDownloaders> = settingStore.data.map { preferences ->
@@ -201,6 +208,12 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
      override suspend fun setVideoFormat(value: VideoFormat) {
           settingStore.edit { preferences ->
                preferences[VIDEO_FORMATS] = value.name
+          }
+     }
+
+     override suspend fun setVideoComp(value: Boolean) {
+          settingStore.edit { preferences ->
+               preferences[VIDEO_COMP] = value
           }
      }
 
@@ -279,6 +292,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                preferences.remove(key = THUMBNAIL_FORMATS)
                preferences.remove(key = AUDIO_FORMATS)
                preferences.remove(key = VIDEO_FORMATS)
+               preferences.remove(key = VIDEO_COMP)
           }
      }
 

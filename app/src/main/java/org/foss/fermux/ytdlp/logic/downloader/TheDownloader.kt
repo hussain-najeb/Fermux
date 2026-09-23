@@ -33,6 +33,7 @@ suspend fun downloaderLogic(
      thumbnail: ThumbnailFormat = ThumbnailFormat.Png,
      audioFormats: AudioFormat = AudioFormat.Mp3Format,
      videoFormats: VideoFormat = VideoFormat.Mp4Format,
+     videoComp: Boolean,
      externalDownloaders: ExternalDownloaders = ExternalDownloaders.TurnedOff,
      url: String,
      taskId: String,
@@ -139,12 +140,9 @@ suspend fun downloaderLogic(
      }
 
 
-     if (videoQuality != null) {
+     if (videoQuality != null && videoComp) {
           request.addOption("--recode-video", videoFormats.videoFormat)
      }
-
-     // TODO. Add a boolean for this for "force format" sake. with recode-video as compatibility option, and --merge-output-format as the not compatibility
-
 
      request.addOption("-i")
      request.addOption("--embed-metadata")

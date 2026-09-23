@@ -51,6 +51,7 @@ fun DownloaderArgs(navController: NavController) {
      val videoFormats by downloaderSettingsViewModel.videoFormats.collectAsStateWithLifecycle()
      val audioFormats by downloaderSettingsViewModel.audioFormats.collectAsStateWithLifecycle()
      val thumbnailFormat by downloaderSettingsViewModel.thumbnailFormat.collectAsStateWithLifecycle()
+     val videoComp by downloaderSettingsViewModel.videoComp.collectAsStateWithLifecycle()
 
      val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
@@ -84,6 +85,18 @@ fun DownloaderArgs(navController: NavController) {
                trailingContent = {
                     VideoFormatSelector(
                          expanded = expandedSetting == ExpandableOptionList.VideoFormats
+                    )
+               },
+               position = TilePosition.MIDDLE
+          ),
+          SettingListInfo(
+               title = "Video Compatibility",
+               description = "Re-encodes the downloaded video to enforce a video format. This option is much more reliable but it's slower and CPU intensive",
+               image = R.drawable.re_encodes,
+               content = {
+                    SettingsSwitch(
+                         checked = videoComp,
+                         onCheckedChange = { downloaderSettingsViewModel.setVideoComp(it) }
                     )
                },
                position = TilePosition.MIDDLE
