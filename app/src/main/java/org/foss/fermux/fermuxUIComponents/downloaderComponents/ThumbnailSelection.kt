@@ -12,24 +12,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
-import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
+import org.foss.fermux.ytdlp.logic.downloader.ThumbnailFormat
 
 @Composable
-fun Aria2cModeSelector(
+fun ThumbnailSelector(
      expanded: Boolean,
-     downloaderSettingsViewModel: DownloaderSettingsViewModel
 ) {
 
-     val aria2cModeOptions = listOf(
-     Aria2cMode.Disabled to "Off",
-     Aria2cMode.EdgeCaseOnly to "Edge Case",
-     Aria2cMode.Always to "Always"
+     val downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel()
+
+     val thumbnailOptions = listOf(
+          ThumbnailFormat.Avfi to "avfi",
+          ThumbnailFormat.Jpeg to "jpeg",
+          ThumbnailFormat.Png to "png",
+          ThumbnailFormat.WebP to "webp"
      )
 
 
-     val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
+     val thumbnailFormats by downloaderSettingsViewModel.thumbnailFormat.collectAsStateWithLifecycle()
+     val thumbnail by downloaderSettingsViewModel.embedThumbnail.collectAsStateWithLifecycle()
 
      AnimatedVisibility(
           visible = expanded,
@@ -49,15 +53,16 @@ fun Aria2cModeSelector(
                          .padding(7.dp)
                          .fillMaxWidth()
                ) {
-                    aria2cModeOptions.forEachIndexed { index, (mode, label) ->
+                    thumbnailOptions.forEachIndexed { index, (format, label) ->
                          SegmentedButton(
-                              selected = aria2cMode == mode,
-                              onClick = { downloaderSettingsViewModel.setAria2cMode(mode) },
+                              selected = thumbnailFormats == format,
+                              onClick = { downloaderSettingsViewModel.setThumbnailFormat(format) },
                               shape = SegmentedButtonDefaults.itemShape(
                                    index = index,
-                                   count = aria2cModeOptions.size,
+                                   count = thumbnailOptions.size,
                                    baseShape = RoundedCornerShape(8.dp)
                               ),
+                              enabled = thumbnail,
                               colors = SegmentedButtonDefaults.colors(
                                    activeContainerColor = FermuxColors.activeContainer,
                                    activeContentColor = FermuxColors.activeContent,

@@ -16,6 +16,7 @@ import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.utils.DebugLogDownloader
 import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
+import org.foss.fermux.ytdlp.logic.downloader.ThumbnailFormat
 import org.foss.fermux.ytdlp.logic.downloader.YtdlpChannel
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -54,6 +55,9 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      val aria2cMode: StateFlow<Aria2cMode> = settingsTab.aria2cMode
      .stateIn(viewModelScope, SharingStarted.Lazily, Aria2cMode.Always)
 
+     val thumbnailFormat: StateFlow<ThumbnailFormat> = settingsTab.thumbnailFormat
+          .stateIn(viewModelScope, SharingStarted.Lazily, ThumbnailFormat.Png)
+
      val externalDownloaders: StateFlow<ExternalDownloaders> = settingsTab.externalDownloaders
           .stateIn(viewModelScope, SharingStarted.Lazily, ExternalDownloaders.TurnedOff)
 
@@ -87,6 +91,10 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
      fun setAria2cMode(value: Aria2cMode) {
           viewModelScope.launch { settingsTab.setAria2cMode(value) }
+     }
+
+     fun setThumbnailFormat(value: ThumbnailFormat) {
+          viewModelScope.launch { settingsTab.setThumbnail(value) }
      }
 
      fun setExternalDownloaders(value: ExternalDownloaders) {
@@ -148,6 +156,10 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
      fun clearYtdlp() {
           viewModelScope.launch { settingsTab.clearYtdlp() }
+     }
+
+     fun clearArgs() {
+          viewModelScope.launch { settingsTab.clearArgs() }
      }
 
      private val isUpdatingYtdlp = AtomicBoolean(false)

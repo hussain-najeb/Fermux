@@ -18,6 +18,7 @@ import org.foss.fermux.terminal.main.ui.FermuxTerminalScreen
 import org.foss.fermux.ytdlp.ui.historyPage.DownloadVideoList
 import org.foss.fermux.ytdlp.ui.historyPage.DownloadedAudioScreen
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloadContent
+import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloaderArgs
 
 
 sealed class MainScreens(val route: String, val descriptor: String?) {
@@ -46,6 +47,8 @@ sealed class Miscellaneous(val route: String) {
      object DownloaderLogs : Miscellaneous(route = "YtdlpLog")
      object DownloaderVideosList : Miscellaneous(route = "History Video List")
      object DownloaderMusicList : Miscellaneous(route = "History Audio List")
+
+     object DownloaderArgs : Miscellaneous(route = "Downloader Arguments")
 }
 @SuppressLint("ViewModelConstructorInComposable")
 @Composable
@@ -80,5 +83,6 @@ fun FermuxAppMainScreen() {
           composable(route = Miscellaneous.DownloaderLogs.route) { DownloaderLogs(navController) }
           composable(route = Miscellaneous.DownloaderMusicList.route) { DownloadedAudioScreen(navController) }
           composable(route = Miscellaneous.DownloaderVideosList.route) { DownloadVideoList(navController) }
+          composable(route = Miscellaneous.DownloaderArgs.route) { DownloaderArgs(navController) }
      }
 }

@@ -34,7 +34,6 @@ suspend fun downloaderLogic(
      url: String,
      taskId: String,
      sleepRequest: Int = 0,
-//   audioFormat: AudioFormat,
      playlistStatus: Boolean = false,
      quickJs: Boolean = true,
      fingerprinting: Boolean = true,
@@ -110,7 +109,6 @@ suspend fun downloaderLogic(
           else -> Unit
      }
 
-   //if (embedThumbnail && audioFormat != AudioFormat.OpusFormat) {
      if (embedThumbnail) {
           request.addOption("--embed-thumbnail")
      }
@@ -124,8 +122,7 @@ suspend fun downloaderLogic(
      musicQuality?.let {
           request.addOption("-x")
           request.addOption("--audio-format", "mp3")
-//          request.addOption("--audio-format", audioFormat.ytdlpFormat)
-          request.addOption("--audio-quality", it.musicQuality)
+          request.addOption("--audio-quality", it.audioQuality)
      }
      videoQuality?.let {
           request.addOption("--merge-output-format", "mp4")

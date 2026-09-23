@@ -84,7 +84,7 @@ fun SideBar(
                }
           }
           ImageButton(
-               modifier = Modifier.size(70.dp).align(Alignment.BottomStart),
+               modifier = Modifier.size(60.dp).align(Alignment.BottomStart),
                imageModifier = Modifier.size(32.dp),
                image = if (isSideBarOpen) R.drawable.sidebar_right else R.drawable.sidebar_left,
                onClick = { isSideBarOpen = !isSideBarOpen },

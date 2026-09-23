@@ -34,7 +34,7 @@ enum class FormatKind { Video, Audio, Idle }
 /**
  * Enum class for specifying the quality of the audio when used to download audio.
  */
-enum class AudioQuality(val musicQuality: String) // audio quality class to pass for ytdlp.
+enum class AudioQuality(val audioQuality: String) // audio quality class to pass for ytdlp.
 {
      BEST("0"),   // ~220-260 kbps (V0)
      HIGH("2"),   // ~170-210 kbps (V2)
@@ -43,10 +43,6 @@ enum class AudioQuality(val musicQuality: String) // audio quality class to pass
 }
 
 
-// TODO. Add format support for the downloader tab dialog
-//enum class AudioFormat (val musicFormat: String) {
-//    MP3()
-//}
 
 /**
  * Enum class for specifying the quality of the video when used to download video.
@@ -65,12 +61,20 @@ enum class VideoQuality(val videoQuality: String) {
 /**
  * Enum for audio formats
  */
-enum class AudioFormat(val ytdlpFormat: String) {
+enum class AudioFormat(val audioFormats: String) {
      OpusFormat("opus"),
      Mp3Format("mp3"),
      FlacFormat("flac"),
      M4aFormat("m4a")
-} // TODO. add UI to this
+} // TODO. Add format support for the downloader options in a separate tab
+
+enum class ThumbnailFormat(val thumbnailFormat: String) {
+     Png("png"),
+     Jpeg("Jpeg"),
+     WebP("WebP"),
+     Avfi("Avfi"),
+     Off("turned ff")
+}
 
 /**
  * Enum class used by the [org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage] and the [downloaderLogic] to manage aria2.

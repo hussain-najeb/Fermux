@@ -2,6 +2,7 @@ package org.foss.fermux.settings.logic
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
@@ -43,6 +44,7 @@ data class SettingListInfo(
     val route: String? = null,
     val onClick: (() -> Unit)? = null,
     val content: @Composable (() -> Unit)? = null,
-    val trailingContent: @Composable (() -> Unit)? = null
+    val trailingContent: @Composable (() -> Unit)? = null,
+    val modifier: Modifier? = null
 )
 

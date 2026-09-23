@@ -6,16 +6,15 @@ import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BugReport
-import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.SettingsBackupRestore
 import androidx.compose.material.icons.filled.Update
-import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -30,7 +29,10 @@ import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.SettingsResetButton
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.*
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.Aria2cModeSelector
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderVersionSwap
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.ExternalDownloaderSelection
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.SponsorBlockChoices
 import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxSnackBar
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
@@ -47,7 +49,6 @@ private enum class ExpandableDownloaderSetting {
      YtdlpUpdater,
      SponsorBlock,
      Aria2c,
-     SleepRequest,
      ExternalDownloader,
      ResetHistory,
      ResetDownloader
@@ -60,7 +61,6 @@ fun SimpleDownloaderPage(
      downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
 ) {
 
-     val sleepRequest by downloaderSettingsViewModel.sleepRequest.collectAsStateWithLifecycle()
      val ytdlpDetails by downloaderSettingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
      val audioHistory by downloaderSettingsViewModel.audioHistory.collectAsStateWithLifecycle()
      val videoHistory by downloaderSettingsViewModel.videoHistory.collectAsStateWithLifecycle()
@@ -68,8 +68,6 @@ fun SimpleDownloaderPage(
      val sponsorBlock by downloaderSettingsViewModel.sponsorBlock.collectAsStateWithLifecycle()
      val quickJS by downloaderSettingsViewModel.quickJS.collectAsStateWithLifecycle()
      val fingerprint by downloaderSettingsViewModel.fingerprint.collectAsStateWithLifecycle()
-     val thumbnail by downloaderSettingsViewModel.embedThumbnail.collectAsStateWithLifecycle()
-     val playlist by downloaderSettingsViewModel.playlistState.collectAsStateWithLifecycle()
      val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
      val logcat by downloaderSettingsViewModel.downloaderDebug.collectAsStateWithLifecycle()
      val bellState by downloaderSettingsViewModel.downloaderBellState.collectAsStateWithLifecycle()
@@ -86,8 +84,7 @@ fun SimpleDownloaderPage(
      }
 
      fun toggleDownloader(setting: ExpandableDownloaderSetting) {
-          expandedSetting =
-               if (expandedSetting == setting) null else setting
+          expandedSetting = if (expandedSetting == setting) null else setting
      }
 
      val requestNotificationPermission = rememberNotificationPermissionRequest(
@@ -116,9 +113,7 @@ fun SimpleDownloaderPage(
                description = if (isCheckingForUpdate) ytdlpUpdateStatus
                     ?: "Checking for update..." else "Current version is $currentVersionName",
                icon = Icons.Default.Update,
-               onClick = {
-                    toggleDownloader(ExpandableDownloaderSetting.YtdlpUpdater)
-               },
+               onClick = { toggleDownloader(ExpandableDownloaderSetting.YtdlpUpdater) },
                trailingContent = {
                     DownloaderVersionSwap(
                          downloaderSettingsViewModel = downloaderSettingsViewModel,
@@ -150,16 +145,6 @@ fun SimpleDownloaderPage(
                content = {
                     SettingsSwitch(
                          checked = videoHistory, onCheckedChange = { downloaderSettingsViewModel.setVideoHistory(it) })
-               },
-               position = TilePosition.MIDDLE
-          ),
-          SettingListInfo(
-               title = if (playlist) "Playlist On" else "Playlist Off",
-               description = if (playlist) "Playlists will be downloaded when the url is copied from a playlist" else "Playlists will not be downloaded when the url is copied from a playlist",
-               image = if (playlist) R.drawable.playlist_on else R.drawable.playlist_off,
-               content = {
-                    SettingsSwitch(
-                         checked = playlist, onCheckedChange = { downloaderSettingsViewModel.setPlaylistState(it) })
                },
                position = TilePosition.MIDDLE
           ),
@@ -260,32 +245,6 @@ fun SimpleDownloaderPage(
                position = TilePosition.MIDDLE
           ),
           SettingListInfo(
-               title = if (thumbnail) "Uncut Thumbnail" else "Cut Thumbnail",
-               description = if (thumbnail) "The thumbnail of the downloaded media will be embedded and will be saved"
-               else "The thumbnail of the downloaded media will be removed and won't be saved",
-               image = if (thumbnail) R.drawable.scissors_off else R.drawable.scissors_on,
-               content = {
-                    SettingsSwitch(
-                         checked = thumbnail, onCheckedChange = {
-                              downloaderSettingsViewModel.setEmbedThumbnail(it)
-                         }
-                    )
-               },
-               position = TilePosition.MIDDLE
-          ),
-          SettingListInfo(
-               title = "Sleep Request Yt-dlp Flag",
-               description = "Sleep request is a flag for delayed download between each request, each number represents a second. 0 means the flag is off",
-               icon = if (sleepRequest > 0) Icons.Filled.Flag else Icons.Outlined.Flag,
-               onClick = { toggleDownloader(ExpandableDownloaderSetting.SleepRequest) },
-               trailingContent = {
-                    RequestTimeSlider(
-                         expanded = expandedSetting == ExpandableDownloaderSetting.SleepRequest
-                    )
-               },
-               position = TilePosition.MIDDLE
-          ),
-          SettingListInfo(
                title = "Impersonation",
                description = "Enabling curl_cffi, this makes a yt-dlp request look like a real browser. This is EXPERIMENTAL",
                image = if (fingerprint) R.drawable.fingerprint_on else R.drawable.fingerprint_off,
@@ -309,7 +268,7 @@ fun SimpleDownloaderPage(
                          }
                     )
                },
-               position = TilePosition.BOTTOM
+               position = TilePosition.MIDDLE
           ),
           SettingListInfo(
                title = "Reset Downloader Settings",
@@ -398,6 +357,7 @@ fun SimpleDownloaderPage(
                          },
                     )
                }
+               Spacer(modifier = Modifier.padding(top = 10.dp))
           }
      }
 }

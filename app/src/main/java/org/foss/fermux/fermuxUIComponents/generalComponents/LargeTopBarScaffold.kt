@@ -17,14 +17,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.foss.fermux.fermuxUIComponents.buttons.BackButton
+import org.foss.fermux.fermuxUIComponents.buttons.HelperButton
 import org.foss.fermux.ui.theme.FermuxColors
 
 
 @Composable
 fun LargeTopBarScaffold(
+     modifier: Modifier = Modifier,
      title: String,
      onBack: () -> Unit,
-     modifier: Modifier = Modifier,
+     helperButton: (()  -> Unit)? = null,
+     helperImage: Int? = null,
      snackbarHost: (@Composable () -> Unit)? = null,
      content: @Composable (PaddingValues) -> Unit
 ) {
@@ -65,6 +68,14 @@ fun LargeTopBarScaffold(
                          BackButton(
                               modifier = Modifier.padding(10.dp).size(44.dp),
                               onClick = onBack
+                         )
+                    },
+                    actions = {
+                         if (helperImage != null)
+                         HelperButton(
+                              modifier = Modifier.padding(10.dp).size(44.dp),
+                              onClick = { helperButton?.invoke() },
+                              image = helperImage
                          )
                     }
                )

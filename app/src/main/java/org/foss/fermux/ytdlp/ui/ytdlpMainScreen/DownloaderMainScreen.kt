@@ -37,12 +37,14 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
+import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.AppIconButton
 import org.foss.fermux.fermuxUIComponents.buttons.GlobalCancelButton
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.SideBar
 import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxSnackBar
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.ui.theme.FermuxColors
+import org.foss.fermux.utils.Miscellaneous
 import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates.DownloaderCards
@@ -72,6 +74,8 @@ fun DownloadContent(
      LargeTopBarScaffold(
           title = "Downloader",
           onBack = { navController.popBackStack() },
+          helperButton = { navController.navigate(Miscellaneous.DownloaderArgs.route) },
+          helperImage = R.drawable.add,
           snackbarHost = { FermuxSnackBar(snackbarHostState) }
      ) { innerPadding ->
           Box(
@@ -81,7 +85,6 @@ fun DownloadContent(
                     modifier = Modifier.verticalScroll(rememberScrollState()).fillMaxSize().imePadding()
                          .background(FermuxColors.fermuxBackground)
                ) {
-
                     Text(
                          text = "Note: Always update your version of Yt-dlp in the settings. It's recommended to use the nightly version",
                          color = FermuxColors.fermuxOffWhiteTextColor,
@@ -164,13 +167,13 @@ fun DownloadContent(
                          // ClipBoard Button
                          if (doingTask) null else AppIconButton(
                               icon = Icons.Default.ContentPaste,
-                              modifier = Modifier.size(70.dp).padding(3.dp),
+                              modifier = Modifier.size(60.dp).padding(3.dp),
                               onClick = { clipboard.getText()?.text?.let { downloaderViewModel.downloadUrl = it } })
                          // Download Button
                          AppIconButton(
                               icon = Icons.Default.FileDownload,
                               enabled = !doingTask,
-                              modifier = Modifier.size(70.dp).padding(3.dp),
+                              modifier = Modifier.size(60.dp).padding(3.dp),
                               onClick = {
                                    downloaderViewModel.userPickedArgs()
                                    if (downloaderViewModel.downloadUrl.isEmpty()) {
