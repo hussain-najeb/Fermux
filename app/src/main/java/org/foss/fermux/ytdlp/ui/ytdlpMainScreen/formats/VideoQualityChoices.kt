@@ -28,14 +28,8 @@ fun VideoQualityChoices(
                position = TilePosition.TOP
           ),
           SettingListInfo(
-               title = "Best",
-               description = "Highest available resolution",
-               onClick = { onQualitySelected(VideoQuality.BEST) },
-               position = TilePosition.MIDDLE
-          ),
-          SettingListInfo(
                title = "1080p",
-               description = "A 1080 × 1920 video",
+               description = "A 1920 * 1080 video",
                onClick = { onQualitySelected(VideoQuality.HD1080) },
                position = TilePosition.MIDDLE
           ),

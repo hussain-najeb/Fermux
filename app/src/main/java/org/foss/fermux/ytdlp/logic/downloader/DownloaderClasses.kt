@@ -49,13 +49,12 @@ enum class AudioQuality(val audioQuality: String) // audio quality class to pass
  */
 
 enum class VideoQuality(val videoQuality: String) {
-     BEST("bestvideo+bestaudio/best"),
-     HD1080("bestvideo[height<=1080]+bestaudio/best"),
-     HD720("bestvideo[height<=720]+bestaudio/best"),
-     SD480("bestvideo[height<=480]+bestaudio/best"),
-     Q360("bestvideo[height<=360]+bestaudio/best"),
-     Q240("bestvideo[height<=240]+bestaudio/best"),
-     Q144("bestvideo[height<=144]+bestaudio/best")
+     HD1080("bv*[height<=1080]+ba/b[height<=1080]"),
+     HD720("bv*[height<=720]+ba/b[height<=720]"),
+     SD480("bv*[height<=480]+ba/b[height<=480]"),
+     Q360("bv*[height<=360]+ba/b[height<=360]"),
+     Q240("bv*[height<=240]+ba/b[height<=240]"),
+     Q144("bv*[height<=144]+ba/b[height<=144]")
 }
 
 /**
@@ -66,13 +65,20 @@ enum class AudioFormat(val audioFormats: String) {
      Mp3Format("mp3"),
      FlacFormat("flac"),
      M4aFormat("m4a")
-} // TODO. Add format support for the downloader options in a separate tab
+}
 
 enum class ThumbnailFormat(val thumbnailFormat: String) {
      Png("png"),
      Jpeg("jpg"),
      WebP("webp"),
      Off("")
+}
+
+enum class VideoFormat(val videoFormat: String) {
+     Mp4Format("mp4"),
+     AviFormat("avi"),
+     WebMFormat("webm"),
+     Mkv("mkv")
 }
 
 /**

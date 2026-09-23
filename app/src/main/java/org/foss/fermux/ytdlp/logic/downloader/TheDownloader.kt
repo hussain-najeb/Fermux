@@ -32,6 +32,7 @@ suspend fun downloaderLogic(
      aria2cMode: Aria2cMode = Aria2cMode.Always,
      thumbnail: ThumbnailFormat = ThumbnailFormat.Png,
      audioFormats: AudioFormat = AudioFormat.Mp3Format,
+     videoFormats: VideoFormat = VideoFormat.Mp4Format,
      externalDownloaders: ExternalDownloaders = ExternalDownloaders.TurnedOff,
      url: String,
      taskId: String,
@@ -39,7 +40,7 @@ suspend fun downloaderLogic(
      playlistStatus: Boolean = false,
      quickJs: Boolean = true,
      fingerprinting: Boolean = true,
-     musicQuality: AudioQuality? = null,
+     audioQuality: AudioQuality? = null,
      videoQuality: VideoQuality? = null,
      sponsorBlock: Boolean = true,
      embedThumbnail: Boolean = true,
@@ -84,9 +85,9 @@ suspend fun downloaderLogic(
      }
 
      val shouldUseAria2c = when (aria2cMode) {
-               Aria2cMode.Always -> true
-               Aria2cMode.EdgeCaseOnly -> videoQuality != VideoQuality.BEST
-               Aria2cMode.Disabled -> false
+          Aria2cMode.Always -> true
+          Aria2cMode.EdgeCaseOnly -> videoQuality != VideoQuality.HD1080
+          Aria2cMode.Disabled -> false
      }
 
      val aria2Argument = "aria2c:--summary-interval=1 -x 12 -s 12 -k 1M"
@@ -100,63 +101,49 @@ suspend fun downloaderLogic(
 
      val hlsConcurrentFragments = 8
 
-     when { aria2cMode != Aria2cMode.Disabled -> Unit
-
+     when {
+          shouldUseAria2c -> Unit
           externalDownloaders == ExternalDownloaders.FFmpegAsExternal -> {
                request.addOption("--hls-prefer-ffmpeg")
           }
+
           externalDownloaders == ExternalDownloaders.YtdlpNativeDownloader -> {
-               request.addOption("--concurrent-fragments",hlsConcurrentFragments)
+               request.addOption("--concurrent-fragments", hlsConcurrentFragments)
           }
+
           else -> Unit
      }
 
-     if (embedThumbnail && thumbnail != ThumbnailFormat.Off) {
+     if (embedThumbnail &&
+          thumbnail != ThumbnailFormat.Off &&
+          videoFormats != VideoFormat.AviFormat &&
+          videoFormats != VideoFormat.WebMFormat
+     ) {
+          request.addOption("--convert-thumbnails", argument = thumbnail.thumbnailFormat)
           request.addOption("--embed-thumbnail")
      }
 
      if (playlistStatus) {
           request.addOption("--yes-playlist")
-     } else { 
-          request.addOption("--no-playlist") 
+     } else {
+          request.addOption("--no-playlist")
      }
 
-     musicQuality?.let {
+     audioQuality?.let {
           request.addOption("-x")
+          request.addOption("--audio-format", audioFormats.audioFormats)
           request.addOption("--audio-quality", it.audioQuality)
      }
      videoQuality?.let {
-          request.addOption("--merge-output-format", "mp4")
           request.addOption("-f", it.videoQuality)
      }
 
-     when (audioFormats) {
-          AudioFormat.Mp3Format -> {
-               request.addOption("--audio-format", argument = audioFormats.audioFormats )
-          }
-          AudioFormat.FlacFormat -> {
-               request.addOption("--audio-format", argument = audioFormats.audioFormats)
-          }
-          AudioFormat.M4aFormat -> {
-               request.addOption("--audio-format", argument = audioFormats.audioFormats)
-          }
-          AudioFormat.OpusFormat -> {
-               request.addOption("--audio-format", argument = audioFormats.audioFormats)
-          }
+
+     if (videoQuality != null) {
+          request.addOption("--recode-video", videoFormats.videoFormat)
      }
 
-     when (thumbnail) {
-          ThumbnailFormat.Png -> {
-               request.addOption("--convert-thumbnails", argument = thumbnail.thumbnailFormat)
-          }
-          ThumbnailFormat.Jpeg -> {
-               request.addOption("--convert-thumbnails", argument = thumbnail.thumbnailFormat)
-          }
-          ThumbnailFormat.WebP -> {
-               request.addOption("--convert-thumbnails", argument = thumbnail.thumbnailFormat)
-          }
-          ThumbnailFormat.Off -> {}
-     }
+     // TODO. Add a boolean for this for "force format" sake. with recode-video as compatibility option, and --merge-output-format as the not compatibility
 
 
      request.addOption("-i")

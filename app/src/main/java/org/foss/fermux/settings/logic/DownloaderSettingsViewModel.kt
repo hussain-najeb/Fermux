@@ -58,6 +58,9 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      val audioFormats: StateFlow<AudioFormat> = settingsTab.audioFormat
           .stateIn(viewModelScope, SharingStarted.Lazily, AudioFormat.Mp3Format)
 
+     val videoFormats: StateFlow<VideoFormat> = settingsTab.videoFormat
+          .stateIn(viewModelScope, SharingStarted.Lazily, VideoFormat.Mp4Format)
+
      val externalDownloaders: StateFlow<ExternalDownloaders> = settingsTab.externalDownloaders
           .stateIn(viewModelScope, SharingStarted.Lazily, ExternalDownloaders.TurnedOff)
 
@@ -99,6 +102,10 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
      fun setAudioFormat(value: AudioFormat) {
           viewModelScope.launch { settingsTab.setAudioFormat(value) }
+     }
+
+     fun setVideoFormat(value: VideoFormat) {
+          viewModelScope.launch { settingsTab.setVideoFormat(value) }
      }
 
      fun setExternalDownloaders(value: ExternalDownloaders) {

@@ -21,6 +21,7 @@ import org.foss.fermux.fermuxUIComponents.buttons.SettingsResetButton
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.AudioFormatSelector
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.RequestTimeSlider
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.ThumbnailSelector
+import org.foss.fermux.fermuxUIComponents.downloaderComponents.VideoFormatSelector
 import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxSnackBar
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
@@ -33,6 +34,7 @@ import org.foss.fermux.ui.theme.FermuxColors
 private enum class ExpandableOptionList {
      ThumbnailFormats,
      AudioFormats,
+     VideoFormats,
      SleepRequest,
      ResetArgs,
 }
@@ -46,13 +48,14 @@ fun DownloaderArgs(navController: NavController) {
      val playlist by downloaderSettingsViewModel.playlistState.collectAsStateWithLifecycle()
      val sleepRequest by downloaderSettingsViewModel.sleepRequest.collectAsStateWithLifecycle()
      val thumbnail by downloaderSettingsViewModel.embedThumbnail.collectAsStateWithLifecycle()
-
+     val videoFormats by downloaderSettingsViewModel.videoFormats.collectAsStateWithLifecycle()
+     val audioFormats by downloaderSettingsViewModel.audioFormats.collectAsStateWithLifecycle()
+     val thumbnailFormat by downloaderSettingsViewModel.thumbnailFormat.collectAsStateWithLifecycle()
 
      val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
 
-     val audioFormats by downloaderSettingsViewModel.audioFormats.collectAsStateWithLifecycle()
-     val thumbnailFormat by downloaderSettingsViewModel.thumbnailFormat.collectAsStateWithLifecycle()
+
      var expandedSetting by remember { mutableStateOf<ExpandableOptionList?>(null) }
 
 
@@ -62,8 +65,8 @@ fun DownloaderArgs(navController: NavController) {
 
      val args = listOf(
           SettingListInfo(
-               title = "Set Audio Formats",
-               description = "This option sets the format of the audio when downloading, current format is $audioFormats",
+               title = "Set Audio Format",
+               description = "This option sets the format of the audio when downloading. current format is $audioFormats",
                image = R.drawable.audio_file,
                onClick = { toggleExpansion(setting = ExpandableOptionList.AudioFormats) },
                trailingContent = {
@@ -72,6 +75,18 @@ fun DownloaderArgs(navController: NavController) {
                     )
                },
                position = TilePosition.TOP
+          ),
+          SettingListInfo(
+               title = "Set Video Format",
+               description = "This option sets the format of the video when downloading. current is $videoFormats",
+               image = R.drawable.file_video,
+               onClick = { toggleExpansion(setting = ExpandableOptionList.VideoFormats) },
+               trailingContent = {
+                    VideoFormatSelector(
+                         expanded = expandedSetting == ExpandableOptionList.VideoFormats
+                    )
+               },
+               position = TilePosition.MIDDLE
           ),
           SettingListInfo(
                title = "Set Thumbnail Format",
