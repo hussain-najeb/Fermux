@@ -158,6 +158,7 @@ class DownloaderViewModel : ViewModel() {
                                                   thumbnail = "",
                                                   duration = 0,
                                                   uploader = null,
+                                                  audioFormat = null,
                                                   audioQuality = null,
                                                   size = null,
                                                   resolution = null

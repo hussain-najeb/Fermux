@@ -11,6 +11,7 @@ data class DownloadMetadata(
      val duration: Int,
      val uploader: String?,
      val size: Long?,
+     val audioFormat: String?,
      val audioQuality: Double?,
      val resolution: String?
 )

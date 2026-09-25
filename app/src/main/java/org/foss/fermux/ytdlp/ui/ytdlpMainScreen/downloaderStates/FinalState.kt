@@ -201,7 +201,8 @@ private fun FinishedCardContent(
                          Row {
                               metadata.resolution?.let {
                                    Text(
-                                        text = it,
+                                        text = if (it.equals("audio only", ignoreCase = true))
+                                             "${metadata.audioFormat}" else it,
                                         fontFamily = FontFamily.Default,
                                         fontSize = 15.sp,
                                         color = FermuxColors.fermuxOffWhiteTextColor,
@@ -261,6 +262,7 @@ fun Test3() {
                     duration = 578,
                     uploader = "Example uploader, Youtube Channel, Or Null",
                     size = 35345455,
+                    audioFormat = "Mp3",
                     audioQuality = 125.6,
                     resolution = "720p"
                ),
