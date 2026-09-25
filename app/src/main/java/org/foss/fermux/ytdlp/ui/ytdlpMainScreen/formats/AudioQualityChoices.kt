@@ -29,25 +29,25 @@ fun AudioQualityChoices(
           ),
           SettingListInfo(
                title = "Best Audio Quality",
-               description = "Highest audio quality, ~220-260 kbps",
+               description = "Highest audio quality",
                onClick = { onQualitySelected(AudioQuality.BEST) },
                position = TilePosition.MIDDLE
           ),
           SettingListInfo(
                title = "High",
-               description = "~170-210 kbps",
+               description = "Best middle ground for size and quality",
                onClick = { onQualitySelected(AudioQuality.HIGH) },
                position = TilePosition.MIDDLE
           ),
           SettingListInfo(
                title = "Medium",
-               description = "~100-140 kbps, yt-dlp default",
+               description = "Yt-dlp default audio quality",
                onClick = { onQualitySelected(AudioQuality.MEDIUM) },
                position = TilePosition.MIDDLE
           ),
           SettingListInfo(
                title = "Low",
-               description = "Smallest file size (~65 kbps)",
+               description = "Smallest file size with the lowest audio quality",
                onClick = { onQualitySelected(AudioQuality.LOW) },
                position = TilePosition.BOTTOM
           ),

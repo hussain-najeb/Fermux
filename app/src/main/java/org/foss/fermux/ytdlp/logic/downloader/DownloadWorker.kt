@@ -173,7 +173,7 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
                          val now = System.currentTimeMillis()
                          val currentProgress = progress.coerceIn(0f, 100f)
 
-                         if (now - lastProgressUpdateAt >= 500L) {
+                         if (now - lastProgressUpdateAt >= 200L) {
                               lastProgressUpdateAt = now
                               runBlocking {
                                    setProgress(

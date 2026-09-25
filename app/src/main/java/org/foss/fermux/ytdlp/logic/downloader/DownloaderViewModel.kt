@@ -142,9 +142,7 @@ class DownloaderViewModel : ViewModel() {
                                         }
                                         val progress = workInfo.progress.getFloat("progress", 0f)
                                         currentMetadata?.let { metadata ->
-                                             if (progress > 0f) {
-                                                  state = DownloadStatus.Downloading(progress, metadata)
-                                             }
+                                             state = DownloadStatus.Downloading(progress, metadata)
                                         }
                                    }
 
@@ -160,6 +158,7 @@ class DownloaderViewModel : ViewModel() {
                                                   thumbnail = "",
                                                   duration = 0,
                                                   uploader = null,
+                                                  audioQuality = null,
                                                   size = null,
                                                   resolution = null
                                              )

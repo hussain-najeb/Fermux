@@ -5,7 +5,6 @@ import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
-import kotlinx.coroutines.withContext
 import org.foss.fermux.utils.DebugLogDownloader
 import org.foss.fermux.utils.fileCopyFilter
 import org.json.JSONObject
@@ -50,24 +49,6 @@ suspend fun execution(
           DebugLogDownloader.debugDownloader("fermux", "err=${it.err}")
      }
 }
-/**
- * This function is used by [DownloadMetadata] to fill the metadata from the given url handed by [downloaderLogic] that later gets saved as a JSON file.
- */
-
-suspend fun fetchingTheMetadata(url: String): DownloadMetadata = withContext(Dispatchers.IO) {
-     val request = YoutubeDLRequest(url).apply {
-          addOption("--no-playlist")
-     }
-     val info = YoutubeDL.getInstance().getInfo(request)
-     DownloadMetadata(
-          title = info.title ?: "Unknown title",
-          thumbnail = info.thumbnail ?: "",
-          duration = info.duration,
-          uploader = info.uploader,
-          size = info.fileSizeApproximate,
-          resolution = info.resolution
-     )
-}
 
 fun parseYtdlpMetadataJson(json: String): DownloadMetadata? {
      return try {
@@ -81,6 +62,8 @@ fun parseYtdlpMetadataJson(json: String): DownloadMetadata? {
           val approxSize = obj.optDouble("filesize_approx")
                .takeIf { !it.isNaN() && it > 0 }
                ?.toLong()
+          val audioQuality = obj.optDouble("abr")
+               .takeIf { !it.isNaN() && it > 0 }
 
           DownloadMetadata(
                title = optStringOrNull("title") ?: "Unknown title",
@@ -88,6 +71,7 @@ fun parseYtdlpMetadataJson(json: String): DownloadMetadata? {
                duration = obj.optInt("duration", 0),
                uploader = optStringOrNull("uploader"),
                size = approxSize,
+               audioQuality = audioQuality,
                resolution = optStringOrNull("resolution")
           )
      } catch (e: Exception) {

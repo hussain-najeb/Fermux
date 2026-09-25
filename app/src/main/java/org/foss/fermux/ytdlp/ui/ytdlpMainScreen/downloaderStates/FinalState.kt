@@ -198,17 +198,31 @@ private fun FinishedCardContent(
                                         .padding(7.dp)
                               )
                          }
-                         metadata.resolution?.let {
-                              Text(
-                                   text = it,
-                                   fontFamily = FontFamily.Default,
-                                   fontSize = 15.sp,
-                                   color = FermuxColors.fermuxOffWhiteTextColor,
-                                   maxLines = 1,
-                                   overflow = TextOverflow.Ellipsis,
-                                   modifier = Modifier
-                                        .padding(7.dp)
-                              )
+                         Row {
+                              metadata.resolution?.let {
+                                   Text(
+                                        text = it,
+                                        fontFamily = FontFamily.Default,
+                                        fontSize = 15.sp,
+                                        color = FermuxColors.fermuxOffWhiteTextColor,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        modifier = Modifier
+                                             .padding(start = 7.dp, top = 7.dp)
+                                   )
+                              }
+                              metadata.audioQuality?.let {
+                                   Text(
+                                        text = " | audio quality is $it kbps",
+                                        fontFamily = FontFamily.Default,
+                                        fontSize = 15.sp,
+                                        color = FermuxColors.fermuxOffWhiteTextColor,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        modifier = Modifier
+                                             .padding(top = 7.dp)
+                                   )
+                              }
                          }
                     }
                }
@@ -247,6 +261,7 @@ fun Test3() {
                     duration = 578,
                     uploader = "Example uploader, Youtube Channel, Or Null",
                     size = 35345455,
+                    audioQuality = 125.6,
                     resolution = "720p"
                ),
                onCancel = {},

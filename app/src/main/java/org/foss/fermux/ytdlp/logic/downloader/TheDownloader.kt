@@ -69,7 +69,7 @@ suspend fun downloaderLogic(
      request.addOption("--no-simulate")
      request.addOption(
           "--print",
-          "before_dl:$FERMUX_METADATA_MARKER%(.{title,thumbnail,duration,uploader,filesize,filesize_approx,resolution})j"
+          "before_dl:$FERMUX_METADATA_MARKER%(.{title,thumbnail,duration,uploader,filesize,filesize_approx,resolution,abr})j"
      )
      request.addOption("--progress")
 
