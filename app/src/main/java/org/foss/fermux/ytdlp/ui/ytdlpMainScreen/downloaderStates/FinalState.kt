@@ -228,7 +228,6 @@ private fun FinishedCardContent(
                     }
                }
           }
-
           Row(
                modifier = Modifier
                     .fillMaxWidth()

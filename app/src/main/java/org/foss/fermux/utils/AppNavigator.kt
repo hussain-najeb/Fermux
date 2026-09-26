@@ -1,6 +1,5 @@
 package org.foss.fermux.utils
 
-import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,21 +20,28 @@ import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloadContent
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloaderArgs
 
 
-sealed class MainScreens(val route: String, val descriptor: String?) {
-     object Home : MainScreens("home", "Home")
-     object Settings : MainScreens("settings", "Settings")
-     object Downloader : MainScreens("downloader", "Downloader")
-     object Converter : MainScreens("converter", "Converter")
-     object Terminal : MainScreens("terminal", "Terminal")
+sealed class MainScreens(val route: String ) {
+     object Home : MainScreens("home")
+     object Settings : MainScreens("settings")
+     object Downloader : MainScreens("downloader")
+     object Converter : MainScreens("converter")
+     object Terminal : MainScreens("terminal")
 }
 
-sealed class SettingsScreens(val route: String, val descriptor: String?) {
-     object SimpleDownloader : SettingsScreens(route = "simple downloader", descriptor = "Main Downloader Page")
-     object SimpleFFmpeg : SettingsScreens(route = "simple FFmpeg", descriptor = "Main FFmpeg Page")
-     object SimpleTerminal : SettingsScreens(route = "simple terminal", descriptor = "Terminal Main Page")
-     object Themes : SettingsScreens(route = "themes", descriptor = "Themes Page")
-     object AboutAppPage : SettingsScreens(route = "about", descriptor = "About Page")
-     object LibraryPage: SettingsScreens(route = "Library", descriptor = "The main page for dependencies and library")
+data class ScreenInfo(
+     val screen: MainScreens,
+     val title: String,
+     val description: String,
+     val image: Int
+)
+
+sealed class SettingsScreens(val route: String) {
+     object SimpleDownloader : SettingsScreens(route = "simple downloader")
+     object SimpleFFmpeg : SettingsScreens(route = "simple FFmpeg")
+     object SimpleTerminal : SettingsScreens(route = "simple terminal")
+     object Themes : SettingsScreens(route = "themes")
+     object AboutAppPage : SettingsScreens(route = "about")
+     object LibraryPage: SettingsScreens(route = "Library")
 
 }
 
@@ -50,7 +56,6 @@ sealed class Miscellaneous(val route: String) {
 
      object DownloaderArgs : Miscellaneous(route = "Downloader Arguments")
 }
-@SuppressLint("ViewModelConstructorInComposable")
 @Composable
 fun FermuxAppMainScreen() {
 

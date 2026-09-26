@@ -9,7 +9,7 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
-data class FermuxColor(
+data class FermuxColor( // TODO. edit the bad naming on these
 
      // Fermux button colors
      val fermuxInActiveButton: Color = Color(0xFF303258),
@@ -39,8 +39,13 @@ data class FermuxColor(
      val fermuxSurface: Color = Color(0xFF1f2034),
      val fermuxErrorCardColor: Color = Color(0xFF8c1d18),
      val inActiveTextField: Color = Color(0xFF474968),
+     val mainCardPrimary: Color = Color(0xFF282c34),
+     val mainCardSecondary: Color = Color(0xFF202329),
+
      val something2: Color = Color(0xFFb9c2ff),
      val something: Color = Color(0xFF3c4257),
+
+
 
      // Fermux FFmpeg crad colors
      val fermuxFFmpegGreen: Color = Color(0xFF388e3c),

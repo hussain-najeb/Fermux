@@ -5,18 +5,7 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
@@ -38,8 +27,6 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import org.foss.fermux.fermuxUIComponents.buttons.AppIconButton
 import org.foss.fermux.fermuxUIComponents.buttons.TextWithIconButton
-import org.foss.fermux.fermuxUIComponents.generalComponents.AppCard
-import org.foss.fermux.fermuxUIComponents.generalComponents.AppSurface
 import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.videoTime
@@ -55,12 +42,8 @@ fun HistoryCards(entry: JSONHistoryCards) {
      @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
 
      Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-          AppCard(
-               modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-               shape = RoundedCornerShape(8.dp),
-          ) {
+
+
                Box(contentAlignment = Alignment.TopStart) {
                     AsyncImage(
                          model = entry.thumbnail,
@@ -103,11 +86,7 @@ fun HistoryCards(entry: JSONHistoryCards) {
 
                }
 
-               AppSurface(
-                    expanded = expanded,
-                    padding = PaddingValues(8.dp),
-                    modifier = Modifier.fillMaxSize()
-               ) {
+
                     Row {
                          Text(
                               text = "Title: ${entry.title}",
@@ -183,5 +162,3 @@ fun HistoryCards(entry: JSONHistoryCards) {
                     }
                }
           }
-     }
-}

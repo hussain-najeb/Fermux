@@ -17,18 +17,16 @@ import org.foss.fermux.ui.theme.FermuxColors
 fun FFmpegCard(
      modifier: Modifier = Modifier,
      color: FermuxColor = FermuxColors,
-     background: Boolean = false,
      shape: Shape = RoundedCornerShape(8.dp),
      content: @Composable (ColumnScope.() -> Unit)? = null
 ) {
-
      Card(
           modifier = modifier,
           shape = shape,
           colors = CardDefaults.cardColors(
-               containerColor = if (background) color.fermuxComponents else color.fermuxFFmpegGreen
+               containerColor = color.fermuxComponents
           ),
-          border = BorderStroke(1.dp, FermuxColors.fermuxWhiteColor)
+          border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
      ) {
           if (content != null) {
                content()

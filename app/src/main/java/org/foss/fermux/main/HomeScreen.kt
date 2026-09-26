@@ -1,62 +1,76 @@
 package org.foss.fermux.main
 
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Text
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import org.foss.fermux.fermuxUIComponents.generalComponents.AppCard
+import org.foss.fermux.R
+import org.foss.fermux.fermuxUIComponents.generalComponents.MainAppCard
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.MainScreens
+import org.foss.fermux.utils.ScreenInfo
 
 @Composable
 fun HomeScreen(navigationController: NavHostController) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(FermuxColors.fermuxBackground)
-            .systemBarsPadding()
-            .padding(12.dp),
-        contentAlignment = Alignment.Center
+
+
+    val scroll = rememberScrollState()
+
+
+    val screens = listOf(
+        ScreenInfo(
+            screen = MainScreens.Terminal,
+            title = "Terminal",
+            description = "A terminal shell with UX, UI, and a lot of convenience taken into account, based on termux",
+            image = R.drawable.terminal_blur
+        ),
+        ScreenInfo(
+            screen = MainScreens.Downloader,
+            title = "Downloader",
+            description = "A modern implementation of ytdlp to android with powerful additions.",
+            image = R.drawable.ytdlp_blur
+        ),
+        ScreenInfo(
+            screen = MainScreens.Converter,
+            title = "Converter",
+            description = "A hardware accelerated, powerful conversion tab based on FFmpeg",
+            image = R.drawable.ffmpeg_blur
+        ),
+        ScreenInfo(
+            screen = MainScreens.Settings,
+            title = "Preferences",
+            description = "An extensive Preferences tab for all your options",
+            image = R.drawable.preferences_blur
+        ),
+    )
+
+    Column( modifier = Modifier
+        .fillMaxSize()
+        .background(FermuxColors.fermuxBackground)
+        .systemBarsPadding()
+        .verticalScroll(scroll),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Column(
+
+    screens.forEach { screen ->
+        MainAppCard(
             modifier = Modifier
-                .fillMaxSize()
-                .align(Alignment.TopCenter),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            val screens = listOf(
-                MainScreens.Terminal,
-                MainScreens.Downloader,
-                MainScreens.Converter,
-                MainScreens.Settings,
-            )
-            screens.forEach { screen ->
-                AppCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(0.25f)
-                        .padding(4.dp),
-                    pressable = true,
-                    onClick = { navigationController.navigate(screen.route) } // TODO. Make this look better, and this code sucks ass, also link this to... when the user clicks a card, make them enable notifs when they press any card if it needed to be be enabled, code is in each tab, just get it from there, maybe even abstract it
-                ) {
-                    screen.descriptor?.let {
-                        Text(
-                            text = it,
-                            color = Color.White,
-                            fontSize = 22.sp,
-                            fontStyle = FontStyle.Italic,
-                            modifier = Modifier.padding(15.dp)
-                        )
-                    }
-                }
-            }
-        }
+                .fillMaxWidth()
+                .padding(6.dp),
+            title = screen.title,
+            description = screen.description,
+            image = screen.image,
+            route = screen.screen,
+            navController = navigationController
+        )
+    }
+
+
+
     }
 }

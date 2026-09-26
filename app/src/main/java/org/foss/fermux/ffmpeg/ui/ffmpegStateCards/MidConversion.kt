@@ -33,7 +33,6 @@ fun MidConversionProcess(
           FFmpegCard(
                modifier = Modifier
                     .padding(5.dp),
-               background = true
           ) {
                if (ffmpegViewModel.inputUri != null) {
                     Box(

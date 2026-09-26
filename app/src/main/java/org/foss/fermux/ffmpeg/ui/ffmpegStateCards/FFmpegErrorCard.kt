@@ -1,9 +1,7 @@
 package org.foss.fermux.ffmpeg.ui.ffmpegStateCards
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Error
@@ -23,10 +21,9 @@ import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
 import org.foss.fermux.fermuxUIComponents.buttons.ErrorCopyButton
 import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
-import org.foss.fermux.fermuxUIComponents.generalComponents.AppSurface
-import org.foss.fermux.utils.Miscellaneous
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
+import org.foss.fermux.utils.Miscellaneous
 
 @Composable
 fun FFmpegErrorMassage(
@@ -36,20 +33,9 @@ fun FFmpegErrorMassage(
      onCancel: () -> Unit
 ) {
 
-
-     @Suppress("DEPRECATION") val clipboard = LocalClipboardManager.current
+     val clipboard = LocalClipboardManager.current
      val scrollState = rememberScrollState()
 
-
-     AppSurface(
-          expanded = true,
-          shape = RoundedCornerShape(8.dp),
-          border = BorderStroke(1.dp, FermuxColors.fermuxOffWhiteTextColor),
-          color = FermuxColors.fermuxErrorCardColor,
-          modifier = Modifier
-               .padding(16.dp)
-               .aspectRatio(16f / 9)
-     ) {
           Box(
                modifier = Modifier
                     .fillMaxSize()
@@ -112,4 +98,3 @@ fun FFmpegErrorMassage(
                }
           }
      }
-}
