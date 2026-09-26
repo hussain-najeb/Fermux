@@ -1,6 +1,7 @@
 package org.foss.fermux.utils
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -32,7 +33,8 @@ data class ScreenInfo(
      val screen: MainScreens,
      val title: String,
      val description: String,
-     val image: Int
+     val image: Int? = null,
+     val icon: ImageVector? = null
 )
 
 sealed class SettingsScreens(val route: String) {

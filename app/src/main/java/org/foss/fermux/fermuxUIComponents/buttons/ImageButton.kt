@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
@@ -32,7 +31,6 @@ fun ImageButton(
      imageModifier: Modifier = Modifier,
      image: Int,
      contentDescription: String? = null,
-     imageRotation: Float = 0f,
      enabled: Boolean = true,
      componentSize: Dp = 50.dp,
      shape: Shape = RoundedCornerShape(8.dp),
@@ -69,12 +67,6 @@ fun ImageButton(
           label = "Fermux Button Animation"
      )
 
-     val iconRotate by animateFloatAsState(
-          targetValue = imageRotation,
-          animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-          label = "Fermux Icon Rotation"
-     )
-
      ElevatedButton(
           modifier = modifier.graphicsLayer {
                scaleX = buttonAnimation
@@ -96,7 +88,7 @@ fun ImageButton(
                painter = painterResource(id = image),
                tint = iconColor,
                contentDescription = contentDescription,
-               modifier = imageModifier.rotate(iconRotate)
+               modifier = imageModifier
           )
      }
 }

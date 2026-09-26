@@ -16,7 +16,7 @@ import org.foss.fermux.utils.MainScreens
 import org.foss.fermux.utils.ScreenInfo
 
 @Composable
-fun HomeScreen(navigationController: NavHostController) {
+fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animation between each transition so its smooth.
 
 
     val scroll = rememberScrollState()
@@ -27,25 +27,28 @@ fun HomeScreen(navigationController: NavHostController) {
             screen = MainScreens.Terminal,
             title = "Terminal",
             description = "A terminal shell with UX, UI, and a lot of convenience taken into account, based on termux",
-            image = R.drawable.terminal_blur
+            image = R.drawable.terminal_main
         ),
         ScreenInfo(
             screen = MainScreens.Downloader,
             title = "Downloader",
             description = "A modern implementation of ytdlp to android with powerful additions.",
-            image = R.drawable.ytdlp_blur
+            image = R.drawable.download // TODO. next time you see this, the downloader takes time to display any progress when forcing format conversion, so deal with it, and make a third boolean tha goes on and says to the user that this may take time and if it takes too long they can turn it off, also via text on the downlaoder page
+            // TODO. Remove the text in the downloader logs, its useless now.
+            // TODO. In the ffmpeg settings, make it so that when vide compression is off, it turns off the hard wear accel option, just an `enalbed` and link both in avar with collectAsStateWithLifecycle
+             // TODO. add a color for "disabled" buttons, mainly the downloader button for download. add in a dedicate color
         ),
         ScreenInfo(
             screen = MainScreens.Converter,
             title = "Converter",
             description = "A hardware accelerated, powerful conversion tab based on FFmpeg",
-            image = R.drawable.ffmpeg_blur
+            image = R.drawable.ffmpeg
         ),
         ScreenInfo(
             screen = MainScreens.Settings,
             title = "Preferences",
             description = "An extensive Preferences tab for all your options",
-            image = R.drawable.preferences_blur
+            image = R.drawable.prefs
         ),
     )
 
@@ -61,7 +64,7 @@ fun HomeScreen(navigationController: NavHostController) {
         MainAppCard(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(6.dp),
+                .padding(start = 6.dp, end = 6.dp),
             title = screen.title,
             description = screen.description,
             image = screen.image,

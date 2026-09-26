@@ -24,7 +24,7 @@ private data class AppIcons (
 )
 
 @Composable
-fun SideBar(
+fun SideBar( // TODO. This should be deprecated in favour of a simple button near the arguments tab that lists both and maybe just a ".takeIf" to seperate both tabs based on the extention name, every file gets checked and the regestered, maybe do a room impl finally.
      modifier: Modifier = Modifier,
      navController: NavController
 ) {
@@ -32,7 +32,7 @@ fun SideBar(
 
      val sideBarEntries = listOf(
           AppIcons(
-               image = R.drawable.download,
+               image = R.drawable.download_side_bar,
                onClick = { navController.navigate(MainScreens.Downloader.route) }
             ),
           AppIcons(
@@ -73,7 +73,7 @@ fun SideBar(
                     sideBarEntries.forEach { option ->
                          ImageButton(
                               modifier = Modifier
-                                   .size(60.dp)
+                                   .size(50.dp)
                                    .padding(2.dp)
                                    .align(Alignment.CenterHorizontally),
                               image = option.image,
