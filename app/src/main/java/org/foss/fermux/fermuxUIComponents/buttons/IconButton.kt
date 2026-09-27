@@ -81,7 +81,7 @@ fun AppIconButton(
           colors = ButtonDefaults.textButtonColors(
                containerColor = containerColor,
                contentColor = contentColor,
-               disabledContainerColor = FermuxColors.fermuxComponents
+               disabledContainerColor = FermuxColors.fermuxSaturatedComponents
           ),
           enabled = enabled,
           contentPadding = contentPadding,

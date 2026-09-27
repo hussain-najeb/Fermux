@@ -72,6 +72,16 @@ fun DownloaderLogs(
                          .padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                ) {
+
+                    Text(
+                         text = "Note*: This page watches ytdlp output in the first surface. A second surface can be turned on in the settings to watch logcat output",
+                         color = FermuxColors.fermuxOffWhiteTextColor,
+                         fontSize = 18.sp,
+                         fontStyle = FontStyle.Normal,
+                         fontFamily = FontFamily.Default,
+                         modifier = Modifier.padding(start = 5.dp, end = 5.dp, top = 15.dp, bottom = 15.dp)
+                    )
+
                     Surface(
                          modifier = Modifier
                               .fillMaxWidth()
@@ -98,18 +108,10 @@ fun DownloaderLogs(
                     }
                     ErrorCopyButton(
                          modifier = Modifier
-                              .padding(2.dp)
+                              .padding(start = 2.dp, top = 6.dp) // TODO. Add the same padding for each logging tab
                               .align(Alignment.Start)
                               .size(50.dp),
                          onClick = { clipboard.setText(AnnotatedString(logs)) }
-                    )
-                    Text(
-                         text = "Note*: This is the log page for the downloader output during download, it doesn't display errors",
-                         color = FermuxColors.fermuxBackgroundTextColor,
-                         fontSize = 16.sp,
-                         fontStyle = FontStyle.Normal,
-                         fontFamily = FontFamily.Default,
-                         modifier = Modifier.padding(7.dp)
                     )
 
                     Row(

@@ -27,16 +27,14 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
             screen = MainScreens.Terminal,
             title = "Terminal",
             description = "A terminal shell with UX, UI, and a lot of convenience taken into account, based on termux",
-            image = R.drawable.terminal_main
+            image = R.drawable.bash
         ),
         ScreenInfo(
             screen = MainScreens.Downloader,
             title = "Downloader",
             description = "A modern implementation of ytdlp to android with powerful additions.",
             image = R.drawable.download // TODO. next time you see this, the downloader takes time to display any progress when forcing format conversion, so deal with it, and make a third boolean tha goes on and says to the user that this may take time and if it takes too long they can turn it off, also via text on the downlaoder page
-            // TODO. Remove the text in the downloader logs, its useless now.
             // TODO. In the ffmpeg settings, make it so that when vide compression is off, it turns off the hard wear accel option, just an `enalbed` and link both in avar with collectAsStateWithLifecycle
-             // TODO. add a color for "disabled" buttons, mainly the downloader button for download. add in a dedicate color
         ),
         ScreenInfo(
             screen = MainScreens.Converter,

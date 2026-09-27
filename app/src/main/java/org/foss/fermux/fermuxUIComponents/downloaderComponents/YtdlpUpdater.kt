@@ -16,17 +16,19 @@ import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.YtdlpChannel
 
-private val ytdlpChannelOptions = listOf(
-     YtdlpChannel.Stable to "Stable",
-     YtdlpChannel.Nightly to "Nightly",
-     YtdlpChannel.Master to "Master"
-)
-
 @Composable
 fun DownloaderVersionSwap(
      downloaderSettingsViewModel: DownloaderSettingsViewModel,
      expanded: Boolean = false
 ) {
+
+     val ytdlpChannelOptions = listOf(
+          YtdlpChannel.Stable to "Stable",
+          YtdlpChannel.Nightly to "Nightly",
+          YtdlpChannel.Master to "Master"
+     )
+
+
      var selectedChannel by remember { mutableStateOf(YtdlpChannel.Stable) }
      val isCheckingForUpdate by downloaderSettingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
 

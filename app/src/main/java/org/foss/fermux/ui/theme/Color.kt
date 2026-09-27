@@ -41,6 +41,7 @@ data class FermuxColor( // TODO. edit the bad naming on these
      val inActiveTextField: Color = Color(0xFF474968),
      val mainCardPrimary: Color = Color(0xFF282c34),
      val mainCardSecondary: Color = Color(0xFF202329),
+     val deepBlue: Color = Color(0xFF3148d6) ,
 
      val something2: Color = Color(0xFFb9c2ff),
      val something: Color = Color(0xFF3c4257),

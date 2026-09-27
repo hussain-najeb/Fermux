@@ -72,7 +72,7 @@ fun SettingsScreen(
                     .background(FermuxColors.fermuxBackground),
                contentPadding = paddingValues
           ) {
-               item { Spacer(modifier = Modifier.height(17.dp)) }
+               item { Spacer(modifier = Modifier.height(10.dp)) }
 
                items(
                     items = generalSettings,
