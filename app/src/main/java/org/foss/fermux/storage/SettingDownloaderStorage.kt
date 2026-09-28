@@ -36,7 +36,7 @@ interface DownloaderSettingsRepo {
      val upToDate: Flow<Boolean>
      val ytdlpChannel: Flow<YtdlpChannel>
      val wifi: Flow<Connectivity>
-     //val ipvConnection: Flow<IpvConnection>
+     val ipvConnection: Flow<IpvConnection>
      val jsonAudioCard: Flow<List<JSONHistoryCards>>
      val jsonVideoCard: Flow<List<JSONHistoryCards>>
 
@@ -61,7 +61,7 @@ interface DownloaderSettingsRepo {
      suspend fun setSponsorBlockCategories(value: Set<String>)
      suspend fun setUpToDate(value: Boolean)
      suspend fun setWifi(value: Connectivity)
-     //suspend fun setIpvConnection(value: IpvConnection)
+     suspend fun setIpvConnection(value: IpvConnection)
      suspend fun setYtdlpChannel(value: YtdlpChannel)
      suspend fun setJSONAudio(value: JSONHistoryCards)
      suspend fun setJSONVideo(value: JSONHistoryCards)
@@ -111,7 +111,7 @@ val SPONSOR_BLOCK_CATEGORIES = stringSetPreferencesKey("sponsor_block_categories
 val UP_TO_DATE = booleanPreferencesKey("up_to_date")
 val YTDLP_CHANNEL = stringPreferencesKey("ytdlp_channels")
 val WIFI = stringPreferencesKey("wifi")
-//val IPV = booleanPreferencesKey("ipv")
+val IPV = stringPreferencesKey("ipv")
 val JSON_AUDIO_HISTORY = stringPreferencesKey("json_audio")
 val JSON_VIDEO_HISTORY = stringPreferencesKey("json_video")
 
@@ -189,11 +189,11 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                ?: Connectivity.Any
      }
 
-//     override val ipvConnection: Flow<Boolean> = settingStore.data.map { preferences ->
-//          preferences[IPV]
-//               ?.let { runCatching { IpvConnection.valueOf(it) }.getOrNull }
-//               ?: IpcConnection.Disabled
-//     }
+     override val ipvConnection: Flow<IpvConnection> = settingStore.data.map { preferences ->
+          preferences[IPV]
+               ?.let { runCatching { IpvConnection.valueOf(it) }.getOrNull() }
+               ?: IpvConnection.Disabled
+     }
 
      override val jsonAudioCard: Flow<List<JSONHistoryCards>> = settingStore.data.map { preferences ->
           val json =
@@ -313,9 +313,9 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
           settingStore.edit { preferences -> preferences[WIFI] = value.name }
      }
 
-//     override suspend fun setIpvConnection(value: IpvConnection) {
-//          settingStore.edit { preferences -> preferences[IPV] = value.name }
-//     }
+     override suspend fun setIpvConnection(value: IpvConnection) {
+          settingStore.edit { preferences -> preferences[IPV] = value.name }
+     }
 
      override suspend fun setJSONAudio(value: JSONHistoryCards) {
           settingStore.edit { preferences ->

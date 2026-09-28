@@ -94,8 +94,8 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      val wifi: StateFlow<Connectivity> = settingsTab.wifi
           .stateIn(viewModelScope, SharingStarted.Lazily, Connectivity.Any)
 
-//     val ipv: StateFlow<IpvConnection> = settingsTab.ipvConnection
-//          .stateIn(viewModelScope, SharingStarted.Lazily, IpvConnection.Disabled)
+     val ipv: StateFlow<IpvConnection> = settingsTab.ipvConnection
+          .stateIn(viewModelScope, SharingStarted.Lazily, IpvConnection.Disabled)
 
      val audioHistoryList: StateFlow<List<JSONHistoryCards>> = settingsTab.jsonAudioCard
           .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
@@ -192,9 +192,9 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           viewModelScope.launch { settingsTab.setWifi(value) }
      }
 
-//     fun setIpvConnection(value: IpvConnection) {
-//          viewModelScope.launch { settingsTab.setIpvConnection(value) }
-//     }
+     fun setIpvConnection(value: IpvConnection) {
+          viewModelScope.launch { settingsTab.setIpvConnection(value) }
+     }
 
      fun clearHistory() {
           viewModelScope.launch { settingsTab.clearHistory() }

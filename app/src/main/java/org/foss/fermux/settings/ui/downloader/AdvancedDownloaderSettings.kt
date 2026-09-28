@@ -21,6 +21,7 @@ import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 import org.foss.fermux.ytdlp.logic.downloader.Connectivity
 import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
+import org.foss.fermux.ytdlp.logic.downloader.IpvConnection
 
 @Composable
 fun AdvancedDownloaderSettings(
@@ -40,6 +41,7 @@ fun AdvancedDownloaderSettings(
      val aria2cEnabled = externalDownloaders == ExternalDownloaders.Disabled
      val externalDownloadersEnabled = aria2cMode == Aria2cMode.Disabled
      val wifi by downloaderSettingsViewModel.wifi.collectAsStateWithLifecycle()
+     val ipv by downloaderSettingsViewModel.ipv.collectAsStateWithLifecycle()
 
      // Miscellaneous vals/funs
      val snackbarHostState = remember { SnackbarHostState() }
@@ -102,6 +104,25 @@ fun AdvancedDownloaderSettings(
                          ),
                          selectedOption = wifi,
                          onOptionSelected = { downloaderSettingsViewModel.setWifi(it) }
+                    )
+               },
+               position = TilePosition.MIDDLE
+          ),
+          SettingListInfo(
+               title = "Change IPV settings",
+               description = "Change the IPV connection type",
+               image = R.drawable.ipv,
+               onClick = { toggleDownloader(ExpandableDownloaderSetting.Ipv) },
+               trailingContent = {
+                    ModularSegmentedButtons(
+                         expanded = expandedSetting == ExpandableDownloaderSetting.Ipv,
+                         optionsList = listOf(
+                              IpvConnection.Disabled to "Default",
+                              IpvConnection.Ipv4 to "IPV4",
+                              IpvConnection.Ipv6 to "IPV6"
+                         ),
+                         selectedOption = ipv,
+                         onOptionSelected = { downloaderSettingsViewModel.setIpvConnection(it) }
                     )
                },
                position = TilePosition.MIDDLE
