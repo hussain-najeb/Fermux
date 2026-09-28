@@ -91,6 +91,12 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      val ytdlpChannel: StateFlow<YtdlpChannel> = settingsTab.ytdlpChannel
           .stateIn(viewModelScope, SharingStarted.Lazily, YtdlpChannel.Nightly)
 
+     val wifi: StateFlow<Connectivity> = settingsTab.wifi
+          .stateIn(viewModelScope, SharingStarted.Lazily, Connectivity.Any)
+
+//     val ipv: StateFlow<IpvConnection> = settingsTab.ipvConnection
+//          .stateIn(viewModelScope, SharingStarted.Lazily, IpvConnection.Disabled)
+
      val audioHistoryList: StateFlow<List<JSONHistoryCards>> = settingsTab.jsonAudioCard
           .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
@@ -170,6 +176,10 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           viewModelScope.launch { settingsTab.setDownloadPath(value) }
      }
 
+     fun setDownloaderBellState(value: Boolean) {
+          viewModelScope.launch { settingsTab.setDownloaderBellState(value) }
+     }
+
      fun setUpToDate(value: Boolean) {
           viewModelScope.launch { settingsTab.setUpToDate(value) }
      }
@@ -178,9 +188,13 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           viewModelScope.launch { settingsTab.setYtdlpChannel(value) }
      }
 
-     fun setDownloaderBellState(value: Boolean) {
-          viewModelScope.launch { settingsTab.setDownloaderBellState(value) }
+     fun setWifi(value: Connectivity) {
+          viewModelScope.launch { settingsTab.setWifi(value) }
      }
+
+//     fun setIpvConnection(value: IpvConnection) {
+//          viewModelScope.launch { settingsTab.setIpvConnection(value) }
+//     }
 
      fun clearHistory() {
           viewModelScope.launch { settingsTab.clearHistory() }

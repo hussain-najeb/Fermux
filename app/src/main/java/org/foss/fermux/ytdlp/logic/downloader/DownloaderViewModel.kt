@@ -26,6 +26,7 @@ class DownloaderViewModel : ViewModel() {
      }
 
      var state by mutableStateOf<DownloadStatus>(DownloadStatus.Idle)
+     var connection by mutableStateOf(Connectivity.Any)
      var downloadUrl by mutableStateOf("")
      var downloaderLogs by mutableStateOf("")
      private var activeProcess by mutableStateOf<UUID?>(null)
@@ -40,6 +41,22 @@ class DownloaderViewModel : ViewModel() {
           "What does an LLM say about it?",
           "Did you paste a URL?"
      )
+
+     val wifiConstraint = when (connection) {
+          Connectivity.Wifi -> {
+               Constraints.Builder()
+                    .setRequiredNetworkType(NetworkType.UNMETERED)
+                    .build()
+          }
+          Connectivity.Cellular -> {
+               Constraints.Builder()
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                    .build()
+          }
+          Connectivity.Any -> {
+               Constraints.NONE
+          }
+     }
 
      fun userPickedArgs() {
           if (downloadUrl.isBlank()) return
@@ -84,6 +101,7 @@ class DownloaderViewModel : ViewModel() {
                          "video" to video?.name
                     )
                )
+               .setConstraints(wifiConstraint)
                .build()
 
           activeProcess = requestedUrls.id

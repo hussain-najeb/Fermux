@@ -23,7 +23,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import org.foss.fermux.terminal.logic.TerminalLine
 import org.foss.fermux.terminal.logic.TermuxOutput
 import org.foss.fermux.terminal.logic.myTermuxCommands
@@ -31,9 +30,7 @@ import org.foss.fermux.terminal.ui.ArrowKeyMovement
 import org.foss.fermux.ui.theme.JetbrainsMono
 
 @Composable
-fun FermuxTerminalScreen(
-     navigationController: NavHostController
-) {
+fun FermuxTerminalScreen() {
      val context = LocalContext.current
      var userCommand by remember { mutableStateOf(TextFieldValue("")) }
      var history by remember { mutableStateOf(listOf<String>()) }
@@ -187,5 +184,3 @@ fun FermuxTerminalScreen(
           )
      }
 }
-
-

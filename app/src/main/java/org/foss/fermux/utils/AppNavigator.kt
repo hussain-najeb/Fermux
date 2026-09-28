@@ -73,7 +73,7 @@ fun FermuxAppMainScreen() {
      ) {
           // Main Screens
           composable(MainScreens.Home.route) { HomeScreen(navController) }
-          composable(MainScreens.Terminal.route) { FermuxTerminalScreen(navController) }
+          composable(MainScreens.Terminal.route) { FermuxTerminalScreen() }
           composable(MainScreens.Settings.route) { SettingsScreen(navController) }
           composable(MainScreens.Downloader.route) { DownloadContent(navController = navController) }
           composable(MainScreens.Converter.route) { ConverterScreen(navController = navController) }

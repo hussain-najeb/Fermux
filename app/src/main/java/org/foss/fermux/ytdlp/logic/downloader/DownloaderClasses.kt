@@ -97,7 +97,19 @@ enum class YtdlpChannel {
      Stable,
      Nightly,
      Master
-}    
+}
+
+enum class Connectivity {
+     Wifi,
+     Cellular,
+     Any
+}
+
+enum class IpvConnection {
+     Ipv6,
+     Ipv4,
+     Disabled
+}
 
 enum class ExternalDownloaders {
      Disabled,

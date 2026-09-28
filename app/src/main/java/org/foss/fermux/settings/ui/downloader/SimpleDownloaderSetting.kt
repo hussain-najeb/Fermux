@@ -44,6 +44,8 @@ import org.foss.fermux.ytdlp.logic.downloader.YtdlpChannel
 enum class ExpandableDownloaderSetting {
      YtdlpUpdater,
      SponsorBlock,
+     Wifi,
+     Ipv,
      Aria2c,
      ExternalDownloader,
      ResetHistory,

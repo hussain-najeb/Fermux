@@ -19,6 +19,7 @@ import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
+import org.foss.fermux.ytdlp.logic.downloader.Connectivity
 import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
 
 @Composable
@@ -38,6 +39,7 @@ fun AdvancedDownloaderSettings(
      val externalDownloaders by downloaderSettingsViewModel.externalDownloaders.collectAsStateWithLifecycle()
      val aria2cEnabled = externalDownloaders == ExternalDownloaders.Disabled
      val externalDownloadersEnabled = aria2cMode == Aria2cMode.Disabled
+     val wifi by downloaderSettingsViewModel.wifi.collectAsStateWithLifecycle()
 
      // Miscellaneous vals/funs
      val snackbarHostState = remember { SnackbarHostState() }
@@ -81,6 +83,25 @@ fun AdvancedDownloaderSettings(
                     SettingsSwitch(
                          checked = logcat,
                          onCheckedChange = { downloaderSettingsViewModel.setDownloaderDebug(it) }
+                    )
+               },
+               position = TilePosition.MIDDLE
+          ),
+          SettingListInfo(
+               title = "Connection Type",
+               description = "Use different connections for the downloader",
+               image = R.drawable.network,
+               onClick = { toggleDownloader(ExpandableDownloaderSetting.Wifi) },
+               trailingContent = {
+                    ModularSegmentedButtons(
+                         expanded = expandedSetting == ExpandableDownloaderSetting.Wifi,
+                         optionsList = listOf(
+                              Connectivity.Any to "Default",
+                              Connectivity.Wifi to "Wifi",
+                              Connectivity.Cellular to "Cellular"
+                         ),
+                         selectedOption = wifi,
+                         onOptionSelected = { downloaderSettingsViewModel.setWifi(it) }
                     )
                },
                position = TilePosition.MIDDLE

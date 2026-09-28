@@ -1,5 +1,7 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.core.tween
@@ -25,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -56,6 +59,8 @@ fun DownloadContent(
      navController: NavController
 ) {
 
+     val context = LocalContext.current
+
      val downloaderSettings: DownloaderSettingsViewModel = viewModel()
      val videoConversionWarning by downloaderSettings.videoComp.collectAsStateWithLifecycle()
      val upToDate by downloaderSettings.upToDate.collectAsStateWithLifecycle()
@@ -66,6 +71,12 @@ fun DownloadContent(
      val doingTask = downloaderViewModel.state is DownloadStatus.LoadingMetadata || downloaderViewModel.state is DownloadStatus.Downloading || downloaderViewModel.state is DownloadStatus.UserArgs
      val isError = downloaderViewModel.state is DownloadStatus.Error
      val clipboard = LocalClipboard.current
+
+
+     val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
+     val network = connectivityManager.activeNetwork
+     val capabilities = connectivityManager.getNetworkCapabilities(network)
+     val connectedToWifi = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true
 
 
 
@@ -100,6 +111,14 @@ fun DownloadContent(
 
                     if (videoConversionWarning) Text(
                          text = "Video Conversion is on, don't cancel the download if it looks stuck.",
+                         color = FermuxColors.fermuxWhiteColor,
+                         fontSize = 16.sp,
+                         fontStyle = FontStyle.Italic,
+                         fontFamily = FontFamily.Default,
+                         modifier = Modifier.padding(5.dp)
+                    )
+                    if (!connectedToWifi) Text(
+                         text = "You don't have internet connection, please connect to the internet to use this tab.",
                          color = FermuxColors.fermuxWhiteColor,
                          fontSize = 16.sp,
                          fontStyle = FontStyle.Italic,
