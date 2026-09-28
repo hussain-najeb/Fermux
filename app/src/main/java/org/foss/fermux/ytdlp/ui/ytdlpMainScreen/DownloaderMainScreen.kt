@@ -2,8 +2,10 @@ package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -53,13 +55,13 @@ import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates.DownloaderCards
 
 // TODO. Replace all the mentions of LargeAppTopBar with its small counterpart in not so crucial places
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun DownloadContent(
      downloaderViewModel: DownloaderViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity),
      navController: NavController
 ) {
 
-     val context = LocalContext.current
 
      val downloaderSettings: DownloaderSettingsViewModel = viewModel()
      val videoConversionWarning by downloaderSettings.videoComp.collectAsStateWithLifecycle()
@@ -72,11 +74,6 @@ fun DownloadContent(
      val isError = downloaderViewModel.state is DownloadStatus.Error
      val clipboard = LocalClipboard.current
 
-
-     val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
-     val network = connectivityManager.activeNetwork
-     val capabilities = connectivityManager.getNetworkCapabilities(network)
-     val connectedToWifi = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true
 
 
 
@@ -117,14 +114,7 @@ fun DownloadContent(
                          fontFamily = FontFamily.Default,
                          modifier = Modifier.padding(5.dp)
                     )
-                    if (!connectedToWifi) Text(
-                         text = "You don't have internet connection, please connect to the internet to use this tab.",
-                         color = FermuxColors.fermuxWhiteColor,
-                         fontSize = 16.sp,
-                         fontStyle = FontStyle.Italic,
-                         fontFamily = FontFamily.Default,
-                         modifier = Modifier.padding(5.dp)
-                    )
+                    Connections()
 
                     DownloaderCards(
                          downloaderViewModel.state,
@@ -235,5 +225,47 @@ fun DownloadContent(
                     SideBar(navController = navController)
                }
           }
+     }
+}
+
+
+@RequiresApi(Build.VERSION_CODES.S)
+@Composable
+private fun Connections() {
+     val context = LocalContext.current
+     val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
+     val network = connectivityManager.activeNetwork
+     val capabilities = connectivityManager.getNetworkCapabilities(network)
+     val connectedToWifi = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true
+     val hasValidatedInternet = capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) == true
+     val connectedToCellular = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) == true
+     val connectedToVPN = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_VPN) == true
+     val connectedToEthernet = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) == true
+     val connectedToAriDrop = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI_AWARE) == true
+     val connectedToUsb = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_USB) == true
+
+
+
+
+     val networkDescriptions = when {
+          !connectedToWifi -> "You aren't connected to the internet, please connect to use this tab."
+          !hasValidatedInternet -> "You don't seem to have internet access, please connect to a sufficient network"
+          connectedToCellular -> "Cellular? Really?"
+          connectedToVPN -> "Using Cloudflare DNS?"
+          connectedToEthernet -> "Wow, Ethernet? How did you do that?"
+          connectedToAriDrop -> "Interesting choice for a network connection"
+          connectedToUsb -> "Network over Usb? Interesting"
+          else -> null
+     }
+
+     if (networkDescriptions != null) {
+          Text(
+               text = networkDescriptions,
+               color = FermuxColors.fermuxWhiteColor,
+               fontSize = 16.sp,
+               fontStyle = FontStyle.Italic,
+               fontFamily = FontFamily.Default,
+               modifier = Modifier.padding(10.dp)
+          )
      }
 }
