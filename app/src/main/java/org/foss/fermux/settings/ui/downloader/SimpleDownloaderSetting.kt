@@ -28,7 +28,6 @@ import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.SettingsResetButton
-import org.foss.fermux.components.downloaderComponents.DownloaderVersionSwap
 import org.foss.fermux.components.downloaderComponents.ModularSegmentedButtons
 import org.foss.fermux.components.downloaderComponents.SponsorBlockChoices
 import org.foss.fermux.components.generalComponents.AppSnackBar
@@ -42,6 +41,7 @@ import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.rememberNotificationPermissionRequest
 import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
+import org.foss.fermux.ytdlp.logic.downloader.YtdlpChannel
 
 
 private enum class ExpandableDownloaderSetting {
@@ -59,6 +59,8 @@ fun SimpleDownloaderPage(
      downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity)
 ) {
 
+
+     // DataStore entries
      val ytdlpDetails by downloaderSettingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
      val audioHistory by downloaderSettingsViewModel.audioHistory.collectAsStateWithLifecycle()
      val videoHistory by downloaderSettingsViewModel.videoHistory.collectAsStateWithLifecycle()
@@ -68,16 +70,18 @@ fun SimpleDownloaderPage(
      val fingerprint by downloaderSettingsViewModel.fingerprint.collectAsStateWithLifecycle()
      val logcat by downloaderSettingsViewModel.downloaderDebug.collectAsStateWithLifecycle()
      val bellState by downloaderSettingsViewModel.downloaderBellState.collectAsStateWithLifecycle()
+     val isCheckingForUpdate by downloaderSettingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
+     val ytdlpUpdateStatus by downloaderSettingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
+
+
 
      // ModularSegmentedButtons vals
      val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
      val externalDownloaders by downloaderSettingsViewModel.externalDownloaders.collectAsStateWithLifecycle()
      val aria2cEnabled = externalDownloaders == ExternalDownloaders.Disabled
      val externalDownloadersEnabled = aria2cMode == Aria2cMode.Disabled
+     val updateChannel by downloaderSettingsViewModel.ytdlpChannel.collectAsStateWithLifecycle()
 
-
-     val isCheckingForUpdate by downloaderSettingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
-     val ytdlpUpdateStatus by downloaderSettingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
 
      val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
@@ -117,9 +121,16 @@ fun SimpleDownloaderPage(
                icon = Icons.Default.Update,
                onClick = { toggleDownloader(ExpandableDownloaderSetting.YtdlpUpdater) },
                trailingContent = {
-                    DownloaderVersionSwap(
-                         downloaderSettingsViewModel = downloaderSettingsViewModel,
-                         expanded = expandedSetting == ExpandableDownloaderSetting.YtdlpUpdater
+                    ModularSegmentedButtons(
+                         expanded = expandedSetting == ExpandableDownloaderSetting.YtdlpUpdater,
+                         enabled = !isCheckingForUpdate,
+                         optionsList = listOf(
+                              YtdlpChannel.Stable to "Stable",
+                              YtdlpChannel.Nightly to "Nightly",
+                              YtdlpChannel.Master to "Master"
+                         ),
+                         selectedOption = updateChannel,
+                         onOptionSelected = { downloaderSettingsViewModel.checkYtdlpUpdate(it) }
                     )
                },
                position = TilePosition.TOP

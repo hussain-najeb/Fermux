@@ -88,6 +88,9 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      val upToDate: StateFlow<Boolean> = settingsTab.upToDate
           .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
+     val ytdlpChannel: StateFlow<YtdlpChannel> = settingsTab.ytdlpChannel
+          .stateIn(viewModelScope, SharingStarted.Lazily, YtdlpChannel.Nightly)
+
      val audioHistoryList: StateFlow<List<JSONHistoryCards>> = settingsTab.jsonAudioCard
           .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
@@ -163,12 +166,16 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           viewModelScope.launch { settingsTab.setSponsorBlockCategories(value) }
      }
 
+     fun setDownloadPath(value: String) {
+          viewModelScope.launch { settingsTab.setDownloadPath(value) }
+     }
+
      fun setUpToDate(value: Boolean) {
           viewModelScope.launch { settingsTab.setUpToDate(value) }
      }
 
-     fun setDownloadPath(value: String) {
-          viewModelScope.launch { settingsTab.setDownloadPath(value) }
+     fun setYtdlpChannel(value: YtdlpChannel) {
+          viewModelScope.launch { settingsTab.setYtdlpChannel(value) }
      }
 
      fun setDownloaderBellState(value: Boolean) {
@@ -202,7 +209,7 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      val currentVersionName: StateFlow<String> = _currentVersionName
 
 
-     fun checkYtdlpUpdate(channel: YtdlpChannel = YtdlpChannel.Stable) {
+     fun checkYtdlpUpdate(channel: YtdlpChannel) {
           if (!isUpdatingYtdlp.compareAndSet(false, true)) return
 
           _isCheckingForUpdate.value = true
@@ -211,6 +218,8 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
                _ytdlpUpdateStatus.value = "Updating yt-dlp..."
 
                try {
+                    settingsTab.setYtdlpChannel(channel)
+
                     val updateChannel = when (channel) {
                          YtdlpChannel.Stable -> YoutubeDL.UpdateChannel.STABLE
                          YtdlpChannel.Nightly -> YoutubeDL.UpdateChannel.NIGHTLY

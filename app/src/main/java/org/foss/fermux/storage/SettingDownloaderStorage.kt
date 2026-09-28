@@ -34,6 +34,7 @@ interface DownloaderSettingsRepo {
      val audioHistory: Flow<Boolean>
      val videoHistory: Flow<Boolean>
      val upToDate: Flow<Boolean>
+     val ytdlpChannel: Flow<YtdlpChannel>
      val jsonAudioCard: Flow<List<JSONHistoryCards>>
      val jsonVideoCard: Flow<List<JSONHistoryCards>>
 
@@ -57,6 +58,7 @@ interface DownloaderSettingsRepo {
      suspend fun setSponsorBlock(value: Boolean)
      suspend fun setSponsorBlockCategories(value: Set<String>)
      suspend fun setUpToDate(value: Boolean)
+     suspend fun setYtdlpChannel(value: YtdlpChannel)
      suspend fun setJSONAudio(value: JSONHistoryCards)
      suspend fun setJSONVideo(value: JSONHistoryCards)
      suspend fun clearHistory()
@@ -103,6 +105,7 @@ val SPONSOR_BLOCK_IMPLEMENTATION = booleanPreferencesKey("sponsor_block")
 val DEFAULT_SPONSOR_BLOCK_CATEGORIES = setOf("sponsor", "selfpromo", "interaction")
 val SPONSOR_BLOCK_CATEGORIES = stringSetPreferencesKey("sponsor_block_categories")
 val UP_TO_DATE = booleanPreferencesKey("up_to_date")
+val YTDLP_CHANNEL = stringPreferencesKey("ytdlp_channels")
 val JSON_AUDIO_HISTORY = stringPreferencesKey("json_audio")
 val JSON_VIDEO_HISTORY = stringPreferencesKey("json_video")
 
@@ -167,6 +170,13 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
      override val upToDate: Flow<Boolean> = settingStore.data.map { preferences ->
           preferences[UP_TO_DATE] ?: false
      }
+
+     override val ytdlpChannel: Flow<YtdlpChannel> = settingStore.data.map { preferences ->
+          preferences[YTDLP_CHANNEL]
+               ?.let { runCatching { YtdlpChannel.valueOf(it) }.getOrNull() }
+               ?: YtdlpChannel.Nightly
+     }
+
      override val jsonAudioCard: Flow<List<JSONHistoryCards>> = settingStore.data.map { preferences ->
           val json =
                preferences[JSON_AUDIO_HISTORY] ?: "[]"
@@ -269,12 +279,16 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
           settingStore.edit { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] = value }
      }
 
+     override suspend fun setSponsorBlockCategories(value: Set<String>) {
+          settingStore.edit { preferences -> preferences[SPONSOR_BLOCK_CATEGORIES] = value }
+     }
+
      override suspend fun setUpToDate(value: Boolean) {
           settingStore.edit { preferences -> preferences[UP_TO_DATE] = value }
      }
 
-     override suspend fun setSponsorBlockCategories(value: Set<String>) {
-          settingStore.edit { preferences -> preferences[SPONSOR_BLOCK_CATEGORIES] = value }
+     override suspend fun setYtdlpChannel(value: YtdlpChannel) {
+          settingStore.edit { preferences -> preferences[YTDLP_CHANNEL] = value.name }
      }
 
      override suspend fun setJSONAudio(value: JSONHistoryCards) {

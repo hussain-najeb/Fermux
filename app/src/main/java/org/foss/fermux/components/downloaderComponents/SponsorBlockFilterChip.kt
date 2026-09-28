@@ -57,7 +57,7 @@ fun SponsorBlockChoices(
                          val pickedFlags = flag in sponsorBlockCategories
                          FilterChip(
                               selected = pickedFlags,
-							 enabled = sponsorBlock,
+							  enabled = sponsorBlock,
                               onClick = {
                                    val updatedFlags = if (pickedFlags) sponsorBlockCategories - flag
                                    else sponsorBlockCategories + flag
