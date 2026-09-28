@@ -2,8 +2,8 @@
 
 package org.foss.fermux.settings.ui.downloader
 
-import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,7 +21,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -29,9 +28,9 @@ import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.SettingsResetButton
-import org.foss.fermux.components.downloaderComponents.Aria2cModeSelector
 import org.foss.fermux.components.downloaderComponents.DownloaderVersionSwap
 import org.foss.fermux.components.downloaderComponents.ExternalDownloaderSelection
+import org.foss.fermux.components.downloaderComponents.ModularSegmentedButtons
 import org.foss.fermux.components.downloaderComponents.SponsorBlockChoices
 import org.foss.fermux.components.generalComponents.AppSnackBar
 import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
@@ -57,8 +56,7 @@ private enum class ExpandableDownloaderSetting {
 @Composable
 fun SimpleDownloaderPage(
      navController: NavHostController,
-     @SuppressLint("ContextCastToActivity")
-     downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
+     downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity)
 ) {
 
      val ytdlpDetails by downloaderSettingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
@@ -68,9 +66,11 @@ fun SimpleDownloaderPage(
      val sponsorBlock by downloaderSettingsViewModel.sponsorBlock.collectAsStateWithLifecycle()
      val quickJS by downloaderSettingsViewModel.quickJS.collectAsStateWithLifecycle()
      val fingerprint by downloaderSettingsViewModel.fingerprint.collectAsStateWithLifecycle()
-     val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
      val logcat by downloaderSettingsViewModel.downloaderDebug.collectAsStateWithLifecycle()
      val bellState by downloaderSettingsViewModel.downloaderBellState.collectAsStateWithLifecycle()
+
+     // ModularSegmentedButtons vals
+     val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
 
 
      val isCheckingForUpdate by downloaderSettingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
@@ -244,9 +244,16 @@ fun SimpleDownloaderPage(
                image = R.drawable.layers,
                onClick = { toggleDownloader(ExpandableDownloaderSetting.Aria2c) },
                trailingContent = {
-                    Aria2cModeSelector(
+                    ModularSegmentedButtons(
+                         modifier = Modifier,
                          expanded = expandedSetting == ExpandableDownloaderSetting.Aria2c,
-                         downloaderSettingsViewModel = downloaderSettingsViewModel
+                         optionsList = listOf(
+                              Aria2cMode.Always to "Disabled",
+                              Aria2cMode.EdgeCaseOnly to "Edge Case",
+                              Aria2cMode.Disabled to "Enabled"
+                         ),
+                         selectedOption = aria2cMode,
+                         onOptionSelected = { downloaderSettingsViewModel.setAria2cMode(it) }
                     )
                },
                position = TilePosition.MIDDLE
@@ -292,8 +299,6 @@ fun SimpleDownloaderPage(
                position = TilePosition.MIDDLE
           )
      )
-
-
 
      LargeTopBarScaffold(
           title = "Downloader Settings",

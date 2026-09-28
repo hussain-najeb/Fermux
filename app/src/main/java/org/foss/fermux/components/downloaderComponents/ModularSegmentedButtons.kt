@@ -8,28 +8,18 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
-import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 
 @Composable
-fun Aria2cModeSelector(
+fun <T> ModularSegmentedButtons(
+     modifier: Modifier,
      expanded: Boolean,
-     downloaderSettingsViewModel: DownloaderSettingsViewModel
+     optionsList: List<Pair<T, String>>,
+     selectedOption: T,
+     onOptionSelected: (T) -> Unit
 ) {
-
-     val aria2cModeOptions = listOf(
-     Aria2cMode.Disabled to "Off",
-     Aria2cMode.EdgeCaseOnly to "Edge Case",
-     Aria2cMode.Always to "Always"
-     )
-
-
-     val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
 
      AnimatedVisibility(
           visible = expanded,
@@ -37,7 +27,7 @@ fun Aria2cModeSelector(
           exit = shrinkVertically(animationSpec = MaterialTheme.motionScheme.fastEffectsSpec()) + fadeOut(targetAlpha = 0.1f)
      ) {
           Surface(
-               modifier = Modifier
+               modifier = modifier
                     .wrapContentSize()
                     .padding(start = 8.dp, end = 8.dp),
                color = FermuxColors.fermuxComponents,
@@ -49,13 +39,13 @@ fun Aria2cModeSelector(
                          .padding(7.dp)
                          .fillMaxWidth()
                ) {
-                    aria2cModeOptions.forEachIndexed { index, (mode, label) ->
+                    optionsList.forEachIndexed { index, (value, name) ->
                          SegmentedButton(
-                              selected = aria2cMode == mode,
-                              onClick = { downloaderSettingsViewModel.setAria2cMode(mode) },
+                              selected = selectedOption == value,
+                              onClick = { onOptionSelected(value) },
                               shape = SegmentedButtonDefaults.itemShape(
                                    index = index,
-                                   count = aria2cModeOptions.size,
+                                   count = optionsList.size,
                                    baseShape = RoundedCornerShape(8.dp)
                               ),
                               colors = SegmentedButtonDefaults.colors(
@@ -79,7 +69,7 @@ fun Aria2cModeSelector(
                                         FermuxColors.fermuxGenericBorder.copy(alpha = 0.4f)
                               )
                          ) {
-                              Text(label)
+                              Text(name)
                          }
                     }
                }
