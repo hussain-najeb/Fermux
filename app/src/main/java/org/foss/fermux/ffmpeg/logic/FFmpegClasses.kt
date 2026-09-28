@@ -92,7 +92,6 @@ enum class FFmpegTargetFormat(
           ffmpegExtraArgs = emptyList(),
           descriptor = "video(webm)",
           videoEncodingProfile = VideoEncodingProfile(
-               // This build has MediaCodec VP8 but was not built with libvpx.
                softwareVideoArgs = listOf("-c:v", "vp8_mediacodec", "-b:v", "4M"),
                hardwareVideoArgs = listOf("-c:v", "vp8_mediacodec", "-b:v", "4M"),
                audioArgs = listOf("-c:a", "opus", "-strict", "experimental"),

@@ -70,10 +70,13 @@ class DownloaderViewModel : ViewModel() {
      /**
       * Used to handle The Downloader's states, settings, metadata, audio and video assignment, and for data to be assigned to [DownloadWorker] to make it work asynchronously and perform the downloading task.
       */
-     fun startingDownload(context: Context, audio: AudioQuality?, video: VideoQuality?) {
+     fun startingDownload(context: Context, audio: AudioQuality? = null, video: VideoQuality? = null) {
           if (activeProcess != null || state !is DownloadStatus.UserArgs) {
 
-               DebugLogDownloader.debugDownloader("DownloadAdmission", "Ignoring duplicate download request; active id=$activeProcess")
+               DebugLogDownloader.debugDownloader(
+                    "DownloadAdmission",
+                    "Ignoring duplicate download request; active id=$activeProcess"
+               )
 
                return
           }
@@ -81,7 +84,6 @@ class DownloaderViewModel : ViewModel() {
           currentMetadata = null
 
           val settingsTab = DataStoreDownloaderSettings(context.applicationContext)
-
           val requestedUrls = OneTimeWorkRequestBuilder<DownloadWorker>()
                .setInputData(
                     workDataOf(
@@ -109,12 +111,18 @@ class DownloaderViewModel : ViewModel() {
                     val observedId = if (existingWork != null) {
                          activeProcess = existingWork.id
 
-                         DebugLogDownloader.debugDownloader("DownloadAdmission","Keeping existing download id=${existingWork.id} state=${existingWork.state}")
+                         DebugLogDownloader.debugDownloader(
+                              "DownloadAdmission",
+                              "Keeping existing download id=${existingWork.id} state=${existingWork.state}"
+                         )
 
                          existingWork.id
                     } else {
 
-                         DebugLogDownloader.debugDownloader("DownloadAdmission", "Enqueue unique download id=${requestedUrls.id}")
+                         DebugLogDownloader.debugDownloader(
+                              "DownloadAdmission",
+                              "Enqueue unique download id=${requestedUrls.id}"
+                         )
 
                          workManager.enqueueUniqueWork(
                               DOWNLOAD_WORK_NAME,
@@ -190,7 +198,11 @@ class DownloaderViewModel : ViewModel() {
                } catch (e: CancellationException) {
                     throw e
                } catch (e: Exception) {
-                    DebugLogDownloader.errorDownloader("DownloadAdmission", "Failed to enqueue id=${requestedUrls.id}", e)
+                    DebugLogDownloader.errorDownloader(
+                         "DownloadAdmission",
+                         "Failed to enqueue id=${requestedUrls.id}",
+                         e
+                    )
                     if (activeProcess == requestedUrls.id) {
                          activeProcess = null
                          downloadErrorHandler(e)

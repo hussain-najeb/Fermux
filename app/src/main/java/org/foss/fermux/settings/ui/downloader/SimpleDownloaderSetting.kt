@@ -33,7 +33,7 @@ import org.foss.fermux.fermuxUIComponents.downloaderComponents.Aria2cModeSelecto
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderVersionSwap
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.ExternalDownloaderSelection
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.SponsorBlockChoices
-import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxSnackBar
+import org.foss.fermux.fermuxUIComponents.generalComponents.AppSnackBar
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
 import org.foss.fermux.fermuxUIComponents.settingsComponents.TileOptions
@@ -189,6 +189,27 @@ fun SimpleDownloaderPage(
 
      val advancedSettings = listOf(
           SettingListInfo(
+               title = "Reset Downloader Settings",
+               description = "Reset the downloader settings to there original state",
+               onClick = { toggleDownloader(ExpandableDownloaderSetting.ResetDownloader) },
+               trailingContent = {
+                    SettingsResetButton(
+                         expanded = expandedSetting == ExpandableDownloaderSetting.ResetDownloader,
+                         settingText = "Reset Downloader Settings",
+                         onClick = {
+                              downloaderSettingsViewModel.clearYtdlp()
+                              scope.launch {
+                                   snackbarHostState.showSnackbar(
+                                        message = "Setting is back to default",
+                                        duration = SnackbarDuration.Short
+                                   )
+                              }
+                         } //     TODO. Add a way to undo the actions
+                    )
+               },
+               position = TilePosition.TOP
+          ),
+          SettingListInfo(
                title = if (logcat) "Debug Logging On" else "Debug Logging Off",
                description = "Write diagnostic messages to Logcat in any builds",
                icon = Icons.Default.BugReport,
@@ -198,7 +219,7 @@ fun SimpleDownloaderPage(
                          onCheckedChange = { downloaderSettingsViewModel.setDownloaderDebug(it) }
                     )
                },
-               position = TilePosition.TOP
+               position = TilePosition.MIDDLE
           ),
           SettingListInfo(
                title = "SponsorBlock",
@@ -269,28 +290,6 @@ fun SimpleDownloaderPage(
                     )
                },
                position = TilePosition.MIDDLE
-          ),
-          SettingListInfo(
-               title = "Reset Downloader Settings",
-               description = "Reset the downloader settings to there original state",
-               icon = Icons.Default.SettingsBackupRestore,
-               onClick = { toggleDownloader(ExpandableDownloaderSetting.ResetDownloader) },
-               trailingContent = {
-                    SettingsResetButton(
-                         expanded = expandedSetting == ExpandableDownloaderSetting.ResetDownloader,
-                         settingText = "Reset Downloader Settings",
-                         onClick = {
-                              downloaderSettingsViewModel.clearYtdlp()
-                              scope.launch {
-                                   snackbarHostState.showSnackbar(
-                                        message = "Setting is back to default",
-                                        duration = SnackbarDuration.Short
-                                   )
-                              }
-                         } //     TODO. Add a way to undo the actions
-                    )
-               },
-               position = TilePosition.BOTTOM
           )
      )
 
@@ -299,7 +298,7 @@ fun SimpleDownloaderPage(
      LargeTopBarScaffold(
           title = "Downloader Settings",
           onBack = { navController.popBackStack() },
-          snackbarHost = { FermuxSnackBar(snackbarHostState) }
+          snackbarHost = { AppSnackBar(snackbarHostState) }
      ) { paddingValues ->
           Column(
                modifier = Modifier

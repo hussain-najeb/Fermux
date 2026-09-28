@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.sp
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
-fun FermuxSnackBar(
+fun AppSnackBar(
      hostState: SnackbarHostState
 ) {
      SnackbarHost(hostState = hostState) { data ->

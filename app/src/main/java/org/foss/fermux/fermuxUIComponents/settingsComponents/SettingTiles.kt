@@ -56,8 +56,8 @@ fun TileOptions(
                shape = shape,
                contentColor = contentColor,
                interactionSource = interactionSource,
-               onClick = onClick,
-               color = surfaceColor
+               color = surfaceColor,
+               onClick = onClick
           ) {
                Row(
                     modifier = Modifier

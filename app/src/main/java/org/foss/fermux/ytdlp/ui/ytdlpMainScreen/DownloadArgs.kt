@@ -12,6 +12,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -22,8 +23,8 @@ import org.foss.fermux.fermuxUIComponents.downloaderComponents.AudioFormatSelect
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.RequestTimeSlider
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.ThumbnailSelector
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.VideoFormatSelector
-import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxSnackBar
-import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
+import org.foss.fermux.fermuxUIComponents.generalComponents.AppSnackBar
+import org.foss.fermux.fermuxUIComponents.generalComponents.SmallTopBarScaffold
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
 import org.foss.fermux.fermuxUIComponents.settingsComponents.TileOptions
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
@@ -37,7 +38,9 @@ private enum class ExpandableOptionList {
      VideoFormats,
      SleepRequest,
      ResetArgs,
-}
+} // TODO. Had a crazy idea, add a quick "anything" button. for downloads add teh quick download button which just copies your clipboard and downloads a video, add a setting entry that tells the user via a slider that edits the video res and audio qualtity
+// TODO. add under the downloads tab card in the home menu a Loading indicator straight horizontal bar, should be easy, like a surface with the loading indicator inside it for.... looking cool
+// TODO. add in a button for each tab except settings, as in, just quick access stuff and it looks better... UX!
 
 
 @Composable
@@ -91,8 +94,8 @@ fun DownloaderArgs(navController: NavController) {
           ),
           SettingListInfo(
                title = "Video Compatibility",
-               description = "Re-encodes the downloaded video to enforce a video format. This option is much more reliable but it's slower and CPU intensive",
-               image = R.drawable.re_encodes,
+               description = "Re-encodes the media to enforce video formats. It's more reliable but EXTREMELY slow and CPU intensive",
+               image = R.drawable.re_encodes, // TODO. resue the AlretDialog you had in the project files and make it launch an alretdialog that says what this means, then in the alert dialog have 3 buttons, one to cancel it and one to enabled the boolean
                content = {
                     SettingsSwitch(
                          checked = videoComp,
@@ -174,10 +177,10 @@ fun DownloaderArgs(navController: NavController) {
      )
 
 
-     LargeTopBarScaffold(
+     SmallTopBarScaffold(
           title = "Arguments",
           onBack = { navController.popBackStack() },
-          snackbarHost = { FermuxSnackBar(snackbarHostState) }
+          snackbarHost = { AppSnackBar(snackbarHostState) }
      ) { innerPadding ->
           Box(
                modifier = Modifier.fillMaxSize().padding(innerPadding).background(FermuxColors.fermuxBackground),
@@ -198,6 +201,7 @@ fun DownloaderArgs(navController: NavController) {
                               shape = option.position.TileShaper()
                          )
                     }
+                    Spacer(modifier = Modifier.padding(top = 20.dp))
                }
           }
      }

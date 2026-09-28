@@ -27,9 +27,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.MainScreens
 
@@ -40,6 +42,8 @@ fun MainAppCard(
      title: String,
      description: String,
      image: Int? = null,
+     buttonImage: Int? = null,
+     buttonOnClick: (() -> Unit)? = null,
      icon: ImageVector? = null,
      route: MainScreens
 ) {
@@ -126,26 +130,43 @@ fun MainAppCard(
                     modifier = Modifier.fillMaxSize(),
                     color = descriptionBackground,
                ) {
-                    Column(
-                         modifier = Modifier.padding(10.dp)
-                    ) {
-                         Text(
-                              text = title,
-                              fontSize = 18.sp,
-                              fontStyle = FontStyle.Italic,
-                              fontFamily = FontFamily.Default,
-                              fontWeight = FontWeight.SemiBold,
-                              color = titleColor,
-                              modifier = Modifier.padding(2.dp)
-                         )
-                         Text(
-                              text = description,
-                              fontSize = 14.sp,
-                              fontStyle = FontStyle.Normal,
-                              fontFamily = FontFamily.Default,
-                              fontWeight = FontWeight.Normal,
-                              color = titleColor,
-                              modifier = Modifier.padding(2.dp)
+                    Row(modifier = Modifier.padding(2.dp).fillMaxSize()) {
+                         Column(
+                              modifier = Modifier
+                                   .weight(1f)
+                                   .padding(10.dp)
+                         ) {
+                              Text(
+                                   text = title,
+                                   fontSize = 18.sp,
+                                   fontStyle = FontStyle.Italic,
+                                   fontFamily = FontFamily.Default,
+                                   fontWeight = FontWeight.SemiBold,
+                                   minLines = 1,
+                                   maxLines = 5,
+                                   overflow = TextOverflow.Ellipsis,
+                                   color = titleColor
+                              )
+                              Text(
+                                   text = description,
+                                   fontSize = 13.sp,
+                                   fontStyle = FontStyle.Normal,
+                                   fontFamily = FontFamily.Default,
+                                   fontWeight = FontWeight.Normal,
+                                   minLines = 1,
+                                   maxLines = 5,
+                                   overflow = TextOverflow.Ellipsis,
+                                   color = titleColor,
+                                   modifier = Modifier.padding(top = 5.dp, end = 5.dp)
+                              )
+                         }
+                         if (buttonImage != null)
+                         ImageButton(
+                              modifier = Modifier
+                                   .align(Alignment.CenterVertically)
+                                   .padding(end = 10.dp),
+                              onClick = { buttonOnClick?.invoke() },
+                              image = buttonImage
                          )
                     }
                }

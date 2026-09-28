@@ -1,6 +1,5 @@
 package org.foss.fermux.fermuxUIComponents.generalComponents
 
-
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -17,17 +16,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.foss.fermux.fermuxUIComponents.buttons.BackButton
-import org.foss.fermux.fermuxUIComponents.buttons.HelperButton
 import org.foss.fermux.ui.theme.FermuxColors
 
 
 @Composable
-fun LargeTopBarScaffold(
+fun SmallTopBarScaffold(
      modifier: Modifier = Modifier,
      title: String,
-     onBack: (() -> Unit)? = null,
-     helperButton: (()  -> Unit)? = null,
-     helperImage: Int? = null,
+     onBack: () -> Unit,
      snackbarHost: (@Composable () -> Unit)? = null,
      content: @Composable (PaddingValues) -> Unit
 ) {
@@ -43,7 +39,7 @@ fun LargeTopBarScaffold(
           containerColor = FermuxColors.fermuxBackground,
           snackbarHost = snackbarHost ?: {},
           topBar = {
-               LargeTopAppBar(
+               TopAppBar(
                     modifier = Modifier
                          .clip(RoundedCornerShape(bottomEnd = 8.dp, bottomStart = 8.dp)),
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -65,20 +61,11 @@ fun LargeTopBarScaffold(
                          )
                     },
                     navigationIcon = {
-                         if (onBack != null)
                          BackButton(
                               modifier = Modifier.padding(10.dp).size(44.dp),
                               onClick = onBack
                          )
                     },
-                    actions = {
-                         if (helperImage != null)
-                         HelperButton(
-                              modifier = Modifier.padding(10.dp).size(44.dp),
-                              onClick = { helperButton?.invoke() },
-                              image = helperImage
-                         )
-                    }
                )
           },
           content = content

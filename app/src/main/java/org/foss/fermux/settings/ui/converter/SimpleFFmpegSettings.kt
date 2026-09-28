@@ -29,7 +29,7 @@ import org.foss.fermux.fermuxUIComponents.ffmpegComponents.AudioBitrateSlider
 import org.foss.fermux.fermuxUIComponents.ffmpegComponents.CrfSlider
 import org.foss.fermux.fermuxUIComponents.ffmpegComponents.ResolutionSelect
 import org.foss.fermux.fermuxUIComponents.ffmpegComponents.ThreadLimitSelect
-import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxSnackBar
+import org.foss.fermux.fermuxUIComponents.generalComponents.AppSnackBar
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
 import org.foss.fermux.fermuxUIComponents.settingsComponents.TileOptions
@@ -234,10 +234,11 @@ fun SimpleFFmpegSetting(
           ),
           SettingListInfo(
                title = "Hardware Encoding",
-               description = "Uses the hardware chip for ffmpeg encoding instead of CPU. It's much faster and saves battery, but files are slightly larger",
+               description = "Uses the hardware chip for encoding instead of CPU. It's much faster and saves battery, but files are slightly larger",
                image = R.drawable.hardware_encoding,
                content = {
                     SettingsSwitch(
+                         enabled = enableVideoCompression,
                          checked = useHardwareEncoder,
                          onCheckedChange = {
                               ffmpegSettingsViewModel.setUseHardwareEncoder(it)
@@ -251,7 +252,7 @@ fun SimpleFFmpegSetting(
      LargeTopBarScaffold(
           title = "Converter Settings",
           onBack = { navController.popBackStack() },
-          snackbarHost = { FermuxSnackBar(snackbarHostState) }
+          snackbarHost = { AppSnackBar(snackbarHostState) }
      ) { paddingValues ->
           Column(
                modifier = Modifier

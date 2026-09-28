@@ -34,7 +34,9 @@ data class ScreenInfo(
      val title: String,
      val description: String,
      val image: Int? = null,
-     val icon: ImageVector? = null
+     val icon: ImageVector? = null,
+     val buttonIcon: Int? = null,
+     val onClick: (() -> Unit)? = null
 )
 
 sealed class SettingsScreens(val route: String) {

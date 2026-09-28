@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
@@ -41,8 +43,9 @@ import org.foss.fermux.R
 import org.foss.fermux.fermuxUIComponents.buttons.AppIconButton
 import org.foss.fermux.fermuxUIComponents.buttons.GlobalCancelButton
 import org.foss.fermux.fermuxUIComponents.downloaderComponents.SideBar
-import org.foss.fermux.fermuxUIComponents.generalComponents.FermuxSnackBar
+import org.foss.fermux.fermuxUIComponents.generalComponents.AppSnackBar
 import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
+import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.Miscellaneous
 import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
@@ -58,25 +61,23 @@ fun DownloadContent(
      ), navController: NavController
 ) {
 
+     val downloadStoreDownloaderSettings: DownloaderSettingsViewModel = viewModel()
+     val videoConversionWarning by downloadStoreDownloaderSettings.videoComp.collectAsStateWithLifecycle()
+
      val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
-
-
-     val doingTask =
-                  downloaderViewModel.state is DownloadStatus.LoadingMetadata ||
-                  downloaderViewModel.state is DownloadStatus.Downloading ||
-                  downloaderViewModel.state is DownloadStatus.UserArgs
-
-
+     val doingTask = downloaderViewModel.state is DownloadStatus.LoadingMetadata || downloaderViewModel.state is DownloadStatus.Downloading || downloaderViewModel.state is DownloadStatus.UserArgs
      val isError = downloaderViewModel.state is DownloadStatus.Error
      val clipboard = LocalClipboardManager.current
+
+
 
      LargeTopBarScaffold(
           title = "Downloader",
           onBack = { navController.popBackStack() },
           helperButton = { navController.navigate(Miscellaneous.DownloaderArgs.route) },
           helperImage = R.drawable.add,
-          snackbarHost = { FermuxSnackBar(snackbarHostState) }
+          snackbarHost = { AppSnackBar(snackbarHostState) }
      ) { innerPadding ->
           Box(
                modifier = Modifier.fillMaxSize().padding(innerPadding).background(FermuxColors.fermuxBackground),
@@ -86,12 +87,20 @@ fun DownloadContent(
                          .background(FermuxColors.fermuxBackground)
                ) {
                     Text(
-                         text = "Note: Always update your version of Yt-dlp in the settings. It's recommended to use the nightly version",
+                         text = "Note: Always update your version of Yt-dlp in the settings. It's recommended to use the nightly version.",
                          color = FermuxColors.fermuxOffWhiteTextColor,
                          fontSize = 16.sp,
                          fontStyle = FontStyle.Normal,
                          fontFamily = FontFamily.Default,
                          modifier = Modifier.padding(7.dp)
+                    )
+                    if (videoConversionWarning) Text(
+                         text = "Video Conversion is on, don't cancel the download if it looks stuck.",
+                         color = FermuxColors.fermuxWhiteColor,
+                         fontSize = 16.sp,
+                         fontStyle = FontStyle.Italic,
+                         fontFamily = FontFamily.Default,
+                         modifier = Modifier.padding(5.dp)
                     )
 
                     DownloaderCards(
