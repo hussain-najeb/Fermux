@@ -65,7 +65,7 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
      val externalDownloaders: StateFlow<ExternalDownloaders> = settingsTab.externalDownloaders
-          .stateIn(viewModelScope, SharingStarted.Lazily, ExternalDownloaders.TurnedOff)
+          .stateIn(viewModelScope, SharingStarted.Lazily, ExternalDownloaders.Disabled)
 
      val audioHistory: StateFlow<Boolean> = settingsTab.audioHistory
           .stateIn(viewModelScope, SharingStarted.Lazily, true)

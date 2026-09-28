@@ -29,7 +29,6 @@ import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.SettingsResetButton
 import org.foss.fermux.components.downloaderComponents.DownloaderVersionSwap
-import org.foss.fermux.components.downloaderComponents.ExternalDownloaderSelection
 import org.foss.fermux.components.downloaderComponents.ModularSegmentedButtons
 import org.foss.fermux.components.downloaderComponents.SponsorBlockChoices
 import org.foss.fermux.components.generalComponents.AppSnackBar
@@ -42,6 +41,7 @@ import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.rememberNotificationPermissionRequest
 import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
+import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
 
 
 private enum class ExpandableDownloaderSetting {
@@ -71,12 +71,14 @@ fun SimpleDownloaderPage(
 
      // ModularSegmentedButtons vals
      val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
+     val externalDownloaders by downloaderSettingsViewModel.externalDownloaders.collectAsStateWithLifecycle()
+     val aria2cEnabled = externalDownloaders == ExternalDownloaders.Disabled
+     val externalDownloadersEnabled = aria2cMode == Aria2cMode.Disabled
 
 
      val isCheckingForUpdate by downloaderSettingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
      val ytdlpUpdateStatus by downloaderSettingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
 
-     val externalDownloaderEnabled = aria2cMode == Aria2cMode.Disabled
      val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
      var expandedSetting by remember {
@@ -245,12 +247,12 @@ fun SimpleDownloaderPage(
                onClick = { toggleDownloader(ExpandableDownloaderSetting.Aria2c) },
                trailingContent = {
                     ModularSegmentedButtons(
-                         modifier = Modifier,
                          expanded = expandedSetting == ExpandableDownloaderSetting.Aria2c,
+                         enabled = aria2cEnabled,
                          optionsList = listOf(
-                              Aria2cMode.Always to "Disabled",
+                              Aria2cMode.Disabled to "Disabled",
                               Aria2cMode.EdgeCaseOnly to "Edge Case",
-                              Aria2cMode.Disabled to "Enabled"
+                              Aria2cMode.Always to "Enabled"
                          ),
                          selectedOption = aria2cMode,
                          onOptionSelected = { downloaderSettingsViewModel.setAria2cMode(it) }
@@ -260,14 +262,20 @@ fun SimpleDownloaderPage(
           ),
           SettingListInfo(
                title = "Yt-dlp HLS Options",
-               description = "Fallback options instead of Aria2, check the one you like if Aria2 is having issues, especially with m3u8 since yt-dlp prefers it's own options over Aria2 recently over security issues",
+               description = "Options instead of Aria2, check any option if Aria2 is having issues, especially with m3u8 since yt-dlp prefers it's own options over Aria2 recently, because of security issues",
                image = R.drawable.hls_on,
                onClick = { toggleDownloader(ExpandableDownloaderSetting.ExternalDownloader) },
                trailingContent = {
-                    ExternalDownloaderSelection(
-                         enabled = externalDownloaderEnabled,
+                    ModularSegmentedButtons(
                          expanded = expandedSetting == ExpandableDownloaderSetting.ExternalDownloader,
-                         downloaderSettingsViewModel = downloaderSettingsViewModel
+                         enabled = externalDownloadersEnabled,
+                         optionsList = listOf(
+                              ExternalDownloaders.Disabled to "Disabled",
+                              ExternalDownloaders.FFmpegAsExternal to "FFmpeg",
+                              ExternalDownloaders.YtdlpNativeDownloader to "hls-native"
+                         ),
+                         selectedOption = externalDownloaders,
+                         onOptionSelected = { downloaderSettingsViewModel.setExternalDownloaders(it) }
                     )
                },
                position = TilePosition.MIDDLE

@@ -14,8 +14,8 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun <T> ModularSegmentedButtons(
-     modifier: Modifier,
      expanded: Boolean,
+     enabled: Boolean = true,
      optionsList: List<Pair<T, String>>,
      selectedOption: T,
      onOptionSelected: (T) -> Unit
@@ -27,7 +27,7 @@ fun <T> ModularSegmentedButtons(
           exit = shrinkVertically(animationSpec = MaterialTheme.motionScheme.fastEffectsSpec()) + fadeOut(targetAlpha = 0.1f)
      ) {
           Surface(
-               modifier = modifier
+               modifier = Modifier
                     .wrapContentSize()
                     .padding(start = 8.dp, end = 8.dp),
                color = FermuxColors.fermuxComponents,
@@ -48,6 +48,7 @@ fun <T> ModularSegmentedButtons(
                                    count = optionsList.size,
                                    baseShape = RoundedCornerShape(8.dp)
                               ),
+                              enabled = enabled,
                               colors = SegmentedButtonDefaults.colors(
                                    activeContainerColor = FermuxColors.activeContainer,
                                    activeContentColor = FermuxColors.activeContent,

@@ -148,7 +148,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
      override val externalDownloaders: Flow<ExternalDownloaders> = settingStore.data.map { preferences ->
           preferences[EXTERNAL_DOWNLOADER]
                ?.let { runCatching { ExternalDownloaders.valueOf(it) }.getOrNull() } 
-               ?: ExternalDownloaders.TurnedOff
+               ?: ExternalDownloaders.Disabled
      }
      override val audioHistory: Flow<Boolean> =
           settingStore.data.map { preferences -> preferences[SHOW_YTDLP_AUDIO_HISTORY] ?: true }
@@ -195,7 +195,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
           settingStore.edit { preferences ->
                preferences[ARIA2C_MODE_KEY] = value.name
                if (value != Aria2cMode.Disabled) {
-                    preferences[EXTERNAL_DOWNLOADER] = ExternalDownloaders.TurnedOff.name
+                    preferences[EXTERNAL_DOWNLOADER] = ExternalDownloaders.Disabled.name
                }
           }
      }
@@ -227,7 +227,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
      override suspend fun setExternalDownloader(value: ExternalDownloaders) {
           settingStore.edit { preferences ->
                preferences[EXTERNAL_DOWNLOADER] = value.name
-               if (value != ExternalDownloaders.TurnedOff) {
+               if (value != ExternalDownloaders.Disabled) {
                     preferences[ARIA2C_MODE_KEY] = Aria2cMode.Disabled.name
                }
           }

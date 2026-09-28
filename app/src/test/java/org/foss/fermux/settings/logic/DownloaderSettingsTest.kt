@@ -85,7 +85,7 @@ class DownloaderSettingsTest {
           setting.setExternalDownloader(externalDownloaders)
           assertEquals(externalDownloaders, setting.externalDownloaders.first())
 
-          val expectedAria2cMode = if (externalDownloaders == ExternalDownloaders.TurnedOff) Aria2cMode.Always else Aria2cMode.Disabled
+          val expectedAria2cMode = if (externalDownloaders == ExternalDownloaders.Disabled) Aria2cMode.Always else Aria2cMode.Disabled
           assertEquals(expectedAria2cMode, setting.aria2cMode.first())
 
      }
@@ -100,7 +100,7 @@ class DownloaderSettingsTest {
 
           assertEquals(aria2cMode, setting.aria2cMode.first())
 
-          val externalDownloaderTests = if (aria2cMode == Aria2cMode.Disabled) ExternalDownloaders.FFmpegAsExternal else ExternalDownloaders.TurnedOff
+          val externalDownloaderTests = if (aria2cMode == Aria2cMode.Disabled) ExternalDownloaders.FFmpegAsExternal else ExternalDownloaders.Disabled
 
           assertEquals(externalDownloaderTests, setting.externalDownloaders.first())
      }
@@ -131,7 +131,7 @@ class DownloaderSettingsTest {
           assertFalse(setting.bellState.first())
           assertEquals(0, setting.sleepRequest.first())
           assertEquals(Aria2cMode.Always, setting.aria2cMode.first())
-          assertEquals(ExternalDownloaders.TurnedOff, setting.externalDownloaders.first())
+          assertEquals(ExternalDownloaders.Disabled, setting.externalDownloaders.first())
           assertTrue(setting.ytdlpDetails.first())
           assertTrue(setting.videoHistory.first())
           assertTrue(setting.audioHistory.first())
@@ -148,7 +148,7 @@ class DownloaderSettingsTest {
           val setting = newFixture().repositoryOfTheProdCode
 
           setting.setAria2cMode(Aria2cMode.EdgeCaseOnly)
-          setting.setExternalDownloader(ExternalDownloaders.TurnedOff)
+          setting.setExternalDownloader(ExternalDownloaders.Disabled)
 
           assertEquals(Aria2cMode.EdgeCaseOnly, setting.aria2cMode.first())
      }

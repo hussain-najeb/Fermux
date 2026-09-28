@@ -100,7 +100,7 @@ enum class YtdlpChannel {
 }    
 
 enum class ExternalDownloaders {
-     TurnedOff,
+     Disabled,
      FFmpegAsExternal,
      YtdlpNativeDownloader
 }

@@ -34,7 +34,7 @@ suspend fun downloaderLogic(
      audioFormats: AudioFormat = AudioFormat.Mp3Format,
      videoFormats: VideoFormat = VideoFormat.Mp4Format,
      videoComp: Boolean,
-     externalDownloaders: ExternalDownloaders = ExternalDownloaders.TurnedOff,
+     externalDownloaders: ExternalDownloaders = ExternalDownloaders.Disabled,
      url: String,
      taskId: String,
      sleepRequest: Int = 0,
