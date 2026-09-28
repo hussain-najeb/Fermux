@@ -2,7 +2,10 @@ package org.foss.fermux.main
 
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.SnackbarDuration
@@ -18,18 +21,18 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.generalComponents.AppSnackBar
-import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
-import org.foss.fermux.fermuxUIComponents.generalComponents.MainAppCard
+import org.foss.fermux.components.generalComponents.AppSnackBar
+import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
+import org.foss.fermux.components.generalComponents.MainAppCard
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.MainScreens
 import org.foss.fermux.utils.ScreenInfo
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
+import org.foss.fermux.ytdlp.ui.quickDownloads.QuickDownloadsStateMachine
 
 
-
-// TODO. Make the tab itself have an "enabled" state where its off if quick downs are happining and make its color darker,
-//  as in, its not on and the user cant pess it, also make it so if there is a download in the main tab, have an "enabled"
+// TODO. Make the tab itself have an "enabled" state where its off if quick downs are happening and make its color darker,
+//  as in, its not on and the user cant press it, also make it so if there is a download in the main tab, have an "enabled"
 //  option for the quick downloads to be off, synchronization is key, these CAN NOT happen asynchronously!
 //  also add a "cancel" button
 
@@ -39,11 +42,11 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
 
      val downloaderViewModel: DownloaderViewModel = viewModel()
 
-    val scroll = rememberScrollState()
-    val clipboard = LocalClipboard.current
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current
+     val scroll = rememberScrollState()
+     val clipboard = LocalClipboard.current
+     val snackbarHostState = remember { SnackbarHostState() }
+     val scope = rememberCoroutineScope()
+     val context = LocalContext.current
 
      val screens = listOf(
           ScreenInfo(
@@ -52,6 +55,14 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
                description = "A terminal shell with UX, UI, and a lot of convenience taken into account",
                image = R.drawable.bash,
                //buttonIcon = ,
+               onClick = {},
+          ),
+          ScreenInfo(
+               screen = MainScreens.Downloader,
+               title = "Downloader",
+               description = "A modern implementation of ytdlp to android with powerful additions.",
+               image = R.drawable.download,
+               buttonIcon = R.drawable.add,
                onClick = {
                     scope.launch {
                          clipboard.getClipEntry()
@@ -62,32 +73,32 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
                               .let { text ->
                                    if (text != null) {
                                         downloaderViewModel.downloadUrl = text
-                                       downloaderViewModel.startingDownload(context)
-                                       scope.launch {
-                                           snackbarHostState.showSnackbar(
-                                               message = "Quick Download Started"
-                                           )
-                                       }
+                                        downloaderViewModel.quickDownloads()
+                                        downloaderViewModel.startingDownload(context)
+                                        scope.launch {
+                                             snackbarHostState.showSnackbar(
+                                                  message = "Quick Download Started"
+                                             )
+                                        }
                                    }
-                                  if (text.isNullOrBlank() || text.isEmpty()) {
-                                      scope.launch {
-                                          snackbarHostState.showSnackbar(
-                                              message = "Your url is empty, copy a url",
-                                              duration = SnackbarDuration.Short
-                                          )
-                                      }
-                                  }
+                                   if (text.isNullOrBlank() || text.isEmpty()) {
+                                        scope.launch {
+                                             snackbarHostState.showSnackbar(
+                                                  message = "Your url is empty, copy a url",
+                                                  duration = SnackbarDuration.Short
+                                             )
+                                        }
+                                   }
                               }
                     }
+               },
+               trailingContent = {
+                    QuickDownloadsStateMachine(
+                         downloaderViewModel.state,
+                         downloaderViewModel,
+                         snackbarHostState
+                    )
                }
-          ),
-          ScreenInfo(
-               screen = MainScreens.Downloader,
-               title = "Downloader",
-               description = "A modern implementation of ytdlp to android with powerful additions.",
-               image = R.drawable.download,
-               buttonIcon = R.drawable.add,
-               onClick = {}
           ),
           ScreenInfo(
                screen = MainScreens.Converter,
@@ -107,33 +118,32 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
           ),
      )
 
-    LargeTopBarScaffold(
-       title = "Home Page",
-        snackbarHost = { AppSnackBar(snackbarHostState) }
-    ) {}
+     LargeTopBarScaffold(
+          title = "Home Page",
+          snackbarHost = { AppSnackBar(snackbarHostState) }
+     ) {}
      Column(
           modifier = Modifier
-               .fillMaxSize()
+               .fillMaxWidth()
                .background(FermuxColors.fermuxBackground)
                .systemBarsPadding()
                .verticalScroll(scroll),
-          verticalArrangement = Arrangement.spacedBy(8.dp)
      ) {
 
           screens.forEach { screen ->
                MainAppCard(
                     modifier = Modifier
-                         .fillMaxWidth(),
+                         .fillMaxWidth()
+                         .padding(start = 5.dp, end = 5.dp, bottom = 3.dp, top = 3.dp),
                     title = screen.title,
                     description = screen.description,
                     image = screen.image,
                     buttonImage = screen.buttonIcon,
                     buttonOnClick = screen.onClick,
                     route = screen.screen,
+                    trailingContent = screen.trailingContent ,
                     navController = navigationController
                )
           }
-
-
      }
 }

@@ -27,10 +27,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
-import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
-import org.foss.fermux.fermuxUIComponents.buttons.LogImage
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderCard
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.FermuxDownloadDescription
+import org.foss.fermux.components.buttons.CancelButton
+import org.foss.fermux.components.buttons.LogImage
+import org.foss.fermux.components.downloaderComponents.DownloaderCard
+import org.foss.fermux.components.downloaderComponents.FermuxDownloadDescription
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.Miscellaneous

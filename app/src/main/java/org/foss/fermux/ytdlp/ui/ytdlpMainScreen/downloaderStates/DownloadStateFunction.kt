@@ -45,6 +45,8 @@ fun DownloaderCards(
                     QualityState(downloaderViewModel)
                }
 
+               is DownloadStatus.QuickDownload -> {}
+
                is DownloadStatus.LoadingMetadata -> {
                     LoadingCard(
                          state = targetState,

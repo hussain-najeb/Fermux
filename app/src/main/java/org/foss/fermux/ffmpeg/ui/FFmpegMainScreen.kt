@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
+import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 

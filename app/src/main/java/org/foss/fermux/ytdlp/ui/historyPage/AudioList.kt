@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.SideBar
-import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
+import org.foss.fermux.components.downloaderComponents.SideBar
+import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 

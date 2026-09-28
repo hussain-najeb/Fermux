@@ -22,6 +22,7 @@ data class DownloadMetadata(
 sealed class DownloadStatus {
      data object Idle : DownloadStatus()
      data object UserArgs : DownloadStatus()
+     data object QuickDownload: DownloadStatus()
      data object LoadingMetadata : DownloadStatus()
      data class Downloading(val downloadProgress: Float, val metadata: DownloadMetadata) : DownloadStatus()
      data class Completed(val metadata: DownloadMetadata) : DownloadStatus()

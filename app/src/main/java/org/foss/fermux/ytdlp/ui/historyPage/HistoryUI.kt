@@ -25,8 +25,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import org.foss.fermux.fermuxUIComponents.buttons.AppIconButton
-import org.foss.fermux.fermuxUIComponents.buttons.TextWithIconButton
+import org.foss.fermux.components.buttons.AppIconButton
+import org.foss.fermux.components.buttons.TextWithIconButton
 import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.videoTime

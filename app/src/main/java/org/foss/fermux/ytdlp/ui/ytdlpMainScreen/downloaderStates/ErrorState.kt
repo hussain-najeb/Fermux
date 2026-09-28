@@ -19,10 +19,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
-import org.foss.fermux.fermuxUIComponents.buttons.ErrorCopyButton
-import org.foss.fermux.fermuxUIComponents.buttons.LogImage
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderCard
+import org.foss.fermux.components.buttons.CancelButton
+import org.foss.fermux.components.buttons.ErrorCopyButton
+import org.foss.fermux.components.buttons.LogImage
+import org.foss.fermux.components.downloaderComponents.DownloaderCard
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
 import org.foss.fermux.utils.Miscellaneous

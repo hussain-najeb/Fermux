@@ -87,6 +87,7 @@ dependencies {
      implementation(libs.androidx.foundation.layout)
      implementation(libs.androidx.room.ktx)
      implementation(libs.androidx.media3.exoplayer)
+     implementation(libs.androidx.compose.animation)
      testImplementation(libs.junit.jupiter)
      testRuntimeOnly(libs.junit.platform.launcher)
      testImplementation(libs.kotlinx.coroutines.test)

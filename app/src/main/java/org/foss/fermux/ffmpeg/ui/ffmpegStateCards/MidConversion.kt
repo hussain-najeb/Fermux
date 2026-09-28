@@ -11,8 +11,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
-import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FFmpegCard
+import org.foss.fermux.components.buttons.CancelButton
+import org.foss.fermux.components.ffmpegComponents.FFmpegCard
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.ui.MediaThumbnailImage
 import org.foss.fermux.ffmpeg.ui.formatStates.FormatList

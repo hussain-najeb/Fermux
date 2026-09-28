@@ -1,7 +1,10 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -18,15 +21,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.buttons.SettingsResetButton
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.AudioFormatSelector
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.RequestTimeSlider
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.ThumbnailSelector
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.VideoFormatSelector
-import org.foss.fermux.fermuxUIComponents.generalComponents.AppSnackBar
-import org.foss.fermux.fermuxUIComponents.generalComponents.SmallTopBarScaffold
-import org.foss.fermux.fermuxUIComponents.settingsComponents.SettingsSwitch
-import org.foss.fermux.fermuxUIComponents.settingsComponents.TileOptions
+import org.foss.fermux.components.buttons.SettingsResetButton
+import org.foss.fermux.components.downloaderComponents.AudioFormatSelector
+import org.foss.fermux.components.downloaderComponents.RequestTimeSlider
+import org.foss.fermux.components.downloaderComponents.ThumbnailSelector
+import org.foss.fermux.components.downloaderComponents.VideoFormatSelector
+import org.foss.fermux.components.generalComponents.AppSnackBar
+import org.foss.fermux.components.generalComponents.MediumTopBarScaffold
+import org.foss.fermux.components.settingsComponents.SettingsSwitch
+import org.foss.fermux.components.settingsComponents.TileOptions
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.TilePosition
@@ -177,17 +180,17 @@ fun DownloaderArgs(navController: NavController) {
      )
 
 
-     SmallTopBarScaffold(
+     MediumTopBarScaffold(
           title = "Arguments",
           onBack = { navController.popBackStack() },
           snackbarHost = { AppSnackBar(snackbarHostState) }
      ) { innerPadding ->
-          Box(
-               modifier = Modifier.fillMaxSize().padding(innerPadding).background(FermuxColors.fermuxBackground),
-          ) {
                Column(
-                    modifier = Modifier.verticalScroll(rememberScrollState()).fillMaxSize().imePadding()
-                         .background(FermuxColors.fermuxBackground)
+                    modifier = Modifier
+                         .padding(innerPadding)
+                         .verticalScroll(rememberScrollState())
+                         .fillMaxSize()
+                         .background(FermuxColors.fermuxBackground),
                ) {
                     args.forEach { option ->
                          TileOptions(
@@ -205,4 +208,3 @@ fun DownloaderArgs(navController: NavController) {
                }
           }
      }
-}

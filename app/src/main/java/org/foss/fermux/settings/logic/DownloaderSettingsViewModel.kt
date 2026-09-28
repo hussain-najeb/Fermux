@@ -85,6 +85,9 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      val sponsorBlockCategories: StateFlow<Set<String>> = settingsTab.sponsorBlockCategories
           .stateIn(viewModelScope, SharingStarted.Lazily, setOf("sponsor", "selfpromo", "interaction"))
 
+     val upToDate: StateFlow<Boolean> = settingsTab.upToDate
+          .stateIn(viewModelScope, SharingStarted.Lazily, false)
+
      val audioHistoryList: StateFlow<List<JSONHistoryCards>> = settingsTab.jsonAudioCard
           .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
@@ -160,6 +163,10 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           viewModelScope.launch { settingsTab.setSponsorBlockCategories(value) }
      }
 
+     fun setUpToDate(value: Boolean) {
+          viewModelScope.launch { settingsTab.setUpToDate(value) }
+     }
+
      fun setDownloadPath(value: String) {
           viewModelScope.launch { settingsTab.setDownloadPath(value) }
      }
@@ -181,14 +188,19 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      }
 
      private val isUpdatingYtdlp = AtomicBoolean(false)
+
      private val _isCheckingForUpdate = MutableStateFlow(false)
+
      val isCheckingForUpdate: StateFlow<Boolean> = _isCheckingForUpdate
+
      private val _ytdlpUpdateStatus = MutableStateFlow<String?>(null)
+
      val ytdlpUpdateStatus: StateFlow<String?> = _ytdlpUpdateStatus
-     private val _currentVersionName = MutableStateFlow(
-          YoutubeDL.getInstance().versionName(getApplication()) ?: "Unknown"
-     )
+
+     private val _currentVersionName = MutableStateFlow(YoutubeDL.getInstance().versionName(getApplication()) ?: "Unknown")
+
      val currentVersionName: StateFlow<String> = _currentVersionName
+
 
      fun checkYtdlpUpdate(channel: YtdlpChannel = YtdlpChannel.Stable) {
           if (!isUpdatingYtdlp.compareAndSet(false, true)) return
@@ -211,9 +223,18 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
                     )
 
                     _ytdlpUpdateStatus.value = when (result) {
-                         YoutubeDL.UpdateStatus.DONE -> "yt-dlp updated successfully"
-                         YoutubeDL.UpdateStatus.ALREADY_UP_TO_DATE -> "yt-dlp is already up to date"
-                         null -> "yt-dlp update completed"
+                         YoutubeDL.UpdateStatus.DONE -> {
+                              settingsTab.setUpToDate(true)
+                              "yt-dlp updated successfully"
+                         }
+                         YoutubeDL.UpdateStatus.ALREADY_UP_TO_DATE -> {
+                              settingsTab.setUpToDate(true)
+                              "yt-dlp is already up to date"
+                         }
+                         null -> {
+                              settingsTab.setUpToDate(false)
+                              "dlp update completed with an unknown result"
+                         }
                     }
 
                     _currentVersionName.value = YoutubeDL.getInstance().versionName(getApplication()) ?: "Unknown"

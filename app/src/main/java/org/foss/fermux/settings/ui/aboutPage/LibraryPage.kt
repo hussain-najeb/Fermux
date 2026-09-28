@@ -13,8 +13,8 @@
      import androidx.compose.ui.platform.LocalContext
      import androidx.navigation.NavController
      import org.foss.fermux.R
-     import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
-     import org.foss.fermux.fermuxUIComponents.settingsComponents.TileOptions
+     import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
+     import org.foss.fermux.components.settingsComponents.TileOptions
      import org.foss.fermux.settings.logic.SettingListInfo
      import org.foss.fermux.settings.logic.TilePosition
      import org.foss.fermux.ui.theme.FermuxColors

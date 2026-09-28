@@ -19,10 +19,6 @@ import org.foss.fermux.storage.DataStoreDownloaderSettings
 import org.foss.fermux.utils.DebugLogDownloader
 import java.util.*
 
-/**
- * The downloader ViewModel used to manage state, cancel tasks, and to handle network and ytdlp related errors.
- */
-
 
 class DownloaderViewModel : ViewModel() {
      companion object {
@@ -45,17 +41,16 @@ class DownloaderViewModel : ViewModel() {
           "Did you paste a URL?"
      )
 
-     /**
-      * Uses the url to start a metadata collection task, assign the correct state, and handling errors with [downloadErrorHandler].
-      */
      fun userPickedArgs() {
           if (downloadUrl.isBlank()) return
           state = DownloadStatus.UserArgs
      }
 
-     /**
-      * Used as a helper function for error handling.
-      */
+     fun quickDownloads() {
+          if (downloadUrl.isBlank()) return
+          state = DownloadStatus.QuickDownload
+     }
+
      private fun downloadErrorHandler(e: Exception) {
 
           DebugLogDownloader.errorDownloader("MetadataFetch", "Fetch failed: ${e.javaClass.simpleName}", e)
@@ -67,11 +62,8 @@ class DownloaderViewModel : ViewModel() {
           state = DownloadStatus.Error(flavorError.random(), raw)
      }
 
-     /**
-      * Used to handle The Downloader's states, settings, metadata, audio and video assignment, and for data to be assigned to [DownloadWorker] to make it work asynchronously and perform the downloading task.
-      */
      fun startingDownload(context: Context, audio: AudioQuality? = null, video: VideoQuality? = null) {
-          if (activeProcess != null || state !is DownloadStatus.UserArgs) {
+          if (activeProcess != null || state !is DownloadStatus.UserArgs && state !is DownloadStatus.QuickDownload) {
 
                DebugLogDownloader.debugDownloader(
                     "DownloadAdmission",

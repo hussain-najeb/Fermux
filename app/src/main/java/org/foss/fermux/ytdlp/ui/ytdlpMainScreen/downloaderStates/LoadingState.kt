@@ -15,8 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
-import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderCard
+import org.foss.fermux.components.buttons.CancelButton
+import org.foss.fermux.components.downloaderComponents.DownloaderCard
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
 import kotlin.time.Duration.Companion.milliseconds
@@ -35,7 +35,7 @@ fun LoadingCard(
                "Stuff Is Happening...",
                "Hold Your Breath...",
                "Calibrating...",
-               "Hopefully This Works..",
+               "Hopefully This Works...",
                "It's So Close...",
                "Just A Second...",
                "Something Is About To Happen...",

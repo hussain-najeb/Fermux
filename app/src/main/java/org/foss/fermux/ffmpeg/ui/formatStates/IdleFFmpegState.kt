@@ -8,7 +8,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FFmpegTiles
+import org.foss.fermux.components.ffmpegComponents.FFmpegTiles
 import org.foss.fermux.ffmpeg.logic.MediaKind
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.TilePosition

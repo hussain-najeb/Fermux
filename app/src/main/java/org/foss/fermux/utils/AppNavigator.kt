@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.DownloaderLogs
+import org.foss.fermux.components.downloaderComponents.DownloaderLogs
 import org.foss.fermux.ffmpeg.ui.ConverterScreen
 import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.FFmpegLogs
 import org.foss.fermux.main.HomeScreen
@@ -36,6 +36,7 @@ data class ScreenInfo(
      val image: Int? = null,
      val icon: ImageVector? = null,
      val buttonIcon: Int? = null,
+     val trailingContent: @Composable (() -> Unit)? = null,
      val onClick: (() -> Unit)? = null
 )
 

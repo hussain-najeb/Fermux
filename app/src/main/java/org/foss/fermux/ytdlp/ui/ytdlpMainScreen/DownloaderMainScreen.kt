@@ -1,9 +1,7 @@
-@file:Suppress("DEPRECATION")
-
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
 
-import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -26,8 +24,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -40,11 +37,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.buttons.AppIconButton
-import org.foss.fermux.fermuxUIComponents.buttons.GlobalCancelButton
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.SideBar
-import org.foss.fermux.fermuxUIComponents.generalComponents.AppSnackBar
-import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
+import org.foss.fermux.components.buttons.AppIconButton
+import org.foss.fermux.components.buttons.GlobalCancelButton
+import org.foss.fermux.components.downloaderComponents.SideBar
+import org.foss.fermux.components.generalComponents.AppSnackBar
+import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.Miscellaneous
@@ -52,23 +49,23 @@ import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates.DownloaderCards
 
-
+// TODO. Replace all the mentions of LargeAppTopBar with its small counterpart in not so crucial places
 @Composable
 fun DownloadContent(
-     @SuppressLint("ContextCastToActivity")
-     downloaderViewModel: DownloaderViewModel = viewModel(
-          viewModelStoreOwner = LocalContext.current as ComponentActivity
-     ), navController: NavController
+     downloaderViewModel: DownloaderViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity),
+     navController: NavController
 ) {
 
-     val downloadStoreDownloaderSettings: DownloaderSettingsViewModel = viewModel()
-     val videoConversionWarning by downloadStoreDownloaderSettings.videoComp.collectAsStateWithLifecycle()
+     val downloaderSettings: DownloaderSettingsViewModel = viewModel()
+     val videoConversionWarning by downloaderSettings.videoComp.collectAsStateWithLifecycle()
+     val upToDate by downloaderSettings.upToDate.collectAsStateWithLifecycle()
+     val currentVersionName by downloaderSettings.currentVersionName.collectAsStateWithLifecycle()
 
      val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
      val doingTask = downloaderViewModel.state is DownloadStatus.LoadingMetadata || downloaderViewModel.state is DownloadStatus.Downloading || downloaderViewModel.state is DownloadStatus.UserArgs
      val isError = downloaderViewModel.state is DownloadStatus.Error
-     val clipboard = LocalClipboardManager.current
+     val clipboard = LocalClipboard.current
 
 
 
@@ -80,20 +77,27 @@ fun DownloadContent(
           snackbarHost = { AppSnackBar(snackbarHostState) }
      ) { innerPadding ->
           Box(
-               modifier = Modifier.fillMaxSize().padding(innerPadding).background(FermuxColors.fermuxBackground),
+               modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .background(FermuxColors.fermuxBackground),
           ) {
                Column(
-                    modifier = Modifier.verticalScroll(rememberScrollState()).fillMaxSize().imePadding()
+                    modifier = Modifier
+                         .verticalScroll(rememberScrollState())
+                         .fillMaxSize()
+                         .imePadding()
                          .background(FermuxColors.fermuxBackground)
                ) {
-                    Text(
-                         text = "Note: Always update your version of Yt-dlp in the settings. It's recommended to use the nightly version.",
-                         color = FermuxColors.fermuxOffWhiteTextColor,
-                         fontSize = 16.sp,
-                         fontStyle = FontStyle.Normal,
-                         fontFamily = FontFamily.Default,
-                         modifier = Modifier.padding(7.dp)
+                    if (!upToDate) Text(
+                              text = "Version $currentVersionName of ytdlp is outdated, update the downloader in the preferences",
+                              color = FermuxColors.fermuxOffWhiteTextColor,
+                              fontSize = 14.sp,
+                              fontStyle = FontStyle.Normal,
+                              fontFamily = FontFamily.Default,
+                              modifier = Modifier.padding(7.dp)
                     )
+
                     if (videoConversionWarning) Text(
                          text = "Video Conversion is on, don't cancel the download if it looks stuck.",
                          color = FermuxColors.fermuxWhiteColor,
@@ -112,7 +116,7 @@ fun DownloadContent(
 
                     Spacer(modifier = Modifier.padding(top = 16.dp))
 
-                    if (doingTask) null else Box(modifier = Modifier.wrapContentSize()) {
+                    if (!doingTask) Box(modifier = Modifier.wrapContentSize()) {
                          OutlinedTextField(
                               modifier = Modifier.fillMaxWidth().padding(start = 15.dp, end = 15.dp),
                               value = downloaderViewModel.downloadUrl,
@@ -162,7 +166,7 @@ fun DownloadContent(
                               keyboardOptions = KeyboardOptions(
                                    imeAction = ImeAction.Send,
                                    capitalization = KeyboardCapitalization.None,
-                                   autoCorrect = false
+                                   autoCorrectEnabled = false
                               ),
                          )
                     }
@@ -174,10 +178,23 @@ fun DownloadContent(
 
                     Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
                          // ClipBoard Button
-                         if (doingTask) null else AppIconButton(
+                         if (!doingTask) AppIconButton(
                               icon = Icons.Default.ContentPaste,
                               modifier = Modifier.size(60.dp).padding(3.dp),
-                              onClick = { clipboard.getText()?.text?.let { downloaderViewModel.downloadUrl = it } })
+                              onClick = { scope.launch {
+                                   clipboard.getClipEntry()
+                                        ?.clipData
+                                        ?.getItemAt(0)
+                                        ?.text
+                                        ?.toString()
+                                        .let { text ->
+                                             if (text != null) {
+                                                  downloaderViewModel.downloadUrl = text
+                                             }
+                                        }
+                                   }
+                              }
+                         )
                          // Download Button
                          AppIconButton(
                               icon = Icons.Default.FileDownload,

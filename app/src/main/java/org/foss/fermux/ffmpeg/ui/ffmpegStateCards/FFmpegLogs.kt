@@ -28,9 +28,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.buttons.ErrorCopyButton
-import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
-import org.foss.fermux.fermuxUIComponents.generalComponents.LargeTopBarScaffold
+import org.foss.fermux.components.buttons.ErrorCopyButton
+import org.foss.fermux.components.buttons.ImageButton
+import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono

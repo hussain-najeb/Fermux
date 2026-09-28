@@ -9,7 +9,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FFmpegTiles
+import org.foss.fermux.components.ffmpegComponents.FFmpegTiles
 import org.foss.fermux.ffmpeg.logic.FFmpegTargetFormat
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.settings.logic.SettingListInfo

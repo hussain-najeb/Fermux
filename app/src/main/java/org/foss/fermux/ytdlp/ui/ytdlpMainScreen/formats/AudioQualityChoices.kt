@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.downloaderComponents.FormatTiles
+import org.foss.fermux.components.downloaderComponents.FormatTiles
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ytdlp.logic.downloader.AudioQuality

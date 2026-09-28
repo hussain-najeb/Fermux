@@ -21,9 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
-import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
-import org.foss.fermux.fermuxUIComponents.ffmpegComponents.FFmpegCard
+import org.foss.fermux.components.buttons.CancelButton
+import org.foss.fermux.components.buttons.ImageButton
+import org.foss.fermux.components.ffmpegComponents.FFmpegCard
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.ui.MediaThumbnailImage
 import org.foss.fermux.ui.theme.FermuxColors

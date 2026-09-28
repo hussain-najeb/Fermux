@@ -18,9 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import org.foss.fermux.R
-import org.foss.fermux.fermuxUIComponents.buttons.CancelButton
-import org.foss.fermux.fermuxUIComponents.buttons.ErrorCopyButton
-import org.foss.fermux.fermuxUIComponents.buttons.ImageButton
+import org.foss.fermux.components.buttons.CancelButton
+import org.foss.fermux.components.buttons.ErrorCopyButton
+import org.foss.fermux.components.buttons.ImageButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
 import org.foss.fermux.utils.Miscellaneous

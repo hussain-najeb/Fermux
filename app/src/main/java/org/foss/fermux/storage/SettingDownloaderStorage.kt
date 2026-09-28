@@ -33,6 +33,7 @@ interface DownloaderSettingsRepo {
      val playlistStatus: Flow<Boolean>
      val audioHistory: Flow<Boolean>
      val videoHistory: Flow<Boolean>
+     val upToDate: Flow<Boolean>
      val jsonAudioCard: Flow<List<JSONHistoryCards>>
      val jsonVideoCard: Flow<List<JSONHistoryCards>>
 
@@ -55,6 +56,7 @@ interface DownloaderSettingsRepo {
      suspend fun setYtdlpDetails(value: Boolean)
      suspend fun setSponsorBlock(value: Boolean)
      suspend fun setSponsorBlockCategories(value: Set<String>)
+     suspend fun setUpToDate(value: Boolean)
      suspend fun setJSONAudio(value: JSONHistoryCards)
      suspend fun setJSONVideo(value: JSONHistoryCards)
      suspend fun clearHistory()
@@ -100,6 +102,7 @@ val PLAYLIST_STATUS = booleanPreferencesKey("playlist_status")
 val SPONSOR_BLOCK_IMPLEMENTATION = booleanPreferencesKey("sponsor_block")
 val DEFAULT_SPONSOR_BLOCK_CATEGORIES = setOf("sponsor", "selfpromo", "interaction")
 val SPONSOR_BLOCK_CATEGORIES = stringSetPreferencesKey("sponsor_block_categories")
+val UP_TO_DATE = booleanPreferencesKey("up_to_date")
 val JSON_AUDIO_HISTORY = stringPreferencesKey("json_audio")
 val JSON_VIDEO_HISTORY = stringPreferencesKey("json_video")
 
@@ -159,6 +162,10 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
           settingStore.data.map { preferences -> preferences[PLAYLIST_STATUS] ?: false }
      override val sponsorBlockCategories: Flow<Set<String>> = settingStore.data.map { preferences ->
           preferences[SPONSOR_BLOCK_CATEGORIES] ?: DEFAULT_SPONSOR_BLOCK_CATEGORIES
+     }
+
+     override val upToDate: Flow<Boolean> = settingStore.data.map { preferences ->
+          preferences[UP_TO_DATE] ?: false
      }
      override val jsonAudioCard: Flow<List<JSONHistoryCards>> = settingStore.data.map { preferences ->
           val json =
@@ -260,6 +267,10 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
 
      override suspend fun setSponsorBlock(value: Boolean) {
           settingStore.edit { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] = value }
+     }
+
+     override suspend fun setUpToDate(value: Boolean) {
+          settingStore.edit { preferences -> preferences[UP_TO_DATE] = value }
      }
 
      override suspend fun setSponsorBlockCategories(value: Set<String>) {
