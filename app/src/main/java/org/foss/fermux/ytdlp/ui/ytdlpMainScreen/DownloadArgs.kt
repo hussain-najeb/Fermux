@@ -205,7 +205,6 @@ fun DownloaderArgs(navController: NavController) {
           )
      )
 
-
      MediumTopBarScaffold(
           title = "Arguments",
           onBack = { navController.popBackStack() },

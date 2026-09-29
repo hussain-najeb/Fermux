@@ -50,7 +50,7 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
      val aria2cMode: StateFlow<Aria2cMode> = settingsTab.aria2cMode
-     .stateIn(viewModelScope, SharingStarted.Lazily, Aria2cMode.Always)
+     .stateIn(viewModelScope, SharingStarted.Lazily, Aria2cMode.Disabled)
 
      val thumbnailFormat: StateFlow<ThumbnailFormat> = settingsTab.thumbnailFormat
           .stateIn(viewModelScope, SharingStarted.Lazily, ThumbnailFormat.Png)
@@ -65,7 +65,7 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
      val externalDownloaders: StateFlow<ExternalDownloaders> = settingsTab.externalDownloaders
-          .stateIn(viewModelScope, SharingStarted.Lazily, ExternalDownloaders.Disabled)
+          .stateIn(viewModelScope, SharingStarted.Lazily, ExternalDownloaders.YtdlpNativeDownloader)
 
      val audioHistory: StateFlow<Boolean> = settingsTab.audioHistory
           .stateIn(viewModelScope, SharingStarted.Lazily, true)

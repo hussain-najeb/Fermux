@@ -141,7 +141,7 @@ fun AdvancedDownloaderSettings(
           ),
           SettingListInfo(
                title = "Aria2c",
-               description = "Aria2c Implementation for better download speeds, especially for large files. Use the Edge Case option when downloading on the highest setting in the downloader",
+               description = "Use aria2 instead of the default. Use the Edge Case option when downloading on the highest setting in the downloader",
                image = R.drawable.layers,
                onClick = { toggleDownloader(ExpandableDownloaderSetting.Aria2c) },
                trailingContent = {
@@ -161,7 +161,7 @@ fun AdvancedDownloaderSettings(
           ),
           SettingListInfo(
                title = "Yt-dlp HLS Options",
-               description = "Options instead of Aria2, check any option if Aria2 is having issues, especially with m3u8 since yt-dlp prefers it's own options over Aria2 recently, because of security issues",
+               description = "Check any option if Aria2 is having issues, especially with m3u8 since yt-dlp prefers it's own options over Aria2",
                image = R.drawable.hls_on,
                onClick = { toggleDownloader(ExpandableDownloaderSetting.ExternalDownloader) },
                trailingContent = {
@@ -181,7 +181,7 @@ fun AdvancedDownloaderSettings(
           ),
           SettingListInfo(
                title = "Impersonation",
-               description = "Enabling curl_cffi, this makes a yt-dlp request look like a real browser. This is EXPERIMENTAL",
+               description = "Enabling impersonation makes yt-dlp requests look like a real browser",
                image = if (fingerprint) R.drawable.fingerprint_on else R.drawable.fingerprint_off,
                content = {
                     SettingsSwitch(

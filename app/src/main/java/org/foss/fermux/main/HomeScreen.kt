@@ -62,7 +62,7 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
                title = "Downloader",
                description = "A modern implementation of ytdlp to android with powerful additions.",
                image = R.drawable.download,
-               buttonIcon = R.drawable.add,
+               buttonIcon = R.drawable.speed,
                onClick = {
                     scope.launch {
                          clipboard.getClipEntry()

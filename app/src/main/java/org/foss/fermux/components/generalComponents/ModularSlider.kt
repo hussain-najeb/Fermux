@@ -8,10 +8,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.foss.fermux.ui.theme.FermuxColors
@@ -43,22 +45,13 @@ fun ModularSlider(
           Surface(
                modifier = Modifier
                     .wrapContentSize()
-                    .padding(start = 8.dp, end = 8.dp),
+                    .padding(1.dp),
                color = FermuxColors.fermuxComponents,
                shape = RoundedCornerShape(8.dp),
                border = BorderStroke(1.dp, color = FermuxColors.fermuxHelperBorder)
           ) {
 
-               Column(modifier = Modifier.padding(7.dp)) {
-
-                    Text(
-                         text = if (sliderKey > 0) "Current Setting: $sliderKey" else "Current Setting: off",
-                         color = Color.White,
-                         fontFamily = FontFamily.Default,
-                         fontStyle = FontStyle.Normal,
-                         fontSize = 18.sp,
-                         modifier = Modifier.padding(top = 5.dp, start = 5.dp)
-                    )
+               Column(modifier = Modifier.padding(1.dp)) {
 
                     Slider(
                          state = sliderState,
@@ -72,8 +65,18 @@ fun ModularSlider(
                                         .background(
                                              color = FermuxColors.fermuxGenericBorder,
                                              shape = RoundedCornerShape(4.dp)
-                                        )
-                              )
+                                        ),
+                                   contentAlignment = Alignment.Center
+                              ) {
+                                   Text(
+                                        text = "$sliderKey",
+                                        color = Color.White,
+                                        fontFamily = FontFamily.Default,
+                                        fontStyle = FontStyle.Normal,
+                                        fontSize = 18.sp,
+                                        textAlign = TextAlign.Center
+                                   )
+                              }
                          },
                          modifier = Modifier.padding(7.dp),
                          colors = SliderColors(

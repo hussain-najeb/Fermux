@@ -130,7 +130,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
      override val aria2cMode: Flow<Aria2cMode> = settingStore.data.map { preferences ->
           preferences[ARIA2C_MODE_KEY]
                ?.let { runCatching { Aria2cMode.valueOf(it) }.getOrNull() }
-               ?: Aria2cMode.Always
+               ?: Aria2cMode.Disabled
      }
      override val thumbnailFormat: Flow<ThumbnailFormat> = settingStore.data.map { preferences ->
           preferences[THUMBNAIL_FORMATS]
@@ -157,7 +157,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
      override val externalDownloaders: Flow<ExternalDownloaders> = settingStore.data.map { preferences ->
           preferences[EXTERNAL_DOWNLOADER]
                ?.let { runCatching { ExternalDownloaders.valueOf(it) }.getOrNull() } 
-               ?: ExternalDownloaders.Disabled
+               ?: ExternalDownloaders.YtdlpNativeDownloader
      }
      override val audioHistory: Flow<Boolean> =
           settingStore.data.map { preferences -> preferences[SHOW_YTDLP_AUDIO_HISTORY] ?: true }

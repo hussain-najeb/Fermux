@@ -29,51 +29,52 @@ fun <T> ModularSegmentedButtons(
           Surface(
                modifier = Modifier
                     .wrapContentSize()
-                    .padding(start = 8.dp, end = 8.dp),
+                    .padding(1.dp),
                color = FermuxColors.fermuxComponents,
                shape = RoundedCornerShape(8.dp),
                border = BorderStroke(1.dp, color = FermuxColors.fermuxHelperBorder)
           ) {
-               SingleChoiceSegmentedButtonRow(
-                    modifier = Modifier
-                         .padding(7.dp)
-                         .fillMaxWidth()
-               ) {
-                    optionsList.forEachIndexed { index, (value, name) ->
-                         SegmentedButton(
-                              selected = selectedOption == value,
-                              onClick = { onOptionSelected(value) },
-                              shape = SegmentedButtonDefaults.itemShape(
-                                   index = index,
-                                   count = optionsList.size,
-                                   baseShape = RoundedCornerShape(8.dp)
-                              ),
-                              enabled = enabled,
-                              colors = SegmentedButtonDefaults.colors(
-                                   activeContainerColor = FermuxColors.activeContainer,
-                                   activeContentColor = FermuxColors.activeContent,
-                                   inactiveContainerColor = FermuxColors.inActiveContainer,
-                                   inactiveContentColor = FermuxColors.inActiveContent,
-                                   activeBorderColor = FermuxColors.fermuxSecondaryBorder,
-                                   inactiveBorderColor = FermuxColors.fermuxGenericBorder,
-                                   disabledActiveContainerColor =
-                                        FermuxColors.activeContainer.copy(alpha = 0.4f),
-                                   disabledActiveContentColor =
-                                        FermuxColors.activeContent.copy(alpha = 0.4f),
-                                   disabledActiveBorderColor =
-                                        FermuxColors.fermuxSecondaryBorder.copy(alpha = 0.4f),
-                                   disabledInactiveContainerColor =
-                                        FermuxColors.inActiveContainer.copy(alpha = 0.4f),
-                                   disabledInactiveContentColor =
-                                        FermuxColors.inActiveContent.copy(alpha = 0.4f),
-                                   disabledInactiveBorderColor =
-                                        FermuxColors.fermuxGenericBorder.copy(alpha = 0.4f)
-                              )
-                         ) {
-                              Text(name)
+                    SingleChoiceSegmentedButtonRow(
+                         modifier = Modifier
+                              .padding(8.dp)
+                              .fillMaxWidth()
+                    ) {
+                         optionsList.forEachIndexed { index, (value, name) ->
+                              SegmentedButton(
+                                   selected = selectedOption == value,
+                                   onClick = { onOptionSelected(value) },
+                                   shape = SegmentedButtonDefaults.itemShape(
+                                        index = index,
+                                        count = optionsList.size,
+                                        baseShape = RoundedCornerShape(8.dp)
+                                   ),
+                                   enabled = enabled,
+                                   colors = SegmentedButtonDefaults.colors(
+                                        activeContainerColor = FermuxColors.activeContainer,
+                                        activeContentColor = FermuxColors.activeContent,
+                                        inactiveContainerColor = FermuxColors.inActiveContainer,
+                                        inactiveContentColor = FermuxColors.inActiveContent,
+                                        activeBorderColor = FermuxColors.fermuxSecondaryBorder,
+                                        inactiveBorderColor = FermuxColors.fermuxGenericBorder,
+                                        disabledActiveContainerColor =
+                                             FermuxColors.activeContainer.copy(alpha = 0.4f),
+                                        disabledActiveContentColor =
+                                             FermuxColors.activeContent.copy(alpha = 0.4f),
+                                        disabledActiveBorderColor =
+                                             FermuxColors.fermuxSecondaryBorder.copy(alpha = 0.4f),
+                                        disabledInactiveContainerColor =
+                                             FermuxColors.inActiveContainer.copy(alpha = 0.4f),
+                                        disabledInactiveContentColor =
+                                             FermuxColors.inActiveContent.copy(alpha = 0.4f),
+                                        disabledInactiveBorderColor =
+                                             FermuxColors.fermuxGenericBorder.copy(alpha = 0.4f)
+                                   )
+                              ) {
+                                   Text(name)
+                              }
                          }
                     }
                }
-          }
+
      }
 }
