@@ -20,7 +20,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import org.foss.fermux.components.downloaderComponents.SideBar
 import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
@@ -65,9 +64,6 @@ fun DownloadVideoList(navController: NavController) {
                          items(videoHistory) { videoItem -> HistoryCards(entry = videoItem) }
                     }
                }
-
-               // Place the SideBar inside the Box, floating above the list
-               SideBar(navController = navController, modifier = Modifier.padding(3.dp))
           }
      }
 }

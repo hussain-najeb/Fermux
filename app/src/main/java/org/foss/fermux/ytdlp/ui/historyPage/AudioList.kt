@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import org.foss.fermux.components.downloaderComponents.SideBar
 import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
@@ -68,7 +67,6 @@ fun DownloadedAudioScreen(navController: NavController) {
                          items(audioHistory) { audioItems -> HistoryCards(entry = audioItems) }
                     }
                }
-               SideBar(navController = navController, modifier = Modifier.padding(3.dp))
           }
      }
 }

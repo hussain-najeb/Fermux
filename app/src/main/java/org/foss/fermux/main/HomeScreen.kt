@@ -27,6 +27,7 @@ import org.foss.fermux.components.generalComponents.MainAppCard
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.MainScreens
 import org.foss.fermux.utils.ScreenInfo
+import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 import org.foss.fermux.ytdlp.ui.quickDownloads.QuickDownloadsStateMachine
 
@@ -47,6 +48,7 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
      val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
      val context = LocalContext.current
+     val disabled = downloaderViewModel.state is DownloadStatus.Idle
 
      val screens = listOf(
           ScreenInfo(
@@ -56,6 +58,7 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
                image = R.drawable.bash,
                //buttonIcon = ,
                onClick = {},
+               enabled = true
           ),
           ScreenInfo(
                screen = MainScreens.Downloader,
@@ -65,21 +68,12 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
                buttonIcon = R.drawable.speed,
                onClick = {
                     scope.launch {
-                         clipboard.getClipEntry()
-                              ?.clipData
-                              ?.getItemAt(0)
-                              ?.text
-                              ?.toString()
+                         clipboard.getClipEntry()?.clipData?.getItemAt(0)?.text?.toString()
                               .let { text ->
                                    if (text != null) {
                                         downloaderViewModel.downloadUrl = text
                                         downloaderViewModel.quickDownloads()
                                         downloaderViewModel.startingDownload(context)
-                                        scope.launch {
-                                             snackbarHostState.showSnackbar(
-                                                  message = "Quick Download Started"
-                                             )
-                                        }
                                    }
                                    if (text.isNullOrBlank() || text.isEmpty()) {
                                         scope.launch {
@@ -96,9 +90,10 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
                     QuickDownloadsStateMachine(
                          downloaderViewModel.state,
                          downloaderViewModel,
-                         snackbarHostState
+                         navController = navigationController
                     )
-               }
+               },
+               enabled = disabled
           ),
           ScreenInfo(
                screen = MainScreens.Converter,
@@ -106,7 +101,8 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
                description = "A hardware accelerated, powerful conversion tab based on FFmpeg",
                image = R.drawable.ffmpeg,
                //buttonIcon = 4,
-               onClick = {}
+               onClick = {},
+               enabled = true
           ),
           ScreenInfo(
                screen = MainScreens.Settings,
@@ -114,36 +110,39 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
                description = "An extensive Preferences tab for all your options",
                image = R.drawable.prefs,
                //buttonIcon = 4,
-               onClick = {}
+               onClick = {},
+               enabled = true
           ),
      )
 
      LargeTopBarScaffold(
           title = "Home Page",
           snackbarHost = { AppSnackBar(snackbarHostState) }
-     ) {}
-     Column(
-          modifier = Modifier
-               .fillMaxWidth()
-               .background(FermuxColors.fermuxBackground)
-               .systemBarsPadding()
-               .verticalScroll(scroll),
-     ) {
-
-          screens.forEach { screen ->
-               MainAppCard(
-                    modifier = Modifier
-                         .fillMaxWidth()
-                         .padding(start = 5.dp, end = 5.dp, bottom = 3.dp, top = 3.dp),
-                    title = screen.title,
-                    description = screen.description,
-                    image = screen.image,
-                    buttonImage = screen.buttonIcon,
-                    buttonOnClick = screen.onClick,
-                    route = screen.screen,
-                    trailingContent = screen.trailingContent ,
-                    navController = navigationController
-               )
+     ) { innerPadding ->
+          Column(
+               modifier = Modifier
+                    .fillMaxWidth()
+                    .background(FermuxColors.fermuxBackground)
+                    .systemBarsPadding()
+                    .verticalScroll(scroll)
+                    .padding(innerPadding),
+          ) {
+               screens.forEach { screen ->
+                    MainAppCard(
+                         modifier = Modifier
+                              .fillMaxWidth()
+                              .padding(start = 5.dp, end = 5.dp, bottom = 3.dp, top = 3.dp),
+                         title = screen.title,
+                         description = screen.description,
+                         image = screen.image,
+                         buttonImage = screen.buttonIcon,
+                         buttonOnClick = screen.onClick,
+                         route = screen.screen,
+                         enabled = screen.enabled,
+                         trailingContent = screen.trailingContent,
+                         navController = navigationController
+                    )
+               }
           }
      }
 }

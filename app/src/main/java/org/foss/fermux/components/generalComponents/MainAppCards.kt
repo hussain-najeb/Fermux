@@ -46,7 +46,8 @@ fun MainAppCard(
      buttonOnClick: (() -> Unit)? = null,
      trailingContent: @Composable (() -> Unit)? = null,
      icon: ImageVector? = null,
-     route: MainScreens
+     route: MainScreens,
+     enabled: Boolean
 ) {
      val interactionSource = remember { MutableInteractionSource() }
      val isPressed by interactionSource.collectIsPressedAsState()
@@ -167,7 +168,8 @@ fun MainAppCard(
                                    .align(Alignment.CenterVertically)
                                    .padding(end = 10.dp),
                               onClick = { buttonOnClick?.invoke() },
-                              image = buttonImage
+                              image = buttonImage,
+                              enabled = enabled
                          )
                     }
                }

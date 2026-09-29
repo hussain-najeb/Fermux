@@ -1,7 +1,7 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates
 
-import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -28,7 +27,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import org.foss.fermux.components.buttons.CancelButton
-import org.foss.fermux.components.buttons.LogImage
+import org.foss.fermux.components.buttons.LogButton
 import org.foss.fermux.components.downloaderComponents.DownloaderCard
 import org.foss.fermux.components.downloaderComponents.FermuxDownloadDescription
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
@@ -48,13 +47,10 @@ fun FinishedDownloadCard(
      onCancel: () -> Unit,
      navController: NavController,
      snackbarHostState: SnackbarHostState,
-     @SuppressLint("ContextCastToActivity") settingsViewModel: DownloaderSettingsViewModel = viewModel(
-          viewModelStoreOwner = LocalContext.current as ComponentActivity
-     )
-
+     settingsViewModel: DownloaderSettingsViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity)
 ) {
-     val showYtdlpDetails by settingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
 
+     val showYtdlpDetails by settingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
      val task = progress != null && progress >= 100
 
      LaunchedEffect(task) {
@@ -235,7 +231,7 @@ private fun FinishedCardContent(
                verticalAlignment = Alignment.CenterVertically
           ) {
                if (showYtdlpDetails) {
-                    LogImage(
+                    LogButton(
                          onClick = { navController.navigate(Miscellaneous.DownloaderLogs.route) }
                     )
                }

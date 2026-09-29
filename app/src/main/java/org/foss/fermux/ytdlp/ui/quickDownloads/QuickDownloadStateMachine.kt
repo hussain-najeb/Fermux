@@ -2,10 +2,9 @@ package org.foss.fermux.ytdlp.ui.quickDownloads
 
 import androidx.compose.animation.*
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
 import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 
@@ -13,7 +12,7 @@ import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
 fun QuickDownloadsStateMachine(
      state: DownloadStatus,
      downloaderViewModel: DownloaderViewModel,
-     snackbarHostState: SnackbarHostState
+     navController: NavController
 ) {
 
      val context = LocalContext.current
@@ -39,27 +38,27 @@ fun QuickDownloadsStateMachine(
           when (targetState) {
                is DownloadStatus.Idle -> {}
 
-               is DownloadStatus.UserArgs -> {}
+               is DownloadStatus.UserArgs -> null
 
-               is DownloadStatus.QuickDownload -> {}
+               is DownloadStatus.QuickDownload -> null
 
                is DownloadStatus.LoadingMetadata -> {
                     QuickDownloadsMetadata()
                }
 
                is DownloadStatus.Downloading -> {
-
+                    QuickDownloading(
+                         progress = targetState.downloadProgress,
+                         onCancel = { downloaderViewModel.cancelButton(context) }
+                    )
                }
 
                is DownloadStatus.Completed -> {
-
+                    FinalQuickDownload()
                }
 
                is DownloadStatus.Error -> {
-                    if (downloaderViewModel.downloadUrl.isBlank()) {
-                         Text(text = "typs something")
-                    }
-                    Text(text = downloaderViewModel.flavorError.toString())
+                    QuickdownloadError(navController = navController)
                }
           }
      }

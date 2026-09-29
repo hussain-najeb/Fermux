@@ -31,6 +31,8 @@ fun CancelButton(
      modifier: Modifier = Modifier,
      componentSize: Dp = 50.dp,
      color: FermuxColor = FermuxColors,
+     allowBorder: Boolean = true,
+     border: BorderStroke? = BorderStroke(width = 1.dp, color = FermuxColors.fermuxHelperBorder),
      onClick: () -> Unit,
 ) {
 
@@ -57,6 +59,7 @@ fun CancelButton(
 
      val iconModifier = Modifier.fillMaxSize()
 
+
      OutlinedButton(
           modifier = modifier
                .graphicsLayer {
@@ -66,7 +69,7 @@ fun CancelButton(
                .size(componentSize),
           interactionSource = interactionSource,
           contentPadding = PaddingValues(10.dp),
-          border = BorderStroke(width = 1.dp, color = FermuxColors.fermuxHelperBorder),
+          border = if (!allowBorder) null else border,
           shape = RoundedCornerShape(16.dp),
           onClick = onClick,
           colors = ButtonDefaults.textButtonColors(
@@ -74,10 +77,11 @@ fun CancelButton(
           ),
      ) {
           Icon(
-               painter = painterResource( id = R.drawable.cancel_buttons),
+               painter = painterResource(id = R.drawable.cancel_buttons),
                contentDescription = null,
                tint = iconColor,
                modifier = iconModifier
           )
      }
+
 }

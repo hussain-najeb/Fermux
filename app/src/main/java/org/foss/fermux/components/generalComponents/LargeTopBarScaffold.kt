@@ -1,10 +1,7 @@
 package org.foss.fermux.components.generalComponents
 
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -26,8 +23,10 @@ fun LargeTopBarScaffold(
      modifier: Modifier = Modifier,
      title: String,
      onBack: (() -> Unit)? = null,
-     helperButton: (()  -> Unit)? = null,
-     helperImage: Int? = null,
+     firstButton: (()  -> Unit)? = null,
+     secondButton: (() -> Unit)? = null,
+     firstImage: Int? = null,
+     secondImage: Int? = null,
      snackbarHost: (@Composable () -> Unit)? = null,
      content: @Composable (PaddingValues) -> Unit
 ) {
@@ -72,12 +71,20 @@ fun LargeTopBarScaffold(
                          )
                     },
                     actions = {
-                         if (helperImage != null)
-                         HelperButton(
-                              modifier = Modifier.padding(10.dp).size(44.dp),
-                              onClick = { helperButton?.invoke() },
-                              image = helperImage
-                         )
+                         Row {
+                              if (firstButton != null && firstImage != null)
+                                   HelperButton(
+                                        modifier = Modifier.padding(10.dp).size(44.dp),
+                                        onClick = { firstButton.invoke() },
+                                        image = firstImage
+                                   )
+                              if (secondButton != null && secondImage != null)
+                              HelperButton(
+                                   modifier = Modifier.padding(10.dp).size(44.dp),
+                                   onClick = { secondButton.invoke() },
+                                   image = secondImage
+                              )
+                         }
                     }
                )
           },

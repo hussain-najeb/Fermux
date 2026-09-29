@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
@@ -26,13 +27,14 @@ import org.foss.fermux.R
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
-fun LogImage(
+fun LogButton(
      modifier: Modifier = Modifier,
      imageModifier: Modifier = Modifier,
      contentDescription: String? = null,
      imageRotation: Float = 0f,
      enabled: Boolean = true,
      componentSize: Dp = 50.dp,
+     shape: Shape = RoundedCornerShape(16.dp),
      border: BorderStroke? = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),
      contentPadding: PaddingValues = PaddingValues(4.dp),
      onClick: () -> Unit
@@ -71,28 +73,28 @@ fun LogImage(
           label = "Fermux Icon Rotation"
      )
 
-     ElevatedButton(
-          modifier = modifier.graphicsLayer {
-               scaleX = buttonAnimation
-               scaleY = buttonAnimation
+          ElevatedButton(
+               modifier = modifier.graphicsLayer {
+                    scaleX = buttonAnimation
+                    scaleY = buttonAnimation
+               }
+                    .size(componentSize),
+               shape = shape,
+               border = border,
+               colors = ButtonDefaults.textButtonColors(
+                    containerColor = containerColor,
+                    contentColor = contentColor
+               ),
+               enabled = enabled,
+               contentPadding = contentPadding,
+               interactionSource = interactionSource,
+               onClick = onClick
+          ) {
+               Icon(
+                    painter = painterResource(id = R.drawable.log),
+                    tint = iconColor,
+                    contentDescription = contentDescription,
+                    modifier = imageModifier.rotate(iconRotate)
+               )
           }
-               .size(componentSize),
-          shape = RoundedCornerShape(16.dp),
-          border = border,
-          colors = ButtonDefaults.textButtonColors(
-               containerColor = containerColor,
-               contentColor = contentColor
-          ),
-          enabled = enabled,
-          contentPadding = contentPadding,
-          interactionSource = interactionSource,
-          onClick = onClick
-     ) {
-          Icon(
-               painter = painterResource(id = R.drawable.logs),
-               tint = iconColor,
-               contentDescription = contentDescription,
-               modifier = imageModifier.rotate(iconRotate)
-          )
-     }
 }

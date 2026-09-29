@@ -1,5 +1,7 @@
 package org.foss.fermux.utils
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.compose.NavHost
@@ -15,18 +17,16 @@ import org.foss.fermux.settings.ui.aboutPage.LibraryPage
 import org.foss.fermux.settings.ui.converter.SimpleFFmpegSetting
 import org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage
 import org.foss.fermux.terminal.main.ui.FermuxTerminalScreen
-import org.foss.fermux.ytdlp.ui.historyPage.DownloadVideoList
-import org.foss.fermux.ytdlp.ui.historyPage.DownloadedAudioScreen
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloadContent
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloaderArgs
 
 
 sealed class MainScreens(val route: String ) {
-     object Home : MainScreens("home")
-     object Settings : MainScreens("settings")
-     object Downloader : MainScreens("downloader")
-     object Converter : MainScreens("converter")
-     object Terminal : MainScreens("terminal")
+     object Home: MainScreens("home")
+     object Settings: MainScreens("settings")
+     object Downloader: MainScreens("downloader")
+     object Converter: MainScreens("converter")
+     object Terminal: MainScreens("terminal")
 }
 
 data class ScreenInfo(
@@ -36,16 +36,17 @@ data class ScreenInfo(
      val image: Int? = null,
      val icon: ImageVector? = null,
      val buttonIcon: Int? = null,
+     val onClick: (() -> Unit)? = null,
      val trailingContent: @Composable (() -> Unit)? = null,
-     val onClick: (() -> Unit)? = null
+     val enabled: Boolean
 )
 
 sealed class SettingsScreens(val route: String) {
-     object SimpleDownloader : SettingsScreens(route = "simple downloader")
-     object SimpleFFmpeg : SettingsScreens(route = "simple FFmpeg")
-     object SimpleTerminal : SettingsScreens(route = "simple terminal")
-     object Themes : SettingsScreens(route = "themes")
-     object AboutAppPage : SettingsScreens(route = "about")
+     object SimpleDownloader: SettingsScreens(route = "simple downloader")
+     object SimpleFFmpeg: SettingsScreens(route = "simple FFmpeg")
+     object SimpleTerminal: SettingsScreens(route = "simple terminal")
+     object Themes: SettingsScreens(route = "themes")
+     object AboutAppPage: SettingsScreens(route = "about")
      object LibraryPage: SettingsScreens(route = "Library")
 
 }
@@ -53,14 +54,13 @@ sealed class SettingsScreens(val route: String) {
 // Miscellaneous navigation
 sealed class Miscellaneous(val route: String) {
      // FFmpeg Screens
-     object FFmpegLog : Miscellaneous(route = "FFmpeg Logs")
+     object FFmpegLog: Miscellaneous(route = "FFmpeg Logs")
      // Downloader Screens
-     object DownloaderLogs : Miscellaneous(route = "YtdlpLog")
-     object DownloaderVideosList : Miscellaneous(route = "History Video List")
-     object DownloaderMusicList : Miscellaneous(route = "History Audio List")
-
-     object DownloaderArgs : Miscellaneous(route = "Downloader Arguments")
+     object DownloaderLogs: Miscellaneous(route = "YtdlpLog")
+     object DownloaderHistory: Miscellaneous(route = "History")
+     object DownloaderArgs: Miscellaneous(route = "Downloader Arguments")
 }
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun FermuxAppMainScreen() {
 
@@ -91,8 +91,7 @@ fun FermuxAppMainScreen() {
 
           // Ytdlp
           composable(route = Miscellaneous.DownloaderLogs.route) { DownloaderLogs(navController) }
-          composable(route = Miscellaneous.DownloaderMusicList.route) { DownloadedAudioScreen(navController) }
-          composable(route = Miscellaneous.DownloaderVideosList.route) { DownloadVideoList(navController) }
           composable(route = Miscellaneous.DownloaderArgs.route) { DownloaderArgs(navController) }
+          composable(route = Miscellaneous.DownloaderLogs.route) {  }
      }
 }

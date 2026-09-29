@@ -158,10 +158,13 @@ class DownloaderViewModel : ViewModel() {
                                                   currentMetadata = parseYtdlpMetadataJson(json)
                                              }
                                         }
+
                                         val progress = workInfo.progress.getFloat("progress", 0f)
-                                        currentMetadata?.let { metadata ->
-                                             state = DownloadStatus.Downloading(progress, metadata)
-                                        }
+
+                                        state = DownloadStatus.Downloading(
+                                             downloadProgress = progress,
+                                             metadata = currentMetadata
+                                        )
                                    }
 
                                    WorkInfo.State.SUCCEEDED -> {

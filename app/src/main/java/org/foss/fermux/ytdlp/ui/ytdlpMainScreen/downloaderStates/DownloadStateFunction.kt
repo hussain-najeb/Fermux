@@ -45,7 +45,7 @@ fun DownloaderCards(
                     QualityState(downloaderViewModel)
                }
 
-               is DownloadStatus.QuickDownload -> {}
+               is DownloadStatus.QuickDownload -> null
 
                is DownloadStatus.LoadingMetadata -> {
                     LoadingCard(
@@ -55,12 +55,17 @@ fun DownloaderCards(
                }
 
                is DownloadStatus.Downloading -> {
-                    FinishedDownloadCard(
-                         targetState.metadata,
-                         targetState.downloadProgress,
-                         onCancel = { downloaderViewModel.cancelButton(context) },
-                         navController = navController,
-                         snackbarHostState = snackbarHostState
+                    targetState.metadata?.let { metadata ->
+                         FinishedDownloadCard(
+                              metadata = metadata,
+                              progress = targetState.downloadProgress,
+                              onCancel = { downloaderViewModel.cancelButton(context) },
+                              navController = navController,
+                              snackbarHostState = snackbarHostState
+                         )
+                    } ?: LoadingCard(
+                         state = DownloadStatus.LoadingMetadata,
+                         onCancel = { downloaderViewModel.cancelButton(context) }
                     )
                }
 

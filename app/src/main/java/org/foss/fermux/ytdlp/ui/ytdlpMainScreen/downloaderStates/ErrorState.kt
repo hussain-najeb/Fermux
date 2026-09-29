@@ -21,7 +21,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.foss.fermux.components.buttons.CancelButton
 import org.foss.fermux.components.buttons.ErrorCopyButton
-import org.foss.fermux.components.buttons.LogImage
+import org.foss.fermux.components.buttons.LogButton
 import org.foss.fermux.components.downloaderComponents.DownloaderCard
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
@@ -90,7 +90,7 @@ fun ErrorCard(
                horizontalArrangement = Arrangement.SpaceBetween,
           ) {
                Row {
-                    LogImage(
+                    LogButton(
                          modifier = Modifier.padding(start = 15.dp, end = 10.dp),
                          onClick = {
                               navController.navigate(Miscellaneous.DownloaderLogs.route)

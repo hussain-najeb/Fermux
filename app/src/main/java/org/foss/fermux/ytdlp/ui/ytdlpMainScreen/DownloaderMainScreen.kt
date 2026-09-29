@@ -19,7 +19,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentPaste
-import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -44,7 +43,7 @@ import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.AppIconButton
 import org.foss.fermux.components.buttons.GlobalCancelButton
-import org.foss.fermux.components.downloaderComponents.SideBar
+import org.foss.fermux.components.buttons.ImageButton
 import org.foss.fermux.components.generalComponents.AppSnackBar
 import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
@@ -61,8 +60,6 @@ fun DownloadContent(
      downloaderViewModel: DownloaderViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity),
      navController: NavController
 ) {
-
-
      val downloaderSettings: DownloaderSettingsViewModel = viewModel()
      val videoConversionWarning by downloaderSettings.videoComp.collectAsStateWithLifecycle()
      val upToDate by downloaderSettings.upToDate.collectAsStateWithLifecycle()
@@ -70,19 +67,17 @@ fun DownloadContent(
 
      val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
-     val doingTask =
-          downloaderViewModel.state is DownloadStatus.LoadingMetadata || downloaderViewModel.state is DownloadStatus.Downloading || downloaderViewModel.state is DownloadStatus.UserArgs
+     val doingTask = downloaderViewModel.state is DownloadStatus.LoadingMetadata || downloaderViewModel.state is DownloadStatus.Downloading || downloaderViewModel.state is DownloadStatus.UserArgs
      val isError = downloaderViewModel.state is DownloadStatus.Error
      val clipboard = LocalClipboard.current
-
-
-
 
      LargeTopBarScaffold(
           title = "Downloader",
           onBack = { navController.popBackStack() },
-          helperButton = { navController.navigate(Miscellaneous.DownloaderArgs.route) },
-          helperImage = R.drawable.add,
+          firstButton = { navController.navigate(Miscellaneous.DownloaderArgs.route) },
+          firstImage = R.drawable.add,
+          secondButton = { navController.navigate(Miscellaneous.DownloaderHistory.route) },
+          secondImage = R.drawable.history,
           snackbarHost = { AppSnackBar(snackbarHostState) }
      ) { innerPadding ->
           Box(
@@ -207,10 +202,10 @@ fun DownloadContent(
                               }
                          )
                          // Download Button
-                         AppIconButton(
-                              icon = Icons.Default.FileDownload,
-                              enabled = !doingTask,
+                         ImageButton(
                               modifier = Modifier.size(60.dp).padding(3.dp),
+                              image = R.drawable.download_side_bar,
+                              enabled = !doingTask,
                               onClick = {
                                    downloaderViewModel.userPickedArgs()
                                    if (downloaderViewModel.downloadUrl.isEmpty()) {
@@ -224,7 +219,6 @@ fun DownloadContent(
                               }
                          )
                     }
-                    SideBar(navController = navController)
                }
           }
      }
