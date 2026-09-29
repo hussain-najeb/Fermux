@@ -1,34 +1,27 @@
 package org.foss.fermux.settings.ui.converter
 
-import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BugReport
-import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.SettingsResetButton
-import org.foss.fermux.components.ffmpegComponents.AudioBitrateSlider
-import org.foss.fermux.components.ffmpegComponents.CrfSlider
-import org.foss.fermux.components.ffmpegComponents.ResolutionSelect
-import org.foss.fermux.components.ffmpegComponents.ThreadLimitSelect
+import org.foss.fermux.components.downloaderComponents.ModularSegmentedButtons
 import org.foss.fermux.components.generalComponents.AppSnackBar
 import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.components.settingsComponents.SettingsSwitch
@@ -40,7 +33,7 @@ import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.rememberNotificationPermissionRequest
 
 
-private enum class ExpandableFFmpegSetting {
+enum class ExpandableFFmpegSetting {
      AudioBitrate,
      ThreadLimit,
      Resolution,
@@ -52,18 +45,14 @@ private enum class ExpandableFFmpegSetting {
 @Composable
 fun SimpleFFmpegSetting(
      navController: NavHostController,
-     @SuppressLint("ContextCastToActivity")
-     ffmpegSettingsViewModel: FFmpegSettingsViewModel = viewModel(
-          viewModelStoreOwner = LocalContext.current as ComponentActivity
-     )
+     ffmpegSettingsViewModel: FFmpegSettingsViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity)
 ) {
-     val threadLimit by ffmpegSettingsViewModel.threadLimit.collectAsStateWithLifecycle()
+     val bellState by ffmpegSettingsViewModel.ffmpegBellState.collectAsStateWithLifecycle()
      val normalizeAudio by ffmpegSettingsViewModel.normalizeAudio.collectAsStateWithLifecycle()
      val monoDownmix by ffmpegSettingsViewModel.monoDownmix.collectAsStateWithLifecycle()
      val enableVideoCompression by ffmpegSettingsViewModel.enableVideoCompression.collectAsStateWithLifecycle()
-     val useHardwareEncoder by ffmpegSettingsViewModel.useHardwareEncoder.collectAsStateWithLifecycle()
-     val bellState by ffmpegSettingsViewModel.ffmpegBellState.collectAsStateWithLifecycle()
-     val logcat by ffmpegSettingsViewModel.ffmpegDebug.collectAsStateWithLifecycle()
+     val audioBitrate by ffmpegSettingsViewModel.audioBitrate.collectAsStateWithLifecycle()
+     val resolution by ffmpegSettingsViewModel.videoResolution.collectAsStateWithLifecycle()
 
 
      val snackbarHostState = remember { SnackbarHostState() }
@@ -108,8 +97,17 @@ fun SimpleFFmpegSetting(
                image = R.drawable.edit_audio,
                onClick = { toggleFFmpeg(ExpandableFFmpegSetting.AudioBitrate) },
                trailingContent = {
-                    AudioBitrateSlider(
-                         expanded = expandedFFmpegSetting == ExpandableFFmpegSetting.AudioBitrate
+                    ModularSegmentedButtons(
+                         expanded = expandedFFmpegSetting == ExpandableFFmpegSetting.AudioBitrate,
+                         optionsList = listOf(
+                              "64k" to "64k",
+                              "128k" to "128k",
+                              "192k" to "192k",
+                              "256k" to "256k",
+                              "320k" to "320k"
+                         ),
+                         selectedOption = audioBitrate,
+                         onOptionSelected = { ffmpegSettingsViewModel.setAudioBitrate(it) }
                     )
                },
                position = TilePosition.TOP
@@ -123,7 +121,7 @@ fun SimpleFFmpegSetting(
           SettingListInfo(
                title = "Normalize Audio",
                description = "Audio normalization is uniformly adjusting a recording's overall volume so its peak or average loudness hits a specific target level",
-               image = R.drawable.normalize_audio,
+               image = if (normalizeAudio) R.drawable.normalize_audio else R.drawable.audio_lines_x,
                content = {
                     SettingsSwitch(
                          checked = normalizeAudio,
@@ -152,8 +150,16 @@ fun SimpleFFmpegSetting(
                image = R.drawable.video_resolution,
                onClick = { toggleFFmpeg(ExpandableFFmpegSetting.Resolution) },
                trailingContent = {
-                    ResolutionSelect(
-                         expanded = expandedFFmpegSetting == ExpandableFFmpegSetting.Resolution
+                    ModularSegmentedButtons(
+                         expanded = expandedFFmpegSetting == ExpandableFFmpegSetting.Resolution,
+                         optionsList = listOf("" to "Normal",
+                              "480" to "480p",
+                              "720" to "720p",
+                              "1080" to "1080p",
+                              "1440" to "1440p"
+                         ),
+                         selectedOption = resolution,
+                         onOptionSelected = { ffmpegSettingsViewModel.setVideoResolution(it) }
                     )
                },
                position = TilePosition.MIDDLE
@@ -167,81 +173,6 @@ fun SimpleFFmpegSetting(
                          checked = enableVideoCompression,
                          onCheckedChange = {
                               ffmpegSettingsViewModel.setEnableVideoCompression(it)
-                         }
-                    )
-               },
-               position = TilePosition.BOTTOM
-          ),
-     )
-
-     val advanced = listOf(
-          SettingListInfo(
-               title = "Reset Converter Settings",
-               description = "Reset the converter settings to there original state",
-               onClick = { toggleFFmpeg(ExpandableFFmpegSetting.ResetFFmpeg) },
-               trailingContent = {
-                    SettingsResetButton(
-                         expanded = expandedFFmpegSetting == ExpandableFFmpegSetting.ResetFFmpeg,
-                         settingText = "Reset FFmpeg Settings",
-                         onClick = {
-                              ffmpegSettingsViewModel.setClearFFmpeg()
-                              scope.launch {
-                                   snackbarHostState.showSnackbar(
-                                        message = "Setting is back to default",
-                                        duration = SnackbarDuration.Short
-                                   )
-                              }
-                         }
-                    )
-               },
-               position = TilePosition.TOP
-          ),
-          SettingListInfo(
-               title = "Video CRF",
-               description = "CRF is the quality target used when compressing videos. Lower is better",
-               icon = Icons.Default.Tune,
-               onClick = { toggleFFmpeg(ExpandableFFmpegSetting.Crf) },
-               trailingContent = {
-                    CrfSlider(
-                         expanded = expandedFFmpegSetting == ExpandableFFmpegSetting.Crf
-                    )
-               },
-               position = TilePosition.MIDDLE
-          ),
-          SettingListInfo(
-               title = if (logcat) "Debug Logging On" else "Debug Logging Off",
-               description = "Write diagnostic messages to Logcat in any builds",
-               icon = Icons.Default.BugReport,
-               content = {
-                    SettingsSwitch(
-                         checked = logcat,
-                         onCheckedChange = { ffmpegSettingsViewModel.setFFmpegDebug(it) }
-                    )
-               },
-               position = TilePosition.MIDDLE
-          ),
-          SettingListInfo(
-               title = "CPU Thread Limit",
-               description = "Limits how many CPU cores ffmpeg can use during conversion, trading speed for less heat and battery drain. Has no effect when hardware encoding is on",
-               image = if(threadLimit >0)R.drawable.thread_limit_on else R.drawable.thread_limit_off,
-               onClick = { toggleFFmpeg(ExpandableFFmpegSetting.ThreadLimit) },
-               trailingContent = {
-                    ThreadLimitSelect(
-                         expanded = expandedFFmpegSetting == ExpandableFFmpegSetting.ThreadLimit
-                    )
-               },
-               position = TilePosition.MIDDLE
-          ),
-          SettingListInfo(
-               title = "Hardware Encoding",
-               description = "Uses the hardware chip for encoding instead of CPU. It's much faster and saves battery, but files are slightly larger",
-               image = R.drawable.hardware_encoding,
-               content = {
-                    SettingsSwitch(
-                         enabled = enableVideoCompression,
-                         checked = useHardwareEncoder,
-                         onCheckedChange = {
-                              ffmpegSettingsViewModel.setUseHardwareEncoder(it)
                          }
                     )
                },
@@ -265,11 +196,8 @@ fun SimpleFFmpegSetting(
 
                Text(
                     text = "General",
-                    modifier = Modifier.padding(
-                         start = 16.dp,
-                         top = 20.dp,
-                         bottom = 8.dp
-                    ),
+                    modifier = Modifier.padding(start = 16.dp, top = 20.dp, bottom = 8.dp),
+                    fontSize = 18.sp,
                     color = FermuxColors.fermuxActiveButton,
                     style = MaterialTheme.typography.labelLarge,
                )
@@ -292,30 +220,17 @@ fun SimpleFFmpegSetting(
 
                Text(
                     text = "Advanced",
-                    modifier = Modifier.padding(
-                         start = 16.dp,
-                         top = 20.dp,
-                         bottom = 8.dp
-                    ),
+                    modifier = Modifier.padding(start = 16.dp, top = 20.dp, bottom = 8.dp),
+                    fontSize = 18.sp,
                     color = FermuxColors.fermuxActiveButton,
                     style = MaterialTheme.typography.labelLarge,
                )
 
-               advanced.forEach { option ->
-                    TileOptions(
-                         title = option.title,
-                         description = option.description,
-                         shape = option.position.TileShaper(),
-                         image = option.image,
-                         icon = option.icon,
-                         onClick = {
-                              option.onClick?.invoke()
-                              option.route?.let { navController.navigate(it) }
-                         },
-                         content = option.content,
-                         trailingContent = option.trailingContent
-                    )
-               }
+               AdvancedFFmpegSettings(
+                    navController = navController,
+                    ffmpegSettingsViewModel = ffmpegSettingsViewModel
+               )
+
           }
      }
 }

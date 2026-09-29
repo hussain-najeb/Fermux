@@ -28,13 +28,11 @@ fun AdvancedDownloaderSettings(
      downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel(),
      navController: NavController
 ) {
-
      // DataStore vals
      val sponsorBlock by downloaderSettingsViewModel.sponsorBlock.collectAsStateWithLifecycle()
      val quickJS by downloaderSettingsViewModel.quickJS.collectAsStateWithLifecycle()
      val fingerprint by downloaderSettingsViewModel.fingerprint.collectAsStateWithLifecycle()
      val logcat by downloaderSettingsViewModel.downloaderDebug.collectAsStateWithLifecycle()
-
      // ModularSegmentedButtons vals
      val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
      val externalDownloaders by downloaderSettingsViewModel.externalDownloaders.collectAsStateWithLifecycle()
@@ -42,18 +40,15 @@ fun AdvancedDownloaderSettings(
      val externalDownloadersEnabled = aria2cMode == Aria2cMode.Disabled
      val wifi by downloaderSettingsViewModel.wifi.collectAsStateWithLifecycle()
      val ipv by downloaderSettingsViewModel.ipv.collectAsStateWithLifecycle()
-
      // Miscellaneous vals/funs
      val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
      var expandedSetting by remember {
           mutableStateOf<ExpandableDownloaderSetting?>(null)
      }
-
      fun toggleDownloader(setting: ExpandableDownloaderSetting) {
           expandedSetting = if (expandedSetting == setting) null else setting
      }
-
 
      val advancedSettings = listOf(
           SettingListInfo(
@@ -212,7 +207,6 @@ fun AdvancedDownloaderSettings(
           )
      )
 
-
      advancedSettings.forEach { setting ->
           TileOptions(
                title = setting.title,
@@ -228,5 +222,4 @@ fun AdvancedDownloaderSettings(
                },
           )
      }
-
 }

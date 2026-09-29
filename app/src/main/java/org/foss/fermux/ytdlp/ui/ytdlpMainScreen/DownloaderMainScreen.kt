@@ -236,7 +236,6 @@ private fun Connections() {
      val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
      val network = connectivityManager.activeNetwork
      val capabilities = connectivityManager.getNetworkCapabilities(network)
-     val connectedToWifi = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true
      val hasValidatedInternet = capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) == true
      val connectedToCellular = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) == true
      val connectedToVPN = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_VPN) == true
@@ -248,10 +247,10 @@ private fun Connections() {
 
 
      val networkDescriptions = when {
-          !connectedToWifi -> "You aren't connected to the internet, please connect to use this tab."
+          capabilities == null -> "You aren't connected to a network, please connect to use this tab."
           !hasValidatedInternet -> "You don't seem to have internet access, please connect to a sufficient network"
-          connectedToCellular -> "Cellular? Really?"
           connectedToVPN -> "Using Cloudflare DNS?"
+          connectedToCellular -> "Cellular? Really?"
           connectedToEthernet -> "Wow, Ethernet? How did you do that?"
           connectedToAriDrop -> "Interesting choice for a network connection"
           connectedToUsb -> "Network over Usb? Interesting"

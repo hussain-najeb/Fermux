@@ -1,5 +1,3 @@
-@file:Suppress("unused")
-
 package org.foss.fermux.settings.ui.downloader
 
 import androidx.activity.ComponentActivity
