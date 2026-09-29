@@ -1,7 +1,5 @@
-package org.foss.fermux.components.downloaderComponents
+package org.foss.fermux.components.generalComponents
 
-import android.annotation.SuppressLint
-import androidx.activity.ComponentActivity
 import androidx.compose.animation.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -10,38 +8,36 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight.Companion.W600
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
+import androidx.compose.ui.unit.sp
 import org.foss.fermux.ui.theme.FermuxColors
 import kotlin.math.roundToInt
 
 @Composable
-fun RequestTimeSlider(
+fun ModularSlider(
      expanded: Boolean,
-     @SuppressLint("ContextCastToActivity") settingsViewModel: DownloaderSettingsViewModel = viewModel(
-          viewModelStoreOwner = LocalContext.current as ComponentActivity
-     )
+     sliderKey: Int,
+     trackSteps: Int,
+     trackRange: ClosedFloatingPointRange<Float>,
+     onOptionSelected: (Int) -> Unit
 ) {
-     val sleepRequest by settingsViewModel.sleepRequest.collectAsStateWithLifecycle()
+
      val sliderState = rememberSliderState(
-          value = sleepRequest.coerceIn(0, 5).toFloat(),
-          steps = 4,
-          trackRange = 0f..5f
+          value = sliderKey.toFloat().coerceIn(trackRange),
+          steps = trackSteps,
+          trackRange = trackRange
      )
-     LaunchedEffect(sleepRequest) {
-          sliderState.value = sleepRequest.coerceIn(0, 5).toFloat()
+     LaunchedEffect(sliderKey) {
+          sliderState.value = sliderKey.toFloat().coerceIn(trackRange)
      }
 
      AnimatedVisibility(
           visible = expanded,
-          enter = expandVertically(animationSpec = MaterialTheme.motionScheme.fastEffectsSpec()) + fadeIn(initialAlpha = 0.2f),
+          enter = expandVertically(animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec()) + fadeIn(initialAlpha = 0.2f),
           exit = shrinkVertically(animationSpec = MaterialTheme.motionScheme.fastEffectsSpec()) + fadeOut(targetAlpha = 0.1f)
      ) {
           Surface(
@@ -52,26 +48,30 @@ fun RequestTimeSlider(
                shape = RoundedCornerShape(8.dp),
                border = BorderStroke(1.dp, color = FermuxColors.fermuxHelperBorder)
           ) {
+
                Column(modifier = Modifier.padding(7.dp)) {
 
                     Text(
-                         text = "Current Time: $sleepRequest",
+                         text = if (sliderKey > 0) "Current Setting: $sliderKey" else "Current Setting: off",
                          color = Color.White,
-                         fontWeight = W600,
-                         modifier = Modifier.padding(top = 8.dp, start = 8.dp)
+                         fontFamily = FontFamily.Default,
+                         fontStyle = FontStyle.Normal,
+                         fontSize = 18.sp,
+                         modifier = Modifier.padding(top = 5.dp, start = 5.dp)
                     )
+
                     Slider(
                          state = sliderState,
                          onValueChange = { value -> sliderState.value = value
-                              settingsViewModel.setSleepRequest(value.roundToInt())
+                              onOptionSelected(value.roundToInt())
                          },
                          thumb = {
                               Box(
                                    modifier = Modifier
-                                        .size(25.dp)
+                                        .size(30.dp)
                                         .background(
                                              color = FermuxColors.fermuxGenericBorder,
-                                             shape = RoundedCornerShape(6.dp)
+                                             shape = RoundedCornerShape(4.dp)
                                         )
                               )
                          },

@@ -22,18 +22,19 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.SettingsResetButton
-import org.foss.fermux.components.downloaderComponents.AudioFormatSelector
-import org.foss.fermux.components.downloaderComponents.RequestTimeSlider
-import org.foss.fermux.components.downloaderComponents.ThumbnailSelector
-import org.foss.fermux.components.downloaderComponents.VideoFormatSelector
 import org.foss.fermux.components.generalComponents.AppSnackBar
 import org.foss.fermux.components.generalComponents.MediumTopBarScaffold
+import org.foss.fermux.components.generalComponents.ModularSegmentedButtons
+import org.foss.fermux.components.generalComponents.ModularSlider
 import org.foss.fermux.components.settingsComponents.SettingsSwitch
 import org.foss.fermux.components.settingsComponents.TileOptions
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
+import org.foss.fermux.ytdlp.logic.downloader.AudioFormat
+import org.foss.fermux.ytdlp.logic.downloader.ThumbnailFormat
+import org.foss.fermux.ytdlp.logic.downloader.VideoFormat
 
 private enum class ExpandableOptionList {
      ThumbnailFormats,
@@ -61,14 +62,11 @@ fun DownloaderArgs(navController: NavController) {
 
      val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
-
-
      var expandedSetting by remember { mutableStateOf<ExpandableOptionList?>(null) }
-
-
      fun toggleExpansion(setting: ExpandableOptionList) {
           expandedSetting = if (expandedSetting == setting) null else setting
      }
+
 
      val args = listOf(
           SettingListInfo(
@@ -77,8 +75,16 @@ fun DownloaderArgs(navController: NavController) {
                image = R.drawable.audio_file,
                onClick = { toggleExpansion(setting = ExpandableOptionList.AudioFormats) },
                trailingContent = {
-                    AudioFormatSelector(
-                         expanded = expandedSetting == ExpandableOptionList.AudioFormats
+                    ModularSegmentedButtons(
+                         expanded = expandedSetting == ExpandableOptionList.AudioFormats,
+                         optionsList = listOf(
+                              AudioFormat.Mp3Format to "mp3",
+                              AudioFormat.OpusFormat to "opus",
+                              AudioFormat.FlacFormat to "flac",
+                              AudioFormat.M4aFormat to "m4a"
+                         ),
+                         selectedOption = audioFormats,
+                         onOptionSelected = { downloaderSettingsViewModel.setAudioFormat(it) }
                     )
                },
                position = TilePosition.TOP
@@ -89,8 +95,16 @@ fun DownloaderArgs(navController: NavController) {
                image = R.drawable.file_video,
                onClick = { toggleExpansion(setting = ExpandableOptionList.VideoFormats) },
                trailingContent = {
-                    VideoFormatSelector(
-                         expanded = expandedSetting == ExpandableOptionList.VideoFormats
+                    ModularSegmentedButtons(
+                         expanded = expandedSetting == ExpandableOptionList.VideoFormats,
+                         optionsList = listOf(
+                              VideoFormat.Mp4Format to "mp4",
+                              VideoFormat.AviFormat to "avi",
+                              VideoFormat.Mkv to "mkv",
+                              VideoFormat.WebMFormat to "webm"
+                         ),
+                         selectedOption = videoFormats,
+                         onOptionSelected = { downloaderSettingsViewModel.setVideoFormat(it) }
                     )
                },
                position = TilePosition.MIDDLE
@@ -113,8 +127,16 @@ fun DownloaderArgs(navController: NavController) {
                image = R.drawable.file_image,
                onClick = { toggleExpansion(setting = ExpandableOptionList.ThumbnailFormats) },
                trailingContent = {
-                    ThumbnailSelector(
-                         expanded = expandedSetting == ExpandableOptionList.ThumbnailFormats
+                    ModularSegmentedButtons(
+                         expanded = expandedSetting == ExpandableOptionList.ThumbnailFormats,
+                         optionsList = listOf(
+                              ThumbnailFormat.Off to "off",
+                              ThumbnailFormat.Jpeg to "jpeg",
+                              ThumbnailFormat.Png to "png",
+                              ThumbnailFormat.WebP to "webp",
+                         ),
+                         selectedOption = thumbnailFormat,
+                         onOptionSelected = { downloaderSettingsViewModel.setThumbnailFormat(it) }
                     )
                },
                position = TilePosition.MIDDLE
@@ -145,12 +167,16 @@ fun DownloaderArgs(navController: NavController) {
           ),
           SettingListInfo(
                title = "Sleep Request Yt-dlp Flag",
-               description = "Sleep request is a flag for delayed download between each request, each number represents a second. 0 means the flag is off",
+               description = "Sleep request is a flag for delayed download between each request, each number represents a second",
                icon = if (sleepRequest > 0) Icons.Filled.Flag else Icons.Outlined.Flag,
                onClick = { toggleExpansion(ExpandableOptionList.SleepRequest) },
                trailingContent = {
-                    RequestTimeSlider(
-                         expanded = expandedSetting == ExpandableOptionList.SleepRequest
+                    ModularSlider(
+                         expanded = expandedSetting == ExpandableOptionList.SleepRequest,
+                         sliderKey = sleepRequest,
+                         trackSteps = 4,
+                         trackRange = 0f..5f,
+                         onOptionSelected = { downloaderSettingsViewModel.setSleepRequest(it) }
                     )
                },
                position = TilePosition.MIDDLE

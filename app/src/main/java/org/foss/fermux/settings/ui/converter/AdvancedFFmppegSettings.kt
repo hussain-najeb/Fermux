@@ -16,8 +16,8 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.SettingsResetButton
-import org.foss.fermux.components.downloaderComponents.ModularSegmentedButtons
-import org.foss.fermux.components.ffmpegComponents.CrfSlider
+import org.foss.fermux.components.generalComponents.ModularSegmentedButtons
+import org.foss.fermux.components.generalComponents.ModularSlider
 import org.foss.fermux.components.settingsComponents.SettingsSwitch
 import org.foss.fermux.components.settingsComponents.TileOptions
 import org.foss.fermux.settings.logic.FFmpegSettingsViewModel
@@ -32,6 +32,7 @@ fun AdvancedFFmpegSettings(
 ) {
 
      val logcat by ffmpegSettingsViewModel.ffmpegDebug.collectAsStateWithLifecycle()
+     val crf by ffmpegSettingsViewModel.videoCrf.collectAsStateWithLifecycle()
      val enableVideoCompression by ffmpegSettingsViewModel.enableVideoCompression.collectAsStateWithLifecycle()
      val threadLimit by ffmpegSettingsViewModel.threadLimit.collectAsStateWithLifecycle()
      val useHardwareEncoder by ffmpegSettingsViewModel.useHardwareEncoder.collectAsStateWithLifecycle()
@@ -82,8 +83,12 @@ fun AdvancedFFmpegSettings(
                icon = Icons.Default.Tune,
                onClick = { toggleFFmpeg(ExpandableFFmpegSetting.Crf) },
                trailingContent = {
-                    CrfSlider(
-                         expanded = expandedFFmpegSetting == ExpandableFFmpegSetting.Crf
+                    ModularSlider(
+                         expanded = expandedFFmpegSetting == ExpandableFFmpegSetting.Crf,
+                         sliderKey = crf,
+                         trackSteps = 9,
+                         trackRange = 18f..28f,
+                         onOptionSelected = { ffmpegSettingsViewModel.setVideoCrf(it) }
                     )
                },
                position = TilePosition.MIDDLE

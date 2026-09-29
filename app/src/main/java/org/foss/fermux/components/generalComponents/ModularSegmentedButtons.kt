@@ -1,4 +1,4 @@
-package org.foss.fermux.components.downloaderComponents
+package org.foss.fermux.components.generalComponents
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.BorderStroke
@@ -8,32 +8,18 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
-import org.foss.fermux.ytdlp.logic.downloader.ThumbnailFormat
 
 @Composable
-fun ThumbnailSelector(
+fun <T> ModularSegmentedButtons(
      expanded: Boolean,
+     enabled: Boolean = true,
+     optionsList: List<Pair<T, String>>,
+     selectedOption: T,
+     onOptionSelected: (T) -> Unit
 ) {
-
-     val downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel()
-
-     val thumbnailOptions = listOf(
-          ThumbnailFormat.Off to "off",
-          ThumbnailFormat.Jpeg to "jpeg",
-          ThumbnailFormat.Png to "png",
-          ThumbnailFormat.WebP to "webp",
-     )
-
-
-     val thumbnailFormats by downloaderSettingsViewModel.thumbnailFormat.collectAsStateWithLifecycle()
-     val thumbnail by downloaderSettingsViewModel.embedThumbnail.collectAsStateWithLifecycle()
 
      AnimatedVisibility(
           visible = expanded,
@@ -53,16 +39,16 @@ fun ThumbnailSelector(
                          .padding(7.dp)
                          .fillMaxWidth()
                ) {
-                    thumbnailOptions.forEachIndexed { index, (format, label) ->
+                    optionsList.forEachIndexed { index, (value, name) ->
                          SegmentedButton(
-                              selected = thumbnailFormats == format,
-                              onClick = { downloaderSettingsViewModel.setThumbnailFormat(format) },
+                              selected = selectedOption == value,
+                              onClick = { onOptionSelected(value) },
                               shape = SegmentedButtonDefaults.itemShape(
                                    index = index,
-                                   count = thumbnailOptions.size,
+                                   count = optionsList.size,
                                    baseShape = RoundedCornerShape(8.dp)
                               ),
-                              enabled = thumbnail,
+                              enabled = enabled,
                               colors = SegmentedButtonDefaults.colors(
                                    activeContainerColor = FermuxColors.activeContainer,
                                    activeContentColor = FermuxColors.activeContent,
@@ -84,7 +70,7 @@ fun ThumbnailSelector(
                                         FermuxColors.fermuxGenericBorder.copy(alpha = 0.4f)
                               )
                          ) {
-                              Text(label)
+                              Text(name)
                          }
                     }
                }

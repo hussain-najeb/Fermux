@@ -21,9 +21,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
-import org.foss.fermux.components.downloaderComponents.ModularSegmentedButtons
 import org.foss.fermux.components.generalComponents.AppSnackBar
 import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
+import org.foss.fermux.components.generalComponents.ModularSegmentedButtons
 import org.foss.fermux.components.settingsComponents.SettingsSwitch
 import org.foss.fermux.components.settingsComponents.TileOptions
 import org.foss.fermux.settings.logic.FFmpegSettingsViewModel
@@ -146,17 +146,17 @@ fun SimpleFFmpegSetting(
           ),
           SettingListInfo(
                title = "Video Resolution",
-               description = "Edit the video resolution for the selected media prior to using the converter so it outputs the selected resolution in this setting. Original is recommended",
+               description = "Edit the video resolution for the selected media prior to using the converter so it outputs the selected resolution in this setting",
                image = R.drawable.video_resolution,
                onClick = { toggleFFmpeg(ExpandableFFmpegSetting.Resolution) },
                trailingContent = {
                     ModularSegmentedButtons(
                          expanded = expandedFFmpegSetting == ExpandableFFmpegSetting.Resolution,
                          optionsList = listOf("" to "Normal",
-                              "480" to "480p",
-                              "720" to "720p",
-                              "1080" to "1080p",
-                              "1440" to "1440p"
+                              "480" to "480",
+                              "720" to "720",
+                              "1080" to "1080",
+                              "1440" to "1440"
                          ),
                          selectedOption = resolution,
                          onOptionSelected = { ffmpegSettingsViewModel.setVideoResolution(it) }

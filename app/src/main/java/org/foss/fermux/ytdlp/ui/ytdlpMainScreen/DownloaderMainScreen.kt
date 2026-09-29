@@ -70,7 +70,8 @@ fun DownloadContent(
 
      val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
-     val doingTask = downloaderViewModel.state is DownloadStatus.LoadingMetadata || downloaderViewModel.state is DownloadStatus.Downloading || downloaderViewModel.state is DownloadStatus.UserArgs
+     val doingTask =
+          downloaderViewModel.state is DownloadStatus.LoadingMetadata || downloaderViewModel.state is DownloadStatus.Downloading || downloaderViewModel.state is DownloadStatus.UserArgs
      val isError = downloaderViewModel.state is DownloadStatus.Error
      val clipboard = LocalClipboard.current
 
@@ -98,12 +99,12 @@ fun DownloadContent(
                          .background(FermuxColors.fermuxBackground)
                ) {
                     if (!upToDate) Text(
-                              text = "Version $currentVersionName of ytdlp is outdated, update the downloader in the preferences",
-                              color = FermuxColors.fermuxOffWhiteTextColor,
-                              fontSize = 14.sp,
-                              fontStyle = FontStyle.Normal,
-                              fontFamily = FontFamily.Default,
-                              modifier = Modifier.padding(7.dp)
+                         text = "Version $currentVersionName of ytdlp is outdated, update the downloader in the preferences",
+                         color = FermuxColors.fermuxOffWhiteTextColor,
+                         fontSize = 14.sp,
+                         fontStyle = FontStyle.Normal,
+                         fontFamily = FontFamily.Default,
+                         modifier = Modifier.padding(7.dp)
                     )
 
                     if (videoConversionWarning) Text(
@@ -190,17 +191,18 @@ fun DownloadContent(
                          if (!doingTask) AppIconButton(
                               icon = Icons.Default.ContentPaste,
                               modifier = Modifier.size(60.dp).padding(3.dp),
-                              onClick = { scope.launch {
-                                   clipboard.getClipEntry()
-                                        ?.clipData
-                                        ?.getItemAt(0)
-                                        ?.text
-                                        ?.toString()
-                                        .let { text ->
-                                             if (text != null) {
-                                                  downloaderViewModel.downloadUrl = text
+                              onClick = {
+                                   scope.launch {
+                                        clipboard.getClipEntry()
+                                             ?.clipData
+                                             ?.getItemAt(0)
+                                             ?.text
+                                             ?.toString()
+                                             .let { text ->
+                                                  if (text != null) {
+                                                       downloaderViewModel.downloadUrl = text
+                                                  }
                                              }
-                                        }
                                    }
                               }
                          )
@@ -242,10 +244,6 @@ private fun Connections() {
      val connectedToEthernet = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) == true
      val connectedToAriDrop = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI_AWARE) == true
      val connectedToUsb = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_USB) == true
-
-
-
-
      val networkDescriptions = when {
           capabilities == null -> "You aren't connected to a network, please connect to use this tab."
           !hasValidatedInternet -> "You don't seem to have internet access, please connect to a sufficient network"
@@ -256,7 +254,6 @@ private fun Connections() {
           connectedToUsb -> "Network over Usb? Interesting"
           else -> null
      }
-
      if (networkDescriptions != null) {
           Text(
                text = networkDescriptions,

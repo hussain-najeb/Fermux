@@ -26,9 +26,9 @@ import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.SettingsResetButton
-import org.foss.fermux.components.downloaderComponents.ModularSegmentedButtons
 import org.foss.fermux.components.generalComponents.AppSnackBar
 import org.foss.fermux.components.generalComponents.MediumTopBarScaffold
+import org.foss.fermux.components.generalComponents.ModularSegmentedButtons
 import org.foss.fermux.components.settingsComponents.SettingsSwitch
 import org.foss.fermux.components.settingsComponents.TileOptions
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
