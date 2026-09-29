@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
@@ -33,6 +34,7 @@ fun CancelButton(
      color: FermuxColor = FermuxColors,
      allowBorder: Boolean = true,
      border: BorderStroke? = BorderStroke(width = 1.dp, color = FermuxColors.fermuxHelperBorder),
+     shape: Shape = RoundedCornerShape(16.dp),
      onClick: () -> Unit,
 ) {
 
@@ -70,7 +72,7 @@ fun CancelButton(
           interactionSource = interactionSource,
           contentPadding = PaddingValues(10.dp),
           border = if (!allowBorder) null else border,
-          shape = RoundedCornerShape(16.dp),
+          shape = shape,
           onClick = onClick,
           colors = ButtonDefaults.textButtonColors(
                containerColor = containerColor,

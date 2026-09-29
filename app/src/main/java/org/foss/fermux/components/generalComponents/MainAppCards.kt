@@ -38,6 +38,7 @@ import org.foss.fermux.utils.MainScreens
 @Composable
 fun MainAppCard(
      modifier: Modifier,
+     iconModifier: Modifier? = null,
      navController: NavController,
      title: String,
      description: String,
@@ -162,13 +163,14 @@ fun MainAppCard(
                                    modifier = Modifier.padding(top = 5.dp, end = 5.dp)
                               )
                          }
-                         if (buttonImage != null)
+                         if (buttonImage != null && iconModifier != null)
                          ImageButton(
                               modifier = Modifier
                                    .align(Alignment.CenterVertically)
                                    .padding(end = 10.dp),
                               onClick = { buttonOnClick?.invoke() },
                               image = buttonImage,
+                              imageModifier = iconModifier,
                               enabled = enabled
                          )
                     }

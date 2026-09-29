@@ -1,5 +1,6 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates
 
+import android.content.ClipData
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -9,9 +10,10 @@ import androidx.compose.material.icons.rounded.Error
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.launch
 import org.foss.fermux.components.buttons.CancelButton
 import org.foss.fermux.components.buttons.ErrorCopyButton
 import org.foss.fermux.components.buttons.LogButton
@@ -34,9 +37,9 @@ fun ErrorCard(
      navController: NavController,
      onCancel: () -> Unit
 ) {
-     @Suppress("DEPRECATION")
-     val clipboard = LocalClipboardManager.current
+     val clipboard = LocalClipboard.current
      val scrollState = rememberScrollState()
+     val scope = rememberCoroutineScope()
 
      Column(modifier = Modifier.fillMaxSize()) {
 
@@ -92,24 +95,24 @@ fun ErrorCard(
                Row {
                     LogButton(
                          modifier = Modifier.padding(start = 15.dp, end = 10.dp),
-                         onClick = {
-                              navController.navigate(Miscellaneous.DownloaderLogs.route)
-                         }
+                         onClick = { navController.navigate(Miscellaneous.DownloaderLogs.route) }
                     )
-
                     ErrorCopyButton(
                          modifier = Modifier.padding(end = 10.dp),
                          onClick = {
-                              clipboard.setText(AnnotatedString(rawError))
+                              scope.launch {
+                                   val clipData = ClipData.newPlainText("raw error", rawError)
+                                   clipboard.setClipEntry(ClipEntry(clipData))
+                              }
                          }
                     )
                }
-
-               CancelButton(
-                    modifier = Modifier.padding(end = 15.dp),
-                    onClick = onCancel
-               )
           }
+
+          CancelButton(
+               modifier = Modifier.padding(end = 15.dp),
+               onClick = onCancel
+          )
      }
 }
 

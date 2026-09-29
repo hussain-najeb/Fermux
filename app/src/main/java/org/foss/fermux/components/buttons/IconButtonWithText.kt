@@ -24,26 +24,6 @@ import androidx.compose.ui.unit.dp
 import org.foss.fermux.ui.theme.FermuxColor
 import org.foss.fermux.ui.theme.FermuxColors
 
-/**
- * A flexible Fermux-styled text button that supports an optional icon and/or text label.
- *
- * Handles all press animation, color transitions, and icon rotation internally —
- * the caller only needs to provide target values, not animation logic.
- *
- * @param modifier Applied to the outer [TextButton]. Use this to control size and positioning.
- * @param text Optional label rendered to the right of the icon. Pass null to hide.
- * @param contentPadding Internal padding between the button edge and its content.
- * @param icon Optional leading icon. Pass null to hide.
- * @param iconRotation Target rotation angle for the icon in degrees. The button animates
- * to this value automatically — useful for expand/collapse chevrons. Defaults to 0f (no rotation).
- * @param buttonRoundness Corner radius of the button shape. Defaults to 16.dp if not provided.
- * @param color Fermux color scheme. Defaults to [FermuxColors].
- * @param enabled Whether the button is interactive. When false, the button dims and
- * blocks clicks — the caller controls when and how long this lasts.
- * @param textModifier A modifier for the text inside the button
- * @param onClick Called when the button is tapped.
- */
-
 @Composable
 fun TextWithIconButton(
      modifier: Modifier = Modifier,

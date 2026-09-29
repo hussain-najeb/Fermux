@@ -38,9 +38,9 @@ fun QuickDownloadsStateMachine(
           when (targetState) {
                is DownloadStatus.Idle -> {}
 
-               is DownloadStatus.UserArgs -> null
+               is DownloadStatus.UserArgs -> {}
 
-               is DownloadStatus.QuickDownload -> null
+               is DownloadStatus.QuickDownload -> {}
 
                is DownloadStatus.LoadingMetadata -> {
                     QuickDownloadsMetadata()
@@ -58,7 +58,10 @@ fun QuickDownloadsStateMachine(
                }
 
                is DownloadStatus.Error -> {
-                    QuickdownloadError(navController = navController)
+                    QuickdownloadError(
+                         onCancel = { downloaderViewModel.cancelButton(context) },
+                         navController = navController
+                    )
                }
           }
      }

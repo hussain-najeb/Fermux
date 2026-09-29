@@ -3,7 +3,6 @@ package org.foss.fermux.utils
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -28,18 +27,6 @@ sealed class MainScreens(val route: String ) {
      object Converter: MainScreens("converter")
      object Terminal: MainScreens("terminal")
 }
-
-data class ScreenInfo(
-     val screen: MainScreens,
-     val title: String,
-     val description: String,
-     val image: Int? = null,
-     val icon: ImageVector? = null,
-     val buttonIcon: Int? = null,
-     val onClick: (() -> Unit)? = null,
-     val trailingContent: @Composable (() -> Unit)? = null,
-     val enabled: Boolean
-)
 
 sealed class SettingsScreens(val route: String) {
      object SimpleDownloader: SettingsScreens(route = "simple downloader")
@@ -92,6 +79,6 @@ fun FermuxAppMainScreen() {
           // Ytdlp
           composable(route = Miscellaneous.DownloaderLogs.route) { DownloaderLogs(navController) }
           composable(route = Miscellaneous.DownloaderArgs.route) { DownloaderArgs(navController) }
-          composable(route = Miscellaneous.DownloaderLogs.route) {  }
+          composable(route = Miscellaneous.DownloaderHistory.route) {  } // TODO. ADD this
      }
 }

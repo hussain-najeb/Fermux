@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.ServiceInfo
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.work.*
@@ -105,6 +106,7 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
           val workerJob = currentCoroutineContext().job
 
           DebugLogDownloader.debugDownloader("DownloadWorker", "Started id=$taskId attempt=$runAttemptCount")
+          Log.d("DownloadWorker", "Started id=$taskId attempt=$runAttemptCount")
 
           val settingsTab = DataStoreDownloaderSettings(applicationContext)
           val sponsorBlock = settingsTab.sponsorBlock.first()

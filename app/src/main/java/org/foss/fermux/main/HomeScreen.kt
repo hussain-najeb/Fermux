@@ -1,6 +1,8 @@
 package org.foss.fermux.main
 
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,9 +13,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -26,9 +30,9 @@ import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.components.generalComponents.MainAppCard
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.MainScreens
-import org.foss.fermux.utils.ScreenInfo
 import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
 import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
+import org.foss.fermux.ytdlp.logic.downloader.ScreenInfo
 import org.foss.fermux.ytdlp.ui.quickDownloads.QuickDownloadsStateMachine
 
 
@@ -48,7 +52,16 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
      val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
      val context = LocalContext.current
-     val disabled = downloaderViewModel.state is DownloadStatus.Idle
+     val disabled = downloaderViewModel.state is DownloadStatus.Idle || downloaderViewModel.state is DownloadStatus.Error
+
+
+
+     val speed = (downloaderViewModel.state as? DownloadStatus.Downloading)?.downloadProgress ?: 0f
+     val iconRotate by animateFloatAsState(
+          targetValue = speed,
+          animationSpec = tween(),
+          label = "Fermux Icon Rotation"
+     )
 
      val screens = listOf(
           ScreenInfo(
@@ -66,6 +79,7 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
                description = "A modern implementation of ytdlp to android with powerful additions.",
                image = R.drawable.download,
                buttonIcon = R.drawable.speed,
+               iconModifier = Modifier.rotate(iconRotate),
                onClick = {
                     scope.launch {
                          clipboard.getClipEntry()?.clipData?.getItemAt(0)?.text?.toString()
@@ -132,6 +146,7 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
                          modifier = Modifier
                               .fillMaxWidth()
                               .padding(start = 5.dp, end = 5.dp, bottom = 3.dp, top = 3.dp),
+                         iconModifier = screen.iconModifier,
                          title = screen.title,
                          description = screen.description,
                          image = screen.image,

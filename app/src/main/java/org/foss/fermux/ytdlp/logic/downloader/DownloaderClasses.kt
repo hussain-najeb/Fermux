@@ -1,5 +1,10 @@
 package org.foss.fermux.ytdlp.logic.downloader
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import org.foss.fermux.utils.MainScreens
+
 const val FERMUX_METADATA_MARKER = "FERMUX_METADATA_JSON:"
 
 /**
@@ -28,6 +33,19 @@ sealed class DownloadStatus {
      data class Completed(val metadata: DownloadMetadata) : DownloadStatus()
      data class Error(val errorMessage: String, val rawError: String) : DownloadStatus()
 }
+
+data class ScreenInfo(
+     val screen: MainScreens,
+     val iconModifier: Modifier? = null,
+     val title: String,
+     val description: String,
+     val image: Int? = null,
+     val icon: ImageVector? = null,
+     val buttonIcon: Int? = null,
+     val onClick: (() -> Unit)? = null,
+     val trailingContent: @Composable (() -> Unit)? = null,
+     val enabled: Boolean
+)
 
 /**
  * Enum class used to handle the types of media to get handled by the UI during download.
