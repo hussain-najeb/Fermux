@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.foss.fermux.storage.DataStoreDownloaderSettings
+import org.foss.fermux.storage.DownloaderSettingsSnapshot
 import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.utils.DebugLogDownloader
 import org.foss.fermux.ytdlp.logic.downloader.*
@@ -200,8 +201,12 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           viewModelScope.launch { settingsTab.clearHistory() }
      }
 
-     fun clearYtdlp() {
-          viewModelScope.launch { settingsTab.clearYtdlp() }
+     suspend fun resetDownloaderSettings(): DownloaderSettingsSnapshot {
+          return settingsTab.resetYtdlp()
+     }
+
+     suspend fun restoreDownloaderSettings(snapshot: DownloaderSettingsSnapshot) {
+          settingsTab.restoreYtdlp(snapshot)
      }
 
      fun clearArgs() {

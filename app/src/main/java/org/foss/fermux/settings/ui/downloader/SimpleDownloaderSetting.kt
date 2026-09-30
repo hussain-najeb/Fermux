@@ -238,8 +238,9 @@ fun SimpleDownloaderPage(
                )
 
                AdvancedDownloaderSettings(
-                    downloaderSettingsViewModel,
-                    navController
+                    downloaderSettingsViewModel = downloaderSettingsViewModel,
+                    navController = navController,
+                    snackbarHostState = snackbarHostState
                )
 
                Spacer(modifier = Modifier.padding(top = 10.dp))

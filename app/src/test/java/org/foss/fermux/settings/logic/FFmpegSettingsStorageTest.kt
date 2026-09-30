@@ -77,7 +77,7 @@ class FFmpegSettingsStorageTest {
           setting.setUseHardwareEncoder(true)
           setting.setThreadLimit(2)
 
-          setting.clearFFmpeg()
+          setting.resetFFmpeg()
 
           assertEquals("", setting.audioBitrate.first())
           assertFalse(setting.normalizeAudio.first())
@@ -87,5 +87,33 @@ class FFmpegSettingsStorageTest {
           assertEquals(23, setting.videoCrf.first())
           assertFalse(setting.useHardwareEncoder.first())
           assertEquals(0, setting.threadLimit.first())
+     }
+
+     @Test
+     fun `reset snapshot restores settings atomically`() = runTest {
+          val setting = newFixture().repositoryOfTheProdCode
+
+          setting.setAudioBitrate("192k")
+          setting.setFFmpegDebug(true)
+          setting.setNormalizeAudio(true)
+          setting.setMonoDownmix(true)
+          setting.setEnableVideoCompression(true)
+          setting.setVideoResolution("720")
+          setting.setVideoCrf(21)
+          setting.setUseHardwareEncoder(false)
+          setting.setThreadLimit(2)
+
+          val snapshot = setting.resetFFmpeg()
+          setting.restoreFFmpeg(snapshot)
+
+          assertEquals("192k", setting.audioBitrate.first())
+          assertTrue(setting.ffmpegDebug.first())
+          assertTrue(setting.normalizeAudio.first())
+          assertTrue(setting.monoDownmix.first())
+          assertTrue(setting.enableVideoCompression.first())
+          assertEquals("720", setting.videoResolution.first())
+          assertEquals(21, setting.videoCrf.first())
+          assertFalse(setting.useHardwareEncoder.first())
+          assertEquals(2, setting.threadLimit.first())
      }
 }

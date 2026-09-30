@@ -228,7 +228,8 @@ fun SimpleFFmpegSetting(
 
                AdvancedFFmpegSettings(
                     navController = navController,
-                    ffmpegSettingsViewModel = ffmpegSettingsViewModel
+                    ffmpegSettingsViewModel = ffmpegSettingsViewModel,
+                    snackbarHostState = snackbarHostState
                )
 
           }

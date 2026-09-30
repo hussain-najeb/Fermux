@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.foss.fermux.storage.DataStoreFFmpegSettings
 import org.foss.fermux.storage.FFmpegSettingsRepo
+import org.foss.fermux.storage.FFmpegSettingsSnapshot
 import org.foss.fermux.utils.DebugLogDownloader
 
 
@@ -84,7 +85,11 @@ class FFmpegSettingsViewModel(application: Application) : AndroidViewModel(appli
      }
 
 
-     fun setClearFFmpeg() {
-          viewModelScope.launch { ffmpegSettings.clearFFmpeg() }
+     suspend fun resetFFmpegSettings(): FFmpegSettingsSnapshot {
+          return ffmpegSettings.resetFFmpeg()
+     }
+
+     suspend fun restoreFFmpegSettings(snapshot: FFmpegSettingsSnapshot) {
+          ffmpegSettings.restoreFFmpeg(snapshot)
      }
 }

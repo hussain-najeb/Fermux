@@ -8,6 +8,7 @@ import org.foss.fermux.storage.DEFAULT_SPONSOR_BLOCK_CATEGORIES
 import org.foss.fermux.storage.DataStoreDownloaderSettings
 import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
+import org.foss.fermux.ytdlp.logic.downloader.Connectivity
 import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -59,7 +60,7 @@ class DownloaderSettingsTest {
           setting.setQuickJS(false)
           setting.setEmbedThumbnail(false)
           setting.setSleepRequest(1)
-          setting.setBellState(false)
+          setting.setDownloaderBellState(false)
 
           assertEquals("/downloads", setting.downloadPath.first())
           assertEquals(listOf(jsonInfo), setting.jsonVideoCard.first())
@@ -74,7 +75,7 @@ class DownloaderSettingsTest {
           assertFalse(setting.quickJS.first())
           assertFalse(setting.embedThumbnail.first())
           assertEquals(1, setting.sleepRequest.first())
-          assertFalse(setting.bellState.first())
+          assertFalse(setting.downloaderBellState.first())
      }
 
      @ParameterizedTest
@@ -85,8 +86,7 @@ class DownloaderSettingsTest {
           setting.setExternalDownloader(externalDownloaders)
           assertEquals(externalDownloaders, setting.externalDownloaders.first())
 
-          val expectedAria2cMode = if (externalDownloaders == ExternalDownloaders.Disabled) Aria2cMode.Always else Aria2cMode.Disabled
-          assertEquals(expectedAria2cMode, setting.aria2cMode.first())
+          assertEquals(Aria2cMode.Disabled, setting.aria2cMode.first())
 
      }
 
@@ -110,7 +110,7 @@ class DownloaderSettingsTest {
           val setting = newFixture().repositoryOfTheProdCode
 
           setting.setDownloadPath("/downloads")
-          setting.setBellState(false)
+          setting.setDownloaderBellState(false)
           setting.setSleepRequest(10)
           setting.setExternalDownloader(ExternalDownloaders.FFmpegAsExternal)
           setting.setYtdlpDetails(false)
@@ -124,14 +124,14 @@ class DownloaderSettingsTest {
           setting.setFingerprinting(false)
 
 
-          setting.clearYtdlp()
+          setting.resetYtdlp()
 
 
           assertEquals("", setting.downloadPath.first())
-          assertFalse(setting.bellState.first())
+          assertFalse(setting.downloaderBellState.first())
           assertEquals(0, setting.sleepRequest.first())
-          assertEquals(Aria2cMode.Always, setting.aria2cMode.first())
-          assertEquals(ExternalDownloaders.Disabled, setting.externalDownloaders.first())
+          assertEquals(Aria2cMode.Disabled, setting.aria2cMode.first())
+          assertEquals(ExternalDownloaders.YtdlpNativeDownloader, setting.externalDownloaders.first())
           assertTrue(setting.ytdlpDetails.first())
           assertTrue(setting.videoHistory.first())
           assertTrue(setting.audioHistory.first())
@@ -141,6 +141,49 @@ class DownloaderSettingsTest {
           assertEquals(DEFAULT_SPONSOR_BLOCK_CATEGORIES, setting.sponsorBlockCategories.first())
           assertTrue(setting.quickJS.first())
           assertTrue(setting.fingerprinting.first())
+     }
+
+     @Test
+     fun `reset snapshot restores settings atomically`() = runTest {
+          val setting = newFixture().repositoryOfTheProdCode
+          val categories = setOf("sponsor", "music_offtopic")
+
+          setting.setDownloadPath("/downloads")
+          setting.setDownloaderDebug(true)
+          setting.setSleepRequest(10)
+          setting.setAria2cMode(Aria2cMode.EdgeCaseOnly)
+          setting.setYtdlpDetails(false)
+          setting.setVideoHistory(false)
+          setting.setAudioHistory(false)
+          setting.setEmbedThumbnail(false)
+          setting.setPlaylistStatus(true)
+          setting.setSponsorBlock(false)
+          setting.setSponsorBlockCategories(categories)
+          setting.setQuickJS(false)
+          setting.setFingerprinting(false)
+          setting.setWifi(Connectivity.Wifi)
+
+          val snapshot = setting.resetYtdlp()
+          setting.restoreYtdlp(snapshot)
+
+          assertEquals("/downloads", setting.downloadPath.first())
+          assertTrue(setting.downloaderDebug.first())
+          assertEquals(10, setting.sleepRequest.first())
+          assertEquals(Aria2cMode.EdgeCaseOnly, setting.aria2cMode.first())
+          assertEquals(ExternalDownloaders.Disabled, setting.externalDownloaders.first())
+          assertFalse(setting.ytdlpDetails.first())
+          assertFalse(setting.videoHistory.first())
+          assertFalse(setting.audioHistory.first())
+          assertFalse(setting.embedThumbnail.first())
+          assertTrue(setting.playlistStatus.first())
+          assertFalse(setting.sponsorBlock.first())
+          assertEquals(categories, setting.sponsorBlockCategories.first())
+          assertFalse(setting.quickJS.first())
+          assertFalse(setting.fingerprinting.first())
+          assertEquals(
+               Connectivity.Wifi,
+               setting.wifi.first()
+          )
      }
 
      @Test

@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -28,7 +29,8 @@ import kotlin.math.roundToInt
 @Composable
 fun AdvancedFFmpegSettings(
      navController: NavController,
-     ffmpegSettingsViewModel: FFmpegSettingsViewModel = viewModel()
+     ffmpegSettingsViewModel: FFmpegSettingsViewModel = viewModel(),
+     snackbarHostState: SnackbarHostState
 ) {
 
      val logcat by ffmpegSettingsViewModel.ffmpegDebug.collectAsStateWithLifecycle()
@@ -45,7 +47,6 @@ fun AdvancedFFmpegSettings(
 
 
 
-     val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
      var expandedFFmpegSetting by remember {
           mutableStateOf<ExpandableFFmpegSetting?>(null)
@@ -65,12 +66,17 @@ fun AdvancedFFmpegSettings(
                          expanded = expandedFFmpegSetting == ExpandableFFmpegSetting.ResetFFmpeg,
                          settingText = "Reset FFmpeg Settings",
                          onClick = {
-                              ffmpegSettingsViewModel.setClearFFmpeg()
                               scope.launch {
-                                   snackbarHostState.showSnackbar(
-                                        message = "Setting is back to default",
-                                        duration = SnackbarDuration.Short
+                                   val oldSettings = ffmpegSettingsViewModel.resetFFmpegSettings()
+                                   val result = snackbarHostState.showSnackbar(
+                                        message = "Settings Reset",
+                                        actionLabel = "Undo",
+                                        duration = SnackbarDuration.Long
                                    )
+
+                                   if (result == SnackbarResult.ActionPerformed) {
+                                        ffmpegSettingsViewModel.restoreFFmpegSettings(oldSettings)
+                                   }
                               }
                          }
                     )

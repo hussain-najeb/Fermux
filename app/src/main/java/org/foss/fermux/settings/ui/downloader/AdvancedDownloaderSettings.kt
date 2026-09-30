@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -26,7 +27,8 @@ import org.foss.fermux.ytdlp.logic.downloader.IpvConnection
 @Composable
 fun AdvancedDownloaderSettings(
      downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel(),
-     navController: NavController
+     navController: NavController,
+     snackbarHostState: SnackbarHostState
 ) {
      // DataStore vals
      val sponsorBlock by downloaderSettingsViewModel.sponsorBlock.collectAsStateWithLifecycle()
@@ -41,7 +43,6 @@ fun AdvancedDownloaderSettings(
      val wifi by downloaderSettingsViewModel.wifi.collectAsStateWithLifecycle()
      val ipv by downloaderSettingsViewModel.ipv.collectAsStateWithLifecycle()
      // Miscellaneous vals/funs
-     val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
      var expandedSetting by remember {
           mutableStateOf<ExpandableDownloaderSetting?>(null)
@@ -60,14 +61,18 @@ fun AdvancedDownloaderSettings(
                          expanded = expandedSetting == ExpandableDownloaderSetting.ResetDownloader,
                          settingText = "Reset Downloader Settings",
                          onClick = {
-                              downloaderSettingsViewModel.clearYtdlp()
                               scope.launch {
-                                   snackbarHostState.showSnackbar(
-                                        message = "Setting is back to default",
-                                        duration = SnackbarDuration.Short
+                                   val oldSettings = downloaderSettingsViewModel.resetDownloaderSettings()
+                                   val result = snackbarHostState.showSnackbar(
+                                        message = "Settings Reset",
+                                        actionLabel = "Undo",
+                                        duration = SnackbarDuration.Long
                                    )
+                                   if (result == SnackbarResult.ActionPerformed) {
+                                        downloaderSettingsViewModel.restoreDownloaderSettings(oldSettings)
+                                   }
                               }
-                         } //     TODO. Add a way to undo the actions
+                         }
                     )
                },
                position = TilePosition.TOP

@@ -22,12 +22,8 @@ import androidx.compose.ui.unit.dp
 import org.foss.fermux.R
 import org.foss.fermux.ui.theme.FermuxColors
 
-
 @Composable
-fun BackButton(
-     modifier: Modifier = Modifier,
-     border: BorderStroke? = BorderStroke(1.dp, Color.Transparent),
-     contentPadding: PaddingValues = PaddingValues(4.dp),
+fun UndoButton(
      onClick: () -> Unit
 ) {
 
@@ -36,9 +32,14 @@ fun BackButton(
      var isClickable by remember { mutableStateOf(true) }
 
      val iconColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.fermuxActiveIcon else FermuxColors.fermuxWhiteColor,
+          targetValue = if (isPressed) FermuxColors.fermuxActiveIcon else FermuxColors.fermuxInActiveIcon,
           animationSpec = tween(durationMillis = 150),
           label = "Fermux Icon Colors"
+     )
+
+     val containerColor by animateColorAsState(
+          targetValue = if (isPressed) FermuxColors.fermuxActiveButton else FermuxColors.something3,
+          animationSpec = tween(150)
      )
 
      val buttonAnimation by animateFloatAsState(
@@ -48,18 +49,18 @@ fun BackButton(
      )
 
      OutlinedButton(
-          modifier = modifier.graphicsLayer {
+          modifier = Modifier.graphicsLayer {
                scaleX = buttonAnimation
                scaleY = buttonAnimation
           }
-               .size(25.dp),
+               .size(40.dp),
           shape = RoundedCornerShape(8.dp),
-          border = border,
+          contentPadding = PaddingValues(0.dp),
+          border = BorderStroke(1.dp, Color.Transparent),
           colors = ButtonDefaults.textButtonColors(
-               containerColor = Color.Transparent,
-               contentColor = Color.Transparent
+               containerColor = containerColor,
+               contentColor = FermuxColors.fermuxWhiteColor
           ),
-          contentPadding = contentPadding,
           interactionSource = interactionSource,
           onClick = {
                if (isClickable) {
@@ -69,9 +70,11 @@ fun BackButton(
           }
      ) {
           Icon(
-               painter = painterResource(id = R.drawable.back_arrow),
+               painter = painterResource(id = R.drawable.undo),
                tint = iconColor,
-               contentDescription = "Back Button",
+               contentDescription = "Undo",
           )
      }
+
+
 }

@@ -67,8 +67,27 @@ interface DownloaderSettingsRepo {
      suspend fun setJSONVideo(value: JSONHistoryCards)
      suspend fun clearHistory()
      suspend fun clearArgs()
-     suspend fun clearYtdlp()
+     suspend fun resetYtdlp(): DownloaderSettingsSnapshot
+     suspend fun restoreYtdlp(snapshot: DownloaderSettingsSnapshot)
 }
+
+data class DownloaderSettingsSnapshot(
+     val downloadPath: String?,
+     val downloaderDebug: Boolean?,
+     val sleepRequest: Int?,
+     val aria2cMode: String?,
+     val ytdlpDetails: Boolean?,
+     val videoHistory: Boolean?,
+     val audioHistory: Boolean?,
+     val embedThumbnail: Boolean?,
+     val playlistStatus: Boolean?,
+     val sponsorBlock: Boolean?,
+     val sponsorBlockCategories: Set<String>?,
+     val quickJS: Boolean?,
+     val fingerprinting: Boolean?,
+     val externalDownloader: String?,
+     val wifi: String?
+)
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings_tab")
 
@@ -347,8 +366,26 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
           }
      }
 
-     override suspend fun clearYtdlp() {
+     override suspend fun resetYtdlp(): DownloaderSettingsSnapshot {
+          lateinit var snapshot: DownloaderSettingsSnapshot
           settingStore.edit { preferences ->
+               snapshot = DownloaderSettingsSnapshot(
+                    downloadPath = preferences[DOWNLOAD_PATH],
+                    downloaderDebug = preferences[DOWNLOADER_DEBUG],
+                    sleepRequest = preferences[SLEEP_REQUEST_KEY],
+                    aria2cMode = preferences[ARIA2C_MODE_KEY],
+                    ytdlpDetails = preferences[DOWNLOADING_DETAILS],
+                    videoHistory = preferences[SHOW_YTDLP_VIDEO_HISTORY],
+                    audioHistory = preferences[SHOW_YTDLP_AUDIO_HISTORY],
+                    embedThumbnail = preferences[EMBED_THUMBNAIL],
+                    playlistStatus = preferences[PLAYLIST_STATUS],
+                    sponsorBlock = preferences[SPONSOR_BLOCK_IMPLEMENTATION],
+                    sponsorBlockCategories = preferences[SPONSOR_BLOCK_CATEGORIES],
+                    quickJS = preferences[QUICK_JS],
+                    fingerprinting = preferences[FINGERPRINT],
+                    externalDownloader = preferences[EXTERNAL_DOWNLOADER],
+                    wifi = preferences[WIFI]
+               )
                preferences.remove(key = DOWNLOAD_PATH)
                preferences.remove(key = DOWNLOADER_DEBUG)
                preferences.remove(key = SLEEP_REQUEST_KEY)
@@ -361,11 +398,30 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                preferences.remove(key = SPONSOR_BLOCK_IMPLEMENTATION)
                preferences.remove(key = SPONSOR_BLOCK_CATEGORIES)
                preferences.remove(key = QUICK_JS)
-               preferences.remove(key = DOWNLOADER_DEBUG)
                preferences.remove(key = FINGERPRINT)
                preferences.remove(key = EXTERNAL_DOWNLOADER)
                preferences.remove(key = WIFI)
-             //preferences.remove(key = IPV)
+          }
+          return snapshot
+     }
+
+     override suspend fun restoreYtdlp(snapshot: DownloaderSettingsSnapshot) {
+          settingStore.edit { preferences ->
+               preferences.restore(DOWNLOAD_PATH, snapshot.downloadPath)
+               preferences.restore(DOWNLOADER_DEBUG, snapshot.downloaderDebug)
+               preferences.restore(SLEEP_REQUEST_KEY, snapshot.sleepRequest)
+               preferences.restore(ARIA2C_MODE_KEY, snapshot.aria2cMode)
+               preferences.restore(DOWNLOADING_DETAILS, snapshot.ytdlpDetails)
+               preferences.restore(SHOW_YTDLP_VIDEO_HISTORY, snapshot.videoHistory)
+               preferences.restore(SHOW_YTDLP_AUDIO_HISTORY, snapshot.audioHistory)
+               preferences.restore(EMBED_THUMBNAIL, snapshot.embedThumbnail)
+               preferences.restore(PLAYLIST_STATUS, snapshot.playlistStatus)
+               preferences.restore(SPONSOR_BLOCK_IMPLEMENTATION, snapshot.sponsorBlock)
+               preferences.restore(SPONSOR_BLOCK_CATEGORIES, snapshot.sponsorBlockCategories)
+               preferences.restore(QUICK_JS, snapshot.quickJS)
+               preferences.restore(FINGERPRINT, snapshot.fingerprinting)
+               preferences.restore(EXTERNAL_DOWNLOADER, snapshot.externalDownloader)
+               preferences.restore(WIFI, snapshot.wifi)
           }
      }
 
@@ -377,4 +433,10 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
      }
 }
 
+private fun <T> MutablePreferences.restore(
+     key: Preferences.Key<T>,
+     value: T?
+) {
+     if (value == null) remove(key) else this[key] = value
+}
 
