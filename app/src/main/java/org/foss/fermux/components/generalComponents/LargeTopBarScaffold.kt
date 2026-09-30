@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.foss.fermux.components.buttons.BackButton
@@ -22,6 +23,7 @@ import org.foss.fermux.ui.theme.FermuxColors
 fun LargeTopBarScaffold(
      modifier: Modifier = Modifier,
      title: String,
+     titleSize: TextUnit = 25.sp,
      onBack: (() -> Unit)? = null,
      firstButton: (()  -> Unit)? = null,
      secondButton: (() -> Unit)? = null,
@@ -58,7 +60,7 @@ fun LargeTopBarScaffold(
                               title,
                               fontFamily = FontFamily.Default,
                               fontWeight = FontWeight.W500,
-                              fontSize = 25.sp,
+                              fontSize = titleSize,
                               color = Color.White,
                               modifier = Modifier.padding(10.dp)
                          )

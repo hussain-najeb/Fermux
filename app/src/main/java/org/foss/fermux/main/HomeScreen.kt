@@ -47,14 +47,12 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
 
      val downloaderViewModel: DownloaderViewModel = viewModel()
 
-     val scroll = rememberScrollState()
+     val context = LocalContext.current
      val clipboard = LocalClipboard.current
      val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
-     val context = LocalContext.current
+     val scroll = rememberScrollState()
      val disabled = downloaderViewModel.state is DownloadStatus.Idle || downloaderViewModel.state is DownloadStatus.Error
-
-
 
      val speed = (downloaderViewModel.state as? DownloadStatus.Downloading)?.downloadProgress ?: 0f
      val iconRotate by animateFloatAsState(

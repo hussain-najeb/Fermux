@@ -78,7 +78,7 @@ object DebugLogFFmpeg {
      val enabled = _enabled.asStateFlow()
 
      fun setEnable(value: Boolean) {
-          DebugLogFFmpeg._enabled.value = value
+          _enabled.value = value
      }
 
      private val _ffmpegLog = MutableStateFlow<List<DebugClass>>(emptyList())
@@ -88,11 +88,11 @@ object DebugLogFFmpeg {
           tag: String,
           message: String
      ) {
-          if (!DebugLogFFmpeg.enabled.value) return
+          if (!enabled.value) return
 
           Log.d(tag, message)
 
-          DebugLogFFmpeg.addFFmpegLog(
+          addFFmpegLog(
                DebugClass(
                     tag = tag,
                     message = message,
