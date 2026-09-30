@@ -64,7 +64,6 @@ enum class AudioQuality(val audioQuality: String) // audio quality class to pass
 }
 
 
-
 /**
  * Enum class for specifying the quality of the video when used to download video.
  */

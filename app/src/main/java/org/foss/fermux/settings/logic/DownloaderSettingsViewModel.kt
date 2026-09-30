@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.foss.fermux.storage.DataStoreDownloaderSettings
+import org.foss.fermux.storage.DownloaderArgumentsSnapshot
 import org.foss.fermux.storage.DownloaderSettingsSnapshot
 import org.foss.fermux.storage.JSONHistoryCards
 import org.foss.fermux.utils.DebugLogDownloader
@@ -97,6 +98,12 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
      val ipv: StateFlow<IpvConnection> = settingsTab.ipvConnection
           .stateIn(viewModelScope, SharingStarted.Lazily, IpvConnection.Disabled)
+
+     val fragRetries: StateFlow<Int> = settingsTab.fragRetries
+          .stateIn(viewModelScope, SharingStarted.Lazily, 10)
+
+     val retries: StateFlow<Int> = settingsTab.retries
+          .stateIn(viewModelScope, SharingStarted.Lazily, 10)
 
      val audioHistoryList: StateFlow<List<JSONHistoryCards>> = settingsTab.jsonAudioCard
           .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
@@ -197,6 +204,14 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           viewModelScope.launch { settingsTab.setIpvConnection(value) }
      }
 
+     fun setFragRetries(value: Int) {
+          viewModelScope.launch { settingsTab.setFragRetries(value) }
+     }
+
+     fun setRetries(value: Int) {
+          viewModelScope.launch { settingsTab.setRetries(value) }
+     }
+
      fun clearHistory() {
           viewModelScope.launch { settingsTab.clearHistory() }
      }
@@ -209,8 +224,12 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           settingsTab.restoreYtdlp(snapshot)
      }
 
-     fun clearArgs() {
-          viewModelScope.launch { settingsTab.clearArgs() }
+     suspend fun resetArguments(): DownloaderArgumentsSnapshot {
+          return settingsTab.resetArgs()
+     }
+
+     suspend fun restoreArguments(snapshot: DownloaderArgumentsSnapshot) {
+          settingsTab.restoreArgs(snapshot)
      }
 
      private val isUpdatingYtdlp = AtomicBoolean(false)

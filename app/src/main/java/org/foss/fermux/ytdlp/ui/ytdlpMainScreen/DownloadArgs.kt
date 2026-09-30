@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.SettingsBackupRestore
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -70,6 +71,30 @@ fun DownloaderArgs(navController: NavController) {
 
      val args = listOf(
           SettingListInfo(
+               title = "Reset Arguments",
+               description = "Reset the arguments to their original state",
+               icon = Icons.Default.SettingsBackupRestore,
+               onClick = { toggleExpansion(ExpandableOptionList.ResetArgs) },
+               trailingContent = {
+                    SettingsResetButton(
+                         expanded = expandedSetting == ExpandableOptionList.ResetArgs,
+                         settingText = "Reset Settings",
+                         onClick = {
+                              scope.launch {
+                                   val oldArg = downloaderSettingsViewModel.resetArguments()
+                                   val result = snackbarHostState.showSnackbar(
+                                        message = "Settings Reset",
+                                        actionLabel = "Undo",
+                                        duration = SnackbarDuration.Short
+                                   )
+                                   if (result == SnackbarResult.ActionPerformed) downloaderSettingsViewModel.restoreArguments(oldArg)
+                              }
+                         }
+                    )
+               },
+               position = TilePosition.TOP
+          ),
+          SettingListInfo(
                title = "Set Audio Format",
                description = "This option sets the format of the audio when downloading. current format is $audioFormats",
                image = R.drawable.audio_file,
@@ -87,7 +112,7 @@ fun DownloaderArgs(navController: NavController) {
                          onOptionSelected = { downloaderSettingsViewModel.setAudioFormat(it) }
                     )
                },
-               position = TilePosition.TOP
+               position = TilePosition.MIDDLE
           ),
           SettingListInfo(
                title = "Set Video Format",
@@ -177,28 +202,6 @@ fun DownloaderArgs(navController: NavController) {
                          trackSteps = 4,
                          trackRange = 0f..5f,
                          onOptionSelected = { downloaderSettingsViewModel.setSleepRequest(it) }
-                    )
-               },
-               position = TilePosition.MIDDLE
-          ),
-          SettingListInfo(
-               title = "Reset Arguments",
-               description = "Reset the arguments to their original state",
-               icon = Icons.Default.SettingsBackupRestore,
-               onClick = { toggleExpansion(ExpandableOptionList.ResetArgs) },
-               trailingContent = {
-                    SettingsResetButton(
-                         expanded = expandedSetting == ExpandableOptionList.ResetArgs,
-                         settingText = "Reset Downloader Settings",
-                         onClick = {
-                              downloaderSettingsViewModel.clearArgs()
-                              scope.launch {
-                                   snackbarHostState.showSnackbar(
-                                        message = "Setting is back to default",
-                                        duration = SnackbarDuration.Short
-                                   )
-                              }
-                         } //     TODO. Add a way to undo the actions
                     )
                },
                position = TilePosition.BOTTOM

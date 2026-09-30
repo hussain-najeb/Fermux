@@ -36,6 +36,8 @@ interface DownloaderSettingsRepo {
      val upToDate: Flow<Boolean>
      val ytdlpChannel: Flow<YtdlpChannel>
      val wifi: Flow<Connectivity>
+     val fragRetries: Flow<Int>
+     val retries: Flow<Int>
      val ipvConnection: Flow<IpvConnection>
      val jsonAudioCard: Flow<List<JSONHistoryCards>>
      val jsonVideoCard: Flow<List<JSONHistoryCards>>
@@ -61,12 +63,15 @@ interface DownloaderSettingsRepo {
      suspend fun setSponsorBlockCategories(value: Set<String>)
      suspend fun setUpToDate(value: Boolean)
      suspend fun setWifi(value: Connectivity)
+     suspend fun setFragRetries(value: Int)
+     suspend fun setRetries(value: Int)
      suspend fun setIpvConnection(value: IpvConnection)
      suspend fun setYtdlpChannel(value: YtdlpChannel)
      suspend fun setJSONAudio(value: JSONHistoryCards)
      suspend fun setJSONVideo(value: JSONHistoryCards)
      suspend fun clearHistory()
-     suspend fun clearArgs()
+     suspend fun resetArgs(): DownloaderArgumentsSnapshot
+     suspend fun restoreArgs(snapshot: DownloaderArgumentsSnapshot)
      suspend fun resetYtdlp(): DownloaderSettingsSnapshot
      suspend fun restoreYtdlp(snapshot: DownloaderSettingsSnapshot)
 }
@@ -89,6 +94,18 @@ data class DownloaderSettingsSnapshot(
      val wifi: String?
 )
 
+data class DownloaderArgumentsSnapshot(
+     val playlist: Boolean?,
+     val sleepRequest: Int?,
+     val fragRetries: Int?,
+     val retries: Int?,
+     val thumbnailFormat: String?,
+     val videoFormat: String?,
+     val audioFormat: String?,
+     val thumbnail: Boolean?,
+     val videoComp: Boolean?
+)
+
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings_tab")
 
 // ytdlp downloader tab.
@@ -96,15 +113,12 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings_
 // TODO. for args
 //  1- Add encoder options, like AV1/H.264/VP9
 //  2- retry count, just a slider like the sleep count
-//  3- add subtitles
 //  4- notification on failure
 //  5- Queue behavior: pause/resume whole queue, queue ordering, priority, auto-start queued downloads, maximum active jobs.
 
 
 // TODO. for settings.
 //  1- sequental downloads, one after the other, so one is done, the other is executed right after
-//  2- wifi only
-//  3- IPv4/IPv6 preference
 
 
 val DOWNLOAD_PATH = stringPreferencesKey("download_path")
@@ -131,6 +145,8 @@ val UP_TO_DATE = booleanPreferencesKey("up_to_date")
 val YTDLP_CHANNEL = stringPreferencesKey("ytdlp_channels")
 val WIFI = stringPreferencesKey("wifi")
 val IPV = stringPreferencesKey("ipv")
+val FRAG_RETRIES = intPreferencesKey("frag_retries")
+val RETRIES = intPreferencesKey("retries")
 val JSON_AUDIO_HISTORY = stringPreferencesKey("json_audio")
 val JSON_VIDEO_HISTORY = stringPreferencesKey("json_video")
 
@@ -141,6 +157,8 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
      override val downloadPath: Flow<String> = settingStore.data.map { preferences -> preferences[DOWNLOAD_PATH] ?: "" }
      override val downloaderBellState: Flow<Boolean> = settingStore.data.map { preferences -> preferences[DOWNLOADER_BELL_STATE] ?: false }
      override val sleepRequest: Flow<Int> = settingStore.data.map { preferences -> preferences[SLEEP_REQUEST_KEY] ?: 0 }
+     override val fragRetries: Flow<Int> = settingStore.data.map { preferences -> preferences[FRAG_RETRIES] ?: 10 }
+     override val retries: Flow<Int> = settingStore.data.map { preferences -> preferences[RETRIES] ?: 10 }
      override val embedThumbnail: Flow<Boolean> =
           settingStore.data.map { preferences -> preferences[EMBED_THUMBNAIL] ?: true }
      override val quickJS: Flow<Boolean> = settingStore.data.map { preferences -> preferences[QUICK_JS] ?: true }
@@ -236,6 +254,14 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
 
      override suspend fun setSleepRequest(value: Int) {
           settingStore.edit { preferences -> preferences[SLEEP_REQUEST_KEY] = value }
+     }
+
+     override suspend fun setFragRetries(value: Int) {
+          settingStore.edit { preferences -> preferences[FRAG_RETRIES] = value }
+     }
+
+     override suspend fun setRetries(value: Int) {
+          settingStore.edit { preferences -> preferences[RETRIES] = value }
      }
 
      override suspend fun setAria2cMode(value: Aria2cMode) {
@@ -354,17 +380,47 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
           }
      }
 
-     override suspend fun clearArgs() {
+     override suspend fun resetArgs(): DownloaderArgumentsSnapshot {
+          lateinit var snapshot: DownloaderArgumentsSnapshot
           settingStore.edit { preferences ->
-               preferences.remove(key = SLEEP_REQUEST_KEY)
-               preferences.remove(key =  EMBED_THUMBNAIL)
+               snapshot = DownloaderArgumentsSnapshot(
+                    playlist = preferences[PLAYLIST_STATUS],
+                    sleepRequest = preferences[SLEEP_REQUEST_KEY],
+                    thumbnail = preferences[EMBED_THUMBNAIL],
+                    thumbnailFormat = preferences[THUMBNAIL_FORMATS],
+                    videoFormat = preferences[VIDEO_FORMATS],
+                    audioFormat = preferences[AUDIO_FORMATS],
+                    videoComp = preferences[VIDEO_COMP],
+                    fragRetries = preferences[FRAG_RETRIES],
+                    retries = preferences[RETRIES],
+               )
                preferences.remove(key = PLAYLIST_STATUS)
+               preferences.remove(key = SLEEP_REQUEST_KEY)
+               preferences.remove(key = EMBED_THUMBNAIL)
                preferences.remove(key = THUMBNAIL_FORMATS)
-               preferences.remove(key = AUDIO_FORMATS)
-               preferences.remove(key = VIDEO_FORMATS)
                preferences.remove(key = VIDEO_COMP)
+               preferences.remove(key = VIDEO_FORMATS)
+               preferences.remove(key = AUDIO_FORMATS)
+               preferences.remove(key = RETRIES)
+               preferences.remove(key = FRAG_RETRIES)
           }
+          return snapshot
      }
+
+     override suspend fun restoreArgs(snapshot: DownloaderArgumentsSnapshot) {
+               settingStore.edit { preferences ->
+                    preferences.restore(key = PLAYLIST_STATUS, snapshot.playlist)
+                    preferences.restore(key = SLEEP_REQUEST_KEY, snapshot.sleepRequest)
+                    preferences.restore(key = EMBED_THUMBNAIL, snapshot.thumbnail)
+                    preferences.restore(key = THUMBNAIL_FORMATS, snapshot.thumbnailFormat)
+                    preferences.restore(key = VIDEO_COMP, snapshot.videoComp)
+                    preferences.restore(key = VIDEO_FORMATS, snapshot.videoFormat)
+                    preferences.restore(key = AUDIO_FORMATS, snapshot.audioFormat)
+                    preferences.restore(key = FRAG_RETRIES, snapshot.fragRetries)
+                    preferences.restore(key = RETRIES, snapshot.retries)
+               }
+     }
+
 
      override suspend fun resetYtdlp(): DownloaderSettingsSnapshot {
           lateinit var snapshot: DownloaderSettingsSnapshot

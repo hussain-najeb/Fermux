@@ -46,6 +46,7 @@ suspend fun downloaderLogic(
      sponsorBlock: Boolean = true,
      embedThumbnail: Boolean = true,
      sponsorBlockCategories: Set<String> = emptySet(),
+     fragRetry: Int,
      onUpdate: (Float, String) -> Unit
 ) {
 
@@ -75,6 +76,10 @@ suspend fun downloaderLogic(
 
      if (sleepRequest > 0) {
           request.addOption("--sleep-requests", sleepRequest)
+     }
+
+     if (frgaRetry) {
+          request.addOption("-R", argument = fragRetry)
      }
 
      if (sponsorBlock && sponsorBlockCategories.isNotEmpty()) {
