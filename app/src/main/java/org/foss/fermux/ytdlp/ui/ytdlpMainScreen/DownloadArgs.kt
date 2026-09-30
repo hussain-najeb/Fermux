@@ -42,6 +42,8 @@ private enum class ExpandableOptionList {
      AudioFormats,
      VideoFormats,
      SleepRequest,
+     Retries,
+     FragRetries,
      ResetArgs,
 } // TODO. Had a crazy idea, add a quick "anything" button. for downloads add teh quick download button which just copies your clipboard and downloads a video, add a setting entry that tells the user via a slider that edits the video res and audio qualtity
 // TODO. add under the downloads tab card in the home menu a Loading indicator straight horizontal bar, should be easy, like a surface with the loading indicator inside it for.... looking cool
@@ -60,6 +62,8 @@ fun DownloaderArgs(navController: NavController) {
      val audioFormats by downloaderSettingsViewModel.audioFormats.collectAsStateWithLifecycle()
      val thumbnailFormat by downloaderSettingsViewModel.thumbnailFormat.collectAsStateWithLifecycle()
      val videoComp by downloaderSettingsViewModel.videoComp.collectAsStateWithLifecycle()
+     val retries by downloaderSettingsViewModel.retries.collectAsStateWithLifecycle()
+     val fragRetries by downloaderSettingsViewModel.fragRetries.collectAsStateWithLifecycle()
 
      val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
@@ -191,6 +195,43 @@ fun DownloaderArgs(navController: NavController) {
                position = TilePosition.MIDDLE
           ),
           SettingListInfo(
+               title = "Set Retries",
+               description = "Set the amount of retries that ytdlp does when downloading",
+               image = R.drawable.retry,
+               onClick = { toggleExpansion(setting = ExpandableOptionList.Retries) },
+               trailingContent = {
+                    ModularSlider(
+                         expanded = expandedSetting == ExpandableOptionList.Retries,
+                         sliderKey = retries,
+                         trackSteps = 3,
+                         trackRange = 10f..50f,
+                         onOptionSelected = { downloaderSettingsViewModel.setRetries(it) }
+                    )
+               }
+          ),
+          SettingListInfo(
+               title = "Set Fragment Retries",
+               description = "Set the amount of retries when downloading a fragment when using hls or aria2",
+               image = FragImage(
+                    fragments = fragRetries,
+                    small = R.drawable.fragment_small,
+                    smallMid = R.drawable.fragment_midsmall,
+                    mid = R.drawable.fragment_mid,
+                    midLarge = R.drawable.fragment_midlarge,
+                    large = R.drawable.fragment_large
+               ),
+               onClick = { toggleExpansion(setting = ExpandableOptionList.FragRetries) },
+               trailingContent = {
+                    ModularSlider(
+                         expanded = expandedSetting == ExpandableOptionList.FragRetries,
+                         sliderKey = fragRetries,
+                         trackSteps = 3,
+                         trackRange = 10f..50f,
+                         onOptionSelected = { downloaderSettingsViewModel.setFragRetries(it) }
+                    )
+               }
+          ),
+          SettingListInfo(
                title = "Sleep Request Yt-dlp Flag",
                description = "Sleep request is a flag for delayed download between each request, each number represents a second",
                icon = if (sleepRequest > 0) Icons.Filled.Flag else Icons.Outlined.Flag,
@@ -236,3 +277,20 @@ fun DownloaderArgs(navController: NavController) {
                }
           }
      }
+
+@Composable
+fun FragImage(
+     fragments: Int,
+     small: Int,
+     smallMid: Int,
+     mid: Int,
+     midLarge: Int,
+     large: Int
+): Int = when (fragments) {
+     10 -> small
+     20 -> smallMid
+     30 -> mid
+     40 -> midLarge
+     50 -> large
+     else -> small
+}

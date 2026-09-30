@@ -123,7 +123,8 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
           val externalDownloaders = settingsTab.externalDownloaders.first()
           val quickJS = settingsTab.quickJS.first()
           val fingerprinting = settingsTab.fingerprinting.first()
-          val fragRetry = settingsTab.fragRetry.first()
+          val fragRetry = settingsTab.fragRetries.first()
+          val retries = settingsTab.retries.first()
 
 
           val audioName = inputData.getString("audio")
@@ -160,6 +161,7 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
                     sponsorBlock = sponsorBlock,
                     sponsorBlockCategories = sponsorBlockCategories,
                     fragRetry = fragRetry,
+                    retries = retries,
                     sleepRequest = sleepRequest,
                     onUpdate = { progress, line ->
 

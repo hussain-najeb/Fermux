@@ -47,6 +47,7 @@ suspend fun downloaderLogic(
      embedThumbnail: Boolean = true,
      sponsorBlockCategories: Set<String> = emptySet(),
      fragRetry: Int,
+     retries: Int,
      onUpdate: (Float, String) -> Unit
 ) {
 
@@ -78,8 +79,12 @@ suspend fun downloaderLogic(
           request.addOption("--sleep-requests", sleepRequest)
      }
 
-     if (frgaRetry) {
-          request.addOption("-R", argument = fragRetry)
+     if (fragRetry > 10) {
+          request.addOption("--fragment-retries", argument = fragRetry)
+     }
+
+     if (retries > 10) {
+          request.addOption("--retries", retries)
      }
 
      if (sponsorBlock && sponsorBlockCategories.isNotEmpty()) {
