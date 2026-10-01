@@ -13,7 +13,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
-import org.foss.fermux.components.buttons.UndoButton
+import org.foss.fermux.R
+import org.foss.fermux.components.buttons.SmallActionButton
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
@@ -54,8 +55,9 @@ fun AppSnackBar(
                          )
 
                          data.visuals.actionLabel?.let {
-                              UndoButton(
-                                   onClick = data::performAction
+                              SmallActionButton(
+                                   onClick = data::performAction,
+                                   image = R.drawable.undo
                               )
                          }
                     }

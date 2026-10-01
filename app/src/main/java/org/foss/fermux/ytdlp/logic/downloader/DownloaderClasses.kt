@@ -49,6 +49,16 @@ data class ScreenInfo(
      val enabled: Boolean
 )
 
+data class HistoryClass(
+     val thumbnail: String,
+     val title: String,
+     val uploader: String,
+     val format: String,
+     val duration: Int,
+     val resolution: String? = null,
+     val onClick: () -> Unit
+)
+
 /**
  * Enum class used to handle the types of media to get handled by the UI during download.
  */

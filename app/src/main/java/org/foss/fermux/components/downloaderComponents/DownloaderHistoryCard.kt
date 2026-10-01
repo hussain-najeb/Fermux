@@ -1,16 +1,14 @@
-package org.foss.fermux.components.generalComponents
+package org.foss.fermux.components.downloaderComponents
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -19,44 +17,37 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import org.foss.fermux.components.buttons.ImageButton
+import coil3.compose.AsyncImage
+import org.foss.fermux.R
+import org.foss.fermux.components.buttons.SmallActionButton
 import org.foss.fermux.ui.theme.FermuxColors
-import org.foss.fermux.utils.MainScreens
 
 @Composable
-fun MainAppCard(
-     modifier: Modifier,
-     iconModifier: Modifier? = null,
-     navController: NavController,
+fun HistoryCard(
+     thumbnail: String,
+     contentDescription: String,
      title: String,
-     description: String,
-     image: Int? = null,
-     buttonImage: Int? = null,
-     buttonOnClick: (() -> Unit)? = null,
-     trailingContent: @Composable (() -> Unit)? = null,
-     icon: ImageVector? = null,
-     route: MainScreens,
-     enabled: Boolean
+     uploader: String,
+     format: String,
+     resolution: String,
+     duration: Int
 ) {
+
+
      val interactionSource = remember { MutableInteractionSource() }
      val isPressed by interactionSource.collectIsPressedAsState()
 
-     val iconBackground by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.deepBlue else FermuxColors.fermuxComponents,
+     val iconColor by animateColorAsState(
+          targetValue = if (isPressed) FermuxColors.deepBlue else FermuxColors.fermuxWhiteColor,
           animationSpec = tween(delayMillis = 10),
-          label = "color of main icons page"
+          label = "color of main page"
      )
 
      val titleColor by animateColorAsState(
@@ -77,7 +68,7 @@ fun MainAppCard(
 
 
      Surface(
-          modifier = modifier
+          modifier = Modifier
           .fillMaxWidth()
                .graphicsLayer {
                     scaleY = size
@@ -87,39 +78,38 @@ fun MainAppCard(
                interactionSource = interactionSource,
                indication = null
           ) {
-               navController.navigate(route.route)
+               // TODO. Add the dialog here
           }
-          .height(100.dp),
+          .height(70.dp),
           color = descriptionBackground,
           shape = RoundedCornerShape(8.dp),
-          border = BorderStroke(1.5.dp, FermuxColors.something2)
+          border = BorderStroke(1.dp, FermuxColors.something2)
      ) {
           Row(
                modifier = Modifier.fillMaxWidth()
           ) {
                Surface(
                     modifier = Modifier
-                         .fillMaxHeight()
                          .align(Alignment.CenterVertically),
-                    shape = RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp),
-                    color = iconBackground
+                    shape = RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)
                ) {
-                    if (icon != null)
-                         Icon(
-                              imageVector = icon,
-                              contentDescription = null,
-                              modifier = Modifier.size(100.dp)
-                         )
-                    if (image != null)
-                         Image(
-                              painter = painterResource(id = image),
-                              contentDescription = null,
-                              colorFilter = ColorFilter.tint(FermuxColors.fermuxWhiteColor),
-                              contentScale = ContentScale.Crop,
-                              modifier = Modifier
-                                   .size(100.dp)
-                                   .align(Alignment.CenterVertically)
-                         )
+                    AsyncImage(
+                         model = thumbnail,
+                         contentDescription = contentDescription,
+                         modifier = Modifier.aspectRatio(16f / 9f)
+                    )
+//                    Text(
+//                         text = resolution,
+//                         fontSize = 14.sp,
+//                         fontStyle = FontStyle.Italic,
+//                         fontFamily = FontFamily.Default,
+//                         fontWeight = FontWeight.SemiBold,
+//                         minLines = 1,
+//                         maxLines = 2,
+//                         overflow = TextOverflow.Ellipsis,
+//                         color = titleColor,
+//                         modifier = Modifier.padding(2.dp)
+//                    )
                }
                Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -133,41 +123,52 @@ fun MainAppCard(
                          ) {
                               Text(
                                    text = title,
-                                   fontSize = 18.sp,
+                                   fontSize = 14.sp,
                                    fontStyle = FontStyle.Italic,
                                    fontFamily = FontFamily.Default,
                                    fontWeight = FontWeight.SemiBold,
                                    minLines = 1,
-                                   maxLines = 5,
-                                   overflow = TextOverflow.Ellipsis,
-                                   color = titleColor
-                              )
-                              Text(
-                                   text = description,
-                                   fontSize = 13.sp,
-                                   fontStyle = FontStyle.Normal,
-                                   fontFamily = FontFamily.Default,
-                                   fontWeight = FontWeight.Normal,
-                                   minLines = 1,
-                                   maxLines = 5,
+                                   maxLines = 2,
                                    overflow = TextOverflow.Ellipsis,
                                    color = titleColor,
-                                   modifier = Modifier.padding(top = 5.dp, end = 5.dp)
+                                   modifier = Modifier.padding(2.dp)
                               )
+                              Row(modifier = Modifier.padding(2.dp)) {
+                                   Text(
+                                        text = uploader,
+                                        fontSize = 11.sp,
+                                        fontStyle = FontStyle.Normal,
+                                        fontFamily = FontFamily.Default,
+                                        fontWeight = FontWeight.Normal,
+                                        minLines = 1,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        color = titleColor,
+                                        modifier = Modifier.padding(2.dp)
+                                   )
+                                   Text(
+                                        text = format,
+                                        fontSize = 11.sp,
+                                        fontStyle = FontStyle.Normal,
+                                        fontFamily = FontFamily.Default,
+                                        fontWeight = FontWeight.Normal,
+                                        minLines = 1,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        color = titleColor,
+                                        modifier = Modifier.padding(2.dp)
+                                   )
+                              }
                          }
-                         if (buttonImage != null && iconModifier != null)
-                         ImageButton(
+                         SmallActionButton(
                               modifier = Modifier
-                                   .align(Alignment.CenterVertically)
-                                   .padding(end = 10.dp),
-                              onClick = { buttonOnClick?.invoke() },
-                              image = buttonImage,
-                              imageModifier = iconModifier,
-                              enabled = enabled
+                                   .align(Alignment.Bottom)
+                                   .padding(5.dp),
+                              onClick = {  },
+                              image = R.drawable.info_circle
                          )
                     }
                }
           }
      }
-     trailingContent?.invoke()
 }

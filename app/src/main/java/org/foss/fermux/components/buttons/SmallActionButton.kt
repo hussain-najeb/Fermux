@@ -19,11 +19,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import org.foss.fermux.R
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
-fun UndoButton(
+fun SmallActionButton(
+     modifier: Modifier = Modifier,
+     image: Int,
      onClick: () -> Unit
 ) {
 
@@ -49,7 +50,7 @@ fun UndoButton(
      )
 
      OutlinedButton(
-          modifier = Modifier.graphicsLayer {
+          modifier = modifier.graphicsLayer {
                scaleX = buttonAnimation
                scaleY = buttonAnimation
           }
@@ -70,7 +71,7 @@ fun UndoButton(
           }
      ) {
           Icon(
-               painter = painterResource(id = R.drawable.undo),
+               painter = painterResource(id = image),
                tint = iconColor,
                contentDescription = "Undo",
           )
