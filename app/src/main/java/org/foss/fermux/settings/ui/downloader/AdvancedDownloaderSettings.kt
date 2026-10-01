@@ -19,6 +19,7 @@ import org.foss.fermux.components.settingsComponents.TileOptions
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.TilePosition
+import org.foss.fermux.settings.ui.downloader.ExpandableDownloaderSetting.*
 import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 import org.foss.fermux.ytdlp.logic.downloader.Connectivity
 import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
@@ -55,10 +56,10 @@ fun AdvancedDownloaderSettings(
           SettingListInfo(
                title = "Reset Downloader Settings",
                description = "Reset the downloader settings to there original state",
-               onClick = { toggleDownloader(ExpandableDownloaderSetting.ResetDownloader) },
+               onClick = { toggleDownloader(ResetDownloader) },
                trailingContent = {
                     SettingsResetButton(
-                         expanded = expandedSetting == ExpandableDownloaderSetting.ResetDownloader,
+                         expanded = expandedSetting == ResetDownloader,
                          settingText = "Reset Downloader Settings",
                          onClick = {
                               scope.launch {
@@ -93,10 +94,10 @@ fun AdvancedDownloaderSettings(
                title = "Connection Type",
                description = "Use different connections for the downloader",
                image = R.drawable.network,
-               onClick = { toggleDownloader(ExpandableDownloaderSetting.Wifi) },
+               onClick = { toggleDownloader(Wifi) },
                trailingContent = {
                     ModularSegmentedButtons(
-                         expanded = expandedSetting == ExpandableDownloaderSetting.Wifi,
+                         expanded = expandedSetting == Wifi,
                          optionsList = listOf(
                               Connectivity.Any to "Default",
                               Connectivity.Wifi to "Wifi",
@@ -112,10 +113,10 @@ fun AdvancedDownloaderSettings(
                title = "Change IPV settings",
                description = "Change the IPV connection type",
                image = R.drawable.ipv,
-               onClick = { toggleDownloader(ExpandableDownloaderSetting.Ipv) },
+               onClick = { toggleDownloader(Ipv) },
                trailingContent = {
                     ModularSegmentedButtons(
-                         expanded = expandedSetting == ExpandableDownloaderSetting.Ipv,
+                         expanded = expandedSetting == Ipv,
                          optionsList = listOf(
                               IpvConnection.Disabled to "Default",
                               IpvConnection.Ipv4 to "IPV4",
@@ -131,14 +132,14 @@ fun AdvancedDownloaderSettings(
                title = "SponsorBlock",
                description = "SponsorBlock API integration for cutting promotions when downloading",
                image = R.drawable.sponsorblock,
-               onClick = { toggleDownloader(ExpandableDownloaderSetting.SponsorBlock) },
+               onClick = { toggleDownloader(SponsorBlock) },
                content = {
                     SettingsSwitch(
                          checked = sponsorBlock, onCheckedChange = { downloaderSettingsViewModel.setSponsorBlock(it) })
                },
                trailingContent = {
                     SponsorBlockChoices(
-                         expanded = expandedSetting == ExpandableDownloaderSetting.SponsorBlock,
+                         expanded = expandedSetting == SponsorBlock,
                          downloaderSettingsViewModel = downloaderSettingsViewModel
                     )
                },
@@ -148,10 +149,10 @@ fun AdvancedDownloaderSettings(
                title = "Aria2c",
                description = "Use aria2 instead of the default. Use the Edge Case option when downloading on the highest setting in the downloader",
                image = R.drawable.layers,
-               onClick = { toggleDownloader(ExpandableDownloaderSetting.Aria2c) },
+               onClick = { toggleDownloader(Aria2c) },
                trailingContent = {
                     ModularSegmentedButtons(
-                         expanded = expandedSetting == ExpandableDownloaderSetting.Aria2c,
+                         expanded = expandedSetting == Aria2c,
                          enabled = aria2cEnabled,
                          optionsList = listOf(
                               Aria2cMode.Disabled to "Disabled",
@@ -168,10 +169,10 @@ fun AdvancedDownloaderSettings(
                title = "Yt-dlp HLS Options",
                description = "Check any option if Aria2 is having issues, especially with m3u8 since yt-dlp prefers it's own options over Aria2",
                image = R.drawable.hls_on,
-               onClick = { toggleDownloader(ExpandableDownloaderSetting.ExternalDownloader) },
+               onClick = { toggleDownloader(ExternalDownloader) },
                trailingContent = {
                     ModularSegmentedButtons(
-                         expanded = expandedSetting == ExpandableDownloaderSetting.ExternalDownloader,
+                         expanded = expandedSetting == ExternalDownloader,
                          enabled = externalDownloadersEnabled,
                          optionsList = listOf(
                               ExternalDownloaders.Disabled to "Disabled",

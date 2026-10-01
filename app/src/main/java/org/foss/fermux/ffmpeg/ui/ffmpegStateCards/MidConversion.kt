@@ -2,6 +2,7 @@ package org.foss.fermux.ffmpeg.ui.ffmpegStateCards
 
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
@@ -21,7 +22,7 @@ import org.foss.fermux.ui.theme.FermuxColors
 @Composable
 fun MidConversionProcess(
      @SuppressLint("ContextCastToActivity") ffmpegViewModel: FFmpegViewModel = viewModel(
-          viewModelStoreOwner = LocalContext.current as ComponentActivity
+          viewModelStoreOwner = LocalActivity.current as ComponentActivity
      )
 ) {
      val context = LocalContext.current

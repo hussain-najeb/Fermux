@@ -1,5 +1,6 @@
 package org.foss.fermux.ffmpeg.ui.ffmpegStateCards
 
+import android.content.ClipData
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -8,15 +9,17 @@ import androidx.compose.material.icons.rounded.Error
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.CancelButton
 import org.foss.fermux.components.buttons.ErrorCopyButton
@@ -33,8 +36,9 @@ fun FFmpegErrorMassage(
      onCancel: () -> Unit
 ) {
 
-     val clipboard = LocalClipboardManager.current
+     val clipboard = LocalClipboard.current
      val scrollState = rememberScrollState()
+     val scope = rememberCoroutineScope()
 
           Box(
                modifier = Modifier
@@ -81,7 +85,12 @@ fun FFmpegErrorMassage(
                ) {
                     ErrorCopyButton(
                          modifier = Modifier.align(Alignment.BottomEnd),
-                         onClick = { clipboard.setText(AnnotatedString(rawError)) }
+                         onClick = {
+                              scope.launch {
+                                   val clipData = ClipData.newPlainText("ffmpeg error", rawError)
+                                   clipboard.setClipEntry(ClipEntry(clipData))
+                              }
+                         }
                     )
                     ImageButton(
                          modifier = Modifier

@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.foss.fermux.storage.DataStoreFFmpegSettings
-import org.foss.fermux.storage.FFmpegSettingsRepo
-import org.foss.fermux.storage.FFmpegSettingsSnapshot
+import org.foss.fermux.dataStore.DataStoreFFmpegSettings
+import org.foss.fermux.dataStore.FFmpegSettingsRepo
+import org.foss.fermux.dataStore.FFmpegSettingsSnapshot
 import org.foss.fermux.utils.DebugLogDownloader
 
 

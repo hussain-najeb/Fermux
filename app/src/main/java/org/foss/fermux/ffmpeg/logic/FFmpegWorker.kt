@@ -17,9 +17,9 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import org.foss.fermux.R
+import org.foss.fermux.dataStore.DataStoreFFmpegSettings
+import org.foss.fermux.dataStore.FFmpegSettingsRepo
 import org.foss.fermux.settings.logic.buildDynamicFFmpegArgs
-import org.foss.fermux.storage.DataStoreFFmpegSettings
-import org.foss.fermux.storage.FFmpegSettingsRepo
 import org.foss.fermux.utils.DebugLogFFmpeg
 import org.foss.fermux.utils.copyFileToDownloads
 import java.io.BufferedReader

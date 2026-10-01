@@ -12,12 +12,13 @@ const val FERMUX_METADATA_MARKER = "FERMUX_METADATA_JSON:"
  */
 data class DownloadMetadata(
      val title: String,
-     val thumbnail: String,
-     val duration: Int,
+     val thumbnail: String?,
+     val duration: Int?,
      val uploader: String?,
      val size: Long?,
      val audioFormat: String?,
      val audioQuality: Double?,
+     val videoFormat: String,
      val resolution: String?
 )
 

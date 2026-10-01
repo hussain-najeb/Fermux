@@ -17,8 +17,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.job
 import kotlinx.coroutines.runBlocking
 import org.foss.fermux.R
-import org.foss.fermux.storage.DataStoreDownloaderSettings
-import org.foss.fermux.storage.JSONHistoryCards
+import org.foss.fermux.dataStore.DataStoreDownloaderSettings
+import org.foss.fermux.dataStore.JSONHistoryCards
 import org.foss.fermux.utils.DebugLogDownloader
 import kotlin.math.roundToInt
 
@@ -108,23 +108,23 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
           DebugLogDownloader.debugDownloader("DownloadWorker", "Started id=$taskId attempt=$runAttemptCount")
           Log.d("DownloadWorker", "Started id=$taskId attempt=$runAttemptCount")
 
-          val settingsTab = DataStoreDownloaderSettings(applicationContext)
-          val sponsorBlock = settingsTab.sponsorBlock.first()
-          val showDetails = settingsTab.ytdlpDetails.first()
-          val sponsorBlockCategories = settingsTab.sponsorBlockCategories.first()
-          val sleepRequest = settingsTab.sleepRequest.first()
-          val embedThumbnail = settingsTab.embedThumbnail.first()
-          val playlistStatus = settingsTab.playlistStatus.first()
-          val aria2cMode = settingsTab.aria2cMode.first()
-          val thumbnailFormat = settingsTab.thumbnailFormat.first()
-          val audioFormat = settingsTab.audioFormat.first()
-          val videoFormat = settingsTab.videoFormat.first()
-          val videoComp = settingsTab.videoComp.first()
-          val externalDownloaders = settingsTab.externalDownloaders.first()
-          val quickJS = settingsTab.quickJS.first()
-          val fingerprinting = settingsTab.fingerprinting.first()
-          val fragRetry = settingsTab.fragRetries.first()
-          val retries = settingsTab.retries.first()
+          val settings = DataStoreDownloaderSettings(applicationContext)
+          val sponsorBlock = settings.sponsorBlock.first()
+          val showDetails = settings.ytdlpDetails.first()
+          val sponsorBlockCategories = settings.sponsorBlockCategories.first()
+          val sleepRequest = settings.sleepRequest.first()
+          val embedThumbnail = settings.embedThumbnail.first()
+          val playlistStatus = settings.playlistStatus.first()
+          val aria2cMode = settings.aria2cMode.first()
+          val thumbnailFormat = settings.thumbnailFormat.first()
+          val audioFormat = settings.audioFormat.first()
+          val videoFormat = settings.videoFormat.first()
+          val videoComp = settings.videoComp.first()
+          val externalDownloaders = settings.externalDownloaders.first()
+          val quickJS = settings.quickJS.first()
+          val fingerprinting = settings.fingerprinting.first()
+          val fragRetry = settings.fragRetries.first()
+          val retries = settings.retries.first()
 
 
           val audioName = inputData.getString("audio")
@@ -220,8 +220,8 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
                               System.currentTimeMillis()
                          )
                     }
-                    if (settingsTab.videoHistory.first() && video != null) settingsTab.setJSONVideo(history)
-                    if (settingsTab.audioHistory.first() && audio != null) settingsTab.setJSONAudio(history)
+                    if (settings.videoHistory.first() && video != null) settings.setJSONVideo(history)
+                    if (settings.audioHistory.first() && audio != null) settings.setJSONAudio(history)
 
                } catch (e: Exception) {
                     DebugLogDownloader.errorDownloader("fermux", "failed to save audio JSON", e)

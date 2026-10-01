@@ -4,9 +4,9 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import org.foss.fermux.storage.DEFAULT_SPONSOR_BLOCK_CATEGORIES
-import org.foss.fermux.storage.DataStoreDownloaderSettings
-import org.foss.fermux.storage.JSONHistoryCards
+import org.foss.fermux.dataStore.DEFAULT_SPONSOR_BLOCK_CATEGORIES
+import org.foss.fermux.dataStore.DataStoreDownloaderSettings
+import org.foss.fermux.dataStore.JSONHistoryCards
 import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 import org.foss.fermux.ytdlp.logic.downloader.Connectivity
 import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders

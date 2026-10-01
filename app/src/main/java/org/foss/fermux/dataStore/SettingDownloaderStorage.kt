@@ -1,6 +1,4 @@
-@file:Suppress("SpellCheckingInspection")
-
-package org.foss.fermux.storage
+package org.foss.fermux.dataStore
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -112,14 +110,13 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings_
 
 // TODO. for args
 //  1- Add encoder options, like AV1/H.264/VP9
-//  2- retry count, just a slider like the sleep count
 //  4- notification on failure
 //  5- Queue behavior: pause/resume whole queue, queue ordering, priority, auto-start queued downloads, maximum active jobs.
 
 
 // TODO. for settings.
 //  1- sequental downloads, one after the other, so one is done, the other is executed right after
-
+//  2- Add a button to remove all cache in the app's private folder
 
 val DOWNLOAD_PATH = stringPreferencesKey("download_path")
 val DOWNLOADER_BELL_STATE = booleanPreferencesKey("bellState")

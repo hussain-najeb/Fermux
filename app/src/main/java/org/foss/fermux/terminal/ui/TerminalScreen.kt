@@ -1,4 +1,4 @@
-package org.foss.fermux.terminal.main.ui
+package org.foss.fermux.terminal.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.sp
 import org.foss.fermux.terminal.logic.TerminalLine
 import org.foss.fermux.terminal.logic.TermuxOutput
 import org.foss.fermux.terminal.logic.myTermuxCommands
-import org.foss.fermux.terminal.ui.ArrowKeyMovement
 import org.foss.fermux.ui.theme.JetbrainsMono
 
 @Composable

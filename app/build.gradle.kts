@@ -2,8 +2,9 @@ plugins {
      alias(libs.plugins.android.application)
      alias(libs.plugins.kotlin.compose)
      alias(libs.plugins.kotlin.serialization)
+     alias(libs.plugins.ksp)
+     }
 
-}
 
 android {
      namespace = "org.foss.fermux"
@@ -65,6 +66,9 @@ android {
 }
 
 dependencies {
+     implementation(libs.androidx.room.runtime)
+     implementation(libs.androidx.room.ktx)
+     ksp(libs.androidx.room.compiler)
      implementation(libs.coil)
      implementation(libs.coil.video)
      implementation(libs.androidx.navigation.compose)
@@ -85,9 +89,9 @@ dependencies {
      implementation(libs.androidx.foundation)
      implementation(libs.androidx.work.runtime.ktx)
      implementation(libs.androidx.foundation.layout)
-     implementation(libs.androidx.room.ktx)
      implementation(libs.androidx.media3.exoplayer)
      implementation(libs.androidx.compose.animation)
+     implementation(libs.androidx.material3)
      testImplementation(libs.junit.jupiter)
      testRuntimeOnly(libs.junit.platform.launcher)
      testImplementation(libs.kotlinx.coroutines.test)

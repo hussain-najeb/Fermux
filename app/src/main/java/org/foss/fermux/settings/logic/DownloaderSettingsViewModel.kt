@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.foss.fermux.storage.DataStoreDownloaderSettings
-import org.foss.fermux.storage.DownloaderArgumentsSnapshot
-import org.foss.fermux.storage.DownloaderSettingsSnapshot
-import org.foss.fermux.storage.JSONHistoryCards
+import org.foss.fermux.dataStore.DataStoreDownloaderSettings
+import org.foss.fermux.dataStore.DownloaderArgumentsSnapshot
+import org.foss.fermux.dataStore.DownloaderSettingsSnapshot
+import org.foss.fermux.dataStore.JSONHistoryCards
 import org.foss.fermux.utils.DebugLogDownloader
 import org.foss.fermux.ytdlp.logic.downloader.*
 import java.util.concurrent.atomic.AtomicBoolean

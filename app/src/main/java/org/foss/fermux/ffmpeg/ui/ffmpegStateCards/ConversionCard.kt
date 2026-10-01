@@ -1,4 +1,3 @@
-@file:Suppress("LocalVariableName")
 
 package org.foss.fermux.ffmpeg.ui.ffmpegStateCards
 
@@ -40,9 +39,7 @@ fun ConversionCard(
      pickedFileUri: Uri?,
      navController: NavController
 ) {
-
      val ffmpegViewModel: FFmpegViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
-
      val context = LocalContext.current
 
 

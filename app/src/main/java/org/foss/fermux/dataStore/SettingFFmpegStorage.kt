@@ -1,4 +1,4 @@
-package org.foss.fermux.storage
+package org.foss.fermux.dataStore
 
 import android.content.Context
 import androidx.datastore.core.DataStore

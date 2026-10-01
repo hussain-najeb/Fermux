@@ -66,7 +66,10 @@ fun parseYtdlpMetadataJson(json: String): DownloadMetadata? {
                .takeIf { !it.isNaN() && it > 0 }
           val audioFormat = obj.optString("ext")
 
+          val videoFormat = obj.optString("ext")
+
           DownloadMetadata(
+
                title = optStringOrNull("title") ?: "Unknown title",
                thumbnail = optStringOrNull("thumbnail") ?: "",
                duration = obj.optInt("duration", 0),
@@ -74,6 +77,7 @@ fun parseYtdlpMetadataJson(json: String): DownloadMetadata? {
                size = approxSize,
                audioFormat = audioFormat,
                audioQuality = audioQuality,
+               videoFormat = videoFormat,
                resolution = optStringOrNull("resolution")
           )
      } catch (e: Exception) {

@@ -1,5 +1,3 @@
-@file:Suppress("LocalVariableName")
-
 package org.foss.fermux.ffmpeg.ui
 
 import androidx.compose.animation.*

@@ -158,12 +158,14 @@ private fun FinishedCardContent(
                                         modifier = Modifier.padding(3.dp)
                                    )
                               }
-                              Text(
-                                   text = videoTime(seconds = metadata.duration),
-                                   color = FermuxColors.fermuxWhiteColor,
-                                   fontSize = 16.sp,
-                                   modifier = Modifier.padding(3.dp)
-                              )
+                              metadata.duration?.let {
+                                   Text(
+                                        text = videoTime(seconds = it),
+                                        color = FermuxColors.fermuxWhiteColor,
+                                        fontSize = 16.sp,
+                                        modifier = Modifier.padding(3.dp)
+                                   )
+                              }
                          }
                     }
                }
@@ -220,6 +222,7 @@ private fun FinishedCardContent(
                                              .padding(top = 7.dp)
                                    )
                               }
+                              metadata.videoFormat // TODO. Add this
                          }
                     }
                }
@@ -258,6 +261,7 @@ fun Test3() {
                     uploader = "Example uploader, Youtube Channel, Or Null",
                     size = 35345455,
                     audioFormat = "Mp3",
+                    videoFormat = "",
                     audioQuality = 125.6,
                     resolution = "720p"
                ),

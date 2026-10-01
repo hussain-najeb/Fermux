@@ -15,7 +15,7 @@ import org.foss.fermux.settings.ui.SettingsScreen
 import org.foss.fermux.settings.ui.aboutPage.LibraryPage
 import org.foss.fermux.settings.ui.converter.SimpleFFmpegSetting
 import org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage
-import org.foss.fermux.terminal.main.ui.FermuxTerminalScreen
+import org.foss.fermux.terminal.ui.FermuxTerminalScreen
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloadContent
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloaderArgs
 
