@@ -175,14 +175,15 @@ class DownloaderViewModel : ViewModel() {
 
                                         state = DownloadStatus.Completed(
                                              metadata ?: DownloadMetadata(
+                                                  mediaId = "",
+                                                  extractor = "",
                                                   title = "Download complete",
-                                                  thumbnail = "",
+                                                  thumbnail = null,
                                                   duration = 0,
                                                   uploader = null,
-                                                  audioFormat = null,
                                                   audioQuality = null,
                                                   size = null,
-                                                  videoFormat = "",
+                                                  format = "",
                                                   resolution = null
                                              )
                                         )

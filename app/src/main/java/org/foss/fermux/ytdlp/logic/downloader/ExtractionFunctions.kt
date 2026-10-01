@@ -1,10 +1,12 @@
 package org.foss.fermux.ytdlp.logic.downloader
 
 import android.content.Context
+import android.util.Log
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
+import org.foss.fermux.utils.CopiedFile
 import org.foss.fermux.utils.DebugLogDownloader
 import org.foss.fermux.utils.fileCopyFilter
 import org.json.JSONObject
@@ -22,7 +24,7 @@ suspend fun execution(
      taskId: String,
      onUpdate: (Float, String) -> Unit,
      context: Context,
-) {
+): List<CopiedFile> {
      val response = runInterruptible(Dispatchers.IO) {
           try {
                YoutubeDL.getInstance().execute(request, taskId) { progress, _, line ->
@@ -41,13 +43,14 @@ suspend fun execution(
           }
      }
 
-     fileCopyFilter(context, downloadDir, subfolderName = "downloader")
+     val copied = fileCopyFilter(context, downloadDir, subfolderName = "downloader")
 
      response?.let {
           DebugLogDownloader.debugDownloader("fermux", "exit=${it.exitCode}")
           DebugLogDownloader.debugDownloader("fermux", "out=${it.out}")
           DebugLogDownloader.debugDownloader("fermux", "err=${it.err}")
      }
+     return copied
 }
 
 fun parseYtdlpMetadataJson(json: String): DownloadMetadata? {
@@ -64,24 +67,32 @@ fun parseYtdlpMetadataJson(json: String): DownloadMetadata? {
                ?.toLong()
           val audioQuality = obj.optDouble("abr")
                .takeIf { !it.isNaN() && it > 0 }
-          val audioFormat = obj.optString("ext")
+          val format = optStringOrNull("ext")
+          val mediaId = optStringOrNull("id") ?: return null
+          val extractorName = optStringOrNull("extractor_key") ?: "Unknown"
+          val title = optStringOrNull("title") ?: "Unknown title"
+          val thumbnail = optStringOrNull("thumbnail")
+          val duration = obj.optDouble("duration").takeIf { !it.isNaN() }?.toInt()
+          val uploader =  optStringOrNull("uploader")
+          val resolution = optStringOrNull("resolution")
 
-          val videoFormat = obj.optString("ext")
+
 
           DownloadMetadata(
-
-               title = optStringOrNull("title") ?: "Unknown title",
-               thumbnail = optStringOrNull("thumbnail") ?: "",
-               duration = obj.optInt("duration", 0),
-               uploader = optStringOrNull("uploader"),
+               mediaId = mediaId,
+               extractor = extractorName,
+               title = title,
+               thumbnail = thumbnail,
+               duration = duration,
+               uploader = uploader,
                size = approxSize,
-               audioFormat = audioFormat,
+               format = format ?: "",
                audioQuality = audioQuality,
-               videoFormat = videoFormat,
-               resolution = optStringOrNull("resolution")
+               resolution = resolution
           )
      } catch (e: Exception) {
-          DebugLogDownloader.errorDownloader("downloader JSON metadata parsing", "JSON metadata failed to be parsed in some way", e)
+          DebugLogDownloader.errorDownloader("downloader JSON metadata parsing", "JSON metadata failed to be parsed", e)
+          Log.e("downloader JSON metadata parsing", "JSON metadata failed to be parsed", e)
           null
      }
 }

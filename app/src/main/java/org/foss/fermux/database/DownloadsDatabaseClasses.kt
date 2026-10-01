@@ -7,7 +7,9 @@ import androidx.room.Entity
      primaryKeys = ["extractor", "videoId"]
 )
 data class DownloadsDatabaseField(
-     val extractor: ,
+     val extractor: String,
+     val videoId: String,
+     val fileUri: String,
      val title: String? = null,
      val uploader: String? = null,
      val thumbnail: String? = null,

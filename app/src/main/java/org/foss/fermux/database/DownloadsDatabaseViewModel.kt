@@ -16,9 +16,9 @@ class DownloadsDatabaseViewModel(
      private val _downloadSorter = _sorting.flatMapLatest { sorter ->
           when(sorter) {
                DownloadsSorter.Duration -> dao.getDownloadsOrderedByDuration()
-               DownloadsSorter.Size -> dao.getDownloadOrderedBySize()
+               DownloadsSorter.Size -> dao.getDownloadsOrderedBySize()
                DownloadsSorter.Title -> dao.getDownloadsOrderedByTitle()
-               DownloadsSorter.Extractor -> dao.
+               DownloadsSorter.Extractor -> dao.getDownloadsOrderedByExtractor()
           }
      }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 

@@ -200,7 +200,7 @@ private fun FinishedCardContent(
                               metadata.resolution?.let {
                                    Text(
                                         text = if (it.equals("audio only", ignoreCase = true))
-                                             "${metadata.audioFormat}" else it,
+                                             metadata.format else it,
                                         fontFamily = FontFamily.Default,
                                         fontSize = 15.sp,
                                         color = FermuxColors.fermuxOffWhiteTextColor,
@@ -222,7 +222,7 @@ private fun FinishedCardContent(
                                              .padding(top = 7.dp)
                                    )
                               }
-                              metadata.videoFormat // TODO. Add this
+                              //metadata.format // TODO. Add this
                          }
                     }
                }
@@ -255,13 +255,14 @@ fun Test3() {
 
           FinishedCardContent(
                metadata = DownloadMetadata(
+                    mediaId = "",
+                    extractor = "",
                     title = "Example Video Title, TEST....TEST. This is a test",
                     thumbnail = "/home/Hussain/Downloads/01_HistoryUniverse_Front_5aa6c115-6004-4508-9d43-41752d9cf891.jpg",
                     duration = 578,
                     uploader = "Example uploader, Youtube Channel, Or Null",
                     size = 35345455,
-                    audioFormat = "Mp3",
-                    videoFormat = "",
+                    format = "",
                     audioQuality = 125.6,
                     resolution = "720p"
                ),

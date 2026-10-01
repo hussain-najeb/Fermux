@@ -3,6 +3,8 @@ package org.foss.fermux.ytdlp.logic.downloader
 import android.content.Context
 import android.os.Environment
 import com.yausername.youtubedl_android.YoutubeDLRequest
+import org.foss.fermux.utils.CopiedFile
+import java.io.File
 
 /*
  * Todo:
@@ -49,10 +51,11 @@ suspend fun downloaderLogic(
      fragRetry: Int,
      retries: Int,
      onUpdate: (Float, String) -> Unit
-) {
+): List<CopiedFile> {
 
-     val downloadDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-     val outputPath = "${downloadDir?.absolutePath}/%(title)s.%(ext)s"
+     val baseDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) ?: context.filesDir
+     val downloadDir = File(baseDir, taskId).apply { mkdirs() }
+     val outputPath = "${downloadDir.absolutePath}/%(title)s.%(ext)s"
      val request = YoutubeDLRequest(url)
 
      if (quickJs) {
@@ -71,7 +74,7 @@ suspend fun downloaderLogic(
      request.addOption("--no-simulate")
      request.addOption(
           "--print",
-          "before_dl:$FERMUX_METADATA_MARKER%(.{title,thumbnail,duration,uploader,filesize,filesize_approx,resolution,abr,ext})j"
+          "before_dl:$FERMUX_METADATA_MARKER%(.{id,extractor_key,title,thumbnail,duration,uploader,filesize,filesize_approx,resolution,abr,ext})j"
      )
      request.addOption("--progress")
 
@@ -158,5 +161,13 @@ suspend fun downloaderLogic(
      request.addOption("--embed-metadata")
      request.addOption("-o", outputPath)
 
-     execution(downloadDir, request, taskId, onUpdate, context)
+     try {
+
+          return execution(downloadDir, request, taskId, onUpdate, context)
+
+     } finally {
+
+          downloadDir.deleteRecursively()
+
+     }
 }

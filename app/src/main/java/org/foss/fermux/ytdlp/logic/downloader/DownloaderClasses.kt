@@ -11,14 +11,15 @@ const val FERMUX_METADATA_MARKER = "FERMUX_METADATA_JSON:"
  * This class is used as a template class for the metadata shape that later gets used in the [org.foss.fermux.ytdlp.ui.historyPage.HistoryCards] and information on the [org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates.FinishedCard] during download.
  */
 data class DownloadMetadata(
+     val mediaId: String,
+     val extractor: String,
      val title: String,
      val thumbnail: String?,
      val duration: Int?,
      val uploader: String?,
      val size: Long?,
-     val audioFormat: String?,
      val audioQuality: Double?,
-     val videoFormat: String,
+     val format: String,
      val resolution: String?
 )
 

@@ -1,23 +1,19 @@
 package org.foss.fermux.utils
 
 import android.content.Context
-import android.os.Environment
 import java.io.File
+
+private val IGNORED_EXTENSIONS = setOf("part", "ytdl", "json", "jpg", "jpeg", "png", "webp", "vtt", "srt")
 
 suspend fun fileCopyFilter(
      context: Context,
      privateDirectory: File?,
      subfolderName: String,
-) {
-     val publicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-     val fermuxPublicDirectory = File(publicDirectory, "fermux/$subfolderName")
-     val fermuxListfiles = fermuxPublicDirectory.listFiles()?.map { it.name }?.toSet() ?: emptySet()
-
-     privateDirectory?.listFiles()?.forEach { file ->
-          if (file.name !in fermuxListfiles) {
-               copyFileToDownloads(context, file, file.name, subFolder = "fermux/$subfolderName")
-          } else {
-               file.delete()
-          }
+): List<CopiedFile> = privateDirectory?.listFiles()
+     .orEmpty()
+     .filter {
+          it.isFile && it.extension.lowercase() !in IGNORED_EXTENSIONS
      }
-}
+     .map {
+          copyFileToDownloads(context, it, it.name, "fermux/$subfolderName")
+     }

@@ -9,6 +9,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.core.net.toUri
 import androidx.work.*
 import com.yausername.youtubedl_android.YoutubeDL
 import kotlinx.coroutines.CancellationException
@@ -19,6 +20,8 @@ import kotlinx.coroutines.runBlocking
 import org.foss.fermux.R
 import org.foss.fermux.dataStore.DataStoreDownloaderSettings
 import org.foss.fermux.dataStore.JSONHistoryCards
+import org.foss.fermux.database.DownloaderDb
+import org.foss.fermux.database.DownloadsDatabaseField
 import org.foss.fermux.utils.DebugLogDownloader
 import kotlin.math.roundToInt
 
@@ -141,7 +144,7 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
           var capturedMetadataJson: String? = null
 
           return try {
-               downloaderLogic(
+               val downloaderInstance = downloaderLogic(
                     context = applicationContext,
                     url = url,
                     taskId = taskId,
@@ -222,6 +225,38 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
                     }
                     if (settings.videoHistory.first() && video != null) settings.setJSONVideo(history)
                     if (settings.audioHistory.first() && audio != null) settings.setJSONAudio(history)
+
+                    if (metadata != null && downloaderInstance.size == 1) {
+
+                         val dao = DownloaderDb.getDatabase(applicationContext).downloadsDao
+                         val instance = downloaderInstance.single()
+                         val oldDownloaderInstance = dao.getSimilarInstance(metadata.extractor, metadata.mediaId)
+
+                         try {
+                              dao.upsertDownload(
+                                   DownloadsDatabaseField(
+                                        extractor = metadata.extractor,
+                                        videoId = metadata.mediaId,
+                                        fileUri = instance.uri.toString(),
+                                        title = metadata.title,
+                                        uploader = metadata.uploader,
+                                        thumbnail = metadata.thumbnail,
+                                        duration = metadata.duration,
+                                        size = instance.sizeBytes,
+                                        format = instance.extension
+                                   )
+                              )
+                              oldDownloaderInstance?.let {
+                                   applicationContext.contentResolver.delete(it.fileUri.toUri(), null, null)
+                              }
+
+                         } catch (e: Exception) {
+                              Log.e("DownloadWorker", "Failed to save download to database", e)
+                              DebugLogDownloader.errorDownloader("DownloadWorker", "Failed to save download to database", e)
+                         }
+
+                    }
+
 
                } catch (e: Exception) {
                     DebugLogDownloader.errorDownloader("fermux", "failed to save audio JSON", e)
