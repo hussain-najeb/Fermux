@@ -36,7 +36,7 @@ fun BackButton(
      var isClickable by remember { mutableStateOf(true) }
 
      val iconColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.fermuxActiveIcon else FermuxColors.fermuxWhiteColor,
+          targetValue = if (isPressed) FermuxColors.fermuxActiveIcon else FermuxColors.white,
           animationSpec = tween(durationMillis = 150),
           label = "Fermux Icon Colors"
      )

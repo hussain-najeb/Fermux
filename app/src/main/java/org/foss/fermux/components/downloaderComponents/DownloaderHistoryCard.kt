@@ -58,7 +58,7 @@ fun HistoryCard(
      var expanded by remember { mutableStateOf(false) }
 
      val titleColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.fermuxOffWhiteTextColor else FermuxColors.fermuxWhiteColor,
+          targetValue = if (isPressed) FermuxColors.fermuxOffWhiteTextColor else FermuxColors.white,
           label = "color of main title of main page"
      )
 
@@ -132,7 +132,7 @@ fun HistoryCard(
                               if (resolution != null) {
                                    Text(
                                         text = resolutionFormatting(resolution),
-                                        color = FermuxColors.fermuxWhiteColor,
+                                        color = FermuxColors.white,
                                         fontStyle = FontStyle.Normal,
                                         fontFamily = FontFamily.Default,
                                         fontSize = 12.sp,
@@ -153,7 +153,7 @@ fun HistoryCard(
                               if (duration != null) {
                                    Text(
                                         text = videoTime(duration),
-                                        color = FermuxColors.fermuxWhiteColor,
+                                        color = FermuxColors.white,
                                         fontStyle = FontStyle.Normal,
                                         fontFamily = FontFamily.Default,
                                         fontSize = 12.sp,

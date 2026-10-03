@@ -41,7 +41,7 @@ fun AppSnackBar(
                          .border(1.dp, FermuxColors.fermuxGenericBorder, RoundedCornerShape(8.dp)),
                     shape = RoundedCornerShape(8.dp),
                     containerColor = FermuxColors.something3,
-                    contentColor = FermuxColors.fermuxWhiteColor
+                    contentColor = FermuxColors.white
                ) {
                     Row(
                          modifier = Modifier.fillMaxWidth(),
@@ -88,7 +88,7 @@ fun test11() {
           ) {
                Text(
                     text = if (settingsReset) "Settings are at their defaults" else "Settings are customized",
-                    color = FermuxColors.fermuxWhiteColor
+                    color = FermuxColors.white
                )
                Button(
                     enabled = !settingsReset,

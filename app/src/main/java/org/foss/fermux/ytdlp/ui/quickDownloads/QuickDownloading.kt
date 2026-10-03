@@ -36,7 +36,7 @@ fun QuickDownloading(
                               .fillMaxWidth()
                               .padding(start = 8.dp, end = 65.dp),
                          color = FermuxColors.deepBlue,
-                         trackColor = FermuxColors.fermuxWhiteColor,
+                         trackColor = FermuxColors.white,
                          strokeCap = StrokeCap.Round
                     )
                }

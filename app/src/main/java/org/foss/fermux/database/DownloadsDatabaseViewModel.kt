@@ -24,7 +24,6 @@ class DownloadsDatabaseViewModel(
      }
 
      private val _sorting = MutableStateFlow(DownloadsSorter.Title)
-     private val _isAscending = MutableStateFlow(true)
      private val _state = MutableStateFlow(DownloadsStateManager())
      @OptIn(ExperimentalCoroutinesApi::class)
      private val _downloadSorter = _sorting.flatMapLatest { sorter ->
@@ -35,11 +34,9 @@ class DownloadsDatabaseViewModel(
           }
      }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
-     val state = combine(_state, _sorting, _downloadSorter, _isAscending) { state, sortType, downloadSorter, isAscending ->
+     val state = combine(_state, _sorting, _downloadSorter) { state, sortType, downloadSorter ->
            state.copy(
-                sorting = sortType,
-                isAscending = isAscending,
-                downloads = if (isAscending) downloadSorter else downloadSorter.reversed(),
+                sorting = sortType, downloads = downloadSorter
            )
      }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(2500), DownloadsStateManager())
 
@@ -61,11 +58,5 @@ class DownloadsDatabaseViewModel(
      fun sortBy(sorter: DownloadsSorter) {
           _sorting.value = sorter
      }
-
-     fun toggleAscending() {
-          _isAscending.update { !it }
-     }
-
-
 
 }

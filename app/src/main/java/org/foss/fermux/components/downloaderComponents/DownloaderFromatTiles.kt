@@ -42,7 +42,7 @@ fun FormatTiles(
           targetValue = if (isPressed) FermuxColors.fermuxActiveButton else FermuxColors.fermuxInActiveButton
      )
      val contentColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.fermuxActiveIcon else FermuxColors.fermuxWhiteColor,
+          targetValue = if (isPressed) FermuxColors.fermuxActiveIcon else FermuxColors.white,
           animationSpec = tween(400),
           label = "Fermux Container Colors",
      )

@@ -3,27 +3,21 @@ package org.foss.fermux.ytdlp.ui.historyPage
 import android.content.ClipData
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -31,11 +25,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.ImageButton
+import org.foss.fermux.components.buttons.FilterButton
 import org.foss.fermux.components.downloaderComponents.HistoryCard
 import org.foss.fermux.components.generalComponents.AppSnackBar
 import org.foss.fermux.components.generalComponents.MediumTopBarScaffold
 import org.foss.fermux.database.DownloadsDatabaseViewModel
+import org.foss.fermux.database.DownloadsSorter
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
@@ -44,23 +39,18 @@ fun History(
      modifier: Modifier = Modifier
 ) {
      val context = LocalContext.current
-     val downloadsDatabaseViewModel: DownloadsDatabaseViewModel = viewModel(factory = DownloadsDatabaseViewModel.factory(context))
+     val downloadsDatabaseViewModel: DownloadsDatabaseViewModel =
+          viewModel(factory = DownloadsDatabaseViewModel.factory(context))
      val state by downloadsDatabaseViewModel.state.collectAsStateWithLifecycle()
-
-
      val snackbarHostState = remember { SnackbarHostState() }
-     val interactionSource = remember { MutableInteractionSource() }
-     val isPressed by interactionSource.collectIsPressedAsState()
-     val containerColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.deepDarkBlue else FermuxColors.darkBlue,
-          animationSpec = tween()
-     )
-
      val scope = rememberCoroutineScope()
      val clipboard = LocalClipboard.current
 
+
      var expanded by remember { mutableStateOf(false) }
      var cardKey by remember { mutableStateOf<String?>(null) }
+     var titleImage by remember { mutableStateOf(false) }
+     var databaseImage by remember { mutableStateOf(false) }
 
 
 
@@ -91,73 +81,66 @@ fun History(
                                    .padding(5.dp),
                               contentAlignment = Alignment.TopStart
                          ) {
-//                              val surfaceColor by animateColorAsState(
-//                                   targetValue = if (expanded) containerColor else Color.Transparent,
-//                                   label = "color"
-//                              )
-
-                              Surface(
-                                   modifier = Modifier
-                                        .padding(5.dp)
-                                        .animateContentSize(),
-                                   shape = RoundedCornerShape(8.dp),
-                                   color = Color.Transparent,
+                              Row(
+                                   modifier = Modifier.wrapContentSize(),
                               ) {
-                                   Row(
-                                        modifier = Modifier.wrapContentSize(),
-                                        verticalAlignment = Alignment.CenterVertically
+                                   FilterButton(
+                                        image = R.drawable.filter,
+                                        onClick = { expanded = !expanded }
+                                   )
+                                   AnimatedVisibility(
+                                        visible = expanded,
+                                        enter = expandHorizontally(animationSpec = tween(250)) + fadeIn(initialAlpha = 0.5f),
+                                        exit = shrinkHorizontally(animationSpec = tween(200)) + fadeOut(targetAlpha = 0.6f)
                                    ) {
-                                        ImageButton(
-                                             modifier = Modifier.padding(2.dp),
-                                             image = R.drawable.filter,
-                                             onClick = { expanded = !expanded }
-                                        )
-                                        AnimatedVisibility(
-                                             visible = expanded,
-                                             enter = expandHorizontally(animationSpec = tween(250)) + fadeIn(initialAlpha = 0.5f),
-                                             exit = shrinkHorizontally(animationSpec = tween(200)) + fadeOut(targetAlpha = 0.6f)
+                                        Row(
+                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
-                                             Row(
-                                                  modifier = Modifier.padding(2.dp),
-                                                  verticalAlignment = Alignment.CenterVertically
-                                             ) {
-                                                  ImageButton(
-                                                       modifier = Modifier.padding(2.dp),
-                                                       image = if (state.isAscending) R.drawable.sort_descending else R.drawable.sort_ascending,
-                                                       onClick = {
-
-                                                       }
-                                                  )
-                                                  ImageButton(
-                                                       modifier = Modifier.padding(2.dp),
-                                                       image = if (state.isAscending) R.drawable.database_fill else R.drawable.database_empty,
-                                                       onClick = {
-
-                                                       }
-                                                  )
-                                                  ImageButton(
-                                                       modifier = Modifier.padding(2.dp),
-                                                       image = R.drawable.extractor,
-                                                       onClick = {
-
-                                                       }
-                                                  )
-                                             }
+                                             FilterButton(
+                                                  modifier = Modifier.padding(start = 4.dp),
+                                                  image = if (titleImage) R.drawable.sort_descending else R.drawable.sort_ascending,
+                                                  onClick = {
+                                                       titleImage = !titleImage
+                                                       databaseImage = false
+                                                       downloadsDatabaseViewModel.sortBy(DownloadsSorter.Title)
+                                                  }
+                                             )
+                                             FilterButton(
+                                                  modifier = Modifier.padding(start = 4.dp),
+                                                  image = if (databaseImage) R.drawable.database_fill else R.drawable.database_empty,
+                                                  onClick = {
+                                                       databaseImage = !databaseImage
+                                                       titleImage = false
+                                                       downloadsDatabaseViewModel.sortBy(DownloadsSorter.Size)
+                                                  }
+                                             )
+                                             FilterButton(
+                                                  modifier = Modifier.padding(start = 4.dp),
+                                                  image = R.drawable.extractor,
+                                                  onClick = {
+                                                       downloadsDatabaseViewModel.sortBy(DownloadsSorter.Extractor)
+                                                  }
+                                             )
                                         }
                                    }
                               }
                          }
                     }
                     if (state.downloads.isEmpty()) item {
-                         Text(
-                              text = "History Looks Empty!",
-                              textAlign = TextAlign.Center,
-                              fontSize = 13.sp,
-                              fontStyle = FontStyle.Italic,
-                              fontFamily = FontFamily.Default,
-                              fontWeight = FontWeight.W400,
-                              color = FermuxColors.fermuxOffWhiteTextColor
-                         )
+                         Spacer(modifier = Modifier.height(210.dp))
+                         Column(
+                              modifier = Modifier.fillMaxHeight(),
+                              verticalArrangement = Arrangement.Center,
+                              horizontalAlignment = Alignment.CenterHorizontally) {
+                              Text(
+                                   text = "History Looks Empty",
+                                   fontSize = 18.sp,
+                                   fontStyle = FontStyle.Italic,
+                                   fontFamily = FontFamily.Default,
+                                   fontWeight = FontWeight.W400,
+                                   color = FermuxColors.fermuxOffWhiteTextColor
+                              )
+                         }
                     } else {
                          items(state.downloads, key = {"${it.extractor}: ${it.videoId}"}) { list ->
                               val key = "${list.extractor}:${list.videoId}"
@@ -173,9 +156,8 @@ fun History(
                               )
                               HistoryActions(
                                    expanded = cardKey == key,
-                                   onDelete = { downloadsDatabaseViewModel.deleteDownload(list) },
+                                   onDelete = { downloadsDatabaseViewModel.showDeleteDialog(list) },
                                    onMoreInfo = {
-
                                    },
                                    onCopyUrl = {
                                         scope.launch {

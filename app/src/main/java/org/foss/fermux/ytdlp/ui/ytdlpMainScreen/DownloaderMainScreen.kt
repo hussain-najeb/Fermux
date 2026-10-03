@@ -73,6 +73,7 @@ fun DownloadContent(
 
      LargeTopBarScaffold(
           title = "Downloader",
+          titleSize = 23.sp,
           onBack = { navController.popBackStack() },
           firstButton = { navController.navigate(Miscellaneous.DownloaderArgs.route) },
           firstImage = R.drawable.add,
@@ -104,7 +105,7 @@ fun DownloadContent(
 
                     if (videoConversionWarning) Text(
                          text = "Video Conversion is on, don't cancel the download if it looks stuck.",
-                         color = FermuxColors.fermuxWhiteColor,
+                         color = FermuxColors.white,
                          fontSize = 16.sp,
                          fontStyle = FontStyle.Italic,
                          fontFamily = FontFamily.Default,
@@ -251,7 +252,7 @@ private fun Connections() {
      if (networkDescriptions != null) {
           Text(
                text = networkDescriptions,
-               color = FermuxColors.fermuxWhiteColor,
+               color = FermuxColors.white,
                fontSize = 16.sp,
                fontStyle = FontStyle.Italic,
                fontFamily = FontFamily.Default,

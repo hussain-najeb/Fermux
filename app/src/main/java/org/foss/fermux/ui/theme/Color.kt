@@ -49,6 +49,7 @@ data class FermuxColor( // TODO. edit the bad naming on these
      val deepDarkBlue: Color = Color(0xFF19212c),
      val darkBlue: Color = Color(0xFF293444),
      val gray: Color = Color(0xFF3d444f),
+     val transparent: Color = Color.Transparent,
 
      // Fermux FFmpeg crad colors
      val fermuxFFmpegGreen: Color = Color(0xFF388e3c),
@@ -69,7 +70,7 @@ data class FermuxColor( // TODO. edit the bad naming on these
      val inActiveSliderColor: Color = Color(0xFFB5C1E8),
 
      // Fermux text
-     val fermuxWhiteColor: Color = Color.White,
+     val white: Color = Color.White,
      val fermuxTextColorBackground: Color = Color(0xFF727882),
      val fermuxOffWhiteTextColor: Color = Color(0xFFC2C6C6),
      val fermuxLightErrorTextColor: Color = Color(0xFFf2b8b5),

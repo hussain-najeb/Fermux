@@ -3,7 +3,6 @@ package org.foss.fermux.database
 data class DownloadsStateManager(
      val downloads: List<DownloadsDatabaseField> = emptyList(),
      val sorting: DownloadsSorter = DownloadsSorter.Title,
-     val isAscending: Boolean = true,
      val isDeleting: Boolean = false,
      val selectedDelete: DownloadsDatabaseField? = null
 )

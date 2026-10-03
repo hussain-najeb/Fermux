@@ -60,7 +60,7 @@ fun MainAppCard(
      )
 
      val titleColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.fermuxOffWhiteTextColor else FermuxColors.fermuxWhiteColor,
+          targetValue = if (isPressed) FermuxColors.fermuxOffWhiteTextColor else FermuxColors.white,
           label = "color of main title of main page"
      )
 
@@ -114,7 +114,7 @@ fun MainAppCard(
                          Image(
                               painter = painterResource(id = image),
                               contentDescription = null,
-                              colorFilter = ColorFilter.tint(FermuxColors.fermuxWhiteColor),
+                              colorFilter = ColorFilter.tint(FermuxColors.white),
                               contentScale = ContentScale.Crop,
                               modifier = Modifier
                                    .size(100.dp)

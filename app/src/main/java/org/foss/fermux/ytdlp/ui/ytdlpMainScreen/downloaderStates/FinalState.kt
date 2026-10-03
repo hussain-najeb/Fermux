@@ -134,7 +134,7 @@ private fun FinishedCardContent(
                                         modifier = Modifier
                                              .padding(8.dp)
                                              .align(Alignment.CenterHorizontally),
-                                        tint = FermuxColors.fermuxWhiteColor
+                                        tint = FermuxColors.white
                                    )
                               }
 
@@ -155,7 +155,7 @@ private fun FinishedCardContent(
                               metadata.size?.let {
                                    Text(
                                         text = sizeFormatting(it),
-                                        color = FermuxColors.fermuxWhiteColor,
+                                        color = FermuxColors.white,
                                         fontSize = 16.sp,
                                         modifier = Modifier.padding(3.dp)
                                    )
@@ -163,7 +163,7 @@ private fun FinishedCardContent(
                               metadata.duration?.let {
                                    Text(
                                         text = videoTime(seconds = it),
-                                        color = FermuxColors.fermuxWhiteColor,
+                                        color = FermuxColors.white,
                                         fontStyle = FontStyle.Normal,
                                         fontFamily = FontFamily.Default,
                                         fontSize = 16.sp,
@@ -181,7 +181,7 @@ private fun FinishedCardContent(
                               text = metadata.title,
                               fontFamily = FontFamily.Default,
                               fontSize = 15.sp,
-                              color = FermuxColors.fermuxWhiteColor,
+                              color = FermuxColors.white,
                               maxLines = 1,
                               overflow = TextOverflow.Ellipsis,
                               fontWeight = FontWeight.W400,

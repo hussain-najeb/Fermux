@@ -88,7 +88,7 @@ fun SettingsResetButton(
                text = settingText,
                textAlign = TextAlign.Center,
                fontSize = 15.sp,
-               color = FermuxColors.fermuxWhiteColor,
+               color = FermuxColors.white,
                modifier = Modifier.padding(5.dp).align(Alignment.Center)
                          )
                     } 

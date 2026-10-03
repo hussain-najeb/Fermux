@@ -44,7 +44,7 @@ fun QuickdownloadError(
                     fontStyle = FontStyle.Normal,
                     fontFamily = FontFamily.Default,
                     textAlign = TextAlign.Start,
-                    color = FermuxColors.fermuxWhiteColor,
+                    color = FermuxColors.white,
                     modifier = Modifier.padding(start = 2.dp)
                )
           }

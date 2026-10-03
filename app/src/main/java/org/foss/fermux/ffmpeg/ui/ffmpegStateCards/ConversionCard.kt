@@ -101,7 +101,7 @@ fun ConversionCard(
                                         modifier = Modifier
                                              .padding(8.dp)
                                              .align(Alignment.CenterHorizontally),
-                                        tint = FermuxColors.fermuxWhiteColor
+                                        tint = FermuxColors.white
                                    )
                               }
 

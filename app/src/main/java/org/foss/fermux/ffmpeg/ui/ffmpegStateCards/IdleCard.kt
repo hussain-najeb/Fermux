@@ -73,7 +73,7 @@ fun IdleCard(
                               fontFamily = FontFamily.Default,
                               fontStyle = FontStyle.Normal,
                               fontWeight = W500,
-                              color = FermuxColors.fermuxWhiteColor,
+                              color = FermuxColors.white,
                          )
 
                          Spacer(modifier = Modifier.height(20.dp))

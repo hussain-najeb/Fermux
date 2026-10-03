@@ -56,7 +56,7 @@ fun LogButton(
      )
 
      val iconColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.fermuxActiveIcon else  FermuxColors.fermuxWhiteColor,
+          targetValue = if (isPressed) FermuxColors.fermuxActiveIcon else  FermuxColors.white,
           animationSpec = tween(200),
           label = "Fermux Icon Colors"
      )

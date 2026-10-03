@@ -68,7 +68,7 @@ fun LoggingScreen(
                          .height(250.dp),
                     color = FermuxColors.fermuxComponents,
                     shape = RoundedCornerShape(10.dp),
-                    border = BorderStroke(1.dp, FermuxColors.fermuxWhiteColor)
+                    border = BorderStroke(1.dp, FermuxColors.white)
                ) {
                     Box(
                          modifier = Modifier
@@ -77,7 +77,7 @@ fun LoggingScreen(
                     ) {
                          Text(
                               text = logs,
-                              color = FermuxColors.fermuxWhiteColor,
+                              color = FermuxColors.white,
                               fontFamily = JetbrainsMono,
                               modifier = Modifier
                                    .fillMaxSize()
@@ -151,7 +151,7 @@ fun LoggingScreen(
                               .height(250.dp),
                          color = FermuxColors.fermuxComponents,
                          shape = RoundedCornerShape(10.dp),
-                         border = BorderStroke(1.dp, FermuxColors.fermuxWhiteColor)
+                         border = BorderStroke(1.dp, FermuxColors.white)
                     ) {
                          LazyColumn(
                               modifier = Modifier
@@ -171,7 +171,7 @@ fun LoggingScreen(
                                    items(debugLogs){ log ->
                                         Text(
                                              text = "${log.tag} \n ${log.message} \n ${log.level} \n ${log.timestamp} \n ${log.throwable}",
-                                             color = FermuxColors.fermuxWhiteColor,
+                                             color = FermuxColors.white,
                                              fontFamily = JetbrainsMono,
                                              modifier = Modifier
                                                   .fillMaxWidth()

@@ -46,7 +46,7 @@ fun ErrorCard(
           DownloaderCard(
                errorBackground = true,
                modifier = Modifier.aspectRatio(16f / 9f),
-               border = BorderStroke(1.dp, FermuxColors.fermuxWhiteColor)
+               border = BorderStroke(1.dp, FermuxColors.white)
           ) {
                Box(
                     modifier = Modifier

@@ -39,12 +39,12 @@ fun SmallActionButton(
      )
 
      val containerColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.fermuxActiveButton else Color.Transparent,
+          targetValue = if (isPressed) FermuxColors.fermuxActiveButton else FermuxColors.transparent,
           animationSpec = tween(150)
      )
 
      val buttonAnimation by animateFloatAsState(
-          targetValue = if (isPressed) 0.95f else 1.0f,
+          targetValue = if (isPressed) 0.90f else 1f,
           animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
           label = "Fermux Button Animation"
      )
@@ -60,7 +60,7 @@ fun SmallActionButton(
           border = BorderStroke(1.dp, Color.Transparent),
           colors = ButtonDefaults.textButtonColors(
                containerColor = containerColor,
-               contentColor = FermuxColors.fermuxWhiteColor
+               contentColor = FermuxColors.white
           ),
           interactionSource = interactionSource,
           onClick = {
