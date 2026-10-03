@@ -68,7 +68,7 @@ fun LoadingCard(
                               text = loadingMessage,
                               fontFamily = FontFamily.Default,
                               fontStyle = FontStyle.Italic,
-                              color = FermuxColors.fermuxInActiveTextColor,
+                              color = FermuxColors.offWhiteTextColor,
                               fontSize = 15.sp,
                          )
 

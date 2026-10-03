@@ -28,7 +28,7 @@ import org.foss.fermux.ui.theme.FermuxColors
 fun GlobalCancelButton(
      modifier: Modifier = Modifier,
      color: FermuxColor = FermuxColors,
-     border: BorderStroke? = BorderStroke(0.8.dp, color.something),
+     border: BorderStroke? = BorderStroke(0.8.dp, color.warmGray),
      contentPadding: PaddingValues = PaddingValues(1.dp),
      onClick: () -> Unit
 ) {
@@ -47,8 +47,8 @@ fun GlobalCancelButton(
 
      val contentColor by animateColorAsState(
           targetValue = when {
-               isPressed -> color.fermuxActiveTextColor
-               else -> color.fermuxInActiveTextColor
+               isPressed -> color.downriver
+               else -> color.white
           },
           animationSpec = tween(200),
           label = "Fermux Text Colors",
@@ -56,8 +56,8 @@ fun GlobalCancelButton(
 
      val iconColor by animateColorAsState(
           targetValue = when {
-               isPressed -> color.fermuxActiveIcon
-               else -> color.fermuxInActiveIcon
+               isPressed -> color.downriver
+               else -> color.white
           },
           animationSpec = tween(durationMillis = 150),
           label = "Fermux Icon Colors"

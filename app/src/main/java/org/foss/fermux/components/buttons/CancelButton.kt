@@ -54,7 +54,7 @@ fun CancelButton(
      )
 
      val iconColor by animateColorAsState(
-          targetValue = if (isPressed) color.fermuxActiveIcon else color.fermuxTextError,
+          targetValue = if (isPressed) color.downriver else color.fermuxTextError,
           animationSpec = tween(150),
           label = "Fermux Icon Color"
      )

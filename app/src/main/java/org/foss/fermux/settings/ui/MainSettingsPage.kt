@@ -69,7 +69,7 @@ fun SettingsScreen(
           LazyColumn(
                modifier = Modifier
                     .fillMaxSize()
-                    .background(FermuxColors.fermuxBackground),
+                    .background(FermuxColors.background),
                contentPadding = paddingValues
           ) {
                item { Spacer(modifier = Modifier.height(10.dp)) }

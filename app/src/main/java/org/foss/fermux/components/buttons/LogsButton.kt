@@ -49,14 +49,8 @@ fun LogButton(
           label = "Fermux Button Colors",
      )
 
-     val contentColor by animateColorAsState(
-          targetValue = if (isPressed)  FermuxColors.fermuxActiveTextColor else FermuxColors.fermuxInActiveTextColor,
-          animationSpec = tween(200),
-          label = "Fermux Text Colors",
-     )
-
      val iconColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.fermuxActiveIcon else  FermuxColors.white,
+          targetValue = if (isPressed) FermuxColors.downriver else  FermuxColors.white,
           animationSpec = tween(200),
           label = "Fermux Icon Colors"
      )
@@ -83,7 +77,6 @@ fun LogButton(
                border = border,
                colors = ButtonDefaults.textButtonColors(
                     containerColor = containerColor,
-                    contentColor = contentColor
                ),
                enabled = enabled,
                contentPadding = contentPadding,

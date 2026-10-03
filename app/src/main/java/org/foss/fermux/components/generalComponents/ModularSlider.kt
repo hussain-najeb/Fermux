@@ -46,7 +46,7 @@ fun ModularSlider(
                modifier = Modifier
                     .wrapContentSize()
                     .padding(1.dp),
-               color = FermuxColors.fermuxComponents,
+               color = FermuxColors.warmPurple,
                shape = RoundedCornerShape(8.dp),
                border = BorderStroke(1.dp, color = FermuxColors.fermuxHelperBorder)
           ) {

@@ -33,7 +33,7 @@ fun SmallActionButton(
      var isClickable by remember { mutableStateOf(true) }
 
      val iconColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.fermuxActiveIcon else FermuxColors.fermuxInActiveIcon,
+          targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.skyBlue,
           animationSpec = tween(durationMillis = 150),
           label = "Fermux Icon Colors"
      )

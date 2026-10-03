@@ -38,9 +38,9 @@ fun AppSnackBar(
                          .padding(12.dp)
                          .padding(bottom = 15.dp)
                          .width(250.dp)
-                         .border(1.dp, FermuxColors.fermuxGenericBorder, RoundedCornerShape(8.dp)),
+                         .border(1.dp, FermuxColors.fermuxHelperBorder, RoundedCornerShape(8.dp)),
                     shape = RoundedCornerShape(8.dp),
-                    containerColor = FermuxColors.something3,
+                    containerColor = FermuxColors.mutedBlue,
                     contentColor = FermuxColors.white
                ) {
                     Row(
@@ -81,7 +81,7 @@ fun test11() {
           Column(
                modifier = Modifier
                     .fillMaxSize()
-                    .background(FermuxColors.fermuxBackground)
+                    .background(FermuxColors.background)
                     .padding(paddingValues),
                verticalArrangement = Arrangement.Center,
                horizontalAlignment = Alignment.CenterHorizontally

@@ -41,7 +41,7 @@ fun SponsorBlockChoices(
                modifier = Modifier
                     .wrapContentSize()
                     .padding(start = 8.dp, end = 8.dp),
-               color = FermuxColors.fermuxComponents,
+               color = FermuxColors.warmPurple,
                shape = RoundedCornerShape(8.dp),
                border = BorderStroke(1.dp, color = FermuxColors.fermuxHelperBorder)
           ) {
@@ -66,11 +66,11 @@ fun SponsorBlockChoices(
                               label = { Text(labeledFlag) },
                               colors = FilterChipDefaults.filterChipColors(
                                    containerColor = FermuxColors.inActiveContainer,
-                                   labelColor = FermuxColors.inActiveContent,
-                                   iconColor = FermuxColors.inActiveContent,
-                                   selectedContainerColor = FermuxColors.activeContainer,
-                                   selectedLabelColor = FermuxColors.activeContent,
-                                   selectedLeadingIconColor = FermuxColors.activeContent
+                                   labelColor = FermuxColors.white,
+                                   iconColor = FermuxColors.white,
+                                   selectedContainerColor = FermuxColors.skyBlue,
+                                   selectedLabelColor = FermuxColors.downriver,
+                                   selectedLeadingIconColor = FermuxColors.downriver
                               ),
                               border = FilterChipDefaults.filterChipBorder(
                                    enabled = true,

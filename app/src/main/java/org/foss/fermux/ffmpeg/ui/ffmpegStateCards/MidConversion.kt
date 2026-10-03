@@ -58,7 +58,7 @@ fun MidConversionProcess(
                Column(
                     modifier = Modifier
                          .wrapContentSize()
-                         .background(FermuxColors.fermuxComponents)
+                         .background(FermuxColors.warmPurple)
                ) {
                     FormatList(ffmpegViewModel)
                }

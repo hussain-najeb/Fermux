@@ -106,7 +106,7 @@ private fun FinishedCardContent(
                                         .align(Alignment.Center)
                                         .size(50.dp)
                                         .background(
-                                             color = FermuxColors.fermuxComponents.copy(alpha = 0.70f),
+                                             color = FermuxColors.warmPurple.copy(alpha = 0.70f),
                                              shape = RoundedCornerShape(8.dp)
                                         )
                               ) {
@@ -124,7 +124,7 @@ private fun FinishedCardContent(
                                    modifier = Modifier
                                         .align(Alignment.Center)
                                         .background(
-                                             color = FermuxColors.fermuxComponents.copy(alpha = 0.75f),
+                                             color = FermuxColors.warmPurple.copy(alpha = 0.75f),
                                              shape = RoundedCornerShape(8.dp)
                                         )
                               ) {
@@ -145,7 +145,7 @@ private fun FinishedCardContent(
                          .padding(5.dp)
                          .wrapContentSize()
                          .background(
-                              color = FermuxColors.fermuxComponents.copy(alpha = 0.75f),
+                              color = FermuxColors.warmPurple.copy(alpha = 0.75f),
                               shape = RoundedCornerShape(5.dp)
                          )
                          .wrapContentSize()
@@ -193,7 +193,7 @@ private fun FinishedCardContent(
                                    text = it,
                                    fontFamily = FontFamily.Default,
                                    fontSize = 13.sp,
-                                   color = FermuxColors.fermuxOffWhiteTextColor,
+                                   color = FermuxColors.offWhiteTextColor,
                                    maxLines = 1,
                                    overflow = TextOverflow.Ellipsis,
                                    modifier = Modifier
@@ -207,7 +207,7 @@ private fun FinishedCardContent(
                                              metadata.format else resolutionFormatting(it),
                                         fontFamily = FontFamily.Default,
                                         fontSize = 15.sp,
-                                        color = FermuxColors.fermuxOffWhiteTextColor,
+                                        color = FermuxColors.offWhiteTextColor,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis,
                                         modifier = Modifier
@@ -219,7 +219,7 @@ private fun FinishedCardContent(
                                         text = " | audio quality is $it kbps",
                                         fontFamily = FontFamily.Default,
                                         fontSize = 15.sp,
-                                        color = FermuxColors.fermuxOffWhiteTextColor,
+                                        color = FermuxColors.offWhiteTextColor,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis,
                                         modifier = Modifier

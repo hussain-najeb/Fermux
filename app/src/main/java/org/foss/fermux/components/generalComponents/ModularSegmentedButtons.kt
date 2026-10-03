@@ -30,7 +30,7 @@ fun <T> ModularSegmentedButtons(
                modifier = Modifier
                     .wrapContentSize()
                     .padding(1.dp),
-               color = FermuxColors.fermuxComponents,
+               color = FermuxColors.warmPurple,
                shape = RoundedCornerShape(8.dp),
                border = BorderStroke(1.dp, color = FermuxColors.fermuxHelperBorder)
           ) {
@@ -50,22 +50,22 @@ fun <T> ModularSegmentedButtons(
                                    ),
                                    enabled = enabled,
                                    colors = SegmentedButtonDefaults.colors(
-                                        activeContainerColor = FermuxColors.activeContainer,
-                                        activeContentColor = FermuxColors.activeContent,
+                                        activeContainerColor = FermuxColors.skyBlue,
+                                        activeContentColor = FermuxColors.downriver,
                                         inactiveContainerColor = FermuxColors.inActiveContainer,
-                                        inactiveContentColor = FermuxColors.inActiveContent,
+                                        inactiveContentColor = FermuxColors.white,
                                         activeBorderColor = FermuxColors.fermuxSecondaryBorder,
                                         inactiveBorderColor = FermuxColors.fermuxGenericBorder,
                                         disabledActiveContainerColor =
-                                             FermuxColors.activeContainer.copy(alpha = 0.4f),
+                                             FermuxColors.skyBlue.copy(alpha = 0.4f),
                                         disabledActiveContentColor =
-                                             FermuxColors.activeContent.copy(alpha = 0.4f),
+                                             FermuxColors.downriver.copy(alpha = 0.4f),
                                         disabledActiveBorderColor =
                                              FermuxColors.fermuxSecondaryBorder.copy(alpha = 0.4f),
                                         disabledInactiveContainerColor =
                                              FermuxColors.inActiveContainer.copy(alpha = 0.4f),
                                         disabledInactiveContentColor =
-                                             FermuxColors.inActiveContent.copy(alpha = 0.4f),
+                                             FermuxColors.white.copy(alpha = 0.4f),
                                         disabledInactiveBorderColor =
                                              FermuxColors.fermuxGenericBorder.copy(alpha = 0.4f)
                                    )

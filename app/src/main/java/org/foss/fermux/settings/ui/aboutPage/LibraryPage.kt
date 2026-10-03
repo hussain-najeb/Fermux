@@ -68,7 +68,7 @@
           LargeTopBarScaffold(
                title = "Library list", onBack = { navController.popBackStack() }) { paddingValues ->
                Column(
-                    modifier = Modifier.fillMaxSize().background(FermuxColors.fermuxBackground)
+                    modifier = Modifier.fillMaxSize().background(FermuxColors.background)
                          .verticalScroll(rememberScrollState()).padding(paddingValues)
                ) {
 

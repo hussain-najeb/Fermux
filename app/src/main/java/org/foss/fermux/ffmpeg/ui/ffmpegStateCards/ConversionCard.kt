@@ -73,7 +73,7 @@ fun ConversionCard(
                                         .align(Alignment.Center)
                                         .size(50.dp)
                                         .background(
-                                             color = FermuxColors.fermuxComponents.copy(alpha = 0.70f),
+                                             color = FermuxColors.warmPurple.copy(alpha = 0.70f),
                                              shape = RoundedCornerShape(10.dp)
                                         )
                               ) {
@@ -91,7 +91,7 @@ fun ConversionCard(
                                    modifier = Modifier
                                         .align(Alignment.Center)
                                         .background(
-                                             color = FermuxColors.fermuxComponents.copy(alpha = 0.75f),
+                                             color = FermuxColors.warmPurple.copy(alpha = 0.75f),
                                              shape = RoundedCornerShape(10.dp)
                                         )
                               ) {

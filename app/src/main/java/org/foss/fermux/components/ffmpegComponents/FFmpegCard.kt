@@ -24,7 +24,7 @@ fun FFmpegCard(
           modifier = modifier,
           shape = shape,
           colors = CardDefaults.cardColors(
-               containerColor = color.fermuxComponents
+               containerColor = color.warmPurple
           ),
           border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
      ) {

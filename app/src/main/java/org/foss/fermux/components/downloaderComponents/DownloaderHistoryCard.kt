@@ -12,7 +12,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,15 +57,13 @@ fun HistoryCard(
      val interactionSource = remember { MutableInteractionSource() }
      val isPressed by interactionSource.collectIsPressedAsState()
 
-     var expanded by remember { mutableStateOf(false) }
-
      val titleColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.fermuxOffWhiteTextColor else FermuxColors.white,
+          targetValue = if (isPressed) FermuxColors.offWhiteTextColor else FermuxColors.white,
           label = "color of main title of main page"
      )
 
      val descriptionBackground by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.fermuxSurface else FermuxColors.fermuxSaturatedComponents,
+          targetValue = if (isPressed) FermuxColors.fermuxSurface else FermuxColors.darkPurple,
           label = "color of main background of the description surface"
      )
 
@@ -74,7 +74,7 @@ fun HistoryCard(
      )
 
      val borderColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.skyBrightDark else FermuxColors.skyBright,
+          targetValue = if (isPressed) FermuxColors.warmBlue else FermuxColors.skyBlue,
      )
 
 
@@ -123,7 +123,7 @@ fun HistoryCard(
                               .padding(5.dp)
                               .wrapContentSize()
                               .background(
-                                   color = FermuxColors.fermuxComponents.copy(alpha = 0.75f),
+                                   color = FermuxColors.warmPurple.copy(alpha = 0.75f),
                                    shape = RoundedCornerShape(5.dp)
                               )
                               .wrapContentSize()
@@ -144,7 +144,7 @@ fun HistoryCard(
                               .padding(5.dp)
                               .wrapContentSize()
                               .background(
-                                   color = FermuxColors.fermuxComponents.copy(alpha = 0.75f),
+                                   color = FermuxColors.warmPurple.copy(alpha = 0.75f),
                                    shape = RoundedCornerShape(5.dp)
                               )
                               .wrapContentSize()
@@ -237,7 +237,7 @@ private fun test11() {
 
      Column(modifier = Modifier
           .fillMaxSize()
-          .background(FermuxColors.fermuxBackground)
+          .background(FermuxColors.background)
           .padding(10.dp),
           verticalArrangement = Arrangement.spacedBy(4.dp)
      ) {

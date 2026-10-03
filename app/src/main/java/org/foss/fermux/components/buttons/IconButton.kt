@@ -47,13 +47,13 @@ fun AppIconButton(
      )
 
      val contentColor by animateColorAsState(
-          targetValue = if (isPressed) color.fermuxActiveTextColor else color.fermuxInActiveTextColor,
+          targetValue = if (isPressed) color.downriver else color.white,
           animationSpec = tween(200),
           label = "Fermux Text Colors",
      )
 
      val iconColor by animateColorAsState(
-          targetValue = if (isPressed) color.fermuxActiveIcon else color.white,
+          targetValue = if (isPressed) color.downriver else color.white,
           animationSpec = tween(durationMillis = 200),
           label = "Fermux Icon Colors"
      )
@@ -81,7 +81,7 @@ fun AppIconButton(
           colors = ButtonDefaults.textButtonColors(
                containerColor = containerColor,
                contentColor = contentColor,
-               disabledContainerColor = FermuxColors.fermuxSaturatedComponents
+               disabledContainerColor = FermuxColors.darkPurple
           ),
           enabled = enabled,
           contentPadding = contentPadding,

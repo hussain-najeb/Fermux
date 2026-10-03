@@ -28,7 +28,7 @@ fun ConverterScreen(
      ) { paddingValues ->
           Column(
                modifier = Modifier
-                    .background(FermuxColors.fermuxBackground)
+                    .background(FermuxColors.background)
                     .fillMaxSize()
                     .padding(paddingValues)
           ) {

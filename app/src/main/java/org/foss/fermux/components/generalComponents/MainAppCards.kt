@@ -54,18 +54,18 @@ fun MainAppCard(
      val isPressed by interactionSource.collectIsPressedAsState()
 
      val iconBackground by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.deepBlue else FermuxColors.fermuxComponents,
+          targetValue = if (isPressed) FermuxColors.deepBlue else FermuxColors.warmPurple,
           animationSpec = tween(delayMillis = 10),
           label = "color of main icons page"
      )
 
      val titleColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.fermuxOffWhiteTextColor else FermuxColors.white,
+          targetValue = if (isPressed) FermuxColors.offWhiteTextColor else FermuxColors.white,
           label = "color of main title of main page"
      )
 
      val descriptionBackground by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.fermuxSurface else FermuxColors.fermuxSaturatedComponents,
+          targetValue = if (isPressed) FermuxColors.fermuxSurface else FermuxColors.darkPurple,
           label = "color of main background of the description surface"
      )
 
@@ -92,7 +92,9 @@ fun MainAppCard(
           .height(100.dp),
           color = descriptionBackground,
           shape = RoundedCornerShape(8.dp),
-          border = BorderStroke(1.5.dp, FermuxColors.skyBright)
+          border = BorderStroke(1.5.dp, FermuxColors.warmPurple),
+          tonalElevation = 12.dp,
+          shadowElevation = 12.dp
      ) {
           Row(
                modifier = Modifier.fillMaxWidth()

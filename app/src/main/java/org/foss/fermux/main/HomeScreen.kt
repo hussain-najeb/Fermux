@@ -4,10 +4,10 @@ package org.foss.fermux.main
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.SnackbarDuration
@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalClipboard
@@ -134,10 +135,12 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
           Column(
                modifier = Modifier
                     .fillMaxWidth()
-                    .background(FermuxColors.fermuxBackground)
-                    .systemBarsPadding()
+                    .background(FermuxColors.background)
                     .verticalScroll(scroll)
+                    .padding(top = 10.dp)
                     .padding(innerPadding),
+               verticalArrangement = Arrangement.Center,
+               horizontalAlignment = Alignment.CenterHorizontally
           ) {
                screens.forEach { screen ->
                     MainAppCard(

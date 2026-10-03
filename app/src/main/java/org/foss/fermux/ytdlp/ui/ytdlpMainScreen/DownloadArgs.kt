@@ -259,7 +259,7 @@ fun DownloaderArgs(navController: NavController) {
                          .padding(innerPadding)
                          .verticalScroll(rememberScrollState())
                          .fillMaxSize()
-                         .background(FermuxColors.fermuxBackground),
+                         .background(FermuxColors.background),
                ) {
                     args.forEach { option ->
                          TileOptions(

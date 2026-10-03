@@ -65,7 +65,7 @@ fun AboutPage(navController: NavController) {
           Column(
                modifier = Modifier
                     .fillMaxSize()
-                    .background(FermuxColors.fermuxBackground)
+                    .background(FermuxColors.background)
                     .verticalScroll(rememberScrollState())
                     .padding(paddingValues)
           ) {

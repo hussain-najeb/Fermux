@@ -34,7 +34,7 @@ fun HistoryActions(
                     .fillMaxWidth(),
                color = FermuxColors.darkBlue,
                shape = RoundedCornerShape(8.dp),
-               border = BorderStroke(1.dp, FermuxColors.something3)
+               border = BorderStroke(1.dp, FermuxColors.mutedBlue)
           ) {
                Row {
                     SmallActionButton(modifier = Modifier

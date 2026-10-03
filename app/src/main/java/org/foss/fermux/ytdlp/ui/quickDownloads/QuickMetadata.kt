@@ -36,7 +36,7 @@ fun QuickDownloadsMetadata(
                fontStyle = FontStyle.Normal,
                fontFamily = FontFamily.Default,
                textAlign = TextAlign.Start,
-               color = FermuxColors.skyBright,
+               color = FermuxColors.skyBlue,
                modifier = Modifier.padding(top = 12.dp, start = 10.dp)
           )
 
@@ -50,7 +50,7 @@ fun QuickDownloadsMetadata(
                     if (progress > -1f)
                          LoadingIndicator(
                               modifier = Modifier.size(45.dp),
-                              color = FermuxColors.skyBright
+                              color = FermuxColors.skyBlue
                          )
                }
           }

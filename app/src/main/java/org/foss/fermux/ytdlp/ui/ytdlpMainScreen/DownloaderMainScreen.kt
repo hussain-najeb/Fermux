@@ -85,18 +85,18 @@ fun DownloadContent(
                modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .background(FermuxColors.fermuxBackground),
+                    .background(FermuxColors.background),
           ) {
                Column(
                     modifier = Modifier
                          .verticalScroll(rememberScrollState())
                          .fillMaxSize()
                          .imePadding()
-                         .background(FermuxColors.fermuxBackground)
+                         .background(FermuxColors.background)
                ) {
                     if (!upToDate) Text(
                          text = "Version $currentVersionName of ytdlp is outdated, update the downloader in the preferences",
-                         color = FermuxColors.fermuxOffWhiteTextColor,
+                         color = FermuxColors.offWhiteTextColor,
                          fontSize = 14.sp,
                          fontStyle = FontStyle.Normal,
                          fontFamily = FontFamily.Default,
@@ -134,7 +134,7 @@ fun DownloadContent(
                                    focusedBorderColor = FermuxColors.fermuxSecondaryBorder,
                                    unfocusedBorderColor = FermuxColors.fermuxGenericBorder,
                                    focusedLabelColor = FermuxColors.fermuxPrimaryBorder,
-                                   unfocusedLabelColor = FermuxColors.fermuxTextColorBackground,
+                                   unfocusedLabelColor = FermuxColors.offWhiteTextColor,
                                    cursorColor = FermuxColors.fermuxGenericBorder,
                                    focusedTextColor = Color.White,
                                    unfocusedTextColor = Color.White,
@@ -143,7 +143,7 @@ fun DownloadContent(
                                    errorLabelColor = FermuxColors.fermuxLightErrorTextColor,
                                    errorCursorColor = FermuxColors.fermuxLightErrorTextColor,
                                    errorContainerColor = FermuxColors.fermuxErrorCardColor,
-                                   unfocusedContainerColor = FermuxColors.fermuxComponents,
+                                   unfocusedContainerColor = FermuxColors.warmPurple,
                                    focusedContainerColor = FermuxColors.inActiveTextField
                               ),
                               onValueChange = { txt -> downloaderViewModel.downloadUrl = txt },
@@ -152,7 +152,7 @@ fun DownloadContent(
                                         text = "Type URL here",
                                         fontFamily = FontFamily.Default,
                                         textAlign = TextAlign.Start,
-                                        color = FermuxColors.fermuxTextColorBackground,
+                                        color = FermuxColors.offWhiteTextColor,
                                         modifier = Modifier.padding(start = 9.dp, bottom = 5.dp)
                                    )
                               },

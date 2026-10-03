@@ -36,7 +36,7 @@ fun HelperButton(
      var isClickable by remember { mutableStateOf(true) }
 
      val iconColor by animateColorAsState(
-          targetValue = if (isPressed) color.fermuxActiveIcon else color.white,
+          targetValue = if (isPressed) color.downriver else color.white,
           animationSpec = tween(durationMillis = 150),
           label = "Fermux Icon Colors"
      )

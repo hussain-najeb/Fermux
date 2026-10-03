@@ -57,7 +57,7 @@ fun SettingsResetButton(
                modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 8.dp, end = 8.dp),
-               color = FermuxColors.fermuxComponents,
+               color = FermuxColors.warmPurple,
                shape = RoundedCornerShape(8.dp),
                border = BorderStroke(1.dp, color = FermuxColors.fermuxHelperBorder)
           ) {

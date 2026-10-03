@@ -41,15 +41,15 @@ fun LargeTopBarScaffold(
           modifier = modifier
                .fillMaxSize()
                .nestedScroll(scrollBehavior.nestedScrollConnection),
-          containerColor = FermuxColors.fermuxBackground,
+          containerColor = FermuxColors.background,
           snackbarHost = snackbarHost ?: {},
           topBar = {
                LargeTopAppBar(
                     modifier = Modifier
                          .clip(RoundedCornerShape(bottomEnd = 8.dp, bottomStart = 8.dp)),
                     colors = TopAppBarDefaults.topAppBarColors(
-                         containerColor = FermuxColors.fermuxBackground,
-                         scrolledContainerColor = FermuxColors.fermuxSaturatedComponents,
+                         containerColor = FermuxColors.background,
+                         scrolledContainerColor = FermuxColors.darkPurple,
                          navigationIconContentColor = Color.Unspecified,
                          titleContentColor = Color.Unspecified,
                          actionIconContentColor = Color.Unspecified

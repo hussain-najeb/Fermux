@@ -64,9 +64,6 @@ fun History(
                     .fillMaxSize().padding(innerPadding)
           ) {
 
-               // TODO. Implement the hopper thinggy as as one item, then make it a dropdown menu that shows the sorting options
-               //  also have a "three dot" button that has "Delete" and "more info" and "copy media url"
-
                LazyColumn(
                     modifier = modifier
                          .fillMaxSize()
@@ -138,7 +135,7 @@ fun History(
                                    fontStyle = FontStyle.Italic,
                                    fontFamily = FontFamily.Default,
                                    fontWeight = FontWeight.W400,
-                                   color = FermuxColors.fermuxOffWhiteTextColor
+                                   color = FermuxColors.offWhiteTextColor
                               )
                          }
                     } else {

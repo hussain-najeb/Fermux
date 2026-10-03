@@ -66,7 +66,7 @@ fun LoggingScreen(
                     modifier = Modifier
                          .fillMaxWidth()
                          .height(250.dp),
-                    color = FermuxColors.fermuxComponents,
+                    color = FermuxColors.warmPurple,
                     shape = RoundedCornerShape(10.dp),
                     border = BorderStroke(1.dp, FermuxColors.white)
                ) {
@@ -149,7 +149,7 @@ fun LoggingScreen(
                          modifier = Modifier
                               .fillMaxWidth()
                               .height(250.dp),
-                         color = FermuxColors.fermuxComponents,
+                         color = FermuxColors.warmPurple,
                          shape = RoundedCornerShape(10.dp),
                          border = BorderStroke(1.dp, FermuxColors.white)
                     ) {
@@ -162,7 +162,7 @@ fun LoggingScreen(
                                    item {
                                         Text(
                                              text = "No downloader debug logs captured yet",
-                                             color = FermuxColors.fermuxBackgroundTextColor,
+                                             color = FermuxColors.white,
                                              fontFamily = JetbrainsMono,
                                              modifier = Modifier.fillMaxWidth()
                                         )

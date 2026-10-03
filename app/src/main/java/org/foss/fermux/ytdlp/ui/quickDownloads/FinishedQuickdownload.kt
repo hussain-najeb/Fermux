@@ -44,7 +44,7 @@ fun FinalQuickDownload() {
                     fontStyle = FontStyle.Normal,
                     fontFamily = FontFamily.Default,
                     textAlign = TextAlign.Start,
-                    color = FermuxColors.skyBright,
+                    color = FermuxColors.skyBlue,
                     modifier = Modifier.padding(start = 10.dp)
                )
           }

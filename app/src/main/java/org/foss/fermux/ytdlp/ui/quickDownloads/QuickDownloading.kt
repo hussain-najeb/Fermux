@@ -55,7 +55,7 @@ fun QuickDownloading(
 @Preview (backgroundColor = 0xFF181825, showBackground = true)
 @Composable
 fun test8() {
-     Column(modifier = Modifier.fillMaxSize().padding(5.dp).background(FermuxColors.fermuxBackground)) {
+     Column(modifier = Modifier.fillMaxSize().padding(5.dp).background(FermuxColors.background)) {
           QuickDownloading(
                progress = 50f,
                onCancel = {}
