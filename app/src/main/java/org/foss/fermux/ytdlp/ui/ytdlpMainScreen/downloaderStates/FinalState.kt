@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,6 +35,7 @@ import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.Miscellaneous
 import org.foss.fermux.ytdlp.logic.downloader.DownloadMetadata
+import org.foss.fermux.ytdlp.logic.downloader.resolutionFormatting
 import org.foss.fermux.ytdlp.logic.downloader.sizeFormatting
 import org.foss.fermux.ytdlp.logic.downloader.videoTime
 
@@ -162,6 +164,8 @@ private fun FinishedCardContent(
                                    Text(
                                         text = videoTime(seconds = it),
                                         color = FermuxColors.fermuxWhiteColor,
+                                        fontStyle = FontStyle.Normal,
+                                        fontFamily = FontFamily.Default,
                                         fontSize = 16.sp,
                                         modifier = Modifier.padding(3.dp)
                                    )
@@ -200,7 +204,7 @@ private fun FinishedCardContent(
                               metadata.resolution?.let {
                                    Text(
                                         text = if (it.equals("audio only", ignoreCase = true))
-                                             metadata.format else it,
+                                             metadata.format else resolutionFormatting(it),
                                         fontFamily = FontFamily.Default,
                                         fontSize = 15.sp,
                                         color = FermuxColors.fermuxOffWhiteTextColor,
@@ -222,7 +226,6 @@ private fun FinishedCardContent(
                                              .padding(top = 7.dp)
                                    )
                               }
-                              //metadata.format // TODO. Add this
                          }
                     }
                }
@@ -256,6 +259,7 @@ fun Test3() {
           FinishedCardContent(
                metadata = DownloadMetadata(
                     mediaId = "",
+                    url = "",
                     extractor = "",
                     title = "Example Video Title, TEST....TEST. This is a test",
                     thumbnail = "/home/Hussain/Downloads/01_HistoryUniverse_Front_5aa6c115-6004-4508-9d43-41752d9cf891.jpg",

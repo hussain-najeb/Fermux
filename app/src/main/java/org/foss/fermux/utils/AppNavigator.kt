@@ -16,6 +16,7 @@ import org.foss.fermux.settings.ui.aboutPage.LibraryPage
 import org.foss.fermux.settings.ui.converter.SimpleFFmpegSetting
 import org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage
 import org.foss.fermux.terminal.ui.FermuxTerminalScreen
+import org.foss.fermux.ytdlp.ui.historyPage.History
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloadContent
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloaderArgs
 
@@ -79,6 +80,6 @@ fun FermuxAppMainScreen() {
           // Ytdlp
           composable(route = Miscellaneous.DownloaderLogs.route) { DownloaderLogs(navController) }
           composable(route = Miscellaneous.DownloaderArgs.route) { DownloaderArgs(navController) }
-          composable(route = Miscellaneous.DownloaderHistory.route) {  } // TODO. ADD this
+          composable(route = Miscellaneous.DownloaderHistory.route) { History(navController) } // TODO. ADD this
      }
 }

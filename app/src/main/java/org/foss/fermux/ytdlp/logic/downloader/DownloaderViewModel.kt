@@ -175,6 +175,7 @@ class DownloaderViewModel : ViewModel() {
 
                                         state = DownloadStatus.Completed(
                                              metadata ?: DownloadMetadata(
+                                                  url = "",
                                                   mediaId = "",
                                                   extractor = "",
                                                   title = "Download complete",

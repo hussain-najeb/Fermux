@@ -16,14 +16,11 @@ interface DownloadsDao {
      @Delete
      suspend fun deleteDownload(downloads: DownloadsDatabaseField)
 
-     @Query("SELECT * FROM downloads ORDER BY title COLLATE NOCASE ASC")
-     fun getDownloadsOrderedByTitle(): Flow<List<DownloadsDatabaseField>>
-
      @Query("SELECT * FROM downloads WHERE extractor = :extractor AND videoId = :videoId")
      suspend fun getSimilarInstance(extractor: String, videoId: String): DownloadsDatabaseField?
 
-     @Query("SELECT * FROM downloads ORDER BY duration ASC")
-     fun getDownloadsOrderedByDuration(): Flow<List<DownloadsDatabaseField>>
+     @Query("SELECT * FROM downloads ORDER BY title COLLATE NOCASE ASC")
+     fun getDownloadsOrderedByTitle(): Flow<List<DownloadsDatabaseField>>
 
      @Query("SELECT * FROM downloads ORDER BY size ASC")
      fun getDownloadsOrderedBySize(): Flow<List<DownloadsDatabaseField>>

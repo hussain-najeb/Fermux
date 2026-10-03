@@ -7,10 +7,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -158,8 +158,8 @@ fun DownloadContent(
                               trailingIcon = {
                                    androidx.compose.animation.AnimatedVisibility(
                                         visible = downloaderViewModel.downloadUrl.isNotEmpty(),
-                                        enter = expandVertically(tween(70)) + fadeIn(tween(100)),
-                                        exit = shrinkVertically(tween(70)) + fadeOut(tween(100))
+                                        enter = slideInVertically(tween(70)) + fadeIn(tween(100)),
+                                        exit = slideOutVertically(tween(70)) + fadeOut(tween(100))
                                    ) {
                                         GlobalCancelButton(
                                              modifier = Modifier.size(40.dp).padding(end = 3.dp), onClick = {

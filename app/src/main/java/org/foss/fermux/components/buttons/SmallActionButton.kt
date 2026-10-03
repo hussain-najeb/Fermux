@@ -39,7 +39,7 @@ fun SmallActionButton(
      )
 
      val containerColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.fermuxActiveButton else FermuxColors.something3,
+          targetValue = if (isPressed) FermuxColors.fermuxActiveButton else Color.Transparent,
           animationSpec = tween(150)
      )
 

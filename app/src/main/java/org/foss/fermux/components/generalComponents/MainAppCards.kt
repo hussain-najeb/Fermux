@@ -92,7 +92,7 @@ fun MainAppCard(
           .height(100.dp),
           color = descriptionBackground,
           shape = RoundedCornerShape(8.dp),
-          border = BorderStroke(1.5.dp, FermuxColors.something2)
+          border = BorderStroke(1.5.dp, FermuxColors.skyBright)
      ) {
           Row(
                modifier = Modifier.fillMaxWidth()

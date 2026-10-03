@@ -1,7 +1,10 @@
 package org.foss.fermux.database
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -10,47 +13,57 @@ class DownloadsDatabaseViewModel(
      private val dao: DownloadsDao
 ): ViewModel() {
 
+     companion object {
+          fun factory(context: Context) = viewModelFactory {
+               initializer {
+                    DownloadsDatabaseViewModel(
+                         DownloaderDb.getDatabase(context).downloadsDao
+                    )
+               }
+          }
+     }
+
      private val _sorting = MutableStateFlow(DownloadsSorter.Title)
+     private val _isAscending = MutableStateFlow(true)
      private val _state = MutableStateFlow(DownloadsStateManager())
      @OptIn(ExperimentalCoroutinesApi::class)
      private val _downloadSorter = _sorting.flatMapLatest { sorter ->
           when(sorter) {
-               DownloadsSorter.Duration -> dao.getDownloadsOrderedByDuration()
                DownloadsSorter.Size -> dao.getDownloadsOrderedBySize()
                DownloadsSorter.Title -> dao.getDownloadsOrderedByTitle()
                DownloadsSorter.Extractor -> dao.getDownloadsOrderedByExtractor()
           }
      }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
-     val state = combine(_state, _sorting, _downloadSorter) { state, sortType, downloadSorter ->
+     val state = combine(_state, _sorting, _downloadSorter, _isAscending) { state, sortType, downloadSorter, isAscending ->
            state.copy(
                 sorting = sortType,
-                downloads = downloadSorter
+                isAscending = isAscending,
+                downloads = if (isAscending) downloadSorter else downloadSorter.reversed(),
            )
      }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(2500), DownloadsStateManager())
 
-     fun onEvent(event: DownloadsEvent) {
-          when(event) {
+     fun showDeleteDialog(item: DownloadsDatabaseField) {
+          _state.update { it.copy(isDeleting = true, selectedDelete = item) }
+     }
 
-               is DownloadsEvent.DeleteDownload -> {
-                    viewModelScope.launch {
-                         dao.deleteDownload(event.download)
-                         _state.update { it.copy(isDeleting = false) }
-                    }
-               }
+     fun hideDeleteDialog() {
+          _state.update { it.copy(isDeleting = false, selectedDelete = null) }
+     }
 
-               is DownloadsEvent.SortDownloads -> {
-                    _sorting.value = event.sorting
-               }
-
-               DownloadsEvent.HideDialog -> {
-                    _state.update { it.copy(isDeleting = false) }
-               }
-
-               DownloadsEvent.ShowDialog -> {
-                    _state.update { it.copy(isDeleting = true) }
-               }
+     fun deleteDownload(item: DownloadsDatabaseField) {
+          viewModelScope.launch {
+               dao.deleteDownload(item)
+               _state.update { it.copy(isDeleting = false, selectedDelete = null) }
           }
+     }
+
+     fun sortBy(sorter: DownloadsSorter) {
+          _sorting.value = sorter
+     }
+
+     fun toggleAscending() {
+          _isAscending.update { !it }
      }
 
 

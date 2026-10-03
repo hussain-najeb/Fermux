@@ -205,6 +205,7 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
                )
 
                DebugLogDownloader.debugDownloader("DownloadWorker", "Succeeded id=$taskId")
+               Log.d("DownloadWorker", "Succeeded id=$taskId")
 
                val metadata = capturedMetadataJson?.let { parseYtdlpMetadataJson(it) }
                val historyTitle = metadata?.title ?: title
@@ -238,10 +239,12 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
                                         extractor = metadata.extractor,
                                         videoId = metadata.mediaId,
                                         fileUri = instance.uri.toString(),
+                                        url = metadata.url,
                                         title = metadata.title,
                                         uploader = metadata.uploader,
                                         thumbnail = metadata.thumbnail,
                                         duration = metadata.duration,
+                                        resolution = metadata.resolution,
                                         size = instance.sizeBytes,
                                         format = instance.extension
                                    )

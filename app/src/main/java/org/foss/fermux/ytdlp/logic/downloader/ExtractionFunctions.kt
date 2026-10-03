@@ -75,10 +75,11 @@ fun parseYtdlpMetadataJson(json: String): DownloadMetadata? {
           val duration = obj.optDouble("duration").takeIf { !it.isNaN() }?.toInt()
           val uploader =  optStringOrNull("uploader")
           val resolution = optStringOrNull("resolution")
-
+          val url = optStringOrNull("webpage_url")
 
 
           DownloadMetadata(
+               url = url ?: return null,
                mediaId = mediaId,
                extractor = extractorName,
                title = title,
