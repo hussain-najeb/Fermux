@@ -52,9 +52,7 @@ data class FermuxColor( // TODO. edit the bad naming on these
 
      // Switch colors
      val fermuxThumbOn: Color = Color(0xFF40407F),
-     val fermuxThumbOff: Color = Color(0xFF848489),
-     val fermuxTrackOn: Color = Color(0xFFB9B9FA),
-     val fermuxTrackOff: Color = Color(0xFF393636),
+     val fermuxTrackOn: Color = Color(0xFF2e2edc),
 
      // Slider color
      val activeSliderColor: Color = Color(0xFF4D7DE5),

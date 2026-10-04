@@ -178,14 +178,14 @@ class DownloaderViewModel : ViewModel() {
                                                   url = "",
                                                   mediaId = "",
                                                   extractor = "",
-                                                  title = "Download complete",
+                                                  title = "",
                                                   thumbnail = null,
                                                   duration = 0,
                                                   uploader = null,
                                                   audioQuality = null,
                                                   size = null,
                                                   format = "",
-                                                  resolution = null
+                                                  resolution = ""
                                              )
                                         )
                                         activeProcess = null

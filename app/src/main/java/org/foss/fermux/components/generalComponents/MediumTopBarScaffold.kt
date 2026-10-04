@@ -55,7 +55,7 @@ fun MediumTopBarScaffold(
                               title,
                               fontFamily = FontFamily.Default,
                               fontWeight = FontWeight.W400,
-                              fontSize = 23.sp,
+                              fontSize = 21.sp,
                               color = Color.White,
                               modifier = Modifier.padding(10.dp)
                          )

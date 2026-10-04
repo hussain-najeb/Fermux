@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 
 @Database(
      entities = [DownloadsDatabaseField::class],
-     version = 3
+     version = 4
 )
 abstract class AppDatabase: RoomDatabase() {
 
@@ -23,6 +23,6 @@ object DownloaderDb {
                     klass = AppDatabase::class.java,
                     name = "downloader.db"
                ).fallbackToDestructiveMigration(false)
-               .build().also { instance = it }
+                    .build().also { instance = it }
      }
 }

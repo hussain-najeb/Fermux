@@ -168,7 +168,7 @@ fun AdvancedDownloaderSettings(
           SettingListInfo(
                title = "Yt-dlp HLS Options",
                description = "Check any option if Aria2 is having issues, especially with m3u8 since yt-dlp prefers it's own options over Aria2",
-               image = R.drawable.hls_on,
+               image = R.drawable.aria2_hls,
                onClick = { toggleDownloader(ExternalDownloader) },
                trailingContent = {
                     ModularSegmentedButtons(

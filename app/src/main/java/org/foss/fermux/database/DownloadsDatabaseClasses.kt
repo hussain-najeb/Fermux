@@ -16,5 +16,5 @@ data class DownloadsDatabaseField(
      val duration: Int? = null,
      val size: Long? = null,
      val format: String,
-     val resolution: String? = "",  // TODO. add "most recent" to the dao and make it a sorting option.
+     val resolution: String
 )

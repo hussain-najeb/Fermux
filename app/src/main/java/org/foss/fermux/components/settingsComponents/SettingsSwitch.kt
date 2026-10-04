@@ -24,7 +24,7 @@ fun SettingsSwitch(
                     Icon(
                          imageVector = Icons.Default.Check,
                          contentDescription = null,
-                         tint = FermuxColors.offWhiteTextColor,
+                         tint = FermuxColors.downriver,
                          modifier = Modifier.size(SwitchDefaults.IconSize),
                     )
                }
@@ -37,9 +37,9 @@ fun SettingsSwitch(
           enabled = enabled,
           colors = SwitchDefaults.colors(
                checkedThumbColor = FermuxColors.fermuxThumbOn,
-               uncheckedThumbColor = FermuxColors.fermuxThumbOff,
+               uncheckedThumbColor = FermuxColors.warmGray,
                checkedTrackColor = FermuxColors.fermuxTrackOn,
-               uncheckedTrackColor = FermuxColors.fermuxTrackOff,
+               uncheckedTrackColor = FermuxColors.gray,
           ),
      )
 }

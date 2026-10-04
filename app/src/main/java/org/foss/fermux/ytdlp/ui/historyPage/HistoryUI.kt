@@ -52,6 +52,18 @@ fun History(
      var titleImage by remember { mutableStateOf(false) }
      var databaseImage by remember { mutableStateOf(false) }
 
+     state.selectedDelete?.let { item ->
+          DeleteDialog(
+               onDismissRequest = { downloadsDatabaseViewModel.hideDeleteDialog() },
+               deletedItem = { downloadsDatabaseViewModel.deleteDownload(item) }
+          )
+     }
+
+     state.selectedEntry?.let { item ->
+
+     } // TODO. Add a Bottom Sheet Modal, to get all the info
+
+     // TODO. Make the UI better!
 
 
      MediumTopBarScaffold(
@@ -155,6 +167,7 @@ fun History(
                                    expanded = cardKey == key,
                                    onDelete = { downloadsDatabaseViewModel.showDeleteDialog(list) },
                                    onMoreInfo = {
+                                        
                                    },
                                    onCopyUrl = {
                                         scope.launch {

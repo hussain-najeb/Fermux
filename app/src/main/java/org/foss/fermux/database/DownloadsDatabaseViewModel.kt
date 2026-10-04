@@ -36,7 +36,8 @@ class DownloadsDatabaseViewModel(
 
      val state = combine(_state, _sorting, _downloadSorter) { state, sortType, downloadSorter ->
            state.copy(
-                sorting = sortType, downloads = downloadSorter
+                sorting = sortType,
+                downloads = downloadSorter
            )
      }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(2500), DownloadsStateManager())
 

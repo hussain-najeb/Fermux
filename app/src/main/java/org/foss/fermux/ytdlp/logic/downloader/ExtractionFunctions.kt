@@ -89,8 +89,16 @@ fun parseYtdlpMetadataJson(json: String): DownloadMetadata? {
                size = approxSize,
                format = format ?: "",
                audioQuality = audioQuality,
-               resolution = resolution
+               resolution = resolution ?: ""
           )
+
+          // TODO. IF you add any flags, ADD ITS JSON ENTRY HERE!
+          // request.addOption("--no-simulate")
+          //     request.addOption(
+          //          "--print",
+          //          "before_dl:$FERMUX_METADATA_MARKER%(.{id,extractor_key,title,thumbnail,duration,uploader,filesize,filesize_approx,resolution,abr,ext,webpage_url})j"
+          //     )
+
      } catch (e: Exception) {
           DebugLogDownloader.errorDownloader("downloader JSON metadata parsing", "JSON metadata failed to be parsed", e)
           Log.e("downloader JSON metadata parsing", "JSON metadata failed to be parsed", e)

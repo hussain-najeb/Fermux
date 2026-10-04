@@ -45,13 +45,13 @@ fun HistoryActions(
                          modifier = Modifier
                               .padding(3.dp),
                          onClick = onMoreInfo,
-                         image = R.drawable.file_type_sql
+                         image = R.drawable.more_info
                     )
                     SmallActionButton(
                          modifier = Modifier
                               .padding(3.dp),
                          onClick = onCopyUrl,
-                         image = R.drawable.content_copy
+                         image = R.drawable.copy
                     )
                }
           }

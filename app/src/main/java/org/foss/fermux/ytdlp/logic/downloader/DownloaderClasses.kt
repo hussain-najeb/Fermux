@@ -20,7 +20,7 @@ data class DownloadMetadata(
      val size: Long?,
      val audioQuality: Double?,
      val format: String,
-     val resolution: String?,
+     val resolution: String,
      val url: String
 )
 

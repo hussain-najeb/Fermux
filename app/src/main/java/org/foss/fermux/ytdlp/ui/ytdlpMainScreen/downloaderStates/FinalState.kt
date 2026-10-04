@@ -201,10 +201,10 @@ private fun FinishedCardContent(
                               )
                          }
                          Row {
-                              metadata.resolution?.let {
+                              metadata.resolution.let {
                                    Text(
                                         text = if (it.equals("audio only", ignoreCase = true))
-                                             metadata.format else resolutionFormatting(it),
+                                             metadata.format else "${resolutionFormatting(it)}p",
                                         fontFamily = FontFamily.Default,
                                         fontSize = 15.sp,
                                         color = FermuxColors.offWhiteTextColor,
@@ -251,7 +251,7 @@ private fun FinishedCardContent(
 
 @Preview(showBackground = true, backgroundColor = 0xFF181825)
 @Composable
-fun Test3() {
+fun test3() {
      val navController = rememberNavController()
 
      Column(modifier = Modifier.fillMaxSize()) {
