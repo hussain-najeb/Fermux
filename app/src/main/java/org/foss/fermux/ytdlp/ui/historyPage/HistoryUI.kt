@@ -30,7 +30,6 @@ import org.foss.fermux.components.downloaderComponents.HistoryCard
 import org.foss.fermux.components.generalComponents.AppSnackBar
 import org.foss.fermux.components.generalComponents.MediumTopBarScaffold
 import org.foss.fermux.database.DownloadsDatabaseViewModel
-import org.foss.fermux.database.DownloadsSorter
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
@@ -111,7 +110,7 @@ fun History(
                                                   onClick = {
                                                        titleImage = !titleImage
                                                        databaseImage = false
-                                                       downloadsDatabaseViewModel.sortBy(DownloadsSorter.Title)
+                                                       downloadsDatabaseViewModel.titleSorter()
                                                   }
                                              )
                                              FilterButton(
@@ -120,14 +119,14 @@ fun History(
                                                   onClick = {
                                                        databaseImage = !databaseImage
                                                        titleImage = false
-                                                       downloadsDatabaseViewModel.sortBy(DownloadsSorter.Size)
+                                                       downloadsDatabaseViewModel.sizeSorter()
                                                   }
                                              )
                                              FilterButton(
                                                   modifier = Modifier.padding(start = 4.dp),
                                                   image = R.drawable.extractor,
                                                   onClick = {
-                                                       downloadsDatabaseViewModel.sortBy(DownloadsSorter.Extractor)
+                                                       downloadsDatabaseViewModel.extractorSorter()
                                                   }
                                              )
                                         }

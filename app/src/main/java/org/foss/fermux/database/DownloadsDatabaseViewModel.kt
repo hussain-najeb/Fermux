@@ -23,14 +23,17 @@ class DownloadsDatabaseViewModel(
           }
      }
 
-     private val _sorting = MutableStateFlow(DownloadsSorter.Title)
+     private val _sorting = MutableStateFlow(DownloadsSorter.TitleASC)
      private val _state = MutableStateFlow(DownloadsStateManager())
      @OptIn(ExperimentalCoroutinesApi::class)
      private val _downloadSorter = _sorting.flatMapLatest { sorter ->
           when(sorter) {
-               DownloadsSorter.Size -> dao.getDownloadsOrderedBySize()
-               DownloadsSorter.Title -> dao.getDownloadsOrderedByTitle()
-               DownloadsSorter.Extractor -> dao.getDownloadsOrderedByExtractor()
+               DownloadsSorter.SizeASC -> dao.getDownloadsOrderedBySizeASC()
+               DownloadsSorter.TitleASC -> dao.getDownloadsOrderedByTitleASC()
+               DownloadsSorter.ExtractorASC -> dao.getDownloadsOrderedByExtractorASC()
+               DownloadsSorter.TitleDESC -> dao.getDownloadsOrderByTitleDESC()
+               DownloadsSorter.SizeDESC -> dao.getDownloadsOrderBySizeDESC()
+               DownloadsSorter.ExtractorDESC -> dao.getDownloadsOrderByExtractorDESC()
           }
      }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
@@ -56,8 +59,28 @@ class DownloadsDatabaseViewModel(
           }
      }
 
-     fun sortBy(sorter: DownloadsSorter) {
-          _sorting.value = sorter
+     fun titleSorter() {
+          _sorting.value = when(_sorting.value) {
+               DownloadsSorter.TitleASC -> DownloadsSorter.TitleASC
+               DownloadsSorter.TitleDESC -> DownloadsSorter.TitleDESC
+               else -> DownloadsSorter.TitleASC
+          }
+     }
+
+     fun sizeSorter() {
+          _sorting.value = when(_sorting.value) {
+               DownloadsSorter.SizeASC -> DownloadsSorter.SizeASC
+               DownloadsSorter.SizeDESC -> DownloadsSorter.SizeDESC
+               else -> DownloadsSorter.SizeASC
+          }
+     }
+
+     fun extractorSorter() {
+          _sorting.value = when(_sorting.value) {
+               DownloadsSorter.ExtractorASC -> DownloadsSorter.ExtractorASC
+               DownloadsSorter.ExtractorDESC -> DownloadsSorter.ExtractorDESC
+               else -> DownloadsSorter.ExtractorASC
+          }
      }
 
 }

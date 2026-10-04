@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogWindowProvider
+import org.foss.fermux.components.buttons.AppTextButton
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
@@ -71,7 +72,11 @@ fun DeleteDialog(
                          verticalAlignment = Alignment.Bottom,
                          horizontalArrangement = Arrangement.End
                     ) {
-
+                         AppTextButton(
+                              modifier = Modifier.padding(5.dp),
+                              text = "Delete",
+                              onClick = deletedItem,
+                         )
                     }
                }
           }

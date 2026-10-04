@@ -20,13 +20,22 @@ interface DownloadsDao {
      suspend fun getSimilarInstance(extractor: String, videoId: String): DownloadsDatabaseField?
 
      @Query("SELECT * FROM downloads ORDER BY title COLLATE NOCASE ASC")
-     fun getDownloadsOrderedByTitle(): Flow<List<DownloadsDatabaseField>>
+     fun getDownloadsOrderedByTitleASC(): Flow<List<DownloadsDatabaseField>>
 
      @Query("SELECT * FROM downloads ORDER BY size ASC")
-     fun getDownloadsOrderedBySize(): Flow<List<DownloadsDatabaseField>>
+     fun getDownloadsOrderedBySizeASC(): Flow<List<DownloadsDatabaseField>>
 
      @Query("SELECT * FROM downloads ORDER BY extractor ASC")
-     fun getDownloadsOrderedByExtractor(): Flow<List<DownloadsDatabaseField>>
+     fun getDownloadsOrderedByExtractorASC(): Flow<List<DownloadsDatabaseField>>
+
+     @Query("SELECT * FROM downloads ORDER BY title DESC")
+     fun getDownloadsOrderByTitleDESC(): Flow<List<DownloadsDatabaseField>>
+
+     @Query("SELECT * FROM downloads ORDER BY size DESC")
+     fun getDownloadsOrderBySizeDESC(): Flow<List<DownloadsDatabaseField>>
+
+     @Query("SELECT * FROM downloads ORDER BY extractor DESC")
+     fun getDownloadsOrderByExtractorDESC(): Flow<List<DownloadsDatabaseField>>
 
      // @Query("SELECT * FROM downloads ORDER BY format ") TODO. Implement this
 }
