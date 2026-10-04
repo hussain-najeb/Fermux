@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui.historyPage
+package org.foss.fermux.ytdlp.ui.history
 
 import android.content.ClipData
 import androidx.compose.animation.*
@@ -26,7 +26,6 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.FilterButton
-import org.foss.fermux.components.downloaderComponents.HistoryCard
 import org.foss.fermux.components.generalComponents.AppSnackBar
 import org.foss.fermux.components.generalComponents.MediumTopBarScaffold
 import org.foss.fermux.database.DownloadsDatabaseViewModel
@@ -48,8 +47,8 @@ fun History(
 
      var expanded by remember { mutableStateOf(false) }
      var cardKey by remember { mutableStateOf<String?>(null) }
-     var titleImage by remember { mutableStateOf(false) }
-     var databaseImage by remember { mutableStateOf(false) }
+     var titleImage by remember { mutableStateOf(true) }
+     var databaseImage by remember { mutableStateOf(true) }
 
      state.selectedDelete?.let { item ->
           DeleteDialog(
@@ -59,10 +58,21 @@ fun History(
      }
 
      state.selectedEntry?.let { item ->
-
-     } // TODO. Add a Bottom Sheet Modal, to get all the info
-
-     // TODO. Make the UI better!
+          InfoModalSheet(
+               onDismissRequest = { downloadsDatabaseViewModel.hideBottomSheet() },
+               thumbnail = item.thumbnail,
+               imageDescription = item.title ?: "null",
+               title = item.title ?: "null",
+               uploader = item.uploader ?: "null",
+               duration = item.duration ?: 0,
+               format = item.format,
+               size = item.size ?: 0,
+               resolution = item.resolution,
+               extractor = item.extractor,
+               url = item.url,
+               uri = item.fileUri,
+          )
+     }
 
 
      MediumTopBarScaffold(
@@ -166,7 +176,7 @@ fun History(
                                    expanded = cardKey == key,
                                    onDelete = { downloadsDatabaseViewModel.showDeleteDialog(list) },
                                    onMoreInfo = {
-                                        
+                                        downloadsDatabaseViewModel.showBottomSheet(list)
                                    },
                                    onCopyUrl = {
                                         scope.launch {

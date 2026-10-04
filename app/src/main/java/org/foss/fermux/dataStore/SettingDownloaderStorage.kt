@@ -6,7 +6,6 @@ import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.serialization.json.Json
 import org.foss.fermux.ytdlp.logic.downloader.*
 
 
@@ -29,16 +28,13 @@ interface DownloaderSettingsRepo {
      val sponsorBlock: Flow<Boolean>
      val sponsorBlockCategories: Flow<Set<String>>
      val playlistStatus: Flow<Boolean>
-     val audioHistory: Flow<Boolean>
-     val videoHistory: Flow<Boolean>
+     val history: Flow<Boolean>
      val upToDate: Flow<Boolean>
      val ytdlpChannel: Flow<YtdlpChannel>
      val wifi: Flow<Connectivity>
      val fragRetries: Flow<Int>
      val retries: Flow<Int>
      val ipvConnection: Flow<IpvConnection>
-     val jsonAudioCard: Flow<List<JSONHistoryCards>>
-     val jsonVideoCard: Flow<List<JSONHistoryCards>>
 
      suspend fun setDownloadPath(value: String)
      suspend fun setDownloaderBellState(value: Boolean)
@@ -53,8 +49,7 @@ interface DownloaderSettingsRepo {
      suspend fun setDownloaderDebug(value: Boolean)
      suspend fun setFingerprinting(value: Boolean)
      suspend fun setEmbedThumbnail(value: Boolean)
-     suspend fun setAudioHistory(value: Boolean)
-     suspend fun setVideoHistory(value: Boolean)
+     suspend fun setHistory(value: Boolean)
      suspend fun setPlaylistStatus(value: Boolean)
      suspend fun setYtdlpDetails(value: Boolean)
      suspend fun setSponsorBlock(value: Boolean)
@@ -65,9 +60,6 @@ interface DownloaderSettingsRepo {
      suspend fun setRetries(value: Int)
      suspend fun setIpvConnection(value: IpvConnection)
      suspend fun setYtdlpChannel(value: YtdlpChannel)
-     suspend fun setJSONAudio(value: JSONHistoryCards)
-     suspend fun setJSONVideo(value: JSONHistoryCards)
-     suspend fun clearHistory()
      suspend fun resetArgs(): DownloaderArgumentsSnapshot
      suspend fun restoreArgs(snapshot: DownloaderArgumentsSnapshot)
      suspend fun resetYtdlp(): DownloaderSettingsSnapshot
@@ -80,8 +72,7 @@ data class DownloaderSettingsSnapshot(
      val sleepRequest: Int?,
      val aria2cMode: String?,
      val ytdlpDetails: Boolean?,
-     val videoHistory: Boolean?,
-     val audioHistory: Boolean?,
+     val history: Boolean?,
      val embedThumbnail: Boolean?,
      val playlistStatus: Boolean?,
      val sponsorBlock: Boolean?,
@@ -126,13 +117,12 @@ val THUMBNAIL_FORMATS = stringPreferencesKey("thumbnail_selection")
 val AUDIO_FORMATS = stringPreferencesKey("audio_formats")
 val VIDEO_FORMATS = stringPreferencesKey("video_formats")
 val VIDEO_COMP = booleanPreferencesKey("video_comp")
-val EXTERNAL_DOWNLOADER = stringPreferencesKey("set external downloaders for ytdlp")
+val EXTERNAL_DOWNLOADER = stringPreferencesKey("set_external_downloaders_for_ytdlp")
 val DOWNLOADING_DETAILS = booleanPreferencesKey("download_details")
-val SHOW_YTDLP_VIDEO_HISTORY = booleanPreferencesKey("video_history")
-val QUICK_JS = booleanPreferencesKey("quick js")
+val HISTORY = booleanPreferencesKey("history")
+val QUICK_JS = booleanPreferencesKey("quickJs")
 val DOWNLOADER_DEBUG = booleanPreferencesKey("debug_button")
 val FINGERPRINT = booleanPreferencesKey("fingerprint")
-val SHOW_YTDLP_AUDIO_HISTORY = booleanPreferencesKey("audio_history")
 val EMBED_THUMBNAIL = booleanPreferencesKey("embed_thumbnail")
 val PLAYLIST_STATUS = booleanPreferencesKey("playlist_status")
 val SPONSOR_BLOCK_IMPLEMENTATION = booleanPreferencesKey("sponsor_block")
@@ -144,8 +134,6 @@ val WIFI = stringPreferencesKey("wifi")
 val IPV = stringPreferencesKey("ipv")
 val FRAG_RETRIES = intPreferencesKey("frag_retries")
 val RETRIES = intPreferencesKey("retries")
-val JSON_AUDIO_HISTORY = stringPreferencesKey("json_audio")
-val JSON_VIDEO_HISTORY = stringPreferencesKey("json_video")
 
 class DataStoreDownloaderSettings(private val settingStore: DataStore<Preferences>) : DownloaderSettingsRepo {
 
@@ -193,10 +181,8 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                ?.let { runCatching { ExternalDownloaders.valueOf(it) }.getOrNull() } 
                ?: ExternalDownloaders.YtdlpNativeDownloader
      }
-     override val audioHistory: Flow<Boolean> =
-          settingStore.data.map { preferences -> preferences[SHOW_YTDLP_AUDIO_HISTORY] ?: true }
-     override val videoHistory: Flow<Boolean> =
-          settingStore.data.map { preferences -> preferences[SHOW_YTDLP_VIDEO_HISTORY] ?: true }
+     override val history: Flow<Boolean> =
+          settingStore.data.map { preferences -> preferences[HISTORY] ?: true }
      override val ytdlpDetails: Flow<Boolean> =
           settingStore.data.map { preferences -> preferences[DOWNLOADING_DETAILS] ?: true }
      override val sponsorBlock: Flow<Boolean> =
@@ -227,18 +213,6 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
           preferences[IPV]
                ?.let { runCatching { IpvConnection.valueOf(it) }.getOrNull() }
                ?: IpvConnection.Disabled
-     }
-
-     override val jsonAudioCard: Flow<List<JSONHistoryCards>> = settingStore.data.map { preferences ->
-          val json =
-               preferences[JSON_AUDIO_HISTORY] ?: "[]"
-          Json.decodeFromString<List<JSONHistoryCards>>(json)
-     }
-
-     override val jsonVideoCard: Flow<List<JSONHistoryCards>> = settingStore.data.map { preferences ->
-          val json =
-               preferences[JSON_VIDEO_HISTORY] ?: "[]"
-          Json.decodeFromString<List<JSONHistoryCards>>(json)
      }
 
      override suspend fun setDownloadPath(value: String) {
@@ -319,16 +293,12 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
           settingStore.edit { preferences -> preferences[EMBED_THUMBNAIL] = value }
      }
 
-     override suspend fun setAudioHistory(value: Boolean) {
-          settingStore.edit { preferences -> preferences[SHOW_YTDLP_AUDIO_HISTORY] = value }
+     override suspend fun setHistory(value: Boolean) {
+          settingStore.edit { preferences -> preferences[HISTORY] = value }
      }
 
      override suspend fun setPlaylistStatus(value: Boolean) {
           settingStore.edit { preferences -> preferences[PLAYLIST_STATUS] = value }
-     }
-
-     override suspend fun setVideoHistory(value: Boolean) {
-          settingStore.edit { preferences -> preferences[SHOW_YTDLP_VIDEO_HISTORY] = value }
      }
 
      override suspend fun setYtdlpDetails(value: Boolean) {
@@ -357,24 +327,6 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
 
      override suspend fun setIpvConnection(value: IpvConnection) {
           settingStore.edit { preferences -> preferences[IPV] = value.name }
-     }
-
-     override suspend fun setJSONAudio(value: JSONHistoryCards) {
-          settingStore.edit { preferences ->
-               val currentJson = preferences[JSON_AUDIO_HISTORY] ?: "[]"
-               val currentList = Json.decodeFromString<List<JSONHistoryCards>>(currentJson)
-               val updatedList = currentList + value
-               preferences[JSON_AUDIO_HISTORY] = Json.encodeToString(updatedList)
-          }
-     }
-
-     override suspend fun setJSONVideo(value: JSONHistoryCards) {
-          settingStore.edit { preferences ->
-               val currentJson = preferences[JSON_VIDEO_HISTORY] ?: "[]"
-               val currentList = Json.decodeFromString<List<JSONHistoryCards>>(currentJson)
-               val updatedList = currentList + value
-               preferences[JSON_VIDEO_HISTORY] = Json.encodeToString(updatedList)
-          }
      }
 
      override suspend fun resetArgs(): DownloaderArgumentsSnapshot {
@@ -428,8 +380,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                     sleepRequest = preferences[SLEEP_REQUEST_KEY],
                     aria2cMode = preferences[ARIA2C_MODE_KEY],
                     ytdlpDetails = preferences[DOWNLOADING_DETAILS],
-                    videoHistory = preferences[SHOW_YTDLP_VIDEO_HISTORY],
-                    audioHistory = preferences[SHOW_YTDLP_AUDIO_HISTORY],
+                    history = preferences[HISTORY],
                     embedThumbnail = preferences[EMBED_THUMBNAIL],
                     playlistStatus = preferences[PLAYLIST_STATUS],
                     sponsorBlock = preferences[SPONSOR_BLOCK_IMPLEMENTATION],
@@ -444,8 +395,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                preferences.remove(key = SLEEP_REQUEST_KEY)
                preferences.remove(key = ARIA2C_MODE_KEY)
                preferences.remove(key = DOWNLOADING_DETAILS)
-               preferences.remove(key = SHOW_YTDLP_VIDEO_HISTORY)
-               preferences.remove(key = SHOW_YTDLP_AUDIO_HISTORY)
+               preferences.remove(key = HISTORY)
                preferences.remove(key = EMBED_THUMBNAIL)
                preferences.remove(key = PLAYLIST_STATUS)
                preferences.remove(key = SPONSOR_BLOCK_IMPLEMENTATION)
@@ -465,8 +415,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                preferences.restore(SLEEP_REQUEST_KEY, snapshot.sleepRequest)
                preferences.restore(ARIA2C_MODE_KEY, snapshot.aria2cMode)
                preferences.restore(DOWNLOADING_DETAILS, snapshot.ytdlpDetails)
-               preferences.restore(SHOW_YTDLP_VIDEO_HISTORY, snapshot.videoHistory)
-               preferences.restore(SHOW_YTDLP_AUDIO_HISTORY, snapshot.audioHistory)
+               preferences.restore(HISTORY, snapshot.history)
                preferences.restore(EMBED_THUMBNAIL, snapshot.embedThumbnail)
                preferences.restore(PLAYLIST_STATUS, snapshot.playlistStatus)
                preferences.restore(SPONSOR_BLOCK_IMPLEMENTATION, snapshot.sponsorBlock)
@@ -475,13 +424,6 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                preferences.restore(FINGERPRINT, snapshot.fingerprinting)
                preferences.restore(EXTERNAL_DOWNLOADER, snapshot.externalDownloader)
                preferences.restore(WIFI, snapshot.wifi)
-          }
-     }
-
-     override suspend fun clearHistory() {
-          settingStore.edit { preferences ->
-               preferences.remove(key = JSON_AUDIO_HISTORY)
-               preferences.remove(key = JSON_VIDEO_HISTORY)
           }
      }
 }

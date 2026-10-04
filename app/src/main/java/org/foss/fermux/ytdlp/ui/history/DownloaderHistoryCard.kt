@@ -1,4 +1,4 @@
-package org.foss.fermux.components.downloaderComponents
+package org.foss.fermux.ytdlp.ui.history
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState

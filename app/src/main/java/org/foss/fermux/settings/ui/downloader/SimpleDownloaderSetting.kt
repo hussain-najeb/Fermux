@@ -57,13 +57,11 @@ fun SimpleDownloaderPage(
 ) {
      // DataStore vals
      val ytdlpDetails by downloaderSettingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
-     val audioHistory by downloaderSettingsViewModel.audioHistory.collectAsStateWithLifecycle()
-     val videoHistory by downloaderSettingsViewModel.videoHistory.collectAsStateWithLifecycle()
+     val history by downloaderSettingsViewModel.history.collectAsStateWithLifecycle()
      val currentVersionName by downloaderSettingsViewModel.currentVersionName.collectAsStateWithLifecycle()
      val bellState by downloaderSettingsViewModel.downloaderBellState.collectAsStateWithLifecycle()
      val isCheckingForUpdate by downloaderSettingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
      val ytdlpUpdateStatus by downloaderSettingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
-
 
 
      // ModularSegmentedButtons vals
@@ -129,22 +127,12 @@ fun SimpleDownloaderPage(
                onClick = requestNotificationPermission
           ),
           SettingListInfo(
-               title = "Audio History",
-               description = "Enable/Disable audio history",
-               image = if (audioHistory) R.drawable.library_music_on else R.drawable.library_music_off,
+               title = "History",
+               description = "Enable/Disable history",
+               image = if (history) R.drawable.history else R.drawable.history, // TODO. add in the approprate icon for this
                content = {
                     SettingsSwitch(
-                         checked = audioHistory, onCheckedChange = { downloaderSettingsViewModel.setAudioHistory(it) })
-               },
-               position = TilePosition.MIDDLE
-          ),
-          SettingListInfo(
-               title = "Video History",
-               description = "Enable/Disable video history",
-               image = if (videoHistory) R.drawable.video_library_on else R.drawable.video_library_off,
-               content = {
-                    SettingsSwitch(
-                         checked = videoHistory, onCheckedChange = { downloaderSettingsViewModel.setVideoHistory(it) })
+                         checked = history, onCheckedChange = { downloaderSettingsViewModel.setHistory(it) })
                },
                position = TilePosition.MIDDLE
           ),
@@ -160,7 +148,7 @@ fun SimpleDownloaderPage(
                          expanded = expandedSetting == ExpandableDownloaderSetting.ResetHistory,
                          settingText = "Reset History Cards",
                          onClick = {
-                              downloaderSettingsViewModel.clearHistory()
+                         //     downloaderSettingsViewModel.clearHistory()
                               scope.launch {
                                    snackbarHostState.showSnackbar(
                                         message = "History settings cleared",

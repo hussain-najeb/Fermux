@@ -26,6 +26,7 @@ import org.foss.fermux.ui.theme.FermuxColors
 @Composable
 fun FilterButton(
      modifier: Modifier = Modifier,
+     iconModifier: Modifier = Modifier,
      image: Int,
      onClick: () -> Unit
 ) {
@@ -77,7 +78,7 @@ fun FilterButton(
           Icon(
                painter = painterResource(id = image),
                tint = iconColor,
-               modifier = Modifier.size(30.dp),
+               modifier = iconModifier.size(30.dp),
                contentDescription = "Undo",
           )
      }

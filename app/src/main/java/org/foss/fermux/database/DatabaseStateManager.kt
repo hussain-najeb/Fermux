@@ -5,7 +5,8 @@ data class DownloadsStateManager(
      val sorting: DownloadsSorter = DownloadsSorter.TitleASC,
      val isDeleting: Boolean = false,
      val selectedDelete: DownloadsDatabaseField? = null,
-     val selectedEntry: DownloadsDatabaseField? = null
+     val selectedEntry: DownloadsDatabaseField? = null,
+     val isViewingInfo: Boolean? = false
 )
 
 

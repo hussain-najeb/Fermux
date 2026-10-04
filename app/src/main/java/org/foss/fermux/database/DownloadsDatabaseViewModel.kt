@@ -52,6 +52,14 @@ class DownloadsDatabaseViewModel(
           _state.update { it.copy(isDeleting = false, selectedDelete = null) }
      }
 
+     fun showBottomSheet(item: DownloadsDatabaseField) {
+          _state.update { it.copy(isViewingInfo = true, selectedEntry = item) }
+     }
+
+     fun hideBottomSheet() {
+          _state.update { it.copy(isViewingInfo = false, selectedEntry = null) }
+     }
+
      fun deleteDownload(item: DownloadsDatabaseField) {
           viewModelScope.launch {
                dao.deleteDownload(item)
@@ -61,24 +69,24 @@ class DownloadsDatabaseViewModel(
 
      fun titleSorter() {
           _sorting.value = when(_sorting.value) {
-               DownloadsSorter.TitleASC -> DownloadsSorter.TitleASC
-               DownloadsSorter.TitleDESC -> DownloadsSorter.TitleDESC
+               DownloadsSorter.TitleASC -> DownloadsSorter.TitleDESC
+               DownloadsSorter.TitleDESC -> DownloadsSorter.TitleASC
                else -> DownloadsSorter.TitleASC
           }
      }
 
      fun sizeSorter() {
           _sorting.value = when(_sorting.value) {
-               DownloadsSorter.SizeASC -> DownloadsSorter.SizeASC
-               DownloadsSorter.SizeDESC -> DownloadsSorter.SizeDESC
+               DownloadsSorter.SizeASC -> DownloadsSorter.SizeDESC
+               DownloadsSorter.SizeDESC -> DownloadsSorter.SizeASC
                else -> DownloadsSorter.SizeASC
           }
      }
 
      fun extractorSorter() {
           _sorting.value = when(_sorting.value) {
-               DownloadsSorter.ExtractorASC -> DownloadsSorter.ExtractorASC
-               DownloadsSorter.ExtractorDESC -> DownloadsSorter.ExtractorDESC
+               DownloadsSorter.ExtractorASC -> DownloadsSorter.ExtractorDESC
+               DownloadsSorter.ExtractorDESC -> DownloadsSorter.ExtractorASC
                else -> DownloadsSorter.ExtractorASC
           }
      }

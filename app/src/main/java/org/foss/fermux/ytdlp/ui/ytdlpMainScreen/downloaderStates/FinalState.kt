@@ -15,8 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -164,8 +162,6 @@ private fun FinishedCardContent(
                                    Text(
                                         text = videoTime(seconds = it),
                                         color = FermuxColors.white,
-                                        fontStyle = FontStyle.Normal,
-                                        fontFamily = FontFamily.Default,
                                         fontSize = 16.sp,
                                         modifier = Modifier.padding(3.dp)
                                    )
@@ -179,7 +175,6 @@ private fun FinishedCardContent(
                     Column(modifier = Modifier.height(100.dp)) {
                          Text(
                               text = metadata.title,
-                              fontFamily = FontFamily.Default,
                               fontSize = 15.sp,
                               color = FermuxColors.white,
                               maxLines = 1,
@@ -191,7 +186,6 @@ private fun FinishedCardContent(
                          metadata.uploader?.let {
                               Text(
                                    text = it,
-                                   fontFamily = FontFamily.Default,
                                    fontSize = 13.sp,
                                    color = FermuxColors.offWhiteTextColor,
                                    maxLines = 1,
@@ -204,8 +198,7 @@ private fun FinishedCardContent(
                               metadata.resolution.let {
                                    Text(
                                         text = if (it.equals("audio only", ignoreCase = true))
-                                             metadata.format else "${resolutionFormatting(it)}p",
-                                        fontFamily = FontFamily.Default,
+                                             metadata.resolution else "${resolutionFormatting(it)}p",
                                         fontSize = 15.sp,
                                         color = FermuxColors.offWhiteTextColor,
                                         maxLines = 1,
@@ -217,7 +210,6 @@ private fun FinishedCardContent(
                               metadata.audioQuality?.let {
                                    Text(
                                         text = " | audio quality is $it kbps",
-                                        fontFamily = FontFamily.Default,
                                         fontSize = 15.sp,
                                         color = FermuxColors.offWhiteTextColor,
                                         maxLines = 1,
@@ -226,6 +218,14 @@ private fun FinishedCardContent(
                                              .padding(top = 7.dp)
                                    )
                               }
+                              Text(
+                                   text = " | ${metadata.format}",
+                                   fontSize = 15.sp,
+                                   color = FermuxColors.offWhiteTextColor,
+                                   overflow = TextOverflow.Ellipsis,
+                                   modifier = Modifier
+                                        .padding(top = 7.dp)
+                              )
                          }
                     }
                }

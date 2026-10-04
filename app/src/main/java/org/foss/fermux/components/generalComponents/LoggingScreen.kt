@@ -135,38 +135,37 @@ fun LoggingScreen(
                                              modifier = Modifier
                                                   .fillMaxWidth()
                                                   .padding(6.dp)
-                                                  .verticalScroll(logsScroll)
                                         )
                                    }
                               }
                          }
                     }
-                    if (debugSwitch) {
-                         ErrorCopyButton(
-                              modifier = Modifier
-                                   .padding(2.dp)
-                                   .size(50.dp),
-                              onClick = {
-                                   scope.launch {
-                                        val formattedDebugLogs = debugLogs.joinToString("\n\n") { log ->
-                                             buildString {
-                                                  append("${log.timestamp} ${log.tag} ${log.level} ${log.message}")
-                                                  log.throwable?.let {
-                                                       appendLine()
-                                                       append(it.stackTraceToString())
-                                                  }
+               }
+               if (debugSwitch) {
+                    ErrorCopyButton(
+                         modifier = Modifier
+                              .padding(2.dp)
+                              .size(50.dp),
+                         onClick = {
+                              scope.launch {
+                                   val formattedDebugLogs = debugLogs.joinToString("\n\n") { log ->
+                                        buildString {
+                                             append("${log.timestamp} ${log.tag} ${log.level} ${log.message}")
+                                             log.throwable?.let {
+                                                  appendLine()
+                                                  append(it.stackTraceToString())
                                              }
                                         }
-                                        val clipData = ClipData.newPlainText("debug logs", formattedDebugLogs)
-                                        clipboard.setClipEntry(ClipEntry(clipData))
-                                        snackbarHostState.showSnackbar(
-                                             message = "Copied debug logs",
-                                             duration = SnackbarDuration.Short
-                                        )
                                    }
+                                   val clipData = ClipData.newPlainText("debug logs", formattedDebugLogs)
+                                   clipboard.setClipEntry(ClipEntry(clipData))
+                                   snackbarHostState.showSnackbar(
+                                        message = "Copied debug logs",
+                                        duration = SnackbarDuration.Short
+                                   )
                               }
-                         )
-                    }
+                         }
+                    )
                }
           }
      }

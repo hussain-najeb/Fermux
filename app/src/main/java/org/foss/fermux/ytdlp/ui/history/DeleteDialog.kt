@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui.historyPage
+package org.foss.fermux.ytdlp.ui.history
 
 
 import android.view.WindowManager

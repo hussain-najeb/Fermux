@@ -36,8 +36,8 @@ fun SettingsSwitch(
           modifier = modifier,
           enabled = enabled,
           colors = SwitchDefaults.colors(
-               checkedThumbColor = FermuxColors.fermuxThumbOn,
-               uncheckedThumbColor = FermuxColors.warmGray,
+               checkedThumbColor = FermuxColors.white,
+               uncheckedThumbColor = FermuxColors.offWhiteTextColor,
                checkedTrackColor = FermuxColors.fermuxTrackOn,
                uncheckedTrackColor = FermuxColors.gray,
           ),

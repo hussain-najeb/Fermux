@@ -19,7 +19,6 @@ import kotlinx.coroutines.job
 import kotlinx.coroutines.runBlocking
 import org.foss.fermux.R
 import org.foss.fermux.dataStore.DataStoreDownloaderSettings
-import org.foss.fermux.dataStore.JSONHistoryCards
 import org.foss.fermux.database.DownloaderDb
 import org.foss.fermux.database.DownloadsDatabaseField
 import org.foss.fermux.utils.DebugLogDownloader
@@ -128,17 +127,13 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
           val fingerprinting = settings.fingerprinting.first()
           val fragRetry = settings.fragRetries.first()
           val retries = settings.retries.first()
-
+          val history = settings.history.first()
 
           val audioName = inputData.getString("audio")
           val videoName = inputData.getString("video")
           val audio = audioName?.let { AudioQuality.valueOf(it) }
           val video = videoName?.let { VideoQuality.valueOf(it) }
           val url = inputData.getString("url") ?: return Result.failure()
-          val title = inputData.getString("title") ?: "unknown title"
-          val thumbnail = inputData.getString("thumbnail") ?: "unknown thumbnail"
-          val duration = inputData.getInt("duration", 0).toLong()
-          val uploader = inputData.getString("uploader") ?: "unknown uploader"
 
           var lastProgressUpdateAt = 0L
           var capturedMetadataJson: String? = null
@@ -208,27 +203,9 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
                Log.d("DownloadWorker", "Succeeded id=$taskId")
 
                val metadata = capturedMetadataJson?.let { parseYtdlpMetadataJson(it) }
-               val historyTitle = metadata?.title ?: title
-               val historyThumbnail = metadata?.thumbnail ?: thumbnail
-               val historyDuration = metadata?.duration?.toLong() ?: duration
-               val historyUploader = metadata?.uploader ?: uploader
 
                try {
-                    val history by lazy {
-                         JSONHistoryCards(
-                              historyTitle,
-                              historyThumbnail,
-                              url,
-                              historyUploader,
-                              historyDuration,
-                              System.currentTimeMillis()
-                         )
-                    }
-                    if (settings.videoHistory.first() && video != null) settings.setJSONVideo(history)
-                    if (settings.audioHistory.first() && audio != null) settings.setJSONAudio(history)
-
-                    if (metadata != null && downloaderInstance.size == 1) {
-
+                    if (metadata != null && history) {
                          val dao = DownloaderDb.getDatabase(applicationContext).downloadsDao
                          val instance = downloaderInstance.single()
                          val oldDownloaderInstance = dao.getSimilarInstance(metadata.extractor, metadata.mediaId)
@@ -252,14 +229,12 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
                               oldDownloaderInstance?.let {
                                    applicationContext.contentResolver.delete(it.fileUri.toUri(), null, null)
                               }
-
                          } catch (e: Exception) {
                               Log.e("DownloadWorker", "Failed to save download to database", e)
                               DebugLogDownloader.errorDownloader("DownloadWorker", "Failed to save download to database", e)
                          }
 
                     }
-
 
                } catch (e: Exception) {
                     DebugLogDownloader.errorDownloader("fermux", "failed to save audio JSON", e)
@@ -277,7 +252,7 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
           } catch (e: Exception) {
                DebugLogDownloader.errorDownloader("DownloadWorker", "Failed id=$taskId attempt=$runAttemptCount", e)
                val error = e.message
-                    ?.take(4_000)
+                    ?.take(5_000)
                     ?: "Download failed"
                Result.failure(workDataOf("error" to error))
           }

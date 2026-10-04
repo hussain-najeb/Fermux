@@ -45,7 +45,8 @@ fun AppSnackBar(
                ) {
                     Row(
                          modifier = Modifier.fillMaxWidth(),
-                         verticalAlignment = Alignment.CenterVertically
+                         verticalAlignment = Alignment.CenterVertically,
+                         horizontalArrangement = Arrangement.Center
                     ) {
                          Text(
                               text = data.visuals.message,
@@ -86,10 +87,6 @@ fun test11() {
                verticalArrangement = Arrangement.Center,
                horizontalAlignment = Alignment.CenterHorizontally
           ) {
-               Text(
-                    text = if (settingsReset) "Settings are at their defaults" else "Settings are customized",
-                    color = FermuxColors.white
-               )
                Button(
                     enabled = !settingsReset,
                     onClick = {
@@ -98,7 +95,7 @@ fun test11() {
 
                          scope.launch {
                               val result = snackbarHostState.showSnackbar(
-                                   message = "Downloader settings reset",
+                                   message = " settings reset",
                                    actionLabel = "Undo",
                                    duration = SnackbarDuration.Long
                               )

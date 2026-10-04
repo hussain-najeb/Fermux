@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
 import org.foss.fermux.dataStore.DataStoreDownloaderSettings
 import org.foss.fermux.dataStore.DownloaderArgumentsSnapshot
 import org.foss.fermux.dataStore.DownloaderSettingsSnapshot
-import org.foss.fermux.dataStore.JSONHistoryCards
 import org.foss.fermux.utils.DebugLogDownloader
 import org.foss.fermux.ytdlp.logic.downloader.*
 import java.util.concurrent.atomic.AtomicBoolean
@@ -69,13 +68,10 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      val externalDownloaders: StateFlow<ExternalDownloaders> = settingsTab.externalDownloaders
           .stateIn(viewModelScope, SharingStarted.Lazily, ExternalDownloaders.YtdlpNativeDownloader)
 
-     val audioHistory: StateFlow<Boolean> = settingsTab.audioHistory
+     val history: StateFlow<Boolean> = settingsTab.history
           .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
      val embedThumbnail: StateFlow<Boolean> = settingsTab.embedThumbnail
-          .stateIn(viewModelScope, SharingStarted.Lazily, true)
-
-     val videoHistory: StateFlow<Boolean> = settingsTab.videoHistory
           .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
      val ytdlpDetails: StateFlow<Boolean> = settingsTab.ytdlpDetails
@@ -104,12 +100,6 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
      val retries: StateFlow<Int> = settingsTab.retries
           .stateIn(viewModelScope, SharingStarted.Lazily, 10)
-
-     val audioHistoryList: StateFlow<List<JSONHistoryCards>> = settingsTab.jsonAudioCard
-          .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
-
-     val videoHistoryList: StateFlow<List<JSONHistoryCards>> = settingsTab.jsonVideoCard
-          .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
      fun setSleepRequest(value: Int) {
           viewModelScope.launch { settingsTab.setSleepRequest(value) }
@@ -147,12 +137,8 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           viewModelScope.launch { settingsTab.setEmbedThumbnail(value) }
      }
 
-     fun setAudioHistory(value: Boolean) {
-          viewModelScope.launch { settingsTab.setAudioHistory(value) }
-     }
-
-     fun setVideoHistory(value: Boolean) {
-          viewModelScope.launch { settingsTab.setVideoHistory(value) }
+     fun setHistory(value: Boolean) {
+          viewModelScope.launch { settingsTab.setHistory(value) }
      }
 
      fun setQuickJS(value: Boolean) {
@@ -210,10 +196,6 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
      fun setRetries(value: Int) {
           viewModelScope.launch { settingsTab.setRetries(value) }
-     }
-
-     fun clearHistory() {
-          viewModelScope.launch { settingsTab.clearHistory() }
      }
 
      suspend fun resetDownloaderSettings(): DownloaderSettingsSnapshot {
