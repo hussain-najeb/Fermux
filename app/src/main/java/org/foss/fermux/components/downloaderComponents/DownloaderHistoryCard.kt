@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -29,11 +28,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.SmallActionButton
-import org.foss.fermux.database.DownloadsDatabaseViewModel
+import org.foss.fermux.components.buttons.FilterButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.resolutionFormatting
 import org.foss.fermux.ytdlp.logic.downloader.videoTime
@@ -49,11 +46,6 @@ fun HistoryCard(
      duration: Int?,
      onMenuClick: () -> Unit
 ) {
-
-     val context = LocalContext.current
-     val viewModel: DownloadsDatabaseViewModel = viewModel(factory = DownloadsDatabaseViewModel.factory(context))
-
-
      val interactionSource = remember { MutableInteractionSource() }
      val isPressed by interactionSource.collectIsPressedAsState()
 
@@ -89,9 +81,7 @@ fun HistoryCard(
           .clickable(
                interactionSource = interactionSource,
                indication = null
-          ) {
-               // TODO. Add the dialog here
-          }
+          ) {}
           .height(100.dp),
           color = descriptionBackground,
           shape = RoundedCornerShape(8.dp),
@@ -131,7 +121,8 @@ fun HistoryCard(
                          ) {
                               if (resolution != null) {
                                    Text(
-                                        text = resolutionFormatting(resolution),
+                                        text = if (resolution.equals("audio only", ignoreCase = true))
+                                              resolution else "${resolutionFormatting(resolution)}p",
                                         color = FermuxColors.white,
                                         fontStyle = FontStyle.Normal,
                                         fontFamily = FontFamily.Default,
@@ -218,7 +209,7 @@ fun HistoryCard(
                                    }
                               }
                          }
-                         SmallActionButton(
+                         FilterButton(
                               modifier = Modifier
                                    .align(Alignment.Bottom)
                                    .padding(5.dp),
@@ -270,7 +261,7 @@ private fun test11() {
                title = "Never Gonna Give You Up - Rick Astley",
                uploader = "Rick Astley",
                format = "MP4",
-               resolution = resolutionFormatting("1028px720p"),
+               resolution = resolutionFormatting("1028x720"),
                duration = 808,
                onMenuClick = {}
           )

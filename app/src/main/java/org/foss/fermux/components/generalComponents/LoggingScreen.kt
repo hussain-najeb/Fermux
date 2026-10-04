@@ -22,9 +22,7 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
-import org.foss.fermux.R
 import org.foss.fermux.components.buttons.ErrorCopyButton
-import org.foss.fermux.components.buttons.ImageButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
 import org.foss.fermux.utils.DebugClass
@@ -42,7 +40,6 @@ fun LoggingScreen(
 
      val pageScroll = rememberScrollState()
      val logsScroll = rememberScrollState()
-     val debugScroll = rememberScrollState()
      val scope = rememberCoroutineScope()
      val snackbarHostState = remember { SnackbarHostState() }
      val clipboard = LocalClipboard.current
@@ -102,46 +99,8 @@ fun LoggingScreen(
                          }
                     }
                )
-               Row(modifier = Modifier.fillMaxWidth()) {
-                    if (debugSwitch) {
-                         ErrorCopyButton(
-                              modifier = Modifier
-                                   .padding(2.dp)
-                                   .size(50.dp),
-                              onClick = {
-                                   scope.launch {
-                                        val formattedDebugLogs = debugLogs.joinToString("\n\n") { log ->
-                                             buildString {
-                                                  append("${log.timestamp} ${log.tag} ${log.level} ${log.message}")
-                                                  log.throwable?.let {
-                                                       appendLine()
-                                                       append(it.stackTraceToString())
-                                                  }
-                                             }
-                                        }
-                                        val clipData = ClipData.newPlainText("debug logs", formattedDebugLogs)
-                                        clipboard.setClipEntry(ClipEntry(clipData))
-                                        snackbarHostState.showSnackbar(
-                                             message = "Copied debug logs",
-                                             duration = SnackbarDuration.Short
-                                        )
-                                   }
-                              }
-                         )
-                         ImageButton(
-                              modifier = Modifier
-                                   .padding(2.dp)
-                                   .size(50.dp),
-                              border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),
-                              contentPadding = PaddingValues(10.dp),
-                              shape = RoundedCornerShape(16.dp),
-                              onClick = { expandedSurface = !expandedSurface },
-                              image = R.drawable.debug
-                         )
-                    }
-               }
                AnimatedVisibility(
-                    visible = expandedSurface,
+                    visible = true,
                     enter = expandVertically(tween(250)) + fadeIn(),
                     exit = shrinkVertically(tween(250)) + fadeOut()
                ) {
@@ -176,11 +135,37 @@ fun LoggingScreen(
                                              modifier = Modifier
                                                   .fillMaxWidth()
                                                   .padding(6.dp)
-                                                  .verticalScroll(debugScroll)
+                                                  .verticalScroll(logsScroll)
                                         )
                                    }
                               }
                          }
+                    }
+                    if (debugSwitch) {
+                         ErrorCopyButton(
+                              modifier = Modifier
+                                   .padding(2.dp)
+                                   .size(50.dp),
+                              onClick = {
+                                   scope.launch {
+                                        val formattedDebugLogs = debugLogs.joinToString("\n\n") { log ->
+                                             buildString {
+                                                  append("${log.timestamp} ${log.tag} ${log.level} ${log.message}")
+                                                  log.throwable?.let {
+                                                       appendLine()
+                                                       append(it.stackTraceToString())
+                                                  }
+                                             }
+                                        }
+                                        val clipData = ClipData.newPlainText("debug logs", formattedDebugLogs)
+                                        clipboard.setClipEntry(ClipEntry(clipData))
+                                        snackbarHostState.showSnackbar(
+                                             message = "Copied debug logs",
+                                             duration = SnackbarDuration.Short
+                                        )
+                                   }
+                              }
+                         )
                     }
                }
           }

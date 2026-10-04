@@ -40,7 +40,7 @@ fun DeleteDialog(
           }
           Surface(
                modifier = Modifier
-                    .height(130.dp)
+                    .height(150.dp)
                     .fillMaxWidth()
                     .padding(8.dp),
                shape = RoundedCornerShape(12.dp),
@@ -68,14 +68,24 @@ fun DeleteDialog(
                     }
                     Row(
                          modifier = Modifier
-                         .padding(5.dp),
+                              .fillMaxSize()
+                              .padding(5.dp),
                          verticalAlignment = Alignment.Bottom,
                          horizontalArrangement = Arrangement.End
                     ) {
                          AppTextButton(
-                              modifier = Modifier.padding(5.dp),
+                              modifier = Modifier
+                                   .padding(start = 5.dp, bottom = 5.dp, top = 5.dp, end = 95.dp)                                   .align(Alignment.Bottom),
                               text = "Delete",
+                              isError = true,
                               onClick = deletedItem,
+                         )
+                         AppTextButton(
+                              modifier = Modifier
+                                   .padding(5.dp)
+                                   .align(Alignment.Bottom),
+                              text = "Cancel",
+                              onClick = onDismissRequest
                          )
                     }
                }
