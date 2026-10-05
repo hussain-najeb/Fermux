@@ -223,18 +223,18 @@ class DownloaderViewModel : ViewModel() {
                          activeProcess = null
                          downloadErrorHandler(e)
                     }
+               } finally {
+                    downloaderLogs = ""
                }
           }
      }
 
      /**
       * Downloader cancel button to clear a process such as:
-      *
       * * Handle Mid-download task that's unwanted
       * * Handle the reset process after an error
       * * Clear a successful process, after extensive editing to the main wrapper, the (YoutubeDL) class.
       * * Kills all process's that were triggered by the user, libs like ffmpeg, yt-dlp, aria2, and quickJs as well.
-      *
       */
      fun cancelButton(context: Context) {
           activeProcess?.let { id ->

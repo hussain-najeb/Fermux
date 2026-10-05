@@ -85,7 +85,7 @@ fun LoggingScreen(
                }
                ErrorCopyButton(
                     modifier = Modifier
-                         .padding(start = 2.dp, top = 6.dp)
+                         .padding(7.dp)
                          .align(Alignment.Start)
                          .size(50.dp),
                     onClick = {
@@ -144,7 +144,8 @@ fun LoggingScreen(
                if (debugSwitch) {
                     ErrorCopyButton(
                          modifier = Modifier
-                              .padding(2.dp)
+                              .padding(7.dp)
+                              .align(Alignment.Start)
                               .size(50.dp),
                          onClick = {
                               scope.launch {

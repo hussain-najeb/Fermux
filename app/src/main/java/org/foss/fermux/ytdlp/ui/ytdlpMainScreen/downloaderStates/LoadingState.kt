@@ -28,8 +28,9 @@ fun LoadingCard(
 ) {
      val message =
           listOf(
-               "Fetching Video Info",
+               "Fetching Video Info...",
                "Connecting To Server...",
+               "Getting Closer...",
                "Analyzing Metadata...",
                "Wrapping Things Up...",
                "Stuff Is Happening...",

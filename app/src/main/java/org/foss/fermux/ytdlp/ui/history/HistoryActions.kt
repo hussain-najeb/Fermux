@@ -4,12 +4,11 @@ package org.foss.fermux.ytdlp.ui.history
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.foss.fermux.R
@@ -36,23 +35,37 @@ fun HistoryActions(
                shape = RoundedCornerShape(8.dp),
                border = BorderStroke(1.dp, FermuxColors.mutedBlue)
           ) {
-               Row {
-                    SmallActionButton(modifier = Modifier
-                              .padding(3.dp),
-                         onClick = onDelete,
-                         image = R.drawable.trash)
-                    SmallActionButton(
-                         modifier = Modifier
-                              .padding(3.dp),
-                         onClick = onMoreInfo,
-                         image = R.drawable.more_info
-                    )
-                    SmallActionButton(
-                         modifier = Modifier
-                              .padding(3.dp),
-                         onClick = onCopyUrl,
-                         image = R.drawable.copy
-                    )
+               Row(
+                    modifier = Modifier
+                         .fillMaxWidth()
+                         .padding(4.dp)
+                    ,
+                    horizontalArrangement = Arrangement.Center
+               ) {
+                    Box(contentAlignment = Alignment.CenterStart) {
+                         SmallActionButton(
+                              modifier = Modifier
+                                   .padding(3.dp),
+                              onClick = onDelete,
+                              image = R.drawable.trash
+                         )
+                    }
+                    Box(contentAlignment = Alignment.Center) {
+                         SmallActionButton(
+                              modifier = Modifier
+                                   .padding(3.dp),
+                              onClick = onMoreInfo,
+                              image = R.drawable.more_info
+                         )
+                    }
+                    Box(contentAlignment = Alignment.CenterEnd) {
+                         SmallActionButton(
+                              modifier = Modifier
+                                   .padding(3.dp),
+                              onClick = onCopyUrl,
+                              image = R.drawable.copy
+                         )
+                    }
                }
           }
      }

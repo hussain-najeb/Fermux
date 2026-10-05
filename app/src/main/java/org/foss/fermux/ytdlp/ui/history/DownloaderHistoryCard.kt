@@ -25,7 +25,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
@@ -211,6 +210,7 @@ fun HistoryCard(
                          }
                          FilterButton(
                               modifier = Modifier
+                                   .size(50.dp)
                                    .align(Alignment.Bottom)
                                    .padding(5.dp),
                               onClick = onMenuClick,
@@ -219,51 +219,5 @@ fun HistoryCard(
                     }
                }
           }
-     }
-}
-
-@Preview(backgroundColor = 181825, showBackground = true)
-@Composable
-private fun test11() {
-
-     Column(modifier = Modifier
-          .fillMaxSize()
-          .background(FermuxColors.background)
-          .padding(10.dp),
-          verticalArrangement = Arrangement.spacedBy(4.dp)
-     ) {
-
-     Spacer(modifier = Modifier.height(20.dp))
-
-          HistoryCard(
-               thumbnail = "/home/Hussain/Downloads/thumbnail.webp",
-               imageDescription = "Video thumbnail",
-               title = "Never Gonna Give You Up - Rick Astley",
-               uploader = "Rick Astley",
-               format = "MP4",
-               resolution = resolutionFormatting("1028px720p"),
-               duration = 666,
-               onMenuClick = {}
-          )
-          HistoryCard(
-               thumbnail = "/home/Hussain/Downloads/images.webp",
-               imageDescription = "Video thumbnail",
-               title = "Never Gonna Give You Up - Rick Astley",
-               uploader = "Rick Astley",
-               format = "MP4",
-               resolution = resolutionFormatting("1028px720p"),
-               duration = 404,
-               onMenuClick = {}
-          )
-          HistoryCard(
-               thumbnail = "/home/Hussain/Downloads/galagcy.webp",
-               imageDescription = "Video thumbnail",
-               title = "Never Gonna Give You Up - Rick Astley",
-               uploader = "Rick Astley",
-               format = "MP4",
-               resolution = resolutionFormatting("1028x720"),
-               duration = 808,
-               onMenuClick = {}
-          )
      }
 }

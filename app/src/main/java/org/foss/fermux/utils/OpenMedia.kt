@@ -6,7 +6,7 @@ import android.net.Uri
 
 fun Context.openMedia(media: Uri) {
      val intent = Intent(Intent.ACTION_VIEW).apply {
-          setDataAndType(media, "*/*")
+          setDataAndType(media, "video/*")
           addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
      }
      startActivity(intent)

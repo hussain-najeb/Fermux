@@ -25,17 +25,11 @@ interface DownloadsDao {
      @Query("SELECT * FROM downloads ORDER BY size ASC")
      fun getDownloadsOrderedBySizeASC(): Flow<List<DownloadsDatabaseField>>
 
-     @Query("SELECT * FROM downloads ORDER BY extractor ASC")
-     fun getDownloadsOrderedByExtractorASC(): Flow<List<DownloadsDatabaseField>>
-
      @Query("SELECT * FROM downloads ORDER BY title DESC")
      fun getDownloadsOrderByTitleDESC(): Flow<List<DownloadsDatabaseField>>
 
      @Query("SELECT * FROM downloads ORDER BY size DESC")
      fun getDownloadsOrderBySizeDESC(): Flow<List<DownloadsDatabaseField>>
-
-     @Query("SELECT * FROM downloads ORDER BY extractor DESC")
-     fun getDownloadsOrderByExtractorDESC(): Flow<List<DownloadsDatabaseField>>
 
      // @Query("SELECT * FROM downloads ORDER BY format ") TODO. Implement this
 }

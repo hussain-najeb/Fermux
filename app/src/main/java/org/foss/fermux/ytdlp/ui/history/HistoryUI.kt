@@ -132,13 +132,6 @@ fun History(
                                                        downloadsDatabaseViewModel.sizeSorter()
                                                   }
                                              )
-                                             FilterButton(
-                                                  modifier = Modifier.padding(start = 4.dp),
-                                                  image = R.drawable.extractor,
-                                                  onClick = {
-                                                       downloadsDatabaseViewModel.extractorSorter()
-                                                  }
-                                             )
                                         }
                                    }
                               }

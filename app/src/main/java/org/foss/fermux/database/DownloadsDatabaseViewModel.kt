@@ -30,10 +30,8 @@ class DownloadsDatabaseViewModel(
           when(sorter) {
                DownloadsSorter.SizeASC -> dao.getDownloadsOrderedBySizeASC()
                DownloadsSorter.TitleASC -> dao.getDownloadsOrderedByTitleASC()
-               DownloadsSorter.ExtractorASC -> dao.getDownloadsOrderedByExtractorASC()
                DownloadsSorter.TitleDESC -> dao.getDownloadsOrderByTitleDESC()
                DownloadsSorter.SizeDESC -> dao.getDownloadsOrderBySizeDESC()
-               DownloadsSorter.ExtractorDESC -> dao.getDownloadsOrderByExtractorDESC()
           }
      }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
@@ -80,14 +78,6 @@ class DownloadsDatabaseViewModel(
                DownloadsSorter.SizeASC -> DownloadsSorter.SizeDESC
                DownloadsSorter.SizeDESC -> DownloadsSorter.SizeASC
                else -> DownloadsSorter.SizeASC
-          }
-     }
-
-     fun extractorSorter() {
-          _sorting.value = when(_sorting.value) {
-               DownloadsSorter.ExtractorASC -> DownloadsSorter.ExtractorDESC
-               DownloadsSorter.ExtractorDESC -> DownloadsSorter.ExtractorASC
-               else -> DownloadsSorter.ExtractorASC
           }
      }
 

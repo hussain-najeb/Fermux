@@ -63,7 +63,6 @@ fun SimpleDownloaderPage(
      val isCheckingForUpdate by downloaderSettingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
      val ytdlpUpdateStatus by downloaderSettingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
 
-
      // ModularSegmentedButtons vals
      val updateChannel by downloaderSettingsViewModel.ytdlpChannel.collectAsStateWithLifecycle()
 
@@ -173,8 +172,6 @@ fun SimpleDownloaderPage(
                position = TilePosition.BOTTOM
           ),
      )
-
-
 
 
      MediumTopBarScaffold(

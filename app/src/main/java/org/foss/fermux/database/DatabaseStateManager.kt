@@ -14,8 +14,5 @@ data class DownloadsStateManager(
 enum class DownloadsSorter {
      TitleASC,
      SizeASC,
-     ExtractorASC,
      TitleDESC,
-     SizeDESC,
-     ExtractorDESC
-}
+     SizeDESC,}
