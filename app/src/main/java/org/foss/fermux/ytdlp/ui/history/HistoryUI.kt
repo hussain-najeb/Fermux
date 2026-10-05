@@ -155,33 +155,35 @@ fun History(
                     } else {
                          items(state.downloads, key = {"${it.extractor}: ${it.videoId}"}) { list ->
                               val key = "${list.extractor}:${list.videoId}"
-                              HistoryCard(
-                                   thumbnail = list.thumbnail,
-                                   imageDescription = list.title,
-                                   title = list.title,
-                                   uploader = list.uploader,
-                                   format = list.format,
-                                   resolution = list.resolution,
-                                   duration = list.duration,
-                                   onMenuClick = { cardKey = if (cardKey == key) null else key }
-                              )
-                              HistoryActions(
-                                   expanded = cardKey == key,
-                                   onDelete = { downloadsDatabaseViewModel.showDeleteDialog(list) },
-                                   onMoreInfo = {
-                                        downloadsDatabaseViewModel.showBottomSheet(list)
-                                   },
-                                   onCopyUrl = {
-                                        scope.launch {
-                                             val clipData = ClipData.newPlainText("copied url", list.url)
-                                             clipboard.setClipEntry(ClipEntry(clipData))
-                                             snackbarHostState.showSnackbar(
-                                                  message = "Copied Url",
-                                                  duration = SnackbarDuration.Short
-                                             )
+                              Column(modifier = Modifier.fillMaxWidth()) {
+                                   HistoryCard(
+                                        thumbnail = list.thumbnail,
+                                        imageDescription = list.title,
+                                        title = list.title,
+                                        uploader = list.uploader,
+                                        format = list.format,
+                                        resolution = list.resolution,
+                                        duration = list.duration,
+                                        onMenuClick = { cardKey = if (cardKey == key) null else key }
+                                   )
+                                   HistoryActions(
+                                        expanded = cardKey == key,
+                                        onDelete = { downloadsDatabaseViewModel.showDeleteDialog(list) },
+                                        onMoreInfo = {
+                                             downloadsDatabaseViewModel.showBottomSheet(list)
+                                        },
+                                        onCopyUrl = {
+                                             scope.launch {
+                                                  val clipData = ClipData.newPlainText("copied url", list.url)
+                                                  clipboard.setClipEntry(ClipEntry(clipData))
+                                                  snackbarHostState.showSnackbar(
+                                                       message = "Copied Url",
+                                                       duration = SnackbarDuration.Short
+                                                  )
+                                             }
                                         }
-                                   }
-                              )
+                                   )
+                              }
                          }
                     }
                }

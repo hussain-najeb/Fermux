@@ -49,7 +49,9 @@ fun TileOptions(
      )
 
      Column(
-          modifier = Modifier.fillMaxSize().padding(start = 18.dp, end = 18.dp)
+          modifier = Modifier
+               .fillMaxSize()
+               .padding(start = 5.dp, end = 5.dp)
      ) {
           Surface(
                modifier = Modifier.padding(2.dp),

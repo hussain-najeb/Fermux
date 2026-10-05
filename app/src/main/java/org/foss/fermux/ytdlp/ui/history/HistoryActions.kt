@@ -24,12 +24,18 @@ fun HistoryActions(
 ) {
      AnimatedVisibility(
           visible = expanded,
-          enter = expandHorizontally(animationSpec = tween(250)) + fadeIn(),
-          exit = shrinkHorizontally(animationSpec = tween(200)) + fadeOut()
+          enter = expandVertically(
+               expandFrom = Alignment.Top,
+               animationSpec = tween(150)
+          ) + fadeIn(),
+          exit = shrinkVertically(
+               shrinkTowards = Alignment.Top,
+               animationSpec = tween(100)
+          ) + fadeOut()
      ) {
           Surface(
                modifier = Modifier
-                    .padding(start = 12.dp, end = 12.dp, top = 4.dp, bottom = 4.dp)
+                    .padding(6.dp)
                     .fillMaxWidth(),
                color = FermuxColors.darkBlue,
                shape = RoundedCornerShape(8.dp),
@@ -37,12 +43,13 @@ fun HistoryActions(
           ) {
                Row(
                     modifier = Modifier
-                         .fillMaxWidth()
-                         .padding(4.dp)
-                    ,
+                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                ) {
-                    Box(contentAlignment = Alignment.CenterStart) {
+                    Box(
+                         modifier = Modifier.wrapContentSize(),
+                         contentAlignment = Alignment.CenterStart
+                    ) {
                          SmallActionButton(
                               modifier = Modifier
                                    .padding(3.dp),
@@ -50,7 +57,10 @@ fun HistoryActions(
                               image = R.drawable.trash
                          )
                     }
-                    Box(contentAlignment = Alignment.Center) {
+                    Box(
+                         modifier = Modifier.wrapContentSize(),
+                         contentAlignment = Alignment.Center
+                    ) {
                          SmallActionButton(
                               modifier = Modifier
                                    .padding(3.dp),
@@ -58,7 +68,10 @@ fun HistoryActions(
                               image = R.drawable.more_info
                          )
                     }
-                    Box(contentAlignment = Alignment.CenterEnd) {
+                    Box(
+                         modifier = Modifier.wrapContentSize(),
+                         contentAlignment = Alignment.CenterEnd
+                    ) {
                          SmallActionButton(
                               modifier = Modifier
                                    .padding(3.dp),

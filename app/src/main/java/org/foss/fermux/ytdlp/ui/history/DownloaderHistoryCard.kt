@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.FilterButton
+import org.foss.fermux.components.buttons.InfoHistoryButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.resolutionFormatting
 import org.foss.fermux.ytdlp.logic.downloader.videoTime
@@ -208,13 +208,10 @@ fun HistoryCard(
                                    }
                               }
                          }
-                         FilterButton(
+                         InfoHistoryButton(
                               modifier = Modifier
-                                   .size(50.dp)
-                                   .align(Alignment.Bottom)
-                                   .padding(5.dp),
-                              onClick = onMenuClick,
-                              image = R.drawable.info_circle
+                                   .align(Alignment.Bottom),
+                              onClick = onMenuClick
                          )
                     }
                }
