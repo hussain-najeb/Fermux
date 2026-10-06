@@ -107,7 +107,6 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings_
 
 // TODO. for settings.
 //  1- sequental downloads, one after the other, so one is done, the other is executed right after
-//  2- Add a button to remove all cache in the app's private folder
 
 val DOWNLOAD_PATH = stringPreferencesKey("download_path")
 val DOWNLOADER_BELL_STATE = booleanPreferencesKey("bellState")

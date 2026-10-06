@@ -6,11 +6,13 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
+import org.foss.fermux.components.buttons.ImageButton
 import org.foss.fermux.components.buttons.SettingsResetButton
 import org.foss.fermux.components.downloaderComponents.SponsorBlockChoices
 import org.foss.fermux.components.generalComponents.ModularSegmentedButtons
@@ -20,6 +22,7 @@ import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.settings.ui.downloader.ExpandableDownloaderSetting.*
+import org.foss.fermux.utils.clearCache
 import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 import org.foss.fermux.ytdlp.logic.downloader.Connectivity
 import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
@@ -31,6 +34,9 @@ fun AdvancedDownloaderSettings(
      navController: NavController,
      snackbarHostState: SnackbarHostState
 ) {
+
+     val context = LocalContext.current
+
      // DataStore vals
      val sponsorBlock by downloaderSettingsViewModel.sponsorBlock.collectAsStateWithLifecycle()
      val quickJS by downloaderSettingsViewModel.quickJS.collectAsStateWithLifecycle()
@@ -193,6 +199,25 @@ fun AdvancedDownloaderSettings(
                     SettingsSwitch(
                          checked = fingerprint, onCheckedChange = {
                               downloaderSettingsViewModel.setFingerprint(it)
+                         }
+                    )
+               },
+               position = TilePosition.MIDDLE
+          ),
+          SettingListInfo(
+               title = "Clearing Cache",
+               description = "Clearing cache for the app",
+               image = R.drawable.eraser,
+               content = {
+                    ImageButton(
+                         image = R.drawable.archive,
+                         onClick = { context.clearCache()
+                              scope.launch {
+                                   snackbarHostState.showSnackbar(
+                                        message = "Cache Cleared",
+                                        duration = SnackbarDuration.Short
+                                   )
+                              }
                          }
                     )
                },
