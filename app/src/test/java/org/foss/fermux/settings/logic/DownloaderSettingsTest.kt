@@ -6,7 +6,6 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.foss.fermux.dataStore.DEFAULT_SPONSOR_BLOCK_CATEGORIES
 import org.foss.fermux.dataStore.DataStoreDownloaderSettings
-import org.foss.fermux.dataStore.JSONHistoryCards
 import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 import org.foss.fermux.ytdlp.logic.downloader.Connectivity
 import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
@@ -38,20 +37,10 @@ class DownloaderSettingsTest {
      fun `test for production settings`() = runTest {
           val setting = newFixture().repositoryOfTheProdCode
 
-          val jsonInfo = JSONHistoryCards(
-               title = "Something Something Title",
-               thumbnail = "Something Something thumbnail",
-               url = "Something Something URL",
-               videoDuration = 4632533,
-               downloadTime = 335632
-          )
+
           val categories = setOf("something something categories", "Something Something categories")
 
           setting.setDownloadPath("/downloads")
-          setting.setJSONVideo(jsonInfo)
-          setting.setJSONAudio(jsonInfo)
-          setting.setVideoHistory(false)
-          setting.setAudioHistory(false)
           setting.setPlaylistStatus(false)
           setting.setSponsorBlockCategories(categories)
           setting.setSponsorBlock(false)
@@ -63,10 +52,6 @@ class DownloaderSettingsTest {
           setting.setDownloaderBellState(false)
 
           assertEquals("/downloads", setting.downloadPath.first())
-          assertEquals(listOf(jsonInfo), setting.jsonVideoCard.first())
-          assertEquals(listOf(jsonInfo), setting.jsonAudioCard.first())
-          assertFalse(setting.videoHistory.first())
-          assertFalse(setting.audioHistory.first())
           assertFalse(setting.playlistStatus.first())
           assertEquals(categories,setting.sponsorBlockCategories.first())
           assertFalse(setting.sponsorBlock.first())
@@ -114,8 +99,6 @@ class DownloaderSettingsTest {
           setting.setSleepRequest(10)
           setting.setExternalDownloader(ExternalDownloaders.FFmpegAsExternal)
           setting.setYtdlpDetails(false)
-          setting.setVideoHistory(false)
-          setting.setAudioHistory(false)
           setting.setEmbedThumbnail(false)
           setting.setPlaylistStatus(false)
           setting.setSponsorBlock(false)
@@ -133,8 +116,6 @@ class DownloaderSettingsTest {
           assertEquals(Aria2cMode.Disabled, setting.aria2cMode.first())
           assertEquals(ExternalDownloaders.YtdlpNativeDownloader, setting.externalDownloaders.first())
           assertTrue(setting.ytdlpDetails.first())
-          assertTrue(setting.videoHistory.first())
-          assertTrue(setting.audioHistory.first())
           assertTrue(setting.embedThumbnail.first())
           assertFalse(setting.playlistStatus.first())
           assertTrue(setting.sponsorBlock.first())
@@ -153,8 +134,6 @@ class DownloaderSettingsTest {
           setting.setSleepRequest(10)
           setting.setAria2cMode(Aria2cMode.EdgeCaseOnly)
           setting.setYtdlpDetails(false)
-          setting.setVideoHistory(false)
-          setting.setAudioHistory(false)
           setting.setEmbedThumbnail(false)
           setting.setPlaylistStatus(true)
           setting.setSponsorBlock(false)
@@ -172,8 +151,6 @@ class DownloaderSettingsTest {
           assertEquals(Aria2cMode.EdgeCaseOnly, setting.aria2cMode.first())
           assertEquals(ExternalDownloaders.Disabled, setting.externalDownloaders.first())
           assertFalse(setting.ytdlpDetails.first())
-          assertFalse(setting.videoHistory.first())
-          assertFalse(setting.audioHistory.first())
           assertFalse(setting.embedThumbnail.first())
           assertTrue(setting.playlistStatus.first())
           assertFalse(setting.sponsorBlock.first())

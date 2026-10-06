@@ -40,7 +40,6 @@ fun HistoryCard(
      imageDescription: String?,
      title: String?,
      uploader: String?,
-     format: String?,
      resolution: String?,
      duration: Int?,
      onMenuClick: () -> Unit
@@ -181,20 +180,6 @@ fun HistoryCard(
                                    if (uploader != null) {
                                         Text(
                                              text = uploader,
-                                             fontSize = 13.sp,
-                                             fontStyle = FontStyle.Normal,
-                                             fontFamily = FontFamily.Default,
-                                             fontWeight = FontWeight.Normal,
-                                             minLines = 1,
-                                             maxLines = 1,
-                                             overflow = TextOverflow.Ellipsis,
-                                             color = titleColor,
-                                             modifier = Modifier.padding(2.dp)
-                                        )
-                                   }
-                                   if (format != null) {
-                                        Text(
-                                             text = "| $format",
                                              fontSize = 13.sp,
                                              fontStyle = FontStyle.Normal,
                                              fontFamily = FontFamily.Default,

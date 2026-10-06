@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -28,16 +27,16 @@ fun DeleteDialog(
      onDismissRequest: () -> Unit
 ) {
      Dialog(
-          onDismissRequest = onDismissRequest,
+          onDismissRequest = onDismissRequest
      ) {
-          val view = LocalView.current
+          val dialogWindow = (LocalView.current.parent as? DialogWindowProvider)?.window
           SideEffect {
-               val window = (view.parent as DialogWindowProvider).window
-               window.setDimAmount(0.5f)
-               window.addFlags(
-                    WindowManager.LayoutParams.FLAG_DIM_BEHIND
-               )
+               dialogWindow?.apply {
+                    addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+                    setDimAmount(0.6f)
+               }
           }
+
           Surface(
                modifier = Modifier
                     .height(150.dp)
@@ -90,20 +89,5 @@ fun DeleteDialog(
                     }
                }
           }
-     }
-}
-
-
-@Preview (backgroundColor = 0xFF15152e, showBackground = true)
-@Composable
-fun test12 () {
-
-     Column(
-          modifier = Modifier.fillMaxSize()
-     ) {
-          DeleteDialog(
-               deletedItem = {},
-               onDismissRequest = {}
-          )
      }
 }

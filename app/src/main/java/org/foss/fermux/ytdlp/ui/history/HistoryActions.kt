@@ -37,19 +37,16 @@ fun HistoryActions(
                modifier = Modifier
                     .padding(6.dp)
                     .fillMaxWidth(),
-               color = FermuxColors.darkBlue,
+               color = FermuxColors.darkPurple,
                shape = RoundedCornerShape(8.dp),
                border = BorderStroke(1.dp, FermuxColors.mutedBlue)
           ) {
                Row(
                     modifier = Modifier
                          .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
+                    horizontalArrangement = Arrangement.SpaceEvenly
                ) {
-                    Box(
-                         modifier = Modifier.wrapContentSize(),
-                         contentAlignment = Alignment.CenterStart
-                    ) {
+                    Box {
                          SmallActionButton(
                               modifier = Modifier
                                    .padding(3.dp),
@@ -57,10 +54,7 @@ fun HistoryActions(
                               image = R.drawable.trash
                          )
                     }
-                    Box(
-                         modifier = Modifier.wrapContentSize(),
-                         contentAlignment = Alignment.Center
-                    ) {
+                    Box{
                          SmallActionButton(
                               modifier = Modifier
                                    .padding(3.dp),
@@ -68,10 +62,7 @@ fun HistoryActions(
                               image = R.drawable.more_info
                          )
                     }
-                    Box(
-                         modifier = Modifier.wrapContentSize(),
-                         contentAlignment = Alignment.CenterEnd
-                    ) {
+                    Box {
                          SmallActionButton(
                               modifier = Modifier
                                    .padding(3.dp),

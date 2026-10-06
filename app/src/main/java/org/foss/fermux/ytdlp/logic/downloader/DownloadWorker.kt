@@ -252,7 +252,7 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
           } catch (e: Exception) {
                DebugLogDownloader.errorDownloader("DownloadWorker", "Failed id=$taskId attempt=$runAttemptCount", e)
                val error = e.message
-                    ?.take(5_000)
+                    ?.take(9_000)
                     ?: "Download failed"
                Result.failure(workDataOf("error" to error))
           }

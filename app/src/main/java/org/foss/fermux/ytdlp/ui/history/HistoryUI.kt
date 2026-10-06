@@ -47,6 +47,7 @@ fun History(
 
      var expanded by remember { mutableStateOf(false) }
      var cardKey by remember { mutableStateOf<String?>(null) }
+     var filter by remember { mutableStateOf(false) }
      var titleImage by remember { mutableStateOf(true) }
      var databaseImage by remember { mutableStateOf(true) }
 
@@ -103,8 +104,8 @@ fun History(
                                    modifier = Modifier.wrapContentSize(),
                               ) {
                                    FilterButton(
-                                        image = R.drawable.filter,
-                                        onClick = { expanded = !expanded }
+                                        image = if (filter)R.drawable.filter_full else R.drawable.filter,
+                                        onClick = { expanded = !expanded.also { filter = !filter } }
                                    )
                                    AnimatedVisibility(
                                         visible = expanded,
@@ -161,7 +162,6 @@ fun History(
                                         imageDescription = list.title,
                                         title = list.title,
                                         uploader = list.uploader,
-                                        format = list.format,
                                         resolution = list.resolution,
                                         duration = list.duration,
                                         onMenuClick = { cardKey = if (cardKey == key) null else key }
