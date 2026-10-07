@@ -1,23 +1,26 @@
 package org.foss.fermux.settings.ui.downloader
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
+import org.foss.fermux.components.buttons.FilterButton
 import org.foss.fermux.components.buttons.ImageButton
-import org.foss.fermux.components.buttons.SettingsResetButton
 import org.foss.fermux.components.downloaderComponents.SponsorBlockChoices
 import org.foss.fermux.components.generalComponents.ModularSegmentedButtons
 import org.foss.fermux.components.settingsComponents.SettingsSwitch
@@ -25,7 +28,7 @@ import org.foss.fermux.components.settingsComponents.TileOptions
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.TilePosition
-import org.foss.fermux.settings.ui.downloader.ExpandableDownloaderSetting.*
+import org.foss.fermux.settings.ui.downloader.ExpandableDownloaderSetting.SponsorBlock
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.clearCache
 import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
@@ -39,7 +42,6 @@ fun AdvancedDownloaderSettings(
      navController: NavController,
      snackbarHostState: SnackbarHostState
 ) {
-
      val context = LocalContext.current
 
      // DataStore vals
@@ -59,19 +61,18 @@ fun AdvancedDownloaderSettings(
      var expandedSetting by remember {
           mutableStateOf<ExpandableDownloaderSetting?>(null)
      }
-     fun toggleDownloader(setting: ExpandableDownloaderSetting) {
-          expandedSetting = if (expandedSetting == setting) null else setting
-     }
 
      val advancedSettings = listOf(
           SettingListInfo(
                title = "Reset Downloader Settings",
                description = "Reset the downloader settings to there original state",
-               onClick = { toggleDownloader(ResetDownloader) },
-               trailingContent = {
-                    SettingsResetButton(
-                         expanded = expandedSetting == ResetDownloader,
-                         settingText = "Reset Downloader Settings",
+               image = R.drawable.restor,
+               liner = true,
+               content = {
+                    FilterButton(
+                         modifier = Modifier.padding(3.dp),
+                         border = true,
+                         image = R.drawable.restor,
                          onClick = {
                               scope.launch {
                                    val oldSettings = downloaderSettingsViewModel.resetDownloaderSettings()
@@ -105,10 +106,8 @@ fun AdvancedDownloaderSettings(
                title = "Connection Type",
                description = "Use different connections for the downloader",
                image = R.drawable.network,
-               onClick = { toggleDownloader(Wifi) },
-               trailingContent = {
+               dialogContent = {
                     ModularSegmentedButtons(
-                         expanded = expandedSetting == Wifi,
                          optionsList = listOf(
                               Connectivity.Any to "Default",
                               Connectivity.Wifi to "Wifi",
@@ -124,10 +123,8 @@ fun AdvancedDownloaderSettings(
                title = "Change IPV settings",
                description = "Change the IPV connection type",
                image = R.drawable.ipv,
-               onClick = { toggleDownloader(Ipv) },
-               trailingContent = {
+               dialogContent = {
                     ModularSegmentedButtons(
-                         expanded = expandedSetting == Ipv,
                          optionsList = listOf(
                               IpvConnection.Disabled to "Default",
                               IpvConnection.Ipv4 to "IPV4",
@@ -143,7 +140,6 @@ fun AdvancedDownloaderSettings(
                title = "SponsorBlock",
                description = "SponsorBlock API integration for cutting promotions when downloading",
                image = R.drawable.sponsorblock,
-               onClick = { toggleDownloader(SponsorBlock) },
                content = {
                     SettingsSwitch(
                          checked = sponsorBlock,
@@ -151,7 +147,7 @@ fun AdvancedDownloaderSettings(
                          onCheckedChange = { downloaderSettingsViewModel.setSponsorBlock(it) }
                     )
                },
-               trailingContent = {
+               dialogContent = {
                     SponsorBlockChoices(
                          expanded = expandedSetting == SponsorBlock,
                          downloaderSettingsViewModel = downloaderSettingsViewModel
@@ -163,10 +159,8 @@ fun AdvancedDownloaderSettings(
                title = "Aria2c",
                description = "Use aria2 instead of the default. Use the Edge Case option when downloading on the highest setting in the downloader",
                image = R.drawable.layers,
-               onClick = { toggleDownloader(Aria2c) },
-               trailingContent = {
+               dialogContent = {
                     ModularSegmentedButtons(
-                         expanded = expandedSetting == Aria2c,
                          enabled = aria2cEnabled,
                          optionsList = listOf(
                               Aria2cMode.Disabled to "Disabled",
@@ -181,17 +175,19 @@ fun AdvancedDownloaderSettings(
           ),
           SettingListInfo(
                title = "Yt-dlp HLS Options",
-               description = "Check any option if Aria2 is having issues, especially with m3u8 since yt-dlp prefers it's own options over Aria2",
+               description = "",
                image = R.drawable.aria2_hls,
-               onClick = { toggleDownloader(ExternalDownloader) },
-               trailingContent = {
+               dialogAppearance = true,
+               dialogTitle = "HLS options",
+               //specialDescription = ,
+               dialogImage = R.drawable.aria2_hls,
+               dialogContent = {
                     ModularSegmentedButtons(
-                         expanded = expandedSetting == ExternalDownloader,
                          enabled = externalDownloadersEnabled,
                          optionsList = listOf(
                               ExternalDownloaders.Disabled to "Disabled",
                               ExternalDownloaders.FFmpegAsExternal to "FFmpeg",
-                              ExternalDownloaders.YtdlpNativeDownloader to "hls-native"
+                              ExternalDownloaders.YtdlpNativeDownloader to "Hls Native"
                          ),
                          selectedOption = externalDownloaders,
                          onOptionSelected = { downloaderSettingsViewModel.setExternalDownloaders(it) }
@@ -279,6 +275,7 @@ fun AdvancedDownloaderSettings(
                icon = setting.icon,
                image = setting.image,
                content = setting.content,
+               liner = setting.liner,
                trailingContent = setting.trailingContent,
                onClick = {
                     setting.onClick?.invoke()
@@ -288,7 +285,8 @@ fun AdvancedDownloaderSettings(
                dialogTitle = setting.dialogTitle,
                dialogDescription = setting.dialogDescription,
                specialDescription = setting.specialDescription,
-               dialogImage = setting.dialogImage
+               dialogImage = setting.dialogImage,
+               dialogContent = setting.dialogContent
           )
      }
 }

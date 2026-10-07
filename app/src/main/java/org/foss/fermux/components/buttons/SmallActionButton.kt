@@ -27,7 +27,8 @@ import org.foss.fermux.ui.theme.FermuxColors
 fun SmallActionButton(
      modifier: Modifier = Modifier,
      image: Int,
-     onClick: () -> Unit
+     onClick: () -> Unit,
+     border: Boolean? =  false
 ) {
 
      val interactionSource = remember { MutableInteractionSource() }
@@ -58,7 +59,8 @@ fun SmallActionButton(
                .size(40.dp),
           shape = RoundedCornerShape(8.dp),
           contentPadding = PaddingValues(0.dp),
-          border = BorderStroke(1.dp, Color.Transparent),
+          border = if (border == true) BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
+               else BorderStroke(1.dp, Color.Transparent),
           colors = ButtonDefaults.textButtonColors(
                containerColor = containerColor,
                contentColor = FermuxColors.white

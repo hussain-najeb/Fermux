@@ -44,6 +44,7 @@ data class SettingListInfo(
     val position: TilePosition = TilePosition.MIDDLE,
     val route: String? = null,
     val onClick: (() -> Unit)? = null,
+    val liner: Boolean? = false,
     val content: @Composable (() -> Unit)? = null,
     val trailingContent: @Composable (() -> Unit)? = null,
     val modifier: Modifier? = null,
@@ -51,6 +52,7 @@ data class SettingListInfo(
     val dialogTitle: String? = null,
     val dialogDescription: String? = null,
     val specialDescription: AnnotatedString? = null,
-    val dialogImage: Int? = null
+    val dialogImage: Int? = null,
+    val dialogContent: @Composable (() -> Unit)? = null
 )
 

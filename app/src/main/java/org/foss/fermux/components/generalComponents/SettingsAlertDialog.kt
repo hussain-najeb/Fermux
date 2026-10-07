@@ -30,7 +30,8 @@ fun SettingAlertDialog(
      title: String? = null,
      description: String? = null,
      specialDescription: AnnotatedString? = null,
-     settingImage: Int? = null
+     settingImage: Int? = null,
+     dialogContent: @Composable (() -> Unit)? = null
 ) {
      Dialog(
           onDismissRequest = onDismissRequest
@@ -105,6 +106,15 @@ fun SettingAlertDialog(
                                    color = FermuxColors.white
                               )
                          }
+                    }
+                    if (dialogContent != null)
+                    Box(
+                         modifier = Modifier
+                              .fillMaxSize()
+                              .padding(8.dp),
+                         contentAlignment = Alignment.BottomCenter
+                    ) {
+                         dialogContent.invoke()
                     }
                }
           }

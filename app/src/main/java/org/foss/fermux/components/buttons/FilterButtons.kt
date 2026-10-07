@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -29,7 +28,8 @@ fun FilterButton(
      iconModifier: Modifier = Modifier,
      image: Int,
      enabled: Boolean = true,
-     onClick: () -> Unit
+     onClick: () -> Unit,
+     border: Boolean? = false
 ) {
 
      val interactionSource = remember { MutableInteractionSource() }
@@ -68,7 +68,8 @@ fun FilterButton(
                hoveredElevation = 5.dp,
                disabledElevation = 0.dp
           ), // TODO. Add more elevation to buttons, they look better that way
-          border = BorderStroke(1.dp, Color.Transparent),
+          border = if (border == true) BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
+               else BorderStroke(1.dp, FermuxColors.transparent),
           colors = ButtonDefaults.textButtonColors(
                containerColor = containerColor,
                contentColor = FermuxColors.white

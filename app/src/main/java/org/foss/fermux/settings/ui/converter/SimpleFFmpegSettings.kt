@@ -12,7 +12,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,16 +34,6 @@ import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.rememberNotificationPermissionRequest
-
-
-enum class ExpandableFFmpegSetting {
-     AudioBitrate,
-     ThreadLimit,
-     Resolution,
-     Crf,
-     ResetFFmpeg
-}
-
 
 @Composable
 fun SimpleFFmpegSetting(
@@ -79,26 +72,15 @@ fun SimpleFFmpegSetting(
           }
      )
 
-     var expandedFFmpegSetting by remember {
-          mutableStateOf<ExpandableFFmpegSetting?>(null)
-     }
-
-     fun toggleFFmpeg(setting: ExpandableFFmpegSetting) {
-          expandedFFmpegSetting =
-               if (expandedFFmpegSetting == setting) null else setting
-     }
-
 
 
      val simpleFFmpegSetting = listOf(
           SettingListInfo(
                title = "Audio Bitrate",
-               description = "Audio bitrate is the amount of data processed for each second of sound, higher is better",
+               description = "The amount of data processed for each second of sound. Higher is better",
                image = R.drawable.edit_audio,
-               onClick = { toggleFFmpeg(ExpandableFFmpegSetting.AudioBitrate) },
                trailingContent = {
                     ModularSegmentedButtons(
-                         expanded = expandedFFmpegSetting == ExpandableFFmpegSetting.AudioBitrate,
                          optionsList = listOf(
                               "64k" to "64k",
                               "128k" to "128k",
@@ -120,7 +102,7 @@ fun SimpleFFmpegSetting(
           ),
           SettingListInfo(
                title = "Normalize Audio",
-               description = "Audio normalization is uniformly adjusting a recording's overall volume so its peak or average loudness hits a specific target level",
+               description = "Audio normalization is uniformly adjusting a recording's overall peak or average loudness in the audio",
                image = if (normalizeAudio) R.drawable.normalize_audio else R.drawable.audio_lines_x,
                content = {
                     SettingsSwitch(
@@ -146,17 +128,15 @@ fun SimpleFFmpegSetting(
           ),
           SettingListInfo(
                title = "Video Resolution",
-               description = "Edit the video resolution for the selected media prior to using the converter so it outputs the selected resolution in this setting",
+               description = "Edit the video resolution for the selected media prior to using the converter so it outputs the selected resolution",
                image = R.drawable.video_resolution,
-               onClick = { toggleFFmpeg(ExpandableFFmpegSetting.Resolution) },
                trailingContent = {
                     ModularSegmentedButtons(
-                         expanded = expandedFFmpegSetting == ExpandableFFmpegSetting.Resolution,
-                         optionsList = listOf("" to "Normal",
-                              "480" to "480",
-                              "720" to "720",
-                              "1080" to "1080",
-                              "1440" to "1440"
+                         optionsList = listOf(
+                              "" to "Default",
+                              "720" to "HD",
+                              "1080" to "FHD",
+                              "1440" to "2K"
                          ),
                          selectedOption = resolution,
                          onOptionSelected = { ffmpegSettingsViewModel.setVideoResolution(it) }
@@ -166,7 +146,7 @@ fun SimpleFFmpegSetting(
           ),
           SettingListInfo(
                title = "Video Compression",
-               description = "This re-encodes the video instead of copying it as-is, trading speed for a smaller file size",
+               description = "This re-encodes the video instead of copying it as-is",
                image = R.drawable.video_compression,
                content = {
                     SettingsSwitch(
@@ -214,7 +194,8 @@ fun SimpleFFmpegSetting(
                               option.route?.let { navController.navigate(it) }
                          },
                          content = option.content,
-                         trailingContent = option.trailingContent
+                         trailingContent = option.trailingContent,
+                         dialogContent = option.dialogContent
                     )
                }
 

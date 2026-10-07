@@ -1,6 +1,5 @@
 package org.foss.fermux.components.generalComponents
 
-import androidx.compose.animation.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,7 +20,6 @@ import kotlin.math.roundToInt
 
 @Composable
 fun ModularSlider(
-     expanded: Boolean,
      sliderKey: Int,
      trackSteps: Int,
      trackRange: ClosedFloatingPointRange<Float>,
@@ -37,11 +35,6 @@ fun ModularSlider(
           sliderState.value = sliderKey.toFloat().coerceIn(trackRange)
      }
 
-     AnimatedVisibility(
-          visible = expanded,
-          enter = expandVertically(animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec()) + fadeIn(initialAlpha = 0.2f),
-          exit = shrinkVertically(animationSpec = MaterialTheme.motionScheme.fastEffectsSpec()) + fadeOut(targetAlpha = 0.1f)
-     ) {
           Surface(
                modifier = Modifier
                     .wrapContentSize()
@@ -94,5 +87,4 @@ fun ModularSlider(
                     )
                }
           }
-     }
 }

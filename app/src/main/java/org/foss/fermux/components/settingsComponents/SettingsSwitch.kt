@@ -26,15 +26,14 @@ fun SettingsSwitch(
                .height(IntrinsicSize.Min)
                .wrapContentSize()
      ) {
-          if (liner) {
-               VerticalDivider(
+          if (liner) VerticalDivider(
                     modifier = Modifier
                          .fillMaxHeight()
                          .padding(6.dp),
                     thickness = 0.5.dp,
                     color = FermuxColors.fermuxHelperBorder,
                )
-          }
+
 
           Switch(
                thumbContent = if (checked) {

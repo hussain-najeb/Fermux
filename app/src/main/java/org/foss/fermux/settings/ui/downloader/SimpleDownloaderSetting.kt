@@ -43,9 +43,7 @@ enum class ExpandableDownloaderSetting {
      Wifi,
      Ipv,
      Aria2c,
-     ExternalDownloader,
-     ResetHistory,
-     ResetDownloader
+     ExternalDownloader
 }
 
 @Composable
@@ -104,7 +102,6 @@ fun SimpleDownloaderPage(
                onClick = { toggleDownloader(ExpandableDownloaderSetting.YtdlpUpdater) },
                trailingContent = {
                     ModularSegmentedButtons(
-                         expanded = expandedSetting == ExpandableDownloaderSetting.YtdlpUpdater,
                          enabled = !isCheckingForUpdate,
                          optionsList = listOf(
                               YtdlpChannel.Stable to "Stable",

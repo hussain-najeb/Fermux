@@ -6,10 +6,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +34,9 @@ fun TileOptions(
      dialogDescription: String? = null,
      specialDescription: AnnotatedString? = null,
      dialogImage: Int? = null,
+     dialogContent: @Composable (() -> Unit)? = null,
 
+     liner: Boolean? = null,
      content: @Composable (() -> Unit)? = null,
      leadingContent: @Composable (() -> Unit)? = null,
      trailingContent: @Composable (() -> Unit)? = null
@@ -78,7 +77,8 @@ fun TileOptions(
                Row(
                     modifier = Modifier
                          .fillMaxWidth()
-                         .padding(horizontal = 16.dp, vertical = 20.dp),
+                         .height(IntrinsicSize.Min)
+                         .padding(horizontal = 12.dp, vertical = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                ) {
                     icon?.let {
@@ -122,7 +122,14 @@ fun TileOptions(
                               style = MaterialTheme.typography.bodyMedium
                          )
                     }
-                    content?.invoke()
+                    if (liner == true) VerticalDivider(
+                         modifier = Modifier
+                              .fillMaxHeight()
+                              .padding(6.dp),
+                         thickness = 0.5.dp,
+                         color = FermuxColors.fermuxHelperBorder,
+                    )
+                         content?.invoke()
                }
           }
           trailingContent?.invoke()
@@ -134,7 +141,8 @@ fun TileOptions(
                title = dialogTitle,
                description = dialogDescription,
                specialDescription = specialDescription,
-               settingImage = dialogImage
+               settingImage = dialogImage,
+               dialogContent = dialogContent
           )
      }
 }
