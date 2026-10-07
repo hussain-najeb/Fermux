@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,9 +27,10 @@ import org.foss.fermux.ui.theme.FermuxColors
 @Composable
 fun SettingAlertDialog(
      onDismissRequest: () -> Unit,
-     title: String,
-     description: String,
-     settingImage: Int
+     title: String? = null,
+     description: String? = null,
+     specialDescription: AnnotatedString? = null,
+     settingImage: Int? = null
 ) {
      Dialog(
           onDismissRequest = onDismissRequest
@@ -60,22 +62,24 @@ fun SettingAlertDialog(
                          contentAlignment = Alignment.TopCenter
                     ) {
                          Row(horizontalArrangement = Arrangement.Center) {
-                              Icon(
-                                   painter = painterResource(id = settingImage),
-                                   contentDescription = null,
-                                   tint = FermuxColors.white,
-                                   modifier = Modifier
-                                        .padding(4.dp)
-                                        .size(28.dp)
-                              )
-                              Text(
-                                   text = title,
-                                   fontSize = 22.sp,
-                                   fontStyle = FontStyle.Normal,
-                                   fontWeight = FontWeight.SemiBold,
-                                   color = FermuxColors.white,
-                                   modifier = Modifier.padding(4.dp)
-                              )
+                              if (settingImage != null)
+                                   Icon(
+                                        painter = painterResource(id = settingImage),
+                                        contentDescription = null,
+                                        tint = FermuxColors.white,
+                                        modifier = Modifier
+                                             .padding(4.dp)
+                                             .size(28.dp)
+                                   )
+                              if (title != null)
+                                   Text(
+                                        text = title,
+                                        fontSize = 22.sp,
+                                        fontStyle = FontStyle.Normal,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = FermuxColors.white,
+                                        modifier = Modifier.padding(4.dp)
+                                   )
                          }
                     }
                     Box(
@@ -84,13 +88,23 @@ fun SettingAlertDialog(
                               .padding(7.dp),
                          contentAlignment = Alignment.CenterStart
                     ) {
-                         Text(
-                              text = description,
-                              fontSize = 18.sp,
-                              fontStyle = FontStyle.Normal,
-                              fontWeight = FontWeight.SemiBold,
-                              color = FermuxColors.white
-                         )
+                         if (specialDescription != null) {
+                              Text(
+                                   text = specialDescription,
+                                   fontSize = 18.sp,
+                                   fontStyle = FontStyle.Normal,
+                                   fontWeight = FontWeight.SemiBold,
+                                   color = FermuxColors.white
+                              )
+                         } else if (description != null) {
+                              Text(
+                                   text = description,
+                                   fontSize = 18.sp,
+                                   fontStyle = FontStyle.Normal,
+                                   fontWeight = FontWeight.SemiBold,
+                                   color = FermuxColors.white
+                              )
+                         }
                     }
                }
           }

@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -45,6 +46,11 @@ data class SettingListInfo(
     val onClick: (() -> Unit)? = null,
     val content: @Composable (() -> Unit)? = null,
     val trailingContent: @Composable (() -> Unit)? = null,
-    val modifier: Modifier? = null
+    val modifier: Modifier? = null,
+    val dialogAppearance: Boolean? = false,
+    val dialogTitle: String? = null,
+    val dialogDescription: String? = null,
+    val specialDescription: AnnotatedString? = null,
+    val dialogImage: Int? = null
 )
 

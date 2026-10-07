@@ -7,6 +7,9 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -22,6 +25,7 @@ import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.settings.ui.downloader.ExpandableDownloaderSetting.*
+import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.clearCache
 import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 import org.foss.fermux.ytdlp.logic.downloader.Connectivity
@@ -91,7 +95,6 @@ fun AdvancedDownloaderSettings(
                content = {
                     SettingsSwitch(
                          checked = logcat,
-                         liner = false,
                          onCheckedChange = { downloaderSettingsViewModel.setDownloaderDebug(it) }
                     )
                },
@@ -142,7 +145,10 @@ fun AdvancedDownloaderSettings(
                onClick = { toggleDownloader(SponsorBlock) },
                content = {
                     SettingsSwitch(
-                         checked = sponsorBlock, onCheckedChange = { downloaderSettingsViewModel.setSponsorBlock(it) })
+                         checked = sponsorBlock,
+                         liner = true,
+                         onCheckedChange = { downloaderSettingsViewModel.setSponsorBlock(it) }
+                    )
                },
                trailingContent = {
                     SponsorBlockChoices(
@@ -195,14 +201,25 @@ fun AdvancedDownloaderSettings(
           SettingListInfo(
                title = "Impersonation",
                description = "Enabling impersonation makes yt-dlp requests look like a real browser",
-               image = if (fingerprint) R.drawable.fingerprint_on else R.drawable.fingerprint_off,
+               image = if (fingerprint) R.drawable.impersonation_on else R.drawable.impersonation_off,
                content = {
                     SettingsSwitch(
-                         checked = fingerprint, onCheckedChange = {
-                              downloaderSettingsViewModel.setFingerprint(it)
-                         }
+                         checked = fingerprint,
+                         liner = true,
+                         onCheckedChange = { downloaderSettingsViewModel.setFingerprint(it) }
                     )
                },
+               dialogAppearance = true,
+               dialogTitle = "Impersonation?",
+               specialDescription = buildAnnotatedString {
+                    withStyle(SpanStyle(FermuxColors.white)) { append("This setting uses ") }
+                    withStyle(SpanStyle(FermuxColors.skyBlue)) { append("curl_cffi") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append(" and ") }
+                    withStyle(SpanStyle(FermuxColors.skyBlue)) { append("curl-impersonate") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append(" to make ytdlp requests seem like a normal browser and not a bot request which is increasingly important in today's internet, This setting supports ") }
+                    withStyle(SpanStyle(FermuxColors.skyBlue)) { append(" ALL Android ABI's") }
+               },
+               dialogImage = R.drawable.impersonation_on,
                position = TilePosition.MIDDLE
           ),
           SettingListInfo(
@@ -252,6 +269,11 @@ fun AdvancedDownloaderSettings(
                     setting.onClick?.invoke()
                     setting.route?.let { navController.navigate(it) }
                },
+               dialogShow = setting.dialogAppearance,
+               dialogTitle = setting.dialogTitle,
+               dialogDescription = setting.dialogDescription,
+               specialDescription = setting.specialDescription,
+               dialogImage = setting.dialogImage
           )
      }
 }

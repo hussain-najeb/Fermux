@@ -18,7 +18,7 @@ fun SettingsSwitch(
      checked: Boolean,
      onCheckedChange: (Boolean) -> Unit,
      modifier: Modifier = Modifier,
-     liner: Boolean = true,
+     liner: Boolean = false,
      enabled: Boolean = true,
 ) {
      Row(
@@ -26,7 +26,7 @@ fun SettingsSwitch(
                .height(IntrinsicSize.Min)
                .wrapContentSize()
      ) {
-          if (!liner) {
+          if (liner) {
                VerticalDivider(
                     modifier = Modifier
                          .fillMaxHeight()
