@@ -48,18 +48,26 @@ fun AppSnackBar(
                          verticalAlignment = Alignment.CenterVertically,
                          horizontalArrangement = Arrangement.Center
                     ) {
-                         Text(
-                              text = data.visuals.message,
-                              fontSize = 16.sp,
-                              fontFamily = FontFamily.Default,
-                              modifier = Modifier.weight(1f)
-                         )
-
-                         data.visuals.actionLabel?.let {
-                              SmallActionButton(
-                                   onClick = data::performAction,
-                                   image = R.drawable.undo
+                         Box(
+                              modifier = Modifier.weight(1f),
+                              contentAlignment = Alignment.Center
+                         ) {
+                              Text(
+                                   text = data.visuals.message,
+                                   fontSize = 16.sp,
+                                   fontFamily = FontFamily.Default,
                               )
+                         }
+                         Box(
+                              modifier = Modifier,
+                              contentAlignment = Alignment.CenterEnd
+                         ) {
+                              data.visuals.actionLabel?.let {
+                                   SmallActionButton(
+                                        onClick = data::performAction,
+                                        image = R.drawable.undo
+                                   )
+                              }
                          }
                     }
                }

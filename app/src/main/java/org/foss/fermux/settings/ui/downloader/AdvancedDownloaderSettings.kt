@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.withStyle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -213,11 +214,14 @@ fun AdvancedDownloaderSettings(
                dialogTitle = "Impersonation?",
                specialDescription = buildAnnotatedString {
                     withStyle(SpanStyle(FermuxColors.white)) { append("This setting uses ") }
-                    withStyle(SpanStyle(FermuxColors.skyBlue)) { append("curl_cffi") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("curl_cffi") }
                     withStyle(SpanStyle(FermuxColors.white)) { append(" and ") }
-                    withStyle(SpanStyle(FermuxColors.skyBlue)) { append("curl-impersonate") }
-                    withStyle(SpanStyle(FermuxColors.white)) { append(" to make ytdlp requests seem like a normal browser and not a bot request which is increasingly important in today's internet, This setting supports ") }
-                    withStyle(SpanStyle(FermuxColors.skyBlue)) { append(" ALL Android ABI's") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("curl-impersonate") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append(" to make") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" yt-dlp") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append(" requests seem like a normal browser and not a bot request which is increasingly important in today's internet, This setting supports") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" ALL Android ABI's") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append(".") }
                },
                dialogImage = R.drawable.impersonation_on,
                position = TilePosition.MIDDLE
@@ -242,20 +246,31 @@ fun AdvancedDownloaderSettings(
                position = TilePosition.MIDDLE
           ),
           SettingListInfo(
-               title = "Quick JS Framework",
-               description = "QuickJS is a JavaScript engine yt-dlp uses to solve youtube JS challenges",
+               title = "Quick JS Engine",
+               description = "JavaScript engine for yt-dlp",
                image = if (quickJS) R.drawable.flash_on else R.drawable.flash_off,
                content = {
                     SettingsSwitch(
-                         checked = quickJS, onCheckedChange = {
-                              downloaderSettingsViewModel.setQuickJS(it)
-                         }
+                         checked = quickJS,
+                         liner = true,
+                         onCheckedChange = { downloaderSettingsViewModel.setQuickJS(it) }
                     )
                },
+               dialogAppearance = true,
+               dialogTitle = "QuickJS NG?",
+               specialDescription = buildAnnotatedString {
+                    withStyle(SpanStyle(FermuxColors.white)) { append("This setting uses ") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("QuickJsNG") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append(", NG here mean Next Gen, which is an improved version of the old") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append(" QuickJs") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append(" .Duo to the nature of Youtube, this JS runtime is recommended by ") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue)) { append("yt-dlp") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append(" to solve JS challenges, this should make Youtube downloads more reliable.") }
+               },
+               dialogImage = R.drawable.impersonation_on,
                position = TilePosition.BOTTOM
           )
      )
-
      advancedSettings.forEach { setting ->
           TileOptions(
                title = setting.title,
