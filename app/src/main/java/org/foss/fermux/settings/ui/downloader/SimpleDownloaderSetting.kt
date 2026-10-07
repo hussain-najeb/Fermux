@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.SettingsBackupRestore
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
@@ -25,7 +24,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.SettingsResetButton
 import org.foss.fermux.components.generalComponents.AppSnackBar
 import org.foss.fermux.components.generalComponents.MediumTopBarScaffold
 import org.foss.fermux.components.generalComponents.ModularSegmentedButtons
@@ -134,29 +132,6 @@ fun SimpleDownloaderPage(
                          checked = history, onCheckedChange = { downloaderSettingsViewModel.setHistory(it) })
                },
                position = TilePosition.MIDDLE
-          ),
-          SettingListInfo(
-               title = "Reset History",
-               description = "Reset both of the history cards",
-               icon = Icons.Default.SettingsBackupRestore,
-               onClick = {
-                    toggleDownloader(setting = ExpandableDownloaderSetting.ResetHistory)
-               },
-               trailingContent = {
-                    SettingsResetButton(
-                         expanded = expandedSetting == ExpandableDownloaderSetting.ResetHistory,
-                         settingText = "Reset History Cards",
-                         onClick = {
-                         //     downloaderSettingsViewModel.clearHistory()
-                              scope.launch {
-                                   snackbarHostState.showSnackbar(
-                                        message = "History settings cleared",
-                                        duration = SnackbarDuration.Short
-                                   )
-                              }
-                         }
-                    )
-               }
           ),
           SettingListInfo(
                title = if (ytdlpDetails) "Shown Logs" else "Hidden Logs",

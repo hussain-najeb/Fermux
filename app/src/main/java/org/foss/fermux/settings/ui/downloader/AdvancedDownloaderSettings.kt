@@ -91,6 +91,7 @@ fun AdvancedDownloaderSettings(
                content = {
                     SettingsSwitch(
                          checked = logcat,
+                         liner = false,
                          onCheckedChange = { downloaderSettingsViewModel.setDownloaderDebug(it) }
                     )
                },
