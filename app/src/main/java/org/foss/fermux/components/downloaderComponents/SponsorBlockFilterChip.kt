@@ -1,11 +1,12 @@
 package org.foss.fermux.components.downloaderComponents
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material3.*
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -28,14 +29,6 @@ fun SponsorBlockChoices(
           "outro" to "Outro",
           "preview" to "Preview/Recap"
      )
-     Surface(
-          modifier = Modifier
-               .wrapContentSize()
-               .padding(start = 8.dp, end = 8.dp),
-          color = FermuxColors.warmPurple,
-          shape = RoundedCornerShape(8.dp),
-          border = BorderStroke(1.dp, color = FermuxColors.fermuxHelperBorder)
-     ) {
 
           FlowRow(
                modifier = Modifier
@@ -56,7 +49,7 @@ fun SponsorBlockChoices(
                          },
                          label = { Text(labeledFlag) },
                          colors = FilterChipDefaults.filterChipColors(
-                              containerColor = FermuxColors.inActiveContainer,
+                              containerColor = FermuxColors.darkPurple,
                               labelColor = FermuxColors.white,
                               iconColor = FermuxColors.white,
                               selectedContainerColor = FermuxColors.skyBlue,
@@ -66,7 +59,7 @@ fun SponsorBlockChoices(
                          border = FilterChipDefaults.filterChipBorder(
                               enabled = true,
                               selected = pickedFlags,
-                              borderColor = FermuxColors.fermuxGenericBorder,
+                              borderColor = FermuxColors.fermuxHelperBorder,
                               selectedBorderColor = FermuxColors.fermuxSecondaryBorder
                          ),
                          leadingIcon = if (pickedFlags) {
@@ -83,5 +76,4 @@ fun SponsorBlockChoices(
                     )
                }
           }
-     }
 }

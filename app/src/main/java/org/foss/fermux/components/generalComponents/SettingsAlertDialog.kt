@@ -50,10 +50,10 @@ fun SettingAlertDialog(
                     .fillMaxWidth()
                     .padding(2.dp),
                shape = RoundedCornerShape(12.dp),
-               color = FermuxColors.warmPurple,
+               color = FermuxColors.mutedBlue,
                border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),
           ) {
-               Column {
+               Column(modifier = Modifier.padding(4.dp)) {
                     Box(
                          modifier = Modifier
                               .fillMaxWidth()

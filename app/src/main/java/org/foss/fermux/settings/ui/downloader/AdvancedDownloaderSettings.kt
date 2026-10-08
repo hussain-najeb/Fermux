@@ -97,7 +97,7 @@ fun AdvancedDownloaderSettings(
                dialogImage = R.drawable.log,
                specialDescription = buildAnnotatedString {
                     withStyle(SpanStyle(FermuxColors.white)) { append("When enabled, this setting makes the logs from ") }
-                    withStyle(SpanStyle(FermuxColors.warmBlue)) { append("WorkManager ") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("WorkManager ") }
                     withStyle(SpanStyle(FermuxColors.white)) { append("appear in the logging screen, which is useful for deep debugging and app inspection") }
                },
                content = {
@@ -159,7 +159,7 @@ fun AdvancedDownloaderSettings(
                dialogAppearance = true,
                dialogTitle = "SponsorBlock",
                dialogImage = R.drawable.sponsorblock,
-               dialogDescription = "Set any SponsorBlock flag to cut any type of advertisement, in-video ads and various other",
+               dialogDescription = "Set any SponsorBlock flag to cut out from the media you will download.",
                content = {
                     SettingsSwitch(
                          modifier = Modifier.padding(2.dp),
@@ -187,7 +187,7 @@ fun AdvancedDownloaderSettings(
                     withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("HLS ") }
                     withStyle(SpanStyle(FermuxColors.white)) { append("option, so you can use these options.") }
                     withStyle(SpanStyle(FermuxColors.white)) { append(" Use") }
-                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("'Edge Case'") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" 'Edge Case'") }
                     withStyle(SpanStyle(FermuxColors.white)) { append(" when using ") }
                     withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Aria2c ") }
                     withStyle(SpanStyle(FermuxColors.white)) { append("and downloading media at the highest setting!") }
@@ -233,7 +233,7 @@ fun AdvancedDownloaderSettings(
                          optionsList = listOf(
                               ExternalDownloaders.Disabled to "Disabled",
                               ExternalDownloaders.FFmpegAsExternal to "FFmpeg",
-                              ExternalDownloaders.YtdlpNativeDownloader to "Hls Native"
+                              ExternalDownloaders.YtdlpNativeDownloader to "HLS Native"
                          ),
                          selectedOption = externalDownloaders,
                          onOptionSelected = { downloaderSettingsViewModel.setExternalDownloaders(it) }
