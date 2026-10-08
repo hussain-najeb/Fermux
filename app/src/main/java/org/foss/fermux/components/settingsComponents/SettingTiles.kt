@@ -125,8 +125,8 @@ fun TileOptions(
                     if (liner == true) VerticalDivider(
                          modifier = Modifier
                               .fillMaxHeight()
-                              .padding(6.dp),
-                         thickness = 0.5.dp,
+                              .padding(start = 4.dp, end = 4.dp),
+                         thickness = 0.7.dp,
                          color = FermuxColors.fermuxHelperBorder,
                     )
                          content?.invoke()

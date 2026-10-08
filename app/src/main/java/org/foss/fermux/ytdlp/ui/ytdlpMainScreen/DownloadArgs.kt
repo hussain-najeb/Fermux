@@ -18,6 +18,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -83,8 +87,12 @@ fun DownloaderArgs(navController: NavController) {
           ),
           SettingListInfo(
                title = "Set Audio Format",
-               description = "This option sets the format of the audio when downloading. current format is $audioFormats",
+               description = "Set the format of the audio when downloading. current format is $audioFormats",
                image = R.drawable.audio_file,
+               dialogAppearance = true,
+               dialogTitle = "Audio Formats",
+               dialogDescription = "You can change the audio format when downloading media via the selections.",
+               dialogImage = R.drawable.audio_file,
                dialogContent = {
                     ModularSegmentedButtons(
                          optionsList = listOf(
@@ -103,6 +111,10 @@ fun DownloaderArgs(navController: NavController) {
                title = "Set Video Format",
                description = "This option sets the format of the video when downloading. current is $videoFormats",
                image = R.drawable.file_video,
+               dialogAppearance = true,
+               dialogTitle = "Video Formats",
+               dialogDescription = "You can change the video format when downloading media via the selections.",
+               dialogImage = R.drawable.file_video,
                dialogContent = {
                     ModularSegmentedButtons(
                          optionsList = listOf(
@@ -119,8 +131,13 @@ fun DownloaderArgs(navController: NavController) {
           ),
           SettingListInfo(
                title = "Video Compatibility",
-               description = "Re-encodes the media to enforce video formats. It's more reliable but EXTREMELY slow and CPU intensive",
-               image = R.drawable.re_encodes, // TODO. resue the AlretDialog you had in the project files and make it launch an alretdialog that says what this means, then in the alert dialog have 3 buttons, one to cancel it and one to enabled the boolean
+               description = "Re-encodes the media to enforce video formats",
+               image = R.drawable.re_encodes,
+               liner = true,
+               dialogAppearance = true,
+               dialogTitle = "Compatibility Mode",
+               dialogDescription = "Be careful, this setting is more reliable but EXTREMELY slow and CPU intensive, do not panic if the progress looks stuck, that's ffmpeg doing the conversion.",
+               dialogImage = R.drawable.re_encodes,
                content = {
                     SettingsSwitch(
                          checked = videoComp,
@@ -131,8 +148,12 @@ fun DownloaderArgs(navController: NavController) {
           ),
           SettingListInfo(
                title = "Set Thumbnail Format",
-               description = "This option sets the format of the thumbnail when downloading. current format is $thumbnailFormat",
+               description = "Set the format of the thumbnail when downloading. current format is $thumbnailFormat",
                image = R.drawable.file_image,
+               dialogAppearance = true,
+               dialogTitle = "Thumbnail Formats",
+               dialogDescription = "You can change the thumbnail format when downloading media via the selections.",
+               dialogImage = R.drawable.file_image,
                dialogContent = {
                     ModularSegmentedButtons(
                          optionsList = listOf(
@@ -149,7 +170,7 @@ fun DownloaderArgs(navController: NavController) {
           ),
           SettingListInfo(
                title = if (thumbnail) "Uncut Thumbnail" else "Cut Thumbnail",
-               description = if (thumbnail) "The thumbnail of the downloaded media will be embedded and will be saved"
+               description = if (thumbnail) "The thumbnail of the downloaded media will be embedded and saved"
                else "The thumbnail of the downloaded media will be removed and won't be saved",
                image = if (thumbnail) R.drawable.scissors_off else R.drawable.scissors_on,
                content = {
@@ -164,6 +185,16 @@ fun DownloaderArgs(navController: NavController) {
           SettingListInfo(
                title = "Set Retries",
                description = "Set the amount of retries that ytdlp does when downloading",
+               dialogAppearance = true,
+               dialogTitle = "Retry Attempts",
+               specialDescription = buildAnnotatedString {
+                    withStyle(SpanStyle(FermuxColors.white)) { append("This is a") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" yt-dlp ") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("flag that sets the amount of times") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" yt-dlp ") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("does when there is any networking errors.") }
+               },
+               dialogImage = R.drawable.audio_file,
                image = R.drawable.retry,
                dialogContent = {
                     ModularSlider(
@@ -176,8 +207,18 @@ fun DownloaderArgs(navController: NavController) {
           ),
           SettingListInfo(
                title = "Set Fragment Retries",
-               description = "Set the amount of retries when downloading a fragment when using hls or aria2",
-               image = FragImage(
+               description = "The amount of retries when downloading a fragment when using hls or aria2",
+               image = R.drawable.fragment_mid,
+               dialogAppearance = true,
+               dialogTitle = "Fragment Retries",
+               specialDescription = buildAnnotatedString {
+                    withStyle(SpanStyle(FermuxColors.white)) { append("This is also a flag for") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" yt-dlp ") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("that set the retries for each fragment before") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" yt-dlp ") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("gives up from trying to download the fragment and skips to the next.") }
+               },
+               dialogImage = FragImage(
                     fragments = fragRetries,
                     small = R.drawable.fragment_small,
                     smallMid = R.drawable.fragment_midsmall,
@@ -196,8 +237,16 @@ fun DownloaderArgs(navController: NavController) {
           ),
           SettingListInfo(
                title = "Sleep Duration",
-               description = "Sleep request is a flag for delayed download between each request, each number is a second",
+               description = "Sleep request is a flag for delayed download between each request",
                icon = if (sleepRequest > 0) Icons.Filled.Flag else Icons.Outlined.Flag,
+               dialogAppearance = true,
+               dialogTitle = "",
+               dialogImage = R.drawable.flag_full,
+               specialDescription = buildAnnotatedString {
+                    withStyle(SpanStyle(FermuxColors.white)) { append("You can set the amounts of seconds in the slider, each number is a second that gets added between each ") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("yt-dlp ") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("request") }
+               },
                dialogContent = {
                     ModularSlider(
                          sliderKey = sleepRequest,
@@ -242,8 +291,13 @@ fun DownloaderArgs(navController: NavController) {
                               content = option.content,
                               trailingContent = option.trailingContent ,
                               shape = option.position.TileShaper(),
-                              dialogShow = option.dialogAppearance
-                         ) // TODO. Add in the rest of the dialog work, with the rest of these arguments added to this one and the rest of the seetings and put everything in a dialog!
+                              dialogShow = option.dialogAppearance,
+                              dialogTitle = option.dialogTitle,
+                              dialogDescription = option.dialogDescription,
+                              specialDescription = option.specialDescription,
+                              dialogImage = option.dialogImage,
+                              dialogContent = option.dialogContent
+                         )
                     }
                     Spacer(modifier = Modifier.padding(top = 10.dp))
                }

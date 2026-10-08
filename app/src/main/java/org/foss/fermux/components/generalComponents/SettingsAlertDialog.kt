@@ -46,7 +46,7 @@ fun SettingAlertDialog(
 
           Surface(
                modifier = Modifier
-                    .height(230.dp)
+                    .height(270.dp)
                     .fillMaxWidth()
                     .padding(0.dp),
                shape = RoundedCornerShape(12.dp),

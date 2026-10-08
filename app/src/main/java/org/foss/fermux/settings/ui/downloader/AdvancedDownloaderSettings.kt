@@ -20,7 +20,6 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.FilterButton
-import org.foss.fermux.components.buttons.ImageButton
 import org.foss.fermux.components.downloaderComponents.SponsorBlockChoices
 import org.foss.fermux.components.generalComponents.ModularSegmentedButtons
 import org.foss.fermux.components.settingsComponents.SettingsSwitch
@@ -96,6 +95,7 @@ fun AdvancedDownloaderSettings(
                icon = Icons.Default.BugReport,
                content = {
                     SettingsSwitch(
+                         modifier = Modifier.padding(3.dp),
                          checked = logcat,
                          onCheckedChange = { downloaderSettingsViewModel.setDownloaderDebug(it) }
                     )
@@ -142,8 +142,8 @@ fun AdvancedDownloaderSettings(
                image = R.drawable.sponsorblock,
                content = {
                     SettingsSwitch(
+                         modifier = Modifier.padding(3.dp),
                          checked = sponsorBlock,
-                         liner = true,
                          onCheckedChange = { downloaderSettingsViewModel.setSponsorBlock(it) }
                     )
                },
@@ -175,11 +175,24 @@ fun AdvancedDownloaderSettings(
           ),
           SettingListInfo(
                title = "Yt-dlp HLS Options",
-               description = "",
+               description = "HLS options for fragment download",
                image = R.drawable.aria2_hls,
                dialogAppearance = true,
                dialogTitle = "HLS options",
-               //specialDescription = ,
+               specialDescription = buildAnnotatedString {
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("HLS ") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("options are essential for fragment downloading, the native ") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("HLS ") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("that comes with ") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("yt-dlp") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("is excellent, but there are options such as ") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("FFmpeg") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append(" which comes with ") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue)) { append(" TLS/HTTP ") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("support, or ") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue)) { append("Aria2c ") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("that comes as a separate setting") }
+               },
                dialogImage = R.drawable.aria2_hls,
                dialogContent = {
                     ModularSegmentedButtons(
@@ -201,8 +214,8 @@ fun AdvancedDownloaderSettings(
                image = if (fingerprint) R.drawable.impersonation_on else R.drawable.impersonation_off,
                content = {
                     SettingsSwitch(
+                         modifier = Modifier.padding(3.dp),
                          checked = fingerprint,
-                         liner = true,
                          onCheckedChange = { downloaderSettingsViewModel.setFingerprint(it) }
                     )
                },
@@ -226,9 +239,12 @@ fun AdvancedDownloaderSettings(
                title = "Clearing Cache",
                description = "Clearing cache for the app",
                image = R.drawable.eraser,
+               liner = true,
                content = {
-                    ImageButton(
+                    FilterButton(
+                         modifier = Modifier.padding(3.dp),
                          image = R.drawable.archive,
+                         border = true,
                          onClick = { context.clearCache()
                               scope.launch {
                                    snackbarHostState.showSnackbar(
@@ -245,13 +261,7 @@ fun AdvancedDownloaderSettings(
                title = "Quick JS Engine",
                description = "JavaScript engine for yt-dlp",
                image = if (quickJS) R.drawable.flash_on else R.drawable.flash_off,
-               content = {
-                    SettingsSwitch(
-                         checked = quickJS,
-                         liner = true,
-                         onCheckedChange = { downloaderSettingsViewModel.setQuickJS(it) }
-                    )
-               },
+               liner = true,
                dialogAppearance = true,
                dialogTitle = "QuickJS NG?",
                specialDescription = buildAnnotatedString {
@@ -260,10 +270,17 @@ fun AdvancedDownloaderSettings(
                     withStyle(SpanStyle(FermuxColors.white)) { append(", NG here mean Next Gen, which is an improved version of the old") }
                     withStyle(SpanStyle(FermuxColors.white)) { append(" QuickJs") }
                     withStyle(SpanStyle(FermuxColors.white)) { append(" .Duo to the nature of Youtube, this JS runtime is recommended by ") }
-                    withStyle(SpanStyle(FermuxColors.warmBlue)) { append("yt-dlp") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("yt-dlp") }
                     withStyle(SpanStyle(FermuxColors.white)) { append(" to solve JS challenges, this should make Youtube downloads more reliable.") }
                },
                dialogImage = R.drawable.impersonation_on,
+               content = {
+                    SettingsSwitch(
+                         modifier = Modifier.padding(3.dp),
+                         checked = quickJS,
+                         onCheckedChange = { downloaderSettingsViewModel.setQuickJS(it) }
+                    )
+               },
                position = TilePosition.BOTTOM
           )
      )
