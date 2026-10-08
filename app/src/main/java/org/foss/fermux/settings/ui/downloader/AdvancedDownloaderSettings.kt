@@ -91,11 +91,19 @@ fun AdvancedDownloaderSettings(
           ),
           SettingListInfo(
                title = if (logcat) "Debug Logging On" else "Debug Logging Off",
-               description = "Write diagnostic messages to Logcat in any builds",
+               description = "Write diagnostic messages to Logcat",
                icon = Icons.Default.BugReport,
+               dialogAppearance = true,
+               dialogTitle = "Debugging",
+               dialogImage = R.drawable.log,
+               specialDescription = buildAnnotatedString {
+                    withStyle(SpanStyle(FermuxColors.white)) { append("When enabled, this setting makes the logs from ") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue)) { append("WorkManager ") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("appear in the logging screen, which is useful for deep debugging and app inspection") }
+               },
                content = {
                     SettingsSwitch(
-                         modifier = Modifier.padding(3.dp),
+                         modifier = Modifier.padding(2.dp),
                          checked = logcat,
                          onCheckedChange = { downloaderSettingsViewModel.setDownloaderDebug(it) }
                     )
@@ -106,6 +114,10 @@ fun AdvancedDownloaderSettings(
                title = "Connection Type",
                description = "Use different connections for the downloader",
                image = R.drawable.network,
+               dialogAppearance = true,
+               dialogTitle = "Connection Types",
+               dialogImage = R.drawable.network,
+               dialogDescription = "You can change each connection type to the one you prefer or is available to you",
                dialogContent = {
                     ModularSegmentedButtons(
                          optionsList = listOf(
@@ -123,6 +135,10 @@ fun AdvancedDownloaderSettings(
                title = "Change IPV settings",
                description = "Change the IPV connection type",
                image = R.drawable.ipv,
+               dialogAppearance = true,
+               dialogTitle = "IPV Types",
+               dialogImage = R.drawable.ipv,
+               dialogDescription = "You can change each IPV connection to the one you prefer or is available to you",
                dialogContent = {
                     ModularSegmentedButtons(
                          optionsList = listOf(
@@ -140,9 +156,10 @@ fun AdvancedDownloaderSettings(
                title = "SponsorBlock",
                description = "SponsorBlock API integration for cutting promotions when downloading",
                image = R.drawable.sponsorblock,
+               liner = true,
                content = {
                     SettingsSwitch(
-                         modifier = Modifier.padding(3.dp),
+                         modifier = Modifier.padding(2.dp),
                          checked = sponsorBlock,
                          onCheckedChange = { downloaderSettingsViewModel.setSponsorBlock(it) }
                     )
@@ -159,6 +176,20 @@ fun AdvancedDownloaderSettings(
                title = "Aria2c",
                description = "Use aria2 instead of the default. Use the Edge Case option when downloading on the highest setting in the downloader",
                image = R.drawable.layers,
+               dialogAppearance = true,
+               dialogTitle = "Aria2c settings",
+               specialDescription = buildAnnotatedString {
+                    withStyle(SpanStyle(FermuxColors.white)) { append("You") }
+                    withStyle(SpanStyle(FermuxColors.fermuxLightErrorTextColor)) { append(" MUST") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append(" disable your chosen ") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("HLS ") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("option, so you can use these options.") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append(" Use") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("'Edge Case'") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append(" when using ") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Aria2c ") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("and downloading media at the highest setting!") }
+               },
                dialogContent = {
                     ModularSegmentedButtons(
                          enabled = aria2cEnabled,
@@ -188,9 +219,9 @@ fun AdvancedDownloaderSettings(
                     withStyle(SpanStyle(FermuxColors.white)) { append("is excellent, but there are options such as ") }
                     withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("FFmpeg") }
                     withStyle(SpanStyle(FermuxColors.white)) { append(" which comes with ") }
-                    withStyle(SpanStyle(FermuxColors.warmBlue)) { append(" TLS/HTTP ") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" TLS/HTTP ") }
                     withStyle(SpanStyle(FermuxColors.white)) { append("support, or ") }
-                    withStyle(SpanStyle(FermuxColors.warmBlue)) { append("Aria2c ") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Aria2c ") }
                     withStyle(SpanStyle(FermuxColors.white)) { append("that comes as a separate setting") }
                },
                dialogImage = R.drawable.aria2_hls,
@@ -212,9 +243,10 @@ fun AdvancedDownloaderSettings(
                title = "Impersonation",
                description = "Enabling impersonation makes yt-dlp requests look like a real browser",
                image = if (fingerprint) R.drawable.impersonation_on else R.drawable.impersonation_off,
+               liner = true,
                content = {
                     SettingsSwitch(
-                         modifier = Modifier.padding(3.dp),
+                         modifier = Modifier.padding(2.dp),
                          checked = fingerprint,
                          onCheckedChange = { downloaderSettingsViewModel.setFingerprint(it) }
                     )
@@ -276,7 +308,7 @@ fun AdvancedDownloaderSettings(
                dialogImage = R.drawable.impersonation_on,
                content = {
                     SettingsSwitch(
-                         modifier = Modifier.padding(3.dp),
+                         modifier = Modifier.padding(2.dp),
                          checked = quickJS,
                          onCheckedChange = { downloaderSettingsViewModel.setQuickJS(it) }
                     )

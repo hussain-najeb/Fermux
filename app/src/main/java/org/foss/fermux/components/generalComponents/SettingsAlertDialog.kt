@@ -46,16 +46,14 @@ fun SettingAlertDialog(
 
           Surface(
                modifier = Modifier
-                    .height(270.dp)
+                    .wrapContentHeight()
                     .fillMaxWidth()
-                    .padding(0.dp),
+                    .padding(2.dp),
                shape = RoundedCornerShape(12.dp),
                color = FermuxColors.warmPurple,
                border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),
           ) {
-               Column(
-                    modifier = Modifier.fillMaxSize()
-               ) {
+               Column {
                     Box(
                          modifier = Modifier
                               .fillMaxWidth()
@@ -79,7 +77,7 @@ fun SettingAlertDialog(
                                         fontStyle = FontStyle.Normal,
                                         fontWeight = FontWeight.SemiBold,
                                         color = FermuxColors.white,
-                                        modifier = Modifier.padding(4.dp)
+                                        modifier = Modifier.padding(5.dp)
                                    )
                          }
                     }
@@ -95,7 +93,8 @@ fun SettingAlertDialog(
                                    fontSize = 18.sp,
                                    fontStyle = FontStyle.Normal,
                                    fontWeight = FontWeight.SemiBold,
-                                   color = FermuxColors.white
+                                   color = FermuxColors.white,
+                                   modifier = Modifier.padding(5.dp)
                               )
                          } else if (description != null) {
                               Text(
@@ -103,14 +102,15 @@ fun SettingAlertDialog(
                                    fontSize = 18.sp,
                                    fontStyle = FontStyle.Normal,
                                    fontWeight = FontWeight.SemiBold,
-                                   color = FermuxColors.white
+                                   color = FermuxColors.white,
+                                   modifier = Modifier.padding(5.dp)
                               )
                          }
                     }
                     if (dialogContent != null)
                     Box(
                          modifier = Modifier
-                              .fillMaxSize()
+                              .fillMaxWidth()
                               .padding(8.dp),
                          contentAlignment = Alignment.BottomCenter
                     ) {
