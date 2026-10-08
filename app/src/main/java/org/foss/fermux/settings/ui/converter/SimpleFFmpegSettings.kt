@@ -171,8 +171,7 @@ fun SimpleFFmpegSetting(
                description = "This re-encodes the video instead of copying it as-is",
                image = R.drawable.video_compression,
                dialogAppearance = true,
-
-
+               dialogImage = R.drawable.video_compression,
                dialogTitle = "Video Compression",
                specialDescription = buildAnnotatedString {
                     withStyle(SpanStyle(FermuxColors.white)) { append("When off, ") }

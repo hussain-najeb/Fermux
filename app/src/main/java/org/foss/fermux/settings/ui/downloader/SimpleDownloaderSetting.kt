@@ -94,8 +94,9 @@ fun SimpleDownloaderPage(
                dialogTitle = "Updating Yt-dlp",
                dialogImage = R.drawable.update_icon,
                specialDescription = buildAnnotatedString {
-                    withStyle(SpanStyle(FermuxColors.white)) { append("You must update") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("Updating") }
                     withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" yt-dlp") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append(" is always favourable,") }
                     withStyle(SpanStyle(FermuxColors.white)) { append(" so you get less bugs, better support, and more features. It's recommended to get the ") }
                     withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Nightly") }
                     withStyle(SpanStyle(FermuxColors.white)) { append(" version.") }
