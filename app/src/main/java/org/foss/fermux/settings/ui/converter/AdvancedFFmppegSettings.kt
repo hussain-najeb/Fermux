@@ -39,18 +39,18 @@ fun AdvancedFFmpegSettings(
      val threadLimit by ffmpegSettingsViewModel.threadLimit.collectAsStateWithLifecycle()
      val useHardwareEncoder by ffmpegSettingsViewModel.useHardwareEncoder.collectAsStateWithLifecycle()
      val availableCores = Runtime.getRuntime().availableProcessors()
-               LaunchedEffect(useHardwareEncoder) {
-                    if (useHardwareEncoder && threadLimit != 0) {
-                         ffmpegSettingsViewModel.setThreadLimit(0)
-               }
+     LaunchedEffect(useHardwareEncoder) {
+          if (useHardwareEncoder && threadLimit != 0) {
+               ffmpegSettingsViewModel.setThreadLimit(0)
           }
+     }
 
      val scope = rememberCoroutineScope()
 
      val advanced = listOf(
           SettingListInfo(
                title = "Reset Converter Settings",
-               description = "Reset the converter settings to there original state",
+               description = "Reset converter settings",
                image = R.drawable.restor,
                content = {
                     SmallActionButton(

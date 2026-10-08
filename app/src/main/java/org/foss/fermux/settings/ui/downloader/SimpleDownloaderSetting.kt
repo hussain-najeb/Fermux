@@ -123,10 +123,12 @@ fun SimpleDownloaderPage(
           SettingListInfo(
                title = "History",
                description = "Enable/Disable history",
+               liner = true,
                image = if (history) R.drawable.history else R.drawable.history, // TODO. add in the approprate icon for this
                content = {
                     SettingsSwitch(
-                         checked = history, onCheckedChange = { downloaderSettingsViewModel.setHistory(it) })
+                         checked = history,
+                         onCheckedChange = { downloaderSettingsViewModel.setHistory(it) })
                },
                position = TilePosition.MIDDLE
           ),

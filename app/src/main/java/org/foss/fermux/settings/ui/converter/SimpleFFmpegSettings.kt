@@ -17,6 +17,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -77,9 +81,13 @@ fun SimpleFFmpegSetting(
      val simpleFFmpegSetting = listOf(
           SettingListInfo(
                title = "Audio Bitrate",
-               description = "The amount of data processed for each second of sound. Higher is better",
+               description = "The amount of data processed for each second of sound",
                image = R.drawable.edit_audio,
-               trailingContent = {
+               dialogAppearance = true,
+               dialogTitle = "Adjust Audio Bitrate",
+               dialogImage = R.drawable.edit_audio,
+               dialogDescription = "Leave as default if you face problems.",
+               dialogContent = {
                     ModularSegmentedButtons(
                          optionsList = listOf(
                               "64k" to "64k",
@@ -102,8 +110,13 @@ fun SimpleFFmpegSetting(
           ),
           SettingListInfo(
                title = "Normalize Audio",
-               description = "Audio normalization is uniformly adjusting a recording's overall peak or average loudness in the audio",
+               description = "Set audio normalization for media",
                image = if (normalizeAudio) R.drawable.normalize_audio else R.drawable.audio_lines_x,
+               liner = true,
+               dialogAppearance = true,
+               dialogTitle = "Audio Normalization",
+               dialogImage = R.drawable.audio_lines,
+               dialogDescription = "Audio normalization is uniformly adjusting a recording's overall peak or average loudness in the audio.",
                content = {
                     SettingsSwitch(
                          checked = normalizeAudio,
@@ -116,8 +129,13 @@ fun SimpleFFmpegSetting(
           ),
           SettingListInfo(
                title = "Mono Downmix",
-               description = "Mono downmix blends multi-channel or stereo audio into one single channel",
+               description = "Set mono downmix for media",
                image = R.drawable.headphones,
+               liner = true,
+               dialogAppearance = true,
+               dialogDescription = "Mono downmix blends multi-channel or stereo audio into one single channel.",
+               dialogTitle = "Mono Downmix",
+               dialogImage = R.drawable.headphones,
                content = {
                     SettingsSwitch(
                          checked = monoDownmix,
@@ -128,9 +146,13 @@ fun SimpleFFmpegSetting(
           ),
           SettingListInfo(
                title = "Video Resolution",
-               description = "Edit the video resolution for the selected media prior to using the converter so it outputs the selected resolution",
+               description = "Edit the video resolution for the selected media",
                image = R.drawable.video_resolution,
-               trailingContent = {
+               dialogAppearance = true,
+               dialogTitle = "Set Video",
+               dialogDescription = "Set video resolution prior to using the converter so it outputs the selected resolution",
+               dialogImage = R.drawable.video_resolution,
+               dialogContent = {
                     ModularSegmentedButtons(
                          optionsList = listOf(
                               "" to "Default",
@@ -145,9 +167,26 @@ fun SimpleFFmpegSetting(
                position = TilePosition.MIDDLE
           ),
           SettingListInfo(
-               title = "Video Compression",
+               title = "Video Re-encoding",
                description = "This re-encodes the video instead of copying it as-is",
                image = R.drawable.video_compression,
+               dialogAppearance = true,
+
+
+               dialogTitle = "Video Compression",
+               specialDescription = buildAnnotatedString {
+                    withStyle(SpanStyle(FermuxColors.white)) { append("When off, ") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("FFmpeg ") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("copies the original video without changing its codec, quality, or resolution. Conversion is faster, but the selected resolution is ignored.\n\n") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("When on, ") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("FFmpeg") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("re-encodes the video using the selected quality and resolution. It must be on for ") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Hardware Acceleration") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append(" and ") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Video Resolution") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append(" to work.") }
+               },
+               liner = true,
                content = {
                     SettingsSwitch(
                          checked = enableVideoCompression,
@@ -195,7 +234,14 @@ fun SimpleFFmpegSetting(
                          },
                          content = option.content,
                          trailingContent = option.trailingContent,
-                         dialogContent = option.dialogContent
+
+                         dialogContent = option.dialogContent,
+                         dialogShow = option.dialogAppearance,
+                         dialogTitle = option.dialogTitle,
+                         dialogDescription = option.dialogDescription,
+                         dialogImage = option.dialogImage,
+                         specialDescription = option.specialDescription,
+                         liner = option.liner
                     )
                }
 

@@ -62,7 +62,7 @@ fun AdvancedDownloaderSettings(
      val advancedSettings = listOf(
           SettingListInfo(
                title = "Reset Downloader Settings",
-               description = "Reset the downloader settings to there original state",
+               description = "Reset downloader settings",
                image = R.drawable.restor,
                liner = true,
                content = {
@@ -98,7 +98,7 @@ fun AdvancedDownloaderSettings(
                specialDescription = buildAnnotatedString {
                     withStyle(SpanStyle(FermuxColors.white)) { append("When enabled, this setting makes the logs from ") }
                     withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("WorkManager ") }
-                    withStyle(SpanStyle(FermuxColors.white)) { append("appear in the logging screen, which is useful for deep debugging and app inspection") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("appear in the logging screen, which is useful for deep debugging and app inspection.") }
                },
                content = {
                     SettingsSwitch(
@@ -116,7 +116,7 @@ fun AdvancedDownloaderSettings(
                dialogAppearance = true,
                dialogTitle = "Connection Types",
                dialogImage = R.drawable.network,
-               dialogDescription = "You can change each connection type to the one you prefer or is available to you",
+               dialogDescription = "You can change each connection type to the one you prefer or is available to you.",
                dialogContent = {
                     ModularSegmentedButtons(
                          optionsList = listOf(
@@ -137,7 +137,7 @@ fun AdvancedDownloaderSettings(
                dialogAppearance = true,
                dialogTitle = "IPV Types",
                dialogImage = R.drawable.ipv,
-               dialogDescription = "You can change each IPV connection to the one you prefer or is available to you",
+               dialogDescription = "You can change each IPV connection to the one you prefer or is available to you.",
                dialogContent = {
                     ModularSegmentedButtons(
                          optionsList = listOf(
@@ -224,7 +224,7 @@ fun AdvancedDownloaderSettings(
                     withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" TLS/HTTP ") }
                     withStyle(SpanStyle(FermuxColors.white)) { append("support, or ") }
                     withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Aria2c ") }
-                    withStyle(SpanStyle(FermuxColors.white)) { append("that comes as a separate setting") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("that comes as a separate setting.") }
                },
                dialogImage = R.drawable.aria2_hls,
                dialogContent = {
@@ -279,11 +279,12 @@ fun AdvancedDownloaderSettings(
                          modifier = Modifier.padding(3.dp),
                          image = R.drawable.archive,
                          border = true,
-                         onClick = { context.clearCache()
-                              scope.launch {
-                                   snackbarHostState.showSnackbar(
-                                        message = "Cache Cleared",
-                                        duration = SnackbarDuration.Short
+                         onClick = {
+                              context.clearCache()
+                                   scope.launch {
+                                        snackbarHostState.showSnackbar(
+                                             message = "Cache Cleared",
+                                             duration = SnackbarDuration.Short
                                    )
                               }
                          }

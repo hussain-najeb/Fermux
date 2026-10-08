@@ -52,43 +52,40 @@ class DynamicFFmpegArgsTest {
           assertEquals(listOf("-c:v", "copy", "-c:a", "copy"), args)
      }
 
-     @ParameterizedTest
-     @ValueSource(booleans = [false, true])
-     fun resolutionTriggersEncodingEvenWithCompressionDisabled(hardware: Boolean) {
+     @Test
+     fun resolutionIsIgnoredWhenCompressionIsDisabled() {
           val args = buildDynamicFFmpegArgs(
                FFmpegTargetFormat.MP4,
-               FFmpegUserPrefs(videoResolution = "720", useHardwareEncoder = hardware),
+               FFmpegUserPrefs(videoResolution = "720"),
           )
 
-          assertOption(args, "-c:v", if (hardware) "h264_mediacodec" else "mpeg4")
-          assertOption(args, "-vf", "scale=-2:720")
-          assertOption(args, "-c:a", "copy")
+          assertEquals(listOf("-c:v", "copy", "-c:a", "copy"), args)
      }
 
      @ParameterizedTest
      @EnumSource(FFmpegTargetFormat::class, names = ["MP4", "MKV", "MOV", "AVI"])
-     fun softwareCompressionCurrentlyUsesMpeg4QualityScale(format: FFmpegTargetFormat) {
+     fun softwareCompressionUsesX264Crf(format: FFmpegTargetFormat) {
           val args = buildDynamicFFmpegArgs(
                format,
                FFmpegUserPrefs(enableVideoCompression = true, videoCrf = 18),
           )
 
-          assertOption(args, "-c:v", "mpeg4")
-          assertOption(args, "-q:v", "18")
+          assertOption(args, "-c:v", "libx264")
+          assertOption(args, "-crf", "18")
           assertOption(args, "-c:a", "copy")
-          assertFalse("-crf" in args)
+          assertFalse("-q:v" in args)
           assertFalse("-b:v" in args)
      }
 
      @ParameterizedTest
-     @CsvSource("-10, 1", "1, 1", "20, 20", "31, 31", "60, 31")
+     @CsvSource("-10, 0", "0, 0", "20, 20", "51, 51", "60, 51")
      fun softwareQualityIsClampedToEncoderRange(requested: Int, expected: Int) {
           val args = buildDynamicFFmpegArgs(
                FFmpegTargetFormat.MP4,
                FFmpegUserPrefs(enableVideoCompression = true, videoCrf = requested),
           )
 
-          assertOption(args, "-q:v", expected.toString())
+          assertOption(args, "-crf", expected.toString())
      }
 
      @Test
@@ -98,7 +95,7 @@ class DynamicFFmpegArgsTest {
                FFmpegUserPrefs(enableVideoCompression = true),
           )
 
-          assertOption(args, "-q:v", "23")
+          assertOption(args, "-crf", "23")
      }
 
      @Test
@@ -119,14 +116,15 @@ class DynamicFFmpegArgsTest {
      }
 
      @Test
-     fun webmCurrentlyUsesMediaCodecEvenWhenHardwareEncodingIsOff() {
+     fun webmSoftwareCompressionUsesVpxCrf() {
           val args = buildDynamicFFmpegArgs(
                FFmpegTargetFormat.WEBM,
                FFmpegUserPrefs(enableVideoCompression = true, useHardwareEncoder = false),
           )
 
-          assertOption(args, "-c:v", "vp8_mediacodec")
-          assertOption(args, "-b:v", "4M")
+          assertOption(args, "-c:v", "libvpx")
+          assertOption(args, "-b:v", "0")
+          assertOption(args, "-crf", "23")
      }
 
      @ParameterizedTest
@@ -187,7 +185,7 @@ class DynamicFFmpegArgsTest {
                ),
           )
 
-          assertOption(args, "-c:v", if (hardware) "h264_mediacodec" else "mpeg4")
+          assertOption(args, "-c:v", if (hardware) "h264_mediacodec" else "libx264")
           assertOption(args, "-vf", "scale=-2:480")
           assertOption(args, "-c:a", "aac")
           assertOption(args, "-b:a", "128k")
@@ -241,7 +239,7 @@ class DynamicFFmpegArgsTest {
                ),
           )
 
-          assertEquals(listOf("-c:v", "mpeg4", "-q:v", "20", "-c:a", "aac", "-b:a", "192k"), args)
+          assertEquals(listOf("-c:v", "libx264", "-crf", "20", "-c:a", "aac", "-b:a", "192k"), args)
      }
 
      @Test
@@ -254,9 +252,11 @@ class DynamicFFmpegArgsTest {
           assertEquals(
                listOf(
                     "-c:v",
-                    "vp8_mediacodec",
+                    "libvpx",
                     "-b:v",
-                    "4M",
+                    "0",
+                    "-crf",
+                    "23",
                     "-c:a",
                     "opus",
                     "-strict",

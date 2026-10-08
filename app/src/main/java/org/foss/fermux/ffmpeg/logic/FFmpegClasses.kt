@@ -40,10 +40,10 @@ enum class FFmpegTargetFormat(
           ffmpegExtraArgs = emptyList(),
           descriptor = "video(mp4)",
           videoEncodingProfile = VideoEncodingProfile(
-               softwareVideoArgs = listOf("-c:v", "mpeg4"),
+               softwareVideoArgs = listOf("-c:v", "libx264"),
                hardwareVideoArgs = listOf("-c:v", "h264_mediacodec", "-b:v", "4M"),
                audioArgs = listOf("-c:a", "aac"),
-               softwareQualityOption = "-q:v",
+               softwareQualityOption = "-crf",
           ),
      ),
      MKV(
@@ -53,10 +53,10 @@ enum class FFmpegTargetFormat(
           ffmpegExtraArgs = emptyList(),
           descriptor = "video(mkv)",
           videoEncodingProfile = VideoEncodingProfile(
-               softwareVideoArgs = listOf("-c:v", "mpeg4"),
+               softwareVideoArgs = listOf("-c:v", "libx264"),
                hardwareVideoArgs = listOf("-c:v", "h264_mediacodec", "-b:v", "4M"),
                audioArgs = listOf("-c:a", "aac"),
-               softwareQualityOption = "-q:v",
+               softwareQualityOption = "-crf",
           ),
      ),
      MOV(
@@ -66,10 +66,10 @@ enum class FFmpegTargetFormat(
           ffmpegExtraArgs = emptyList(),
           descriptor = "video(mov)",
           videoEncodingProfile = VideoEncodingProfile(
-               softwareVideoArgs = listOf("-c:v", "mpeg4"),
+               softwareVideoArgs = listOf("-c:v", "libx264"),
                hardwareVideoArgs = listOf("-c:v", "h264_mediacodec", "-b:v", "4M"),
                audioArgs = listOf("-c:a", "aac"),
-               softwareQualityOption = "-q:v",
+               softwareQualityOption = "-crf",
           ),
      ),
      AVI(
@@ -79,10 +79,10 @@ enum class FFmpegTargetFormat(
           ffmpegExtraArgs = emptyList(),
           descriptor = "video(avi)",
           videoEncodingProfile = VideoEncodingProfile(
-               softwareVideoArgs = listOf("-c:v", "mpeg4"),
+               softwareVideoArgs = listOf("-c:v", "libx264"),
                hardwareVideoArgs = listOf("-c:v", "mpeg4_mediacodec", "-b:v", "4M"),
                audioArgs = listOf("-c:a", "libmp3lame"),
-               softwareQualityOption = "-q:v",
+               softwareQualityOption = "-crf",
           ),
      ),
      WEBM(
@@ -92,9 +92,10 @@ enum class FFmpegTargetFormat(
           ffmpegExtraArgs = emptyList(),
           descriptor = "video(webm)",
           videoEncodingProfile = VideoEncodingProfile(
-               softwareVideoArgs = listOf("-c:v", "vp8_mediacodec", "-b:v", "4M"),
+               softwareVideoArgs = listOf("-c:v", "libvpx", "-b:v", "0"),
                hardwareVideoArgs = listOf("-c:v", "vp8_mediacodec", "-b:v", "4M"),
                audioArgs = listOf("-c:a", "opus", "-strict", "experimental"),
+               softwareQualityOption = "-crf",
           ),
      ),
 

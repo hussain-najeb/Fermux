@@ -17,7 +17,7 @@ fun buildDynamicFFmpegArgs(
                val profile = requireNotNull(targetFormat.videoEncodingProfile) {
                     "Missing video encoding profile for $targetFormat"
                }
-               val wantsVideoReencode = prefs.enableVideoCompression || prefs.videoResolution != null
+               val wantsVideoReencode = prefs.enableVideoCompression
                val wantsAudioReencode = prefs.audioBitrate != null || prefs.normalizeAudio || prefs.monoDownmix
 
                if (wantsVideoReencode) {
@@ -26,7 +26,7 @@ fun buildDynamicFFmpegArgs(
                     } else {
                          args += profile.softwareVideoArgs
                          profile.softwareQualityOption?.let {
-                              args += listOf(it, (prefs.videoCrf ?: 23).coerceIn(1, 31).toString())
+                              args += listOf(it, (prefs.videoCrf ?: 23).coerceIn(0, 51).toString())
                          }
                     }
                     prefs.videoResolution?.let {
