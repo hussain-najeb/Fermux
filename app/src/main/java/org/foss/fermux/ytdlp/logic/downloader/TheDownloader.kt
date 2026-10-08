@@ -45,6 +45,7 @@ suspend fun downloaderLogic(
      fingerprinting: Boolean = true,
      audioQuality: AudioQuality? = null,
      videoQuality: VideoQuality? = null,
+     ipv: IpvConnection,
      sponsorBlock: Boolean = true,
      embedThumbnail: Boolean = true,
      sponsorBlockCategories: Set<String> = emptySet(),
@@ -65,17 +66,22 @@ suspend fun downloaderLogic(
           )
      }
 
-
      if (fingerprinting) {
           request.addOption("--impersonate", "chrome")
      }
 
+     when (ipv) {
+          IpvConnection.Ipv6 -> request.addOption("--force-ipv6")
+          IpvConnection.Ipv4 -> request.addOption("--force-ipv4")
+          IpvConnection.Disabled -> Unit
+     }
 
      request.addOption("--no-simulate")
-     request.addOption(
-          "--print",
+
+     request.addOption("--print",
           "before_dl:$FERMUX_METADATA_MARKER%(.{id,extractor_key,title,thumbnail,duration,uploader,filesize,filesize_approx,resolution,abr,ext,webpage_url})j"
      )
+
      request.addOption("--progress")
 
      if (sleepRequest > 0) {

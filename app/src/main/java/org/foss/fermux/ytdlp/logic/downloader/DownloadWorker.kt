@@ -128,6 +128,7 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
           val fragRetry = settings.fragRetries.first()
           val retries = settings.retries.first()
           val history = settings.history.first()
+          val ipv = settings.ipvConnection.first()
 
           val audioName = inputData.getString("audio")
           val videoName = inputData.getString("video")
@@ -155,6 +156,7 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
                     embedThumbnail = embedThumbnail,
                     playlistStatus = playlistStatus,
                     videoQuality = video,
+                    ipv = ipv,
                     showDetails = showDetails,
                     sponsorBlock = sponsorBlock,
                     sponsorBlockCategories = sponsorBlockCategories,
