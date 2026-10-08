@@ -15,8 +15,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -37,15 +44,6 @@ import org.foss.fermux.utils.rememberNotificationPermissionRequest
 import org.foss.fermux.ytdlp.logic.downloader.YtdlpChannel
 
 
-enum class ExpandableDownloaderSetting {
-     YtdlpUpdater,
-     SponsorBlock,
-     Wifi,
-     Ipv,
-     Aria2c,
-     ExternalDownloader
-}
-
 @Composable
 fun SimpleDownloaderPage(
      navController: NavHostController,
@@ -65,13 +63,7 @@ fun SimpleDownloaderPage(
      // Miscellaneous vals/funs
      val snackbarHostState = remember { SnackbarHostState() }
      val scope = rememberCoroutineScope()
-     var expandedSetting by remember {
-          mutableStateOf<ExpandableDownloaderSetting?>(null)
-     }
 
-     fun toggleDownloader(setting: ExpandableDownloaderSetting) {
-          expandedSetting = if (expandedSetting == setting) null else setting
-     }
 
      val requestNotificationPermission = rememberNotificationPermissionRequest(
           onGranted = {
@@ -96,11 +88,19 @@ fun SimpleDownloaderPage(
      val simpleDownloaderSettings = listOf(
           SettingListInfo(
                title = "Update Yt-dlp",
-               description = if (isCheckingForUpdate) ytdlpUpdateStatus
-                    ?: "Checking for update..." else "Current version is $currentVersionName",
+               description = if (isCheckingForUpdate) ytdlpUpdateStatus ?: "Checking for update..." else "Current version is $currentVersionName",
                icon = Icons.Default.Update,
-               onClick = { toggleDownloader(ExpandableDownloaderSetting.YtdlpUpdater) },
-               trailingContent = {
+               dialogAppearance = true,
+               dialogTitle = "Updating Yt-dlp",
+               dialogImage = R.drawable.update_icon,
+               specialDescription = buildAnnotatedString {
+                    withStyle(SpanStyle(FermuxColors.white)) { append("You must update") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" yt-dlp") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append(" so you get less bugs, better support, and more features. It's recommended to get the ") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Nightly") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append(" version.") }
+               },
+               dialogContent = {
                     ModularSegmentedButtons(
                          enabled = !isCheckingForUpdate,
                          optionsList = listOf(
@@ -132,8 +132,17 @@ fun SimpleDownloaderPage(
           ),
           SettingListInfo(
                title = if (ytdlpDetails) "Shown Logs" else "Hidden Logs",
+               liner = true,
                description = if (ytdlpDetails) "Shown the downloader Logs" else "Hidden the downloader Logs",
                image = if (ytdlpDetails) R.drawable.eye_open else R.drawable.eye_closed,
+               dialogAppearance = true,
+               dialogTitle = "Logging",
+               dialogImage = R.drawable.log,
+               specialDescription = buildAnnotatedString {
+                    withStyle(SpanStyle(FermuxColors.white)) { append("This is the flag for enabling the ") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("yt-dlp") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append(" logs, for better inspection of what happens under-the-hood.") }
+               },
                content = {
                     SettingsSwitch(
                          checked = ytdlpDetails, onCheckedChange = {
@@ -181,6 +190,13 @@ fun SimpleDownloaderPage(
                               setting.onClick?.invoke()
                               setting.route?.let { navController.navigate(it) }
                          },
+                         dialogShow = setting.dialogAppearance,
+                         dialogTitle = setting.dialogTitle,
+                         dialogDescription = setting.dialogDescription,
+                         dialogImage = setting.dialogImage,
+                         dialogContent = setting.dialogContent,
+                         specialDescription = setting.specialDescription,
+                         liner = setting.liner
                     )
                }
 

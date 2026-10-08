@@ -6,7 +6,9 @@ import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
@@ -27,7 +29,6 @@ import org.foss.fermux.components.settingsComponents.TileOptions
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.settings.logic.SettingListInfo
 import org.foss.fermux.settings.logic.TilePosition
-import org.foss.fermux.settings.ui.downloader.ExpandableDownloaderSetting.SponsorBlock
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.clearCache
 import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
@@ -57,9 +58,6 @@ fun AdvancedDownloaderSettings(
      val ipv by downloaderSettingsViewModel.ipv.collectAsStateWithLifecycle()
      // Miscellaneous vals/funs
      val scope = rememberCoroutineScope()
-     var expandedSetting by remember {
-          mutableStateOf<ExpandableDownloaderSetting?>(null)
-     }
 
      val advancedSettings = listOf(
           SettingListInfo(
@@ -93,6 +91,7 @@ fun AdvancedDownloaderSettings(
                title = if (logcat) "Debug Logging On" else "Debug Logging Off",
                description = "Write diagnostic messages to Logcat",
                icon = Icons.Default.BugReport,
+               liner = true,
                dialogAppearance = true,
                dialogTitle = "Debugging",
                dialogImage = R.drawable.log,
@@ -154,9 +153,13 @@ fun AdvancedDownloaderSettings(
           ),
           SettingListInfo(
                title = "SponsorBlock",
-               description = "SponsorBlock API integration for cutting promotions when downloading",
+               description = "SponsorBlock API integration for yt-dlp",
                image = R.drawable.sponsorblock,
                liner = true,
+               dialogAppearance = true,
+               dialogTitle = "SponsorBlock",
+               dialogImage = R.drawable.sponsorblock,
+               dialogDescription = "Set any SponsorBlock flag to cut any type of advertisement, in-video ads and various other",
                content = {
                     SettingsSwitch(
                          modifier = Modifier.padding(2.dp),
@@ -166,7 +169,6 @@ fun AdvancedDownloaderSettings(
                },
                dialogContent = {
                     SponsorBlockChoices(
-                         expanded = expandedSetting == SponsorBlock,
                          downloaderSettingsViewModel = downloaderSettingsViewModel
                     )
                },
@@ -174,7 +176,7 @@ fun AdvancedDownloaderSettings(
           ),
           SettingListInfo(
                title = "Aria2c",
-               description = "Use aria2 instead of the default. Use the Edge Case option when downloading on the highest setting in the downloader",
+               description = "Another option instead of the default fragment downloader",
                image = R.drawable.layers,
                dialogAppearance = true,
                dialogTitle = "Aria2c settings",
