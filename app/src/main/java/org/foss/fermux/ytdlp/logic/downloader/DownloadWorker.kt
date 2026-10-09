@@ -131,12 +131,21 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
           val ipv = settings.ipvConnection.first()
           val quickAudio = settings.quickAudio.first()
           val quickVideo = settings.quickVideo.first()
+          val quickFormat = settings.quickFormat.first()
 
-          val audioName = inputData.getString("audio")
-          val videoName = inputData.getString("video")
+          val url = inputData.getString(URL) ?: return Result.failure()
+          val audioName = inputData.getString(AUDIO)
+          val videoName = inputData.getString(VIDEO)
           val audio = audioName?.let { AudioQuality.valueOf(it) }
           val video = videoName?.let { VideoQuality.valueOf(it) }
-          val url = inputData.getString("url") ?: return Result.failure()
+          val isQuickDownload = audio == null && video == null
+          val selectedQuickAudio = quickAudio.takeIf {
+               isQuickDownload && quickFormat == QuickDownloadFormats.QuickAudio
+          }
+          val selectedQuickVideo = quickVideo.takeIf {
+               isQuickDownload && quickFormat == QuickDownloadFormats.QuickVideo
+          }
+
 
           var lastProgressUpdateAt = 0L
           var capturedMetadataJson: String? = null
@@ -165,6 +174,9 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
                     fragRetry = fragRetry,
                     retries = retries,
                     sleepRequest = sleepRequest,
+                    quickDownloadFormats = quickFormat,
+                    quickAudioQuality = selectedQuickAudio,
+                    quickVideoQuality = selectedQuickVideo,
                     onUpdate = { progress, line ->
 
                          if (isStopped || !workerJob.isActive) {

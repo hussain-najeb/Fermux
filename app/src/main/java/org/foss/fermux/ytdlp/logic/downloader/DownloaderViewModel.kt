@@ -20,15 +20,13 @@ import org.foss.fermux.utils.DebugLogDownloader
 import java.util.*
 
 
-private const val QUICK_AUDIO = "quick_audio"
-private const val QUICK_VIDEO = "quick_video"
-private const val VIDEO = "video"
-private const val AUDIO = "audio"
-private const val URL = "url"
+const val VIDEO = "video"
+const val AUDIO = "audio"
+const val URL = "url"
 
 class DownloaderViewModel : ViewModel() {
      companion object {
-          private const val DOWNLOAD_WORK_NAME = "fermux-active-download"
+          private const val DOWNLOAD_WORK_NAME = "fermux_actived_download"
      }
 
      var state by mutableStateOf<DownloadStatus>(DownloadStatus.Idle)
@@ -88,9 +86,7 @@ class DownloaderViewModel : ViewModel() {
      fun startingDownload(
           context: Context,
           audio: AudioQuality? = null,
-          video: VideoQuality? = null,
-          quickVideo: QuickVideoQuality? = null,
-          quickAudio: QuickAudioQuality? = null
+          video: VideoQuality? = null
      ) {
           if (activeProcess != null || state !is DownloadStatus.UserArgs && state !is DownloadStatus.QuickDownload) {
                DebugLogDownloader.debugDownloader("DownloadAdmission", "Ignoring duplicate download request, active id=$activeProcess")
@@ -105,9 +101,7 @@ class DownloaderViewModel : ViewModel() {
                     workDataOf(
                          URL to downloadUrl,
                          AUDIO to audio?.name,
-                         VIDEO to video?.name,
-                         QUICK_AUDIO to quickAudio?.name,
-                         QUICK_VIDEO to quickVideo?.name
+                         VIDEO to video?.name
                     )
                )
                .setConstraints(wifiConstraint)

@@ -51,6 +51,9 @@ suspend fun downloaderLogic(
      sponsorBlockCategories: Set<String> = emptySet(),
      fragRetry: Int,
      retries: Int,
+     quickDownloadFormats: QuickDownloadFormats = QuickDownloadFormats.QuickAudio,
+     quickAudioQuality: QuickAudioQuality? = null,
+     quickVideoQuality: QuickVideoQuality? = null,
      onUpdate: (Float, String) -> Unit
 ): List<CopiedFile> {
 
@@ -156,6 +159,17 @@ suspend fun downloaderLogic(
      }
      videoQuality?.let {
           request.addOption("-f", it.videoQuality)
+     }
+
+     quickAudioQuality?.let {
+          request.addOption("-x")
+          request.addOption("--audio-format", quickDownloadFormats.quickDownloadFormats)
+          request.addOption("--audio-quality", it.quickDownloadAudioQuality)
+     }
+
+     quickVideoQuality?.let {
+          request.addOption("-f", it.quickDownloadVideoQuality)
+          request.addOption("--merge-output-format", quickDownloadFormats.quickDownloadFormats)
      }
 
 
