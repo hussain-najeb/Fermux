@@ -36,7 +36,7 @@ import org.foss.fermux.components.generalComponents.ModularSlider
 import org.foss.fermux.components.settingsComponents.SettingsSwitch
 import org.foss.fermux.components.settingsComponents.TileOptions
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
-import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.InfoListClass
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.downloader.AudioFormat
@@ -62,7 +62,7 @@ fun DownloaderArgs(navController: NavController) {
      val scope = rememberCoroutineScope()
 
      val args = listOf(
-          SettingListInfo(
+          InfoListClass(
                title = "Reset Arguments",
                description = "Reset the arguments to their original state",
                image = R.drawable.restor,
@@ -85,7 +85,7 @@ fun DownloaderArgs(navController: NavController) {
                },
                position = TilePosition.TOP
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Set Audio Format",
                description = "Set the format of the audio when downloading. current format is $audioFormats",
                image = R.drawable.audio_file,
@@ -107,7 +107,7 @@ fun DownloaderArgs(navController: NavController) {
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Set Video Format",
                description = "This option sets the format of the video when downloading. current is $videoFormats",
                image = R.drawable.file_video,
@@ -129,7 +129,7 @@ fun DownloaderArgs(navController: NavController) {
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Video Compatibility",
                description = "Re-encodes the media to enforce video formats",
                image = R.drawable.re_encodes,
@@ -146,7 +146,7 @@ fun DownloaderArgs(navController: NavController) {
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Set Thumbnail Format",
                description = "Set the format of the thumbnail when downloading. current format is $thumbnailFormat",
                image = R.drawable.file_image,
@@ -168,7 +168,7 @@ fun DownloaderArgs(navController: NavController) {
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = if (thumbnail) "Uncut Thumbnail" else "Cut Thumbnail",
                description = if (thumbnail) "The thumbnail of the downloaded media will be embedded and saved"
                else "The thumbnail of the downloaded media will be removed and won't be saved",
@@ -182,7 +182,7 @@ fun DownloaderArgs(navController: NavController) {
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Set Retries",
                description = "Set the amount of retries that ytdlp does when downloading",
                dialogAppearance = true,
@@ -205,7 +205,7 @@ fun DownloaderArgs(navController: NavController) {
                     )
                }
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Set Fragment Retries",
                description = "The amount of retries when downloading a fragment when using hls or aria2",
                image = R.drawable.fragment_mid,
@@ -235,7 +235,7 @@ fun DownloaderArgs(navController: NavController) {
                     )
                }
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Sleep Duration",
                description = "Sleep request is a flag for delayed download between each request",
                icon = if (sleepRequest > 0) Icons.Filled.Flag else Icons.Outlined.Flag,
@@ -257,7 +257,7 @@ fun DownloaderArgs(navController: NavController) {
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = if (playlist) "Playlist On" else "Playlist Off",
                description = if (playlist) "Playlists will be downloaded when the url is copied from a playlist" else "Playlists will not be downloaded when the url is copied from a playlist",
                image = if (playlist) R.drawable.playlist_on else R.drawable.playlist_off,

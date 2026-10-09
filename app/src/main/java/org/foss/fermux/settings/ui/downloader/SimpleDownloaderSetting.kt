@@ -37,7 +37,7 @@ import org.foss.fermux.components.generalComponents.ModularSegmentedButtons
 import org.foss.fermux.components.settingsComponents.SettingsSwitch
 import org.foss.fermux.components.settingsComponents.TileOptions
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
-import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.InfoListClass
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.rememberNotificationPermissionRequest
@@ -86,7 +86,7 @@ fun SimpleDownloaderPage(
      )
 
      val simpleDownloaderSettings = listOf(
-          SettingListInfo(
+          InfoListClass(
                title = "Update Yt-dlp",
                description = if (isCheckingForUpdate) ytdlpUpdateStatus ?: "Checking for update..." else "Current version is $currentVersionName",
                icon = Icons.Default.Update,
@@ -115,13 +115,13 @@ fun SimpleDownloaderPage(
                },
                position = TilePosition.TOP
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Notifications",
                description = "Press to enable notifications",
                image = if (bellState) R.drawable.bell_on else R.drawable.bell_off,
                onClick = requestNotificationPermission
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "History",
                description = "Enable/Disable history",
                liner = true,
@@ -133,7 +133,7 @@ fun SimpleDownloaderPage(
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = if (ytdlpDetails) "Shown Logs" else "Hidden Logs",
                liner = true,
                description = if (ytdlpDetails) "Shown the downloader Logs" else "Hidden the downloader Logs",

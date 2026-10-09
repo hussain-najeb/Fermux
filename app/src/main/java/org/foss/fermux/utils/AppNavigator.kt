@@ -10,8 +10,8 @@ import org.foss.fermux.components.downloaderComponents.DownloaderLogs
 import org.foss.fermux.ffmpeg.ui.ConverterScreen
 import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.FFmpegLogs
 import org.foss.fermux.main.HomeScreen
-import org.foss.fermux.settings.ui.AboutPage
 import org.foss.fermux.settings.ui.SettingsScreen
+import org.foss.fermux.settings.ui.aboutPage.AboutPage
 import org.foss.fermux.settings.ui.aboutPage.LibraryPage
 import org.foss.fermux.settings.ui.converter.SimpleFFmpegSetting
 import org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage

@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
 import org.foss.fermux.R
 import org.foss.fermux.ui.theme.FermuxColors
@@ -34,7 +35,10 @@ fun SettingAlertDialog(
      dialogContent: @Composable (() -> Unit)? = null
 ) {
      Dialog(
-          onDismissRequest = onDismissRequest
+          onDismissRequest = onDismissRequest,
+          properties = DialogProperties(
+               usePlatformDefaultWidth = false
+          )
      ) {
           val view = (LocalView.current.parent as? DialogWindowProvider)?.window
           SideEffect {
@@ -48,7 +52,7 @@ fun SettingAlertDialog(
                modifier = Modifier
                     .wrapContentHeight()
                     .fillMaxWidth()
-                    .padding(2.dp),
+                    .padding(10.dp),
                shape = RoundedCornerShape(12.dp),
                color = FermuxColors.mutedBlue,
                border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),

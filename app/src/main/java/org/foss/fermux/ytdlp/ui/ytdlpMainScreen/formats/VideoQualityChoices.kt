@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.foss.fermux.R
 import org.foss.fermux.components.downloaderComponents.FormatTiles
-import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.InfoListClass
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ytdlp.logic.downloader.VideoQuality
 
@@ -20,44 +20,44 @@ fun VideoQualityChoices(
 ) {
 
      val videoListOptions = listOf(
-          SettingListInfo(
+          InfoListClass(
                title = "Back",
                description = "Back to the previous page",
                image = R.drawable.back_arrow,
                onClick = onBack,
                position = TilePosition.TOP
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "1080p",
                description = "A 1920 * 1080 video",
                onClick = { onQualitySelected(VideoQuality.HD1080) },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "720p",
                description = "A 1280 × 720 video",
                onClick = { onQualitySelected(VideoQuality.HD720) },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "480p",
                description = "A 854 × 480 video",
                onClick = { onQualitySelected(VideoQuality.SD480) },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "360p",
                description = "A 640 × 360 video",
                onClick = { onQualitySelected(VideoQuality.Q360) },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "240p",
                description = "A 426 × 240 video",
                onClick = { onQualitySelected(VideoQuality.Q240) },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "144p",
                description = "A 256 × 144 video",
                onClick = { onQualitySelected(VideoQuality.Q144) },

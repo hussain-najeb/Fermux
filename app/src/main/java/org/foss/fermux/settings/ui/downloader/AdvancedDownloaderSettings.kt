@@ -27,7 +27,7 @@ import org.foss.fermux.components.generalComponents.ModularSegmentedButtons
 import org.foss.fermux.components.settingsComponents.SettingsSwitch
 import org.foss.fermux.components.settingsComponents.TileOptions
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
-import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.InfoListClass
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.clearCache
@@ -49,6 +49,7 @@ fun AdvancedDownloaderSettings(
      val quickJS by downloaderSettingsViewModel.quickJS.collectAsStateWithLifecycle()
      val fingerprint by downloaderSettingsViewModel.fingerprint.collectAsStateWithLifecycle()
      val logcat by downloaderSettingsViewModel.downloaderDebug.collectAsStateWithLifecycle()
+     val quickDownloads by downloaderSettingsViewModel.quickDownloads.collectAsStateWithLifecycle()
      // ModularSegmentedButtons vals
      val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
      val externalDownloaders by downloaderSettingsViewModel.externalDownloaders.collectAsStateWithLifecycle()
@@ -60,7 +61,7 @@ fun AdvancedDownloaderSettings(
      val scope = rememberCoroutineScope()
 
      val advancedSettings = listOf(
-          SettingListInfo(
+          InfoListClass(
                title = "Reset Downloader Settings",
                description = "Reset downloader settings",
                image = R.drawable.restor,
@@ -87,7 +88,7 @@ fun AdvancedDownloaderSettings(
                },
                position = TilePosition.TOP
           ),
-          SettingListInfo(
+          InfoListClass(
                title = if (logcat) "Debug Logging On" else "Debug Logging Off",
                description = "Write diagnostic messages to Logcat",
                icon = Icons.Default.BugReport,
@@ -109,7 +110,7 @@ fun AdvancedDownloaderSettings(
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Connection Type",
                description = "Use different connections for the downloader",
                image = R.drawable.network,
@@ -130,7 +131,7 @@ fun AdvancedDownloaderSettings(
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Change IPV settings",
                description = "Change the IPV connection type",
                image = R.drawable.ipv,
@@ -151,7 +152,7 @@ fun AdvancedDownloaderSettings(
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "SponsorBlock",
                description = "SponsorBlock API integration for yt-dlp",
                image = R.drawable.sponsorblock,
@@ -174,7 +175,7 @@ fun AdvancedDownloaderSettings(
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Aria2c",
                description = "Another option instead of the default fragment downloader",
                image = R.drawable.layers,
@@ -206,7 +207,7 @@ fun AdvancedDownloaderSettings(
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Yt-dlp HLS Options",
                description = "HLS options for fragment download",
                image = R.drawable.aria2_hls,
@@ -241,7 +242,7 @@ fun AdvancedDownloaderSettings(
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Impersonation",
                description = "Enabling impersonation makes yt-dlp requests look like a real browser",
                image = if (fingerprint) R.drawable.impersonation_on else R.drawable.impersonation_off,
@@ -269,7 +270,43 @@ fun AdvancedDownloaderSettings(
                dialogImage = R.drawable.impersonation_on,
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
+               title = "Quick Downloads",
+               description = "The button in the downloader card at the home page",
+               image = R.drawable.speed,
+               liner = true,
+               content = {
+                    SettingsSwitch(
+                         checked = quickDownloads,
+                         onCheckedChange = {
+                              downloaderSettingsViewModel.setQuickDownloads(it)
+                         }
+                    )
+               },
+               dialogAppearance = true,
+               dialogTitle = "Quick Downloads?",
+               specialDescription = buildAnnotatedString {
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Quick Downloads ") }
+                    withStyle(SpanStyle(FermuxColors.white)) {
+                         append("is a feature that you can the settings of here.\n\n")
+                         append("When the ")
+                    }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Quick Downloads ") }
+                    withStyle(SpanStyle(FermuxColors.white)) {
+                         append("button is pressed it takes the Url from your clipboard and downloads the media right away without additional configuration.\n\n")
+                         append("You can configure the ")
+                    }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Quick Downloads ") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("beforehand, specify the format, resolution, or audio quality, so its the defualt when pressing the ") }
+                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Quick Downloads ") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("button.") }
+               },
+               dialogImage = R.drawable.speed,
+               dialogContent = {
+
+               }
+          ),
+          InfoListClass(
                title = "Clearing Cache",
                description = "Clearing cache for the app",
                image = R.drawable.eraser,
@@ -292,7 +329,7 @@ fun AdvancedDownloaderSettings(
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Quick JS Engine",
                description = "JavaScript engine for yt-dlp",
                image = if (quickJS) R.drawable.flash_on else R.drawable.flash_off,

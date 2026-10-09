@@ -101,6 +101,9 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      val retries: StateFlow<Int> = settingsTab.retries
           .stateIn(viewModelScope, SharingStarted.Lazily, 10)
 
+     val quickDownloads: StateFlow<Boolean> = settingsTab.quickDownloads
+          .stateIn(viewModelScope, SharingStarted.Lazily, true)
+
      fun setSleepRequest(value: Int) {
           viewModelScope.launch { settingsTab.setSleepRequest(value) }
      }
@@ -174,14 +177,6 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
           viewModelScope.launch { settingsTab.setDownloaderBellState(value) }
      }
 
-     fun setUpToDate(value: Boolean) {
-          viewModelScope.launch { settingsTab.setUpToDate(value) }
-     }
-
-     fun setYtdlpChannel(value: YtdlpChannel) {
-          viewModelScope.launch { settingsTab.setYtdlpChannel(value) }
-     }
-
      fun setWifi(value: Connectivity) {
           viewModelScope.launch { settingsTab.setWifi(value) }
      }
@@ -196,6 +191,10 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
      fun setRetries(value: Int) {
           viewModelScope.launch { settingsTab.setRetries(value) }
+     }
+
+     fun setQuickDownloads(value: Boolean) {
+          viewModelScope.launch { settingsTab.setQuickDownloads(value) }
      }
 
      suspend fun resetDownloaderSettings(): DownloaderSettingsSnapshot {

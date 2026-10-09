@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
@@ -29,6 +30,7 @@ import org.foss.fermux.R
 import org.foss.fermux.components.generalComponents.AppSnackBar
 import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.components.generalComponents.MainAppCard
+import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.MainScreens
 import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
@@ -47,6 +49,8 @@ import org.foss.fermux.ytdlp.ui.quickDownloads.QuickDownloadsStateMachine
 fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animation between each transition so its smooth. App wide transition between each tab, not component animations
 
      val downloaderViewModel: DownloaderViewModel = viewModel()
+     val downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel()
+
 
      val context = LocalContext.current
      val clipboard = LocalClipboard.current
@@ -54,6 +58,9 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
      val scope = rememberCoroutineScope()
      val scroll = rememberScrollState()
      val disabled = downloaderViewModel.state is DownloadStatus.Idle || downloaderViewModel.state is DownloadStatus.Error
+
+     val quickDownloads by downloaderSettingsViewModel.quickDownloads.collectAsStateWithLifecycle()
+
 
      val speed = (downloaderViewModel.state as? DownloadStatus.Downloading)?.downloadProgress ?: 0f
      val iconRotate by animateFloatAsState(
@@ -77,26 +84,28 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
                title = "Downloader",
                description = "A modern implementation of ytdlp to android with powerful additions.",
                image = R.drawable.download,
-               buttonIcon = R.drawable.speed,
+               buttonIcon = if (quickDownloads) R.drawable.speed else null,
                iconModifier = Modifier.rotate(iconRotate),
-               onClick = {
-                    scope.launch {
-                         clipboard.getClipEntry()?.clipData?.getItemAt(0)?.text?.toString()
-                              .let { text ->
-                                   if (text != null) {
-                                        downloaderViewModel.downloadUrl = text
-                                        downloaderViewModel.quickDownloads()
-                                        downloaderViewModel.startingDownload(context)
-                                   }
-                                   if (text.isNullOrBlank() || text.isEmpty()) {
-                                        scope.launch {
-                                             snackbarHostState.showSnackbar(
-                                                  message = "Your url is empty, copy a url",
-                                                  duration = SnackbarDuration.Short
-                                             )
+               onClick =  {
+                    if (quickDownloads) {
+                         scope.launch {
+                              clipboard.getClipEntry()?.clipData?.getItemAt(0)?.text?.toString()
+                                   .let { text ->
+                                        if (text != null) {
+                                             downloaderViewModel.downloadUrl = text
+                                             downloaderViewModel.quickDownloads()
+                                             downloaderViewModel.startingDownload(context)
+                                        }
+                                        if (text.isNullOrBlank() || text.isEmpty()) {
+                                             scope.launch {
+                                                  snackbarHostState.showSnackbar(
+                                                       message = "Your url is empty, copy a url",
+                                                       duration = SnackbarDuration.Short
+                                                  )
+                                             }
                                         }
                                    }
-                              }
+                         }
                     }
                },
                trailingContent = {

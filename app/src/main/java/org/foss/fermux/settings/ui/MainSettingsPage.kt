@@ -18,7 +18,7 @@ import androidx.navigation.NavHostController
 import org.foss.fermux.R
 import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.components.settingsComponents.TileOptions
-import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.InfoListClass
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.SettingsScreens
@@ -30,28 +30,28 @@ fun SettingsScreen(
 ) {
      val generalSettings = remember {
           listOf(
-               SettingListInfo(
+               InfoListClass(
                     title = "Downloader Settings",
                     description = "Changing the settings for Ytdlp",
                     image = R.drawable.yt_dlp,
                     route = SettingsScreens.SimpleDownloader.route,
                     position = TilePosition.TOP
                ),
-               SettingListInfo(
+               InfoListClass(
                     title = "Converter Settings",
                     description = "Changing the settings for FFmpeg",
                     image = R.drawable.ffmpeg,
                     route = SettingsScreens.SimpleFFmpeg.route,
                     position = TilePosition.MIDDLE
                ),
-               SettingListInfo(
+               InfoListClass(
                     title = "Terminal Settings",
                     description = "Changing the settings for the Terminal",
                     image = R.drawable.terminal,
                     route = SettingsScreens.SimpleTerminal.route,
                     position = TilePosition.MIDDLE
                ),
-               SettingListInfo(
+               InfoListClass(
                     title = "About",
                     description = "About page of the app",
                     icon = Icons.Default.Info,

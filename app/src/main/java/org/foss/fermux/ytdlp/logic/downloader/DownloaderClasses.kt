@@ -76,11 +76,6 @@ enum class AudioQuality(val audioQuality: String) // audio quality class to pass
      LOW("9") // ~65 kbps (V9)
 }
 
-
-/**
- * Enum class for specifying the quality of the video when used to download video.
- */
-
 enum class VideoQuality(val videoQuality: String) {
      HD1080("bv*[height<=1080]+ba/b[height<=1080]"),
      HD720("bv*[height<=720]+ba/b[height<=720]"),
@@ -90,9 +85,6 @@ enum class VideoQuality(val videoQuality: String) {
      Q144("bv*[height<=144]+ba/b[height<=144]")
 }
 
-/**
- * Enum for audio formats
- */
 enum class AudioFormat(val audioFormats: String) {
      OpusFormat("opus"),
      Mp3Format("mp3"),
@@ -114,9 +106,6 @@ enum class VideoFormat(val videoFormat: String) {
      Mkv("mkv")
 }
 
-/**
- * Enum class used by the [org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage] and the [downloaderLogic] to manage aria2.
- */
 enum class Aria2cMode {
      Disabled,
      EdgeCaseOnly,
@@ -146,3 +135,25 @@ enum class ExternalDownloaders {
      FFmpegAsExternal,
      YtdlpNativeDownloader
 }
+
+enum class QuickDownloadFormats(val quickDownloadFormats: String) {
+     QuickVideo("mp4"),
+     QuickAudio("mp3")
+}
+
+enum class QuickVideoQuality(val quickDownloadVideoQuality: String) {
+     HD1080("bv*[height<=1080]+ba/b[height<=1080]"),
+     HD720("bv*[height<=720]+ba/b[height<=720]"),
+     SD480("bv*[height<=480]+ba/b[height<=480]"),
+     Q360("bv*[height<=360]+ba/b[height<=360]"),
+     Q240("bv*[height<=240]+ba/b[height<=240]"),
+     Q144("bv*[height<=144]+ba/b[height<=144]")
+}
+
+enum class QuickAudioQuality(val quickDownloadAudioQuality: String) {
+     Best("0"),   // ~220-260 kbps (V0)
+     High("2"),   // ~170-210 kbps (V2)
+     Medium("5"), // ~100-140 kbps (V5 - yt-dlp default)
+     Low("9") // ~65 kbps (V9)
+}
+

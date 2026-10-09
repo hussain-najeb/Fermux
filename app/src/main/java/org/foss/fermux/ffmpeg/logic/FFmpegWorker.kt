@@ -6,16 +6,14 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.ServiceInfo
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.net.toUri
 import androidx.work.*
 import androidx.work.ListenableWorker.Result.failure
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.withContext
 import org.foss.fermux.R
 import org.foss.fermux.dataStore.DataStoreFFmpegSettings
 import org.foss.fermux.dataStore.FFmpegSettingsRepo
@@ -151,6 +149,19 @@ private fun createFFmpegNotif(
                          )
                     }
 
+                    @OptIn(InternalCoroutinesApi::class)
+                    suspend fun registerProcessCancellation(process: Process): DisposableHandle {
+                         return currentCoroutineContext()[Job]!!
+                              .invokeOnCompletion(
+                                   onCancelling = true,
+                                   invokeImmediately = true
+                              ) { cause ->
+                                   if (cause is CancellationException) {
+                                        process.destroy()
+                                   }
+                              }
+                    }
+
                     val ffprobeInfo = ffprobeProgress(
                          ffprobeBinary,
                          tempFile,
@@ -175,96 +186,97 @@ private fun createFFmpegNotif(
                          ).apply {
                               environment()["LD_LIBRARY_PATH"] = nativeLibDir
                               redirectErrorStream(true)
-
                          }.start()
+
                     }
+                    val cancellationHandle = registerProcessCancellation(process)
 
-                    currentCoroutineContext()[Job]?.invokeOnCompletion { handler ->
-                         if (handler is CancellationException)
-                              process.destroy()
-                    }
+                    try {
+                         val output = StringBuilder()
+                         withContext(Dispatchers.IO) {
+                              BufferedReader(InputStreamReader(process.inputStream)).use { reader ->
+                                   var line: String?
+                                   var lastUpdateAt = 0L
+                                   var currentProgress = 0f
 
-                    val output = StringBuilder()
-                    withContext(Dispatchers.IO) {
-                         BufferedReader(InputStreamReader(process.inputStream)).use { reader ->
-                              var line: String?
-                              var lastUpdateAt = 0L
-                              var currentProgress = 0f
+                                   while (reader.readLine().also { line = it } != null) {
+                                        val logOutput = line!!
+                                        output.appendLine(logOutput)
+                                        DebugLogFFmpeg.debugFFmpeg("Fermux FFmpeg Output", logOutput)
+                                        val now = System.currentTimeMillis()
+                                        var progressDoneSign = false
 
-                              while (reader.readLine().also { line = it } != null) {
-                                   val logOutput = line!!
-                                   output.appendLine(logOutput)
-                                   DebugLogFFmpeg.debugFFmpeg("Fermux FFmpeg Output", logOutput)
-                                   val now = System.currentTimeMillis()
-                                   var progressDoneSign = false
+                                        val separator = logOutput.indexOf("=")
+                                        if (separator > 0) {
+                                             val progressKey = logOutput.substring(0, separator)
+                                             val progressValue = logOutput.substring(separator + 1)
 
-                                   val separator = logOutput.indexOf("=")
-                                   if (separator > 0) {
-                                        val progressKey = logOutput.substring(0, separator)
-                                        val progressValue = logOutput.substring(separator + 1)
-
-                                        when(progressKey) {
-                                             "out_time_us", "out_time_ms" -> {
-                                                  val processedTime = progressValue.toLongOrNull()
-                                                  if (processedTime != null && ffprobeInfo != null && ffprobeInfo > 0L) {
-                                                       currentProgress = (
-                                                               processedTime.toDouble() / ffprobeInfo.toDouble() * 100.0
-                                                               ).toFloat().coerceIn(0f, 99.9f)
+                                             when (progressKey) {
+                                                  "out_time_us", "out_time_ms" -> {
+                                                       val processedTime = progressValue.toLongOrNull()
+                                                       if (processedTime != null && ffprobeInfo != null && ffprobeInfo > 0L) {
+                                                            currentProgress = (
+                                                                    processedTime.toDouble() / ffprobeInfo.toDouble() * 100.0
+                                                                    ).toFloat().coerceIn(0f, 99.9f)
+                                                       }
                                                   }
-                                             }
-                                             "progress" -> {
-                                                  if (progressValue == "end") {
-                                                       currentProgress = 100f
-                                                       progressDoneSign = true
+
+                                                  "progress" -> {
+                                                       if (progressValue == "end") {
+                                                            currentProgress = 100f
+                                                            progressDoneSign = true
+                                                       }
                                                   }
                                              }
                                         }
-                                   }
 
-                                   if (now - lastUpdateAt >= 500L || progressDoneSign) {
-                                        lastUpdateAt = now
-                                        setProgress(
-                                             workDataOf(
-                                                  "progress" to currentProgress,
-                                                  "line" to logOutput,
+                                        if (now - lastUpdateAt >= 500L || progressDoneSign) {
+                                             lastUpdateAt = now
+                                             setProgress(
+                                                  workDataOf(
+                                                       "progress" to currentProgress,
+                                                       "line" to logOutput,
+                                                  )
                                              )
-                                        )
-                                        ffmpegWorkNotif.notify(
-                                             FFMPEG_NOTIFICATION_ID,
-                                             createFFmpegNotif(
-                                                  progress = currentProgress.roundToInt(),
-                                                  text = logOutput
+                                             ffmpegWorkNotif.notify(
+                                                  FFMPEG_NOTIFICATION_ID,
+                                                  createFFmpegNotif(
+                                                       progress = currentProgress.roundToInt(),
+                                                       text = logOutput
+                                                  )
                                              )
-                                        )
+                                        }
                                    }
                               }
                          }
-                    }
 
-                    val exitCode = withContext(Dispatchers.IO) {
-                         process.waitFor()
-                    }
-                    if (exitCode == 0) {
-                         withContext(Dispatchers.IO) {
-                              copyFileToDownloads(
-                                   applicationContext,
-                                   outputFile,
-                                   displayName,
-                                   subFolder = "fermux/converter"
-                              )
-                              Result.success()
+                         val exitCode = withContext(Dispatchers.IO) {
+                              process.waitFor()
                          }
-                    } else {
-                         val logs = output.toString().take(4_000)
-                         DebugLogFFmpeg.debugFFmpeg("fermuxFFmpeg", "FFmpeg failed with rc: $exitCode\n$logs")
-                         failure(workDataOf("error" to logs))
+                         if (exitCode == 0) {
+                              withContext(Dispatchers.IO) {
+                                   copyFileToDownloads(
+                                        applicationContext,
+                                        outputFile,
+                                        displayName,
+                                        subFolder = "fermux/converter"
+                                   )
+                                   Result.success()
+                              }
+                         } else {
+                              val logs = output.toString().take(8_000)
+                              DebugLogFFmpeg.debugFFmpeg("fermuxFFmpeg", "FFmpeg failed with rc: $exitCode\n$logs")
+                              failure(workDataOf("error" to logs))
+                         }
+                    } finally {
+                         cancellationHandle.dispose()
+                         if (process.isAlive) {
+                              process.destroyForcibly()
+                         }
                     }
                } catch (e: CancellationException) {
-                    DebugLogFFmpeg.errorFFmpeg(
-                         "fermuxFFmpeg",
-                         "FFmpeg conversion cancelled id=$id stopReason=$stopReason",
-                         e
-                    )
+                    DebugLogFFmpeg.errorFFmpeg("fermuxFFmpeg", "FFmpeg conversion cancelled id=$id stopReason=$stopReason", e)
+                    Log.e("fermuxFFmpeg", "FFmpeg conversion cancelled id=$id stopReason=$stopReason", e)
                     throw e
                } finally {
                     if (tempFile.exists()) tempFile.delete()

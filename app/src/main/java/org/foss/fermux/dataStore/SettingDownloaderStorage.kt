@@ -34,7 +34,11 @@ interface DownloaderSettingsRepo {
      val wifi: Flow<Connectivity>
      val fragRetries: Flow<Int>
      val retries: Flow<Int>
+     val quickDownloads: Flow<Boolean>
      val ipvConnection: Flow<IpvConnection>
+     val quickFormat: Flow<QuickDownloadFormats>
+     val quickVideo: Flow<QuickVideoQuality>
+     val quickAudio: Flow<QuickAudioQuality>
 
      suspend fun setDownloadPath(value: String)
      suspend fun setDownloaderBellState(value: Boolean)
@@ -58,12 +62,16 @@ interface DownloaderSettingsRepo {
      suspend fun setWifi(value: Connectivity)
      suspend fun setFragRetries(value: Int)
      suspend fun setRetries(value: Int)
+     suspend fun setQuickDownloads(value: Boolean)
      suspend fun setIpvConnection(value: IpvConnection)
      suspend fun setYtdlpChannel(value: YtdlpChannel)
      suspend fun resetArgs(): DownloaderArgumentsSnapshot
      suspend fun restoreArgs(snapshot: DownloaderArgumentsSnapshot)
      suspend fun resetYtdlp(): DownloaderSettingsSnapshot
      suspend fun restoreYtdlp(snapshot: DownloaderSettingsSnapshot)
+     suspend fun setQuickFormat(value: QuickDownloadFormats)
+     suspend fun setQuickVideo(value: QuickVideoQuality)
+     suspend fun setQuickAudio(value: QuickAudioQuality)
 }
 
 data class DownloaderSettingsSnapshot(
@@ -80,7 +88,11 @@ data class DownloaderSettingsSnapshot(
      val quickJS: Boolean?,
      val fingerprinting: Boolean?,
      val externalDownloader: String?,
-     val wifi: String?
+     val wifi: String?,
+     val quickDownloads: Boolean?,
+     val quickDownloadFormats: QuickDownloadFormats,
+     val quickAudioQuality: QuickAudioQuality,
+     val quickVideoQuality: QuickVideoQuality,
 )
 
 data class DownloaderArgumentsSnapshot(
@@ -106,7 +118,7 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings_
 
 
 // TODO. for settings.
-//  1- sequental downloads, one after the other, so one is done, the other is executed right after
+//  1- sequential downloads, one after the other, so one is done, the other is executed right after
 
 val DOWNLOAD_PATH = stringPreferencesKey("download_path")
 val DOWNLOADER_BELL_STATE = booleanPreferencesKey("bellState")
@@ -133,6 +145,10 @@ val WIFI = stringPreferencesKey("wifi")
 val IPV = stringPreferencesKey("ipv")
 val FRAG_RETRIES = intPreferencesKey("frag_retries")
 val RETRIES = intPreferencesKey("retries")
+val QUICK_DOWNLOADS = booleanPreferencesKey("quick_downloads")
+val QUICK_DOWNLOADS_FORMAT = stringPreferencesKey("quick_format")
+val QUICK_DOWNLOADS_VIDEO = stringPreferencesKey("quick_video")
+val QUICK_DOWNLOADS_AUDIO = stringPreferencesKey("quick_audio")
 
 class DataStoreDownloaderSettings(private val settingStore: DataStore<Preferences>) : DownloaderSettingsRepo {
 
@@ -213,6 +229,8 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                ?.let { runCatching { IpvConnection.valueOf(it) }.getOrNull() }
                ?: IpvConnection.Disabled
      }
+
+     override val quickDownloads: Flow<Boolean> = settingStore.data.map { preferences -> preferences[QUICK_DOWNLOADS] ?: true }
 
      override suspend fun setDownloadPath(value: String) {
           settingStore.edit { preferences -> preferences[DOWNLOAD_PATH] = value }
@@ -328,6 +346,10 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
           settingStore.edit { preferences -> preferences[IPV] = value.name }
      }
 
+     override suspend fun setQuickDownloads(value: Boolean) {
+          settingStore.edit { preferences -> preferences[QUICK_DOWNLOADS] = value }
+     }
+
      override suspend fun resetArgs(): DownloaderArgumentsSnapshot {
           lateinit var snapshot: DownloaderArgumentsSnapshot
           settingStore.edit { preferences ->
@@ -387,7 +409,8 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                     quickJS = preferences[QUICK_JS],
                     fingerprinting = preferences[FINGERPRINT],
                     externalDownloader = preferences[EXTERNAL_DOWNLOADER],
-                    wifi = preferences[WIFI]
+                    wifi = preferences[WIFI],
+                    quickDownloads = preferences[QUICK_DOWNLOADS]
                )
                preferences.remove(key = DOWNLOAD_PATH)
                preferences.remove(key = DOWNLOADER_DEBUG)
@@ -403,6 +426,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                preferences.remove(key = FINGERPRINT)
                preferences.remove(key = EXTERNAL_DOWNLOADER)
                preferences.remove(key = WIFI)
+               preferences.remove(key = QUICK_DOWNLOADS)
           }
           return snapshot
      }
@@ -423,6 +447,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                preferences.restore(FINGERPRINT, snapshot.fingerprinting)
                preferences.restore(EXTERNAL_DOWNLOADER, snapshot.externalDownloader)
                preferences.restore(WIFI, snapshot.wifi)
+               preferences.restore(QUICK_DOWNLOADS, snapshot.quickDownloads)
           }
      }
 }

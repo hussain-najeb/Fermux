@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import org.foss.fermux.R
 import org.foss.fermux.components.ffmpegComponents.FFmpegTiles
 import org.foss.fermux.ffmpeg.logic.MediaKind
-import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.InfoListClass
 import org.foss.fermux.settings.logic.TilePosition
 
 @SuppressLint("SuspiciousIndentation")
@@ -20,21 +20,21 @@ fun IdleConversionState(onPick: (MediaKind) -> Unit) {
      val scrollState = rememberScrollState()
 
      val formatOptions = listOf(
-          SettingListInfo(
+          InfoListClass(
                title = "Audio",
                description = "Convert the selected media to audio",
                image = R.drawable.audio,
                onClick = { onPick(MediaKind.AUDIO) },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Video",
                description = "Convert the selected media to video",
                image = R.drawable.video,
                onClick = { onPick(MediaKind.VIDEO) },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Image",
                description = "Convert selected media to image",
                image = R.drawable.image,

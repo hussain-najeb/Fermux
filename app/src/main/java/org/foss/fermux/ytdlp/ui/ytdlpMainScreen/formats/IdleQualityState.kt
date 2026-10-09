@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.foss.fermux.R
 import org.foss.fermux.components.downloaderComponents.FormatTiles
-import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.InfoListClass
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ytdlp.logic.downloader.FormatKind
 
@@ -18,21 +18,21 @@ fun IdleQualityChoices(onPick: (FormatKind) -> Unit, onCancel: () -> Unit) {
 
 
      val formatOptions = listOf(
-          SettingListInfo(
+          InfoListClass(
                title = "Cancel",
                description = "Cancel this downloader process",
                onClick = { onCancel() },
                image = R.drawable.cancel_buttons,
                position = TilePosition.TOP
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Audio",
                description = "Only download the audio track",
                image = R.drawable.audio,
                onClick = { onPick(FormatKind.Audio) },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Video",
                description = "Download the full video",
                image = R.drawable.video,

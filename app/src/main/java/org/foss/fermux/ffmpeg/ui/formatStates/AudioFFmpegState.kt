@@ -12,7 +12,7 @@ import org.foss.fermux.R
 import org.foss.fermux.components.ffmpegComponents.FFmpegTiles
 import org.foss.fermux.ffmpeg.logic.FFmpegTargetFormat
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
-import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.InfoListClass
 import org.foss.fermux.settings.logic.TilePosition
 
 @Composable
@@ -26,14 +26,14 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
      }
 
      val audioOptions = listOf(
-          SettingListInfo(
+          InfoListClass(
                title = "Back",
                description = "Choose a different media kind",
                image = R.drawable.back_arrow,
                onClick = onBack,
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "MP3",
                description = "Best compatible format",
                image = R.drawable.mp3,
@@ -45,7 +45,7 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "FLAC",
                description = "Flac is a lossless audio format with a big files size",
                image = R.drawable.flac,
@@ -61,7 +61,7 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "WAV",
                description = "A WAV file gives the highest possible audio quality, but a MASSIVE file size",
                image = R.drawable.wav,
@@ -77,7 +77,7 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "OGG",
                description = "OGG is a lower quality format, with a much lower file size",
                image = R.drawable.ogg,
@@ -93,7 +93,7 @@ fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "M4A",
                description = "M4A is a modern, high-efficiency format that is smaller than WAV and FLAC and better quality than OGG",
                image = R.drawable.m4p,

@@ -34,7 +34,7 @@ import org.foss.fermux.components.generalComponents.ModularSegmentedButtons
 import org.foss.fermux.components.settingsComponents.SettingsSwitch
 import org.foss.fermux.components.settingsComponents.TileOptions
 import org.foss.fermux.settings.logic.FFmpegSettingsViewModel
-import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.InfoListClass
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.rememberNotificationPermissionRequest
@@ -79,7 +79,7 @@ fun SimpleFFmpegSetting(
 
 
      val simpleFFmpegSetting = listOf(
-          SettingListInfo(
+          InfoListClass(
                title = "Audio Bitrate",
                description = "The amount of data processed for each second of sound",
                image = R.drawable.edit_audio,
@@ -102,13 +102,13 @@ fun SimpleFFmpegSetting(
                },
                position = TilePosition.TOP
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Notifications",
                description = "Press to enable notifications",
                image = if (bellState) R.drawable.bell_on else R.drawable.bell_off,
                onClick = requestNotificationPermission
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Normalize Audio",
                description = "Set audio normalization for media",
                image = if (normalizeAudio) R.drawable.normalize_audio else R.drawable.audio_lines_x,
@@ -127,7 +127,7 @@ fun SimpleFFmpegSetting(
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Mono Downmix",
                description = "Set mono downmix for media",
                image = R.drawable.headphones,
@@ -144,7 +144,7 @@ fun SimpleFFmpegSetting(
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Video Resolution",
                description = "Edit the video resolution for the selected media",
                image = R.drawable.video_resolution,
@@ -166,7 +166,7 @@ fun SimpleFFmpegSetting(
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Video Re-encoding",
                description = "This re-encodes the video instead of copying it as-is",
                image = R.drawable.video_compression,

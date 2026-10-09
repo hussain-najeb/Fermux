@@ -36,7 +36,7 @@ enum class TilePosition {
     }
 }
 
-data class SettingListInfo(
+data class InfoListClass(
     val title: String,
     val description: String,
     val icon: ImageVector? = null,

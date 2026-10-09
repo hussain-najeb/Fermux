@@ -12,7 +12,7 @@ import org.foss.fermux.R
 import org.foss.fermux.components.ffmpegComponents.FFmpegTiles
 import org.foss.fermux.ffmpeg.logic.FFmpegTargetFormat
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
-import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.InfoListClass
 import org.foss.fermux.settings.logic.TilePosition
 
 @Composable
@@ -28,14 +28,14 @@ fun ImageConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
 
 
      val imageOptions = listOf(
-          SettingListInfo(
+          InfoListClass(
                title = "Back",
                description = "Choose a different media kind",
                image = R.drawable.back_arrow,
                onClick = onBack,
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "GIF",
                description = "it is a short, animated image file that plays on an endless loop without any sound",
                image = R.drawable.gif,
@@ -51,7 +51,7 @@ fun ImageConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "JPEG",
                description = "JPEG is a compressed digital image format designed to balance small file sizes with high photo quality",
                image = R.drawable.jpg,
@@ -67,7 +67,7 @@ fun ImageConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "PNG",
                description = "PNG is an uncompressed image format that supports sharp detail, crisp text, and transparent backgrounds",
                image = R.drawable.png,

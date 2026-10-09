@@ -1,4 +1,4 @@
-package org.foss.fermux.settings.ui
+package org.foss.fermux.settings.ui.aboutPage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -13,11 +13,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.foss.fermux.R
+import org.foss.fermux.components.buttons.FilterButton
 import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.components.settingsComponents.TileOptions
-import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.InfoListClass
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.settings.logic.getAppVersionName
 import org.foss.fermux.ui.theme.FermuxColors
@@ -30,32 +32,38 @@ fun AboutPage(navController: NavController) {
      val versionName = remember { context.getAppVersionName() }
 
      val aboutSettingLists = listOf(
-          SettingListInfo(
+          InfoListClass(
                title = "README Page",
-               description = "Check the Github Repository for more information",
+               description = "Check Github Repo for more info",
                icon = Icons.Default.Description,
-               onClick = {
-                    context.openUrl("https://github.com/hussain-najeb/Fermux")
+               liner = true,
+               content = {
+                    FilterButton(
+                         modifier = Modifier.padding(3.dp),
+                         border = true,
+                         image = R.drawable.open_link,
+                         onClick = {
+                              context.openUrl("https://github.com/hussain-najeb/Fermux")
+                         }
+                    )
                },
-               position = TilePosition.TOP
+               position = TilePosition.SOLO
           ),
-          SettingListInfo(
+          InfoListClass(
                // TODO. Make so it checks if there is an update an have it tell the user. Maybe an auto updater for the app.
                title = "App Version",
                description = "The current version of the app is $versionName",
                icon = Icons.Outlined.Info,
-               position = TilePosition.MIDDLE
+               position = TilePosition.SOLO
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Dependency And Library Versions",
                description = "Press to see all the versions of dependencies and libraries the app uses",
                image = R.drawable.library,
                onClick = { navController.navigate(SettingsScreens.LibraryPage.route) },
-               position = TilePosition.BOTTOM
+               position = TilePosition.SOLO // TODO. Add link buttons for each dependency, also fix it by adding the same dialog based stuff in ffmpeg and downloader to it.
           )
      )
-
-
 
 
      LargeTopBarScaffold(
@@ -82,6 +90,7 @@ fun AboutPage(navController: NavController) {
                               aboutList.route?.let { navController.navigate(it) }
                          },
                          content = aboutList.content,
+                         liner = aboutList.liner,
                          trailingContent = aboutList.trailingContent
                     )
                }

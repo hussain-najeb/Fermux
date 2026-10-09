@@ -27,7 +27,7 @@ import org.foss.fermux.components.generalComponents.ModularSlider
 import org.foss.fermux.components.settingsComponents.SettingsSwitch
 import org.foss.fermux.components.settingsComponents.TileOptions
 import org.foss.fermux.settings.logic.FFmpegSettingsViewModel
-import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.InfoListClass
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
 import kotlin.math.roundToInt
@@ -54,7 +54,7 @@ fun AdvancedFFmpegSettings(
      val scope = rememberCoroutineScope()
 
      val advanced = listOf(
-          SettingListInfo(
+          InfoListClass(
                title = "Reset Converter Settings",
                description = "Reset converter settings",
                image = R.drawable.restor,
@@ -82,7 +82,7 @@ fun AdvancedFFmpegSettings(
                },
                position = TilePosition.TOP
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Video CRF",
                description = "Set a value for video CRF, default is recommended",
                image = R.drawable.tune,
@@ -103,7 +103,7 @@ fun AdvancedFFmpegSettings(
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = if (logcat) "Debug Logging On" else "Debug Logging Off",
                description = "Write diagnostic messages to Logcat",
                icon = Icons.Default.BugReport,
@@ -124,7 +124,7 @@ fun AdvancedFFmpegSettings(
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "CPU Thread Limit",
                description = "Limits how many CPU cores ffmpeg can use during conversion",
                image = if(threadLimit > 0)R.drawable.thread_limit_on else R.drawable.thread_limit_off,
@@ -151,7 +151,7 @@ fun AdvancedFFmpegSettings(
                },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Hardware Acceleration",
                description = "Enable/Disable hardware acceleration",
                image = R.drawable.hardware_encoding,

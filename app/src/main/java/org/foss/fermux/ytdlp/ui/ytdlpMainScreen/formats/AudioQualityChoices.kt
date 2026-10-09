@@ -10,7 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.foss.fermux.R
 import org.foss.fermux.components.downloaderComponents.FormatTiles
-import org.foss.fermux.settings.logic.SettingListInfo
+import org.foss.fermux.settings.logic.InfoListClass
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ytdlp.logic.downloader.AudioQuality
 
@@ -20,32 +20,32 @@ fun AudioQualityChoices(
      onQualitySelected: (AudioQuality) -> Unit
 ) {
      val audioListOptions = listOf(
-          SettingListInfo(
+          InfoListClass(
                title = "Back",
                description = "Back to the previous page",
                image = R.drawable.back_arrow,
                onClick = onBack,
                position = TilePosition.TOP
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Best Audio Quality",
                description = "Highest audio quality",
                onClick = { onQualitySelected(AudioQuality.BEST) },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "High",
                description = "Best middle ground for size and quality",
                onClick = { onQualitySelected(AudioQuality.HIGH) },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Medium",
                description = "Yt-dlp default audio quality",
                onClick = { onQualitySelected(AudioQuality.MEDIUM) },
                position = TilePosition.MIDDLE
           ),
-          SettingListInfo(
+          InfoListClass(
                title = "Low",
                description = "Smallest file size with the lowest audio quality",
                onClick = { onQualitySelected(AudioQuality.LOW) },
