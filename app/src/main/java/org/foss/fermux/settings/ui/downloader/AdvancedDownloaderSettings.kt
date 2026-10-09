@@ -35,6 +35,7 @@ import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
 import org.foss.fermux.ytdlp.logic.downloader.Connectivity
 import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
 import org.foss.fermux.ytdlp.logic.downloader.IpvConnection
+import org.foss.fermux.ytdlp.ui.quickDownloads.QuickDownloadSettingQuality
 
 @Composable
 fun AdvancedDownloaderSettings(
@@ -303,7 +304,7 @@ fun AdvancedDownloaderSettings(
                },
                dialogImage = R.drawable.speed,
                dialogContent = {
-
+                    QuickDownloadSettingQuality(downloaderSettingsViewModel)
                }
           ),
           InfoListClass(

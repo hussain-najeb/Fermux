@@ -35,56 +35,57 @@ fun ModularSlider(
           sliderState.value = sliderKey.toFloat().coerceIn(trackRange)
      }
 
-          Surface(
-               modifier = Modifier
-                    .wrapContentSize()
-                    .padding(1.dp),
-               color = FermuxColors.warmPurple,
-               shape = RoundedCornerShape(8.dp),
-               border = BorderStroke(1.dp, color = FermuxColors.fermuxHelperBorder)
-          ) {
+     Surface(
+          modifier = Modifier
+               .wrapContentSize()
+               .padding(1.dp),
+          color = FermuxColors.warmPurple,
+          shape = RoundedCornerShape(8.dp),
+          border = BorderStroke(1.dp, color = FermuxColors.fermuxHelperBorder)
+     ) {
 
-               Column(modifier = Modifier.padding(1.dp)) {
+          Column(modifier = Modifier.padding(1.dp)) {
 
-                    Slider(
-                         state = sliderState,
-                         onValueChange = { value -> sliderState.value = value
-                              onOptionSelected(value.roundToInt())
-                         },
-                         thumb = {
-                              Box(
-                                   modifier = Modifier
-                                        .size(30.dp)
-                                        .background(
-                                             color = FermuxColors.fermuxGenericBorder,
-                                             shape = RoundedCornerShape(4.dp)
-                                        ),
-                                   contentAlignment = Alignment.Center
-                              ) {
-                                   Text(
-                                        text = "$sliderKey",
-                                        color = Color.White,
-                                        fontFamily = FontFamily.Default,
-                                        fontStyle = FontStyle.Normal,
-                                        fontSize = 18.sp,
-                                        textAlign = TextAlign.Center
-                                   )
-                              }
-                         },
-                         modifier = Modifier.padding(7.dp),
-                         colors = SliderColors(
-                              activeTrackColor = FermuxColors.activeSliderColor,
-                              inactiveTrackColor = FermuxColors.inActiveSliderColor,
-                              activeTickColor = Color.White,
-                              inactiveTickColor = Color.Gray.copy(alpha = 0.5f),
-                              thumbColor = Color.Unspecified,
-                              disabledThumbColor = Color.Unspecified,
-                              disabledActiveTrackColor = Color.Unspecified,
-                              disabledActiveTickColor = Color.Unspecified,
-                              disabledInactiveTrackColor = Color.Unspecified,
-                              disabledInactiveTickColor = Color.Unspecified,
-                         )
+               Slider(
+                    state = sliderState,
+                    onValueChange = { value ->
+                         sliderState.value = value
+                         onOptionSelected(value.roundToInt())
+                    },
+                    thumb = {
+                         Box(
+                              modifier = Modifier
+                                   .size(30.dp)
+                                   .background(
+                                        color = FermuxColors.fermuxGenericBorder,
+                                        shape = RoundedCornerShape(4.dp)
+                                   ),
+                              contentAlignment = Alignment.Center
+                         ) {
+                              Text(
+                                   text = "$sliderKey",
+                                   color = Color.White,
+                                   fontFamily = FontFamily.Default,
+                                   fontStyle = FontStyle.Normal,
+                                   fontSize = 18.sp,
+                                   textAlign = TextAlign.Center
+                              )
+                         }
+                    },
+                    modifier = Modifier.padding(7.dp),
+                    colors = SliderColors(
+                         activeTrackColor = FermuxColors.activeSliderColor,
+                         inactiveTrackColor = FermuxColors.inActiveSliderColor,
+                         activeTickColor = Color.White,
+                         inactiveTickColor = Color.Gray.copy(alpha = 0.5f),
+                         thumbColor = Color.Unspecified,
+                         disabledThumbColor = Color.Unspecified,
+                         disabledActiveTrackColor = Color.Unspecified,
+                         disabledActiveTickColor = Color.Unspecified,
+                         disabledInactiveTrackColor = Color.Unspecified,
+                         disabledInactiveTickColor = Color.Unspecified,
                     )
-               }
+               )
           }
+     }
 }

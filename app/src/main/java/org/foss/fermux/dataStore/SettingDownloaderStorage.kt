@@ -90,9 +90,9 @@ data class DownloaderSettingsSnapshot(
      val externalDownloader: String?,
      val wifi: String?,
      val quickDownloads: Boolean?,
-     val quickDownloadFormats: QuickDownloadFormats,
-     val quickAudioQuality: QuickAudioQuality,
-     val quickVideoQuality: QuickVideoQuality,
+     val quickDownloadFormats: String?,
+     val quickAudioQuality: String?,
+     val quickVideoQuality: String?,
 )
 
 data class DownloaderArgumentsSnapshot(
@@ -232,6 +232,24 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
 
      override val quickDownloads: Flow<Boolean> = settingStore.data.map { preferences -> preferences[QUICK_DOWNLOADS] ?: true }
 
+     override val quickFormat: Flow<QuickDownloadFormats> = settingStore.data.map { preferences ->
+          preferences[QUICK_DOWNLOADS_FORMAT]
+               ?.let { runCatching { QuickDownloadFormats.valueOf(it) }.getOrNull() }
+               ?: QuickDownloadFormats.QuickVideo
+     }
+
+     override val quickVideo: Flow<QuickVideoQuality> = settingStore.data.map { preferences ->
+          preferences[QUICK_DOWNLOADS_VIDEO]
+               ?.let { runCatching { QuickVideoQuality.valueOf(it) }.getOrNull() }
+               ?: QuickVideoQuality.HD1080
+     }
+
+     override val quickAudio: Flow<QuickAudioQuality> = settingStore.data.map { preferences ->
+          preferences[QUICK_DOWNLOADS_AUDIO]
+               ?.let { runCatching { QuickAudioQuality.valueOf(it) }.getOrNull() }
+               ?: QuickAudioQuality.Best
+     }
+
      override suspend fun setDownloadPath(value: String) {
           settingStore.edit { preferences -> preferences[DOWNLOAD_PATH] = value }
      }
@@ -350,6 +368,18 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
           settingStore.edit { preferences -> preferences[QUICK_DOWNLOADS] = value }
      }
 
+     override suspend fun setQuickAudio(value: QuickAudioQuality) {
+          settingStore.edit { preferences -> preferences[QUICK_DOWNLOADS_AUDIO] = value.name }
+     }
+
+     override suspend fun setQuickVideo(value: QuickVideoQuality) {
+          settingStore.edit { preferences -> preferences[QUICK_DOWNLOADS_VIDEO] = value.name }
+     }
+
+     override suspend fun setQuickFormat(value: QuickDownloadFormats) {
+          settingStore.edit { preferences -> preferences[QUICK_DOWNLOADS_FORMAT] = value.name }
+     }
+
      override suspend fun resetArgs(): DownloaderArgumentsSnapshot {
           lateinit var snapshot: DownloaderArgumentsSnapshot
           settingStore.edit { preferences ->
@@ -410,7 +440,10 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                     fingerprinting = preferences[FINGERPRINT],
                     externalDownloader = preferences[EXTERNAL_DOWNLOADER],
                     wifi = preferences[WIFI],
-                    quickDownloads = preferences[QUICK_DOWNLOADS]
+                    quickDownloads = preferences[QUICK_DOWNLOADS],
+                    quickDownloadFormats = preferences[QUICK_DOWNLOADS_FORMAT],
+                    quickAudioQuality = preferences[QUICK_DOWNLOADS_AUDIO],
+                    quickVideoQuality = preferences[QUICK_DOWNLOADS_VIDEO],
                )
                preferences.remove(key = DOWNLOAD_PATH)
                preferences.remove(key = DOWNLOADER_DEBUG)
@@ -427,6 +460,9 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                preferences.remove(key = EXTERNAL_DOWNLOADER)
                preferences.remove(key = WIFI)
                preferences.remove(key = QUICK_DOWNLOADS)
+               preferences.remove(key = QUICK_DOWNLOADS_VIDEO)
+               preferences.remove(key = QUICK_DOWNLOADS_AUDIO)
+               preferences.remove(key = QUICK_DOWNLOADS_FORMAT)
           }
           return snapshot
      }
@@ -448,6 +484,9 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                preferences.restore(EXTERNAL_DOWNLOADER, snapshot.externalDownloader)
                preferences.restore(WIFI, snapshot.wifi)
                preferences.restore(QUICK_DOWNLOADS, snapshot.quickDownloads)
+               preferences.restore(QUICK_DOWNLOADS_FORMAT, snapshot.quickDownloadFormats)
+               preferences.restore(QUICK_DOWNLOADS_AUDIO, snapshot.quickAudioQuality)
+               preferences.restore(QUICK_DOWNLOADS_VIDEO, snapshot.quickVideoQuality)
           }
      }
 }

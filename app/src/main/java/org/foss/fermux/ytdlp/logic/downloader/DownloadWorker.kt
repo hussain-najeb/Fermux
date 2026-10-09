@@ -129,6 +129,8 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
           val retries = settings.retries.first()
           val history = settings.history.first()
           val ipv = settings.ipvConnection.first()
+          val quickAudio = settings.quickAudio.first()
+          val quickVideo = settings.quickVideo.first()
 
           val audioName = inputData.getString("audio")
           val videoName = inputData.getString("video")

@@ -20,6 +20,12 @@ import org.foss.fermux.utils.DebugLogDownloader
 import java.util.*
 
 
+private const val QUICK_AUDIO = "quick_audio"
+private const val QUICK_VIDEO = "quick_video"
+private const val VIDEO = "video"
+private const val AUDIO = "audio"
+private const val URL = "url"
+
 class DownloaderViewModel : ViewModel() {
      companion object {
           private const val DOWNLOAD_WORK_NAME = "fermux-active-download"
@@ -79,14 +85,15 @@ class DownloaderViewModel : ViewModel() {
           state = DownloadStatus.Error(flavorError.random(), raw)
      }
 
-     fun startingDownload(context: Context, audio: AudioQuality? = null, video: VideoQuality? = null) {
+     fun startingDownload(
+          context: Context,
+          audio: AudioQuality? = null,
+          video: VideoQuality? = null,
+          quickVideo: QuickVideoQuality? = null,
+          quickAudio: QuickAudioQuality? = null
+     ) {
           if (activeProcess != null || state !is DownloadStatus.UserArgs && state !is DownloadStatus.QuickDownload) {
-
-               DebugLogDownloader.debugDownloader(
-                    "DownloadAdmission",
-                    "Ignoring duplicate download request; active id=$activeProcess"
-               )
-
+               DebugLogDownloader.debugDownloader("DownloadAdmission", "Ignoring duplicate download request, active id=$activeProcess")
                return
           }
           state = DownloadStatus.LoadingMetadata
@@ -96,9 +103,11 @@ class DownloaderViewModel : ViewModel() {
           val requestedUrls = OneTimeWorkRequestBuilder<DownloadWorker>()
                .setInputData(
                     workDataOf(
-                         "url" to downloadUrl,
-                         "audio" to audio?.name,
-                         "video" to video?.name
+                         URL to downloadUrl,
+                         AUDIO to audio?.name,
+                         VIDEO to video?.name,
+                         QUICK_AUDIO to quickAudio?.name,
+                         QUICK_VIDEO to quickVideo?.name
                     )
                )
                .setConstraints(wifiConstraint)

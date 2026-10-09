@@ -104,6 +104,15 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
      val quickDownloads: StateFlow<Boolean> = settingsTab.quickDownloads
           .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
+     val quickFormat: StateFlow<QuickDownloadFormats> = settingsTab.quickFormat
+          .stateIn(viewModelScope, SharingStarted.Lazily, QuickDownloadFormats.QuickVideo)
+
+     val quickAudio: StateFlow<QuickAudioQuality> = settingsTab.quickAudio
+          .stateIn(viewModelScope, SharingStarted.Lazily, QuickAudioQuality.Best)
+
+     val quickVideo: StateFlow<QuickVideoQuality> = settingsTab.quickVideo
+          .stateIn(viewModelScope, SharingStarted.Lazily, QuickVideoQuality.HD1080)
+
      fun setSleepRequest(value: Int) {
           viewModelScope.launch { settingsTab.setSleepRequest(value) }
      }
@@ -211,6 +220,18 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
      suspend fun restoreArguments(snapshot: DownloaderArgumentsSnapshot) {
           settingsTab.restoreArgs(snapshot)
+     }
+
+     fun setQuickFormat(value: QuickDownloadFormats) {
+          viewModelScope.launch { settingsTab.setQuickFormat(value) }
+     }
+
+     fun setQuickVideo(value: QuickVideoQuality) {
+          viewModelScope.launch { settingsTab.setQuickVideo(value) }
+     }
+
+     fun setQuickAudio(value: QuickAudioQuality) {
+          viewModelScope.launch { settingsTab.setQuickAudio(value) }
      }
 
      private val isUpdatingYtdlp = AtomicBoolean(false)
