@@ -11,8 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight.Companion.W500
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -70,8 +68,6 @@ fun IdleCard(
                          Text(
                               text = "Upload A File",
                               fontSize = 23.sp,
-                              fontFamily = FontFamily.Default,
-                              fontStyle = FontStyle.Normal,
                               fontWeight = W500,
                               color = FermuxColors.white,
                          )

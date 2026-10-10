@@ -170,4 +170,4 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
                }
           }
      }
-} // TODO. Add a dialog to explain the quick downlaod feature and create a boolean to turn it off and on, then create a way to give it args
+}

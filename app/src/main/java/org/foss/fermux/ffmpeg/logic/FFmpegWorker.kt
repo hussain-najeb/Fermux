@@ -27,9 +27,6 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.roundToInt
 
 class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
-
-
-     // TODO. Add in a way to kill the ffmpeg process when canceled by the user, the downloader viewmodel and the yauusername work can be written verbatim here maybe.
      private val ffmpegWorkNotif: NotificationManager
           get() = applicationContext.getSystemService(
                Context.NOTIFICATION_SERVICE

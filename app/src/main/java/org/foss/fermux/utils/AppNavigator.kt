@@ -80,6 +80,6 @@ fun FermuxAppMainScreen() {
           // Ytdlp
           composable(route = Miscellaneous.DownloaderLogs.route) { DownloaderLogs(navController) }
           composable(route = Miscellaneous.DownloaderArgs.route) { DownloaderArgs(navController) }
-          composable(route = Miscellaneous.DownloaderHistory.route) { History(navController) } // TODO. ADD this
+          composable(route = Miscellaneous.DownloaderHistory.route) { History(navController) }
      }
 }
