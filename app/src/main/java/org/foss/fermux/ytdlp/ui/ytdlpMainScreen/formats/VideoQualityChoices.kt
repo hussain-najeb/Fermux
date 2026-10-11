@@ -10,7 +10,7 @@ import org.foss.fermux.R
 import org.foss.fermux.components.downloaderComponents.FormatTiles
 import org.foss.fermux.settings.logic.InfoListClass
 import org.foss.fermux.settings.logic.TilePosition
-import org.foss.fermux.ytdlp.logic.downloader.VideoQuality
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.VideoQuality
 
 
 @Composable

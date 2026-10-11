@@ -18,7 +18,7 @@ import kotlinx.coroutines.delay
 import org.foss.fermux.components.buttons.CancelButton
 import org.foss.fermux.components.downloaderComponents.DownloaderCard
 import org.foss.fermux.ui.theme.FermuxColors
-import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.DownloadStatus
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable

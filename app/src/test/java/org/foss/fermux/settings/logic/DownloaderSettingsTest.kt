@@ -6,9 +6,9 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.foss.fermux.dataStore.DEFAULT_SPONSOR_BLOCK_CATEGORIES
 import org.foss.fermux.dataStore.DataStoreDownloaderSettings
-import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
-import org.foss.fermux.ytdlp.logic.downloader.Connectivity
-import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.Aria2cMode
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.Connectivity
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.ExternalDownloaders
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir

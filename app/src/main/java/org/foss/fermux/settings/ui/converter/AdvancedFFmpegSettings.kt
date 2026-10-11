@@ -55,13 +55,13 @@ fun AdvancedFFmpegSettings(
           InfoListClass(
                title = "Reset Converter Settings",
                description = "Reset converter settings",
-               image = R.drawable.restor,
+               image = R.drawable.restore,
                liner = true,
                content = {
                     FilterButton(
                          modifier = Modifier.padding(3.dp),
                          border = true,
-                         image = R.drawable.restor,
+                         image = R.drawable.restore,
                          onClick = {
                               scope.launch {
                                    val oldSettings = ffmpegSettingsViewModel.resetFFmpegSettings()

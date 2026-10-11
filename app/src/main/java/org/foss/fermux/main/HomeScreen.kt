@@ -33,9 +33,9 @@ import org.foss.fermux.components.generalComponents.MainAppCard
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.MainScreens
-import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
-import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
-import org.foss.fermux.ytdlp.logic.downloader.ScreenInfo
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.DownloadStatus
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.DownloaderViewModel
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.ScreenInfo
 import org.foss.fermux.ytdlp.ui.quickDownloads.QuickDownloadsStateMachine
 
 

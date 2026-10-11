@@ -31,10 +31,10 @@ import org.foss.fermux.settings.logic.InfoListClass
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.clearCache
-import org.foss.fermux.ytdlp.logic.downloader.Aria2cMode
-import org.foss.fermux.ytdlp.logic.downloader.Connectivity
-import org.foss.fermux.ytdlp.logic.downloader.ExternalDownloaders
-import org.foss.fermux.ytdlp.logic.downloader.IpvConnection
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.Aria2cMode
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.Connectivity
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.ExternalDownloaders
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.IpvConnection
 import org.foss.fermux.ytdlp.ui.quickDownloads.QuickDownloadSettingQuality
 
 @Composable
@@ -66,13 +66,13 @@ fun AdvancedDownloaderSettings(
           InfoListClass(
                title = "Reset Downloader Settings",
                description = "Reset downloader settings",
-               image = R.drawable.restor,
+               image = R.drawable.restore,
                liner = true,
                content = {
                     FilterButton(
                          modifier = Modifier.padding(3.dp),
                          border = true,
-                         image = R.drawable.restor,
+                         image = R.drawable.restore,
                          onClick = {
                               scope.launch {
                                    val oldSettings = downloaderSettingsViewModel.resetDownloaderSettings()
@@ -306,7 +306,7 @@ fun AdvancedDownloaderSettings(
                          append("You can configure the ")
                     }
                     withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Quick Downloads ") }
-                    withStyle(SpanStyle(FermuxColors.white)) { append("beforehand, specify the format, resolution, or audio quality, so it's the defualt when pressing the ") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("beforehand, specify the format, resolution, or audio quality, so it's the default when pressing the ") }
                     withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Quick Downloads ") }
                     withStyle(SpanStyle(FermuxColors.white)) { append("button.") }
                },
@@ -348,9 +348,9 @@ fun AdvancedDownloaderSettings(
                specialDescription = buildAnnotatedString {
                     withStyle(SpanStyle(FermuxColors.white)) { append("This setting uses ") }
                     withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("QuickJsNG") }
-                    withStyle(SpanStyle(FermuxColors.white)) { append(", NG here mean Next Gen, which is an improved version of the old") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append(", NG here means Next Gen, which is an improved version of the old") }
                     withStyle(SpanStyle(FermuxColors.white)) { append(" QuickJs") }
-                    withStyle(SpanStyle(FermuxColors.white)) { append(" .Duo to the nature of Youtube, this JS runtime is recommended by ") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append(" .Due to the nature of Youtube, this JS runtime is recommended by ") }
                     withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("yt-dlp") }
                     withStyle(SpanStyle(FermuxColors.white)) { append(" to solve JS challenges, this should make Youtube downloads more reliable.") }
                },

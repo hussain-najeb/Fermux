@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.logic.downloader
+package org.foss.fermux.ytdlp.logic.oneTimeDownloader
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

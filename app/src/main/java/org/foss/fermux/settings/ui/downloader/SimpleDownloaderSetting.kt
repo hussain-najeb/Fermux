@@ -41,7 +41,7 @@ import org.foss.fermux.settings.logic.InfoListClass
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.rememberNotificationPermissionRequest
-import org.foss.fermux.ytdlp.logic.downloader.YtdlpChannel
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.YtdlpChannel
 
 
 @Composable
@@ -125,7 +125,7 @@ fun SimpleDownloaderPage(
                title = "History",
                description = "Enable/Disable history",
                liner = true,
-               image = if (history) R.drawable.history else R.drawable.history, // TODO. add in the approprate icon for this
+               image = if (history) R.drawable.history else R.drawable.history, // TODO. add in the appropriate icon for this
                content = {
                     SettingsSwitch(
                          checked = history,

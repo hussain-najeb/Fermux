@@ -32,10 +32,10 @@ import org.foss.fermux.components.downloaderComponents.FermuxDownloadDescription
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.Miscellaneous
-import org.foss.fermux.ytdlp.logic.downloader.DownloadMetadata
-import org.foss.fermux.ytdlp.logic.downloader.resolutionFormatting
-import org.foss.fermux.ytdlp.logic.downloader.sizeFormatting
-import org.foss.fermux.ytdlp.logic.downloader.videoTime
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.DownloadMetadata
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.resolutionFormatting
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.sizeFormatting
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.videoTime
 
 
 private enum class ProgressState { InProgress, Done }

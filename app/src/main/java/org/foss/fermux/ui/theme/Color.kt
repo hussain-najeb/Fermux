@@ -33,7 +33,7 @@ data class FermuxColor( // TODO. edit the bad naming on these
      val warmGray: Color = Color(0xFF3c4257),
      val transparent: Color = Color.Transparent,
 
-     // Fermux FFmpeg crad colors
+     // Fermux FFmpeg card colors
      val fermuxFFmpegGreen: Color = Color(0xFF388e3c),
 
      // Purple variations

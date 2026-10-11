@@ -4,8 +4,8 @@ import androidx.compose.animation.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
-import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
-import org.foss.fermux.ytdlp.logic.downloader.FormatKind
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.DownloaderViewModel
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.FormatKind
 
 
 @Composable

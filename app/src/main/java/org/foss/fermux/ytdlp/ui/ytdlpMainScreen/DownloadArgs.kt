@@ -39,9 +39,9 @@ import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.settings.logic.InfoListClass
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
-import org.foss.fermux.ytdlp.logic.downloader.AudioFormat
-import org.foss.fermux.ytdlp.logic.downloader.ThumbnailFormat
-import org.foss.fermux.ytdlp.logic.downloader.VideoFormat
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.AudioFormat
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.ThumbnailFormat
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.VideoFormat
 
 
 @Composable
@@ -65,11 +65,11 @@ fun DownloaderArgs(navController: NavController) {
           InfoListClass(
                title = "Reset Arguments",
                description = "Reset the arguments to their original state",
-               image = R.drawable.restor,
+               image = R.drawable.restore,
                content = {
                     SmallActionButton(
                          modifier = Modifier,
-                         image = R.drawable.restor,
+                         image = R.drawable.restore,
                          onClick = {
                               scope.launch {
                                    val oldArg = downloaderSettingsViewModel.resetArguments()

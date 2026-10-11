@@ -15,7 +15,7 @@ import org.foss.fermux.dataStore.DataStoreDownloaderSettings
 import org.foss.fermux.dataStore.DownloaderArgumentsSnapshot
 import org.foss.fermux.dataStore.DownloaderSettingsSnapshot
 import org.foss.fermux.utils.DebugLogDownloader
-import org.foss.fermux.ytdlp.logic.downloader.*
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(application) {

@@ -14,9 +14,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.foss.fermux.components.generalComponents.ModularSegmentedButtons
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
-import org.foss.fermux.ytdlp.logic.downloader.QuickAudioQuality
-import org.foss.fermux.ytdlp.logic.downloader.QuickDownloadFormats
-import org.foss.fermux.ytdlp.logic.downloader.QuickVideoQuality
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.QuickAudioQuality
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.QuickDownloadFormats
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.QuickVideoQuality
 
 
 @Composable

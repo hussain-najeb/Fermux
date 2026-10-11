@@ -31,8 +31,8 @@ import coil3.compose.AsyncImage
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.InfoHistoryButton
 import org.foss.fermux.ui.theme.FermuxColors
-import org.foss.fermux.ytdlp.logic.downloader.resolutionFormatting
-import org.foss.fermux.ytdlp.logic.downloader.videoTime
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.resolutionFormatting
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.videoTime
 
 @Composable
 fun HistoryCard(

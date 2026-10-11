@@ -9,7 +9,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import org.foss.fermux.components.generalComponents.LoggingScreen
 import org.foss.fermux.utils.DebugLogDownloader
-import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.DownloaderViewModel
 
 @Composable
 fun DownloaderLogs(

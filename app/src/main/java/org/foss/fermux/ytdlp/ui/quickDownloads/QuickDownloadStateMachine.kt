@@ -5,8 +5,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
-import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
-import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.DownloadStatus
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.DownloaderViewModel
 
 @Composable
 fun QuickDownloadsStateMachine(

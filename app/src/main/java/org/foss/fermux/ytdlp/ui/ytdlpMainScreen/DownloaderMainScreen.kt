@@ -49,8 +49,8 @@ import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.Miscellaneous
-import org.foss.fermux.ytdlp.logic.downloader.DownloadStatus
-import org.foss.fermux.ytdlp.logic.downloader.DownloaderViewModel
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.DownloadStatus
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.DownloaderViewModel
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates.DownloaderCards
 
 // TODO. Replace all the mentions of LargeAppTopBar with its small counterpart in not so crucial places

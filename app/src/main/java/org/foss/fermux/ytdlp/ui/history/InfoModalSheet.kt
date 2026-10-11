@@ -22,9 +22,9 @@ import org.foss.fermux.components.buttons.FilterButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.openMedia
 import org.foss.fermux.utils.openUrl
-import org.foss.fermux.ytdlp.logic.downloader.resolutionFormatting
-import org.foss.fermux.ytdlp.logic.downloader.sizeFormatting
-import org.foss.fermux.ytdlp.logic.downloader.videoTime
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.resolutionFormatting
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.sizeFormatting
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.videoTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.logic.downloader
+package org.foss.fermux.ytdlp.logic.oneTimeDownloader
 
 import android.content.Context
 import android.util.Log

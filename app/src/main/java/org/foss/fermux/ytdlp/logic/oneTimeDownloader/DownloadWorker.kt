@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.logic.downloader
+package org.foss.fermux.ytdlp.logic.oneTimeDownloader
 
 import android.app.Notification
 import android.app.NotificationChannel
