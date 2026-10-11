@@ -76,7 +76,7 @@ fun SettingsScreen(
 
                items(
                     items = generalSettings,
-                    key = { it.title }
+                    key = InfoListClass::title
                ) { settingsList ->
                     TileOptions(
                          title = settingsList.title,

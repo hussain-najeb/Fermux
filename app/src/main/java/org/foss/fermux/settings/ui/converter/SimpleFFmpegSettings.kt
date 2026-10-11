@@ -97,7 +97,7 @@ fun SimpleFFmpegSetting(
                               "320k" to "320k"
                          ),
                          selectedOption = audioBitrate,
-                         onSelected = { ffmpegSettingsViewModel.setAudioBitrate(it) }
+                         onSelected = ffmpegSettingsViewModel::setAudioBitrate
                     )
                },
                position = TilePosition.TOP
@@ -120,9 +120,7 @@ fun SimpleFFmpegSetting(
                content = {
                     SettingsSwitch(
                          checked = normalizeAudio,
-                         onCheckedChange = {
-                              ffmpegSettingsViewModel.setNormalizeAudio(it)
-                         }
+                         onCheckedChange = ffmpegSettingsViewModel::setNormalizeAudio
                     )
                },
                position = TilePosition.MIDDLE
@@ -139,7 +137,7 @@ fun SimpleFFmpegSetting(
                content = {
                     SettingsSwitch(
                          checked = monoDownmix,
-                         onCheckedChange = { ffmpegSettingsViewModel.setMonoDownmix(it) }
+                         onCheckedChange = ffmpegSettingsViewModel::setMonoDownmix
                     )
                },
                position = TilePosition.MIDDLE
@@ -161,7 +159,7 @@ fun SimpleFFmpegSetting(
                               "1440" to "2K"
                          ),
                          selectedOption = resolution,
-                         onSelected = { ffmpegSettingsViewModel.setVideoResolution(it) }
+                         onSelected = ffmpegSettingsViewModel::setVideoResolution
                     )
                },
                position = TilePosition.MIDDLE
@@ -189,9 +187,7 @@ fun SimpleFFmpegSetting(
                content = {
                     SettingsSwitch(
                          checked = enableVideoCompression,
-                         onCheckedChange = {
-                              ffmpegSettingsViewModel.setEnableVideoCompression(it)
-                         }
+                         onCheckedChange = ffmpegSettingsViewModel::setEnableVideoCompression
                     )
                },
                position = TilePosition.BOTTOM
@@ -210,8 +206,6 @@ fun SimpleFFmpegSetting(
                     .verticalScroll(rememberScrollState())
                     .padding(paddingValues)
           ) {
-
-
                Text(
                     text = "General",
                     modifier = Modifier.padding(start = 16.dp, top = 20.dp, bottom = 8.dp),
@@ -257,7 +251,6 @@ fun SimpleFFmpegSetting(
                     ffmpegSettingsViewModel = ffmpegSettingsViewModel,
                     snackbarHostState = snackbarHostState
                )
-
           }
      }
 }

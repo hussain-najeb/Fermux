@@ -110,7 +110,7 @@ fun SimpleDownloaderPage(
                               YtdlpChannel.Master to "Master"
                          ),
                          selectedOption = updateChannel,
-                         onSelected = { downloaderSettingsViewModel.checkYtdlpUpdate(it) }
+                         onSelected = downloaderSettingsViewModel::checkYtdlpUpdate
                     )
                },
                position = TilePosition.TOP
@@ -129,7 +129,8 @@ fun SimpleDownloaderPage(
                content = {
                     SettingsSwitch(
                          checked = history,
-                         onCheckedChange = { downloaderSettingsViewModel.setHistory(it) })
+                         onCheckedChange = downloaderSettingsViewModel::setHistory
+                    )
                },
                position = TilePosition.MIDDLE
           ),
@@ -148,9 +149,8 @@ fun SimpleDownloaderPage(
                },
                content = {
                     SettingsSwitch(
-                         checked = ytdlpDetails, onCheckedChange = {
-                              downloaderSettingsViewModel.setYtdlpDetails(it)
-                         }
+                         checked = ytdlpDetails,
+                         onCheckedChange = downloaderSettingsViewModel::setYtdlpDetails
                     )
                },
                position = TilePosition.BOTTOM

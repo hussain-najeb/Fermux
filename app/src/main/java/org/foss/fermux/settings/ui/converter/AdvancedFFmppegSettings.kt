@@ -46,9 +46,7 @@ fun AdvancedFFmpegSettings(
      val useHardwareEncoder by ffmpegSettingsViewModel.useHardwareEncoder.collectAsStateWithLifecycle()
      val availableCores = Runtime.getRuntime().availableProcessors()
      LaunchedEffect(useHardwareEncoder) {
-          if (useHardwareEncoder && threadLimit != 0) {
-               ffmpegSettingsViewModel.setThreadLimit(0)
-          }
+          if (useHardwareEncoder && threadLimit != 0) ffmpegSettingsViewModel.setThreadLimit(0)
      }
 
      val scope = rememberCoroutineScope()
@@ -98,7 +96,7 @@ fun AdvancedFFmpegSettings(
                          sliderKey = crf,
                          trackSteps = 9,
                          trackRange = 18f..28f,
-                         onOptionSelected = { ffmpegSettingsViewModel.setVideoCrf(it) }
+                         onOptionSelected = ffmpegSettingsViewModel::setVideoCrf
                     )
                },
                position = TilePosition.MIDDLE
@@ -111,7 +109,7 @@ fun AdvancedFFmpegSettings(
                content = {
                     SettingsSwitch(
                          checked = logcat,
-                         onCheckedChange = { ffmpegSettingsViewModel.setFFmpegDebug(it) }
+                         onCheckedChange = ffmpegSettingsViewModel::setFFmpegDebug
                     )
                },
                dialogAppearance = true,
@@ -127,7 +125,7 @@ fun AdvancedFFmpegSettings(
           InfoListClass(
                title = "CPU Thread Limit",
                description = "Limits how many CPU cores ffmpeg can use during conversion",
-               image = if(threadLimit > 0)R.drawable.thread_limit_on else R.drawable.thread_limit_off,
+               image = if(threadLimit > 0) R.drawable.thread_limit_on else R.drawable.thread_limit_off,
                dialogAppearance = true,
                dialogTitle = "Set Thread Limit",
                specialDescription = buildAnnotatedString {
@@ -146,7 +144,7 @@ fun AdvancedFFmpegSettings(
                          ),
                          selectedOption = threadLimit,
                          enabled = !useHardwareEncoder,
-                         onSelected = { ffmpegSettingsViewModel.setThreadLimit(it) }
+                         onSelected = ffmpegSettingsViewModel::setThreadLimit
                     )
                },
                position = TilePosition.MIDDLE
@@ -170,7 +168,7 @@ fun AdvancedFFmpegSettings(
                     SettingsSwitch(
                          enabled = enableVideoCompression,
                          checked = useHardwareEncoder,
-                         onCheckedChange = { ffmpegSettingsViewModel.setUseHardwareEncoder(it) }
+                         onCheckedChange = ffmpegSettingsViewModel::setUseHardwareEncoder
                     )
                },
                position = TilePosition.BOTTOM
