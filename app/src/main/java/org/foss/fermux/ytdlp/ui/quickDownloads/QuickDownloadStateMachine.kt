@@ -54,7 +54,9 @@ fun QuickDownloadsStateMachine(
                }
 
                is DownloadStatus.Completed -> {
-                    FinalQuickDownload()
+                    FinalQuickDownload(
+                         onCancel = { downloaderViewModel.cancelButton(context) }
+                    )
                }
 
                is DownloadStatus.Error -> {

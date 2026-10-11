@@ -60,7 +60,6 @@ fun QuickdownloadError(
                          modifier = Modifier.padding(end = 4.dp)
                     )
                     CancelButton(
-                         modifier = Modifier.padding(),
                          shape = RoundedCornerShape(8.dp),
                          onClick = { onCancel() }
                     )
