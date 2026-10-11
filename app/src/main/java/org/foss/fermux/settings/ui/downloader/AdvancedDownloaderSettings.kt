@@ -278,6 +278,7 @@ fun AdvancedDownloaderSettings(
                liner = true,
                content = {
                     SettingsSwitch(
+                         modifier = Modifier.padding(2.dp),
                          checked = quickDownloads,
                          onCheckedChange = {
                               downloaderSettingsViewModel.setQuickDownloads(it)
@@ -287,9 +288,7 @@ fun AdvancedDownloaderSettings(
                dialogAppearance = true,
                dialogTitle = "Quick Downloads?",
                specialDescription = buildAnnotatedString {
-                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Quick Downloads ") }
                     withStyle(SpanStyle(FermuxColors.white)) {
-                         append("is a feature that you can the settings of here.\n\n")
                          append("When the ")
                     }
                     withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Quick Downloads ") }
@@ -298,7 +297,7 @@ fun AdvancedDownloaderSettings(
                          append("You can configure the ")
                     }
                     withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Quick Downloads ") }
-                    withStyle(SpanStyle(FermuxColors.white)) { append("beforehand, specify the format, resolution, or audio quality, so its the defualt when pressing the ") }
+                    withStyle(SpanStyle(FermuxColors.white)) { append("beforehand, specify the format, resolution, or audio quality, so it's the defualt when pressing the ") }
                     withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Quick Downloads ") }
                     withStyle(SpanStyle(FermuxColors.white)) { append("button.") }
                },

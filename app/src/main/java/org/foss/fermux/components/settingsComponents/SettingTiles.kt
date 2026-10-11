@@ -122,13 +122,7 @@ fun TileOptions(
                               style = MaterialTheme.typography.bodyMedium
                          )
                     }
-                    if (liner == true) VerticalDivider(
-                         modifier = Modifier
-                              .fillMaxHeight()
-                              .padding(start = 4.dp, end = 4.dp),
-                         thickness = 0.7.dp,
-                         color = FermuxColors.fermuxHelperBorder,
-                    )
+                    TileDivider(liner)
                          content?.invoke()
                }
           }
@@ -145,4 +139,16 @@ fun TileOptions(
                dialogContent = dialogContent
           )
      }
+}
+
+
+@Composable
+private fun TileDivider(liner: Boolean?) {
+     if (liner == true) VerticalDivider(
+          modifier = Modifier
+               .fillMaxHeight()
+               .padding(start = 8.dp, end = 8.dp),
+          thickness = 0.7.dp,
+          color = FermuxColors.fermuxHelperBorder,
+     )
 }
