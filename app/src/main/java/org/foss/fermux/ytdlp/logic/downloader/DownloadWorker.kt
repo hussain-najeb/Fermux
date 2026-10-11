@@ -21,13 +21,14 @@ import org.foss.fermux.R
 import org.foss.fermux.dataStore.DataStoreDownloaderSettings
 import org.foss.fermux.database.DownloaderDb
 import org.foss.fermux.database.DownloadsDatabaseField
+import org.foss.fermux.utils.CopiedFile
 import org.foss.fermux.utils.DebugLogDownloader
 import kotlin.math.roundToInt
 
 /**
  * The downloads worker for background, asynchronous work.
  * This class handles most of the settings work for the [org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage]
- * page and [DownloaderSettingsTab] as well as handling the JSON history cards.
+ * page and [DownloaderSettingsTab] as well as handling the history cards.
  */
 
 class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorker(context, params) {
@@ -98,7 +99,6 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
 
      @RequiresApi(Build.VERSION_CODES.S)
      override suspend fun doWork(): Result {
-
 
           setForeground(
                createDownloaderForegroundInfo()
@@ -214,48 +214,13 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
                          }
                     },
                )
-
                DebugLogDownloader.debugDownloader("DownloadWorker", "Succeeded id=$taskId")
                Log.d("DownloadWorker", "Succeeded id=$taskId")
 
-               val metadata = capturedMetadataJson?.let { parseYtdlpMetadataJson(it) }
 
-               try {
-                    if (metadata != null && history) {
-                         val dao = DownloaderDb.getDatabase(applicationContext).downloadsDao
-                         val instance = downloaderInstance.single()
-                         val oldDownloaderInstance = dao.getSimilarInstance(metadata.extractor, metadata.mediaId)
+               historyRegistration(capturedMetadataJson, history, downloaderInstance)
 
-                         try {
-                              dao.upsertDownload(
-                                   DownloadsDatabaseField(
-                                        extractor = metadata.extractor,
-                                        videoId = metadata.mediaId,
-                                        fileUri = instance.uri.toString(),
-                                        url = metadata.url,
-                                        title = metadata.title,
-                                        uploader = metadata.uploader,
-                                        thumbnail = metadata.thumbnail,
-                                        duration = metadata.duration,
-                                        resolution = metadata.resolution,
-                                        size = instance.sizeBytes,
-                                        format = instance.extension
-                                   )
-                              )
-                              oldDownloaderInstance?.let {
-                                   applicationContext.contentResolver.delete(it.fileUri.toUri(), null, null)
-                              }
-                         } catch (e: Exception) {
-                              Log.e("DownloadWorker", "Failed to save download to database", e)
-                              DebugLogDownloader.errorDownloader("DownloadWorker", "Failed to save download to database", e)
-                         }
 
-                    }
-
-               } catch (e: Exception) {
-                    DebugLogDownloader.errorDownloader("fermux", "failed to save audio JSON", e)
-                    DebugLogDownloader.errorDownloader("fermux", "failed to save video JSON", e)
-               }
 
                capturedMetadataJson?.let {
                     Result.success(workDataOf("metadataJson" to it))
@@ -272,5 +237,50 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
                     ?: "Download failed"
                Result.failure(workDataOf("error" to error))
           }
+     }
+}
+
+private suspend fun DownloadWorker.historyRegistration(
+     capturedMetadataJson: String?,
+     history: Boolean,
+     downloaderInstance: List<CopiedFile>
+) {
+     val metadata = capturedMetadataJson?.let { parseYtdlpMetadataJson(it) }
+
+     try {
+          if (metadata != null && history) {
+               val dao = DownloaderDb.getDatabase(applicationContext).downloadsDao
+               val instance = downloaderInstance.single()
+               val oldDownloaderInstance = dao.getSimilarInstance(metadata.extractor, metadata.mediaId)
+
+               try {
+                    dao.upsertDownload(
+                         DownloadsDatabaseField(
+                              extractor = metadata.extractor,
+                              videoId = metadata.mediaId,
+                              fileUri = instance.uri.toString(),
+                              url = metadata.url,
+                              title = metadata.title,
+                              uploader = metadata.uploader,
+                              thumbnail = metadata.thumbnail,
+                              duration = metadata.duration,
+                              resolution = metadata.resolution,
+                              size = instance.sizeBytes,
+                              format = instance.extension
+                         )
+                    )
+                    oldDownloaderInstance?.let {
+                         applicationContext.contentResolver.delete(it.fileUri.toUri(), null, null)
+                    }
+               } catch (e: Exception) {
+                    Log.e("DownloadWorker", "Failed to save download to database", e)
+                    DebugLogDownloader.errorDownloader("DownloadWorker", "Failed to save download to database", e)
+               }
+
+          }
+
+     } catch (e: Exception) {
+          DebugLogDownloader.errorDownloader("fermux", "failed to save audio JSON", e)
+          DebugLogDownloader.errorDownloader("fermux", "failed to save video JSON", e)
      }
 }

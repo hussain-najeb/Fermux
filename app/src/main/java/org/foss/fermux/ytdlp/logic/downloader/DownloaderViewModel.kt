@@ -33,6 +33,7 @@ class DownloaderViewModel : ViewModel() {
      var connection by mutableStateOf(Connectivity.Any)
      var downloadUrl by mutableStateOf("")
      var downloaderLogs by mutableStateOf("")
+     var urlSet = mutableSetOf("")
      private var activeProcess by mutableStateOf<UUID?>(null)
      private var downloaderJob: Job? = null
      private var currentMetadata: DownloadMetadata? = null
@@ -72,6 +73,10 @@ class DownloaderViewModel : ViewModel() {
           state = DownloadStatus.QuickDownload
      }
 
+     fun sequentialDownloads() {
+          if (urlSet.isEmpty()) return
+          state =
+     }
      private fun downloadErrorHandler(e: Exception) {
 
           DebugLogDownloader.errorDownloader("MetadataFetch", "Fetch failed: ${e.javaClass.simpleName}", e)

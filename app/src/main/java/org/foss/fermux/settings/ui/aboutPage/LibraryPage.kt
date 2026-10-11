@@ -23,7 +23,6 @@
 
      @Composable
      fun LibraryPage(navController: NavController) {
-
           val context = LocalContext.current
 
               val libraryList = listOf(
@@ -66,10 +65,15 @@
                )
 
           LargeTopBarScaffold(
-               title = "Library list", onBack = { navController.popBackStack() }) { paddingValues ->
+               title = "Library list",
+               onBack = navController::popBackStack
+          ) { paddingValues ->
                Column(
-                    modifier = Modifier.fillMaxSize().background(FermuxColors.background)
-                         .verticalScroll(rememberScrollState()).padding(paddingValues)
+                    modifier = Modifier
+                         .fillMaxSize()
+                         .background(FermuxColors.background)
+                         .verticalScroll(rememberScrollState())
+                         .padding(paddingValues)
                ) {
 
                     libraryList.forEach { aboutList ->

@@ -37,6 +37,16 @@ sealed class DownloadStatus {
      data class Error(val errorMessage: String, val rawError: String) : DownloadStatus()
 }
 
+
+sealed class SequentialDownloader {
+     data object SequentiallyIdle : SequentialDownloader()
+     data object SequentiallyFetchingMetadata : SequentialDownloader()
+     data class SequentiallyDownloading(val downloadProgress: Float, val metadata: DownloadMetadata?) : SequentialDownloader()
+     data class SequentiallyCompleted(val metadata: DownloadMetadata) : SequentialDownloader()
+     data class SequentiallyErroring(val error: String) : SequentialDownloader()
+}
+
+
 data class ScreenInfo(
      val screen: MainScreens,
      val iconModifier: Modifier? = null,
@@ -50,26 +60,11 @@ data class ScreenInfo(
      val enabled: Boolean
 )
 
-data class HistoryClass(
-     val thumbnail: String,
-     val title: String,
-     val uploader: String,
-     val format: String,
-     val duration: Int,
-     val resolution: String? = null,
-     val onClick: () -> Unit
-)
-
-/**
- * Enum class used to handle the types of media to get handled by the UI during download.
- */
 enum class FormatKind { Video, Audio, Idle }
 
-/**
- * Enum class for specifying the quality of the audio when used to download audio.
- */
-enum class AudioQuality(val audioQuality: String) // audio quality class to pass for ytdlp.
-{
+
+// audio quality class to pass for ytdlp.
+enum class AudioQuality(val audioQuality: String) {
      BEST("0"),   // ~220-260 kbps (V0)
      HIGH("2"),   // ~170-210 kbps (V2)
      MEDIUM("5"), // ~100-140 kbps (V5 - yt-dlp default)

@@ -68,7 +68,7 @@ fun AboutPage(navController: NavController) {
 
      LargeTopBarScaffold(
           title = "About Page",
-          onBack = { navController.popBackStack() }
+          onBack = navController::popBackStack
      ) { paddingValues ->
           Column(
                modifier = Modifier
