@@ -36,7 +36,7 @@ fun QuickDownloadSettingQuality(
                     QuickDownloadFormats.QuickAudio to "Audio"
                ),
                selectedOption = formatPick,
-               onOptionSelected = {
+               onSelected = {
                     downloaderSettingsViewModel.setQuickFormat(it)
                }
           )
@@ -87,7 +87,7 @@ fun QuickVideo(
                QuickVideoQuality.Q144 to "144p"
           ),
           selectedOption = video,
-          onOptionSelected = {
+          onSelected = {
                downloaderSettingsViewModel.setQuickVideo(it)
           }
      )
@@ -106,7 +106,7 @@ fun QuickAudio(
                QuickAudioQuality.Low to "Low"
           ),
           selectedOption = audio,
-          onOptionSelected = {
+          onSelected = {
                downloaderSettingsViewModel.setQuickAudio(it)
           }
      )

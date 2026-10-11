@@ -16,7 +16,7 @@ fun <T> ModularSegmentedButtons(
      enabled: Boolean = true,
      optionsList: List<Pair<T, String>>,
      selectedOption: T,
-     onOptionSelected: (T) -> Unit
+     onSelected: (T) -> Unit
 ) {
      SingleChoiceSegmentedButtonRow(
           modifier = Modifier
@@ -25,7 +25,7 @@ fun <T> ModularSegmentedButtons(
           optionsList.forEachIndexed { index, (value, name) ->
                SegmentedButton(
                     selected = selectedOption == value,
-                    onClick = { onOptionSelected(value) },
+                    onClick = { onSelected(value) },
                     shape = SegmentedButtonDefaults.itemShape(
                          index = index,
                          count = optionsList.size,

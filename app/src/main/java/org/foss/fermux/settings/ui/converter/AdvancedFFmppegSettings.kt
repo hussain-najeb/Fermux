@@ -146,7 +146,7 @@ fun AdvancedFFmpegSettings(
                          ),
                          selectedOption = threadLimit,
                          enabled = !useHardwareEncoder,
-                         onOptionSelected = { ffmpegSettingsViewModel.setThreadLimit(it) }
+                         onSelected = { ffmpegSettingsViewModel.setThreadLimit(it) }
                     )
                },
                position = TilePosition.MIDDLE

@@ -97,7 +97,7 @@ fun SimpleFFmpegSetting(
                               "320k" to "320k"
                          ),
                          selectedOption = audioBitrate,
-                         onOptionSelected = { ffmpegSettingsViewModel.setAudioBitrate(it) }
+                         onSelected = { ffmpegSettingsViewModel.setAudioBitrate(it) }
                     )
                },
                position = TilePosition.TOP
@@ -161,7 +161,7 @@ fun SimpleFFmpegSetting(
                               "1440" to "2K"
                          ),
                          selectedOption = resolution,
-                         onOptionSelected = { ffmpegSettingsViewModel.setVideoResolution(it) }
+                         onSelected = { ffmpegSettingsViewModel.setVideoResolution(it) }
                     )
                },
                position = TilePosition.MIDDLE

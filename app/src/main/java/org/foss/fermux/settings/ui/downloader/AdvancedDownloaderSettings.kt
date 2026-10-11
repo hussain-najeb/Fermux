@@ -22,7 +22,7 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.FilterButton
-import org.foss.fermux.components.downloaderComponents.SponsorBlockChoices
+import org.foss.fermux.components.downloaderComponents.ModularFilterChip
 import org.foss.fermux.components.generalComponents.ModularSegmentedButtons
 import org.foss.fermux.components.settingsComponents.SettingsSwitch
 import org.foss.fermux.components.settingsComponents.TileOptions
@@ -47,6 +47,7 @@ fun AdvancedDownloaderSettings(
 
      // DataStore vals
      val sponsorBlock by downloaderSettingsViewModel.sponsorBlock.collectAsStateWithLifecycle()
+     val sponsorBlockCategories by downloaderSettingsViewModel.sponsorBlockCategories.collectAsStateWithLifecycle()
      val quickJS by downloaderSettingsViewModel.quickJS.collectAsStateWithLifecycle()
      val fingerprint by downloaderSettingsViewModel.fingerprint.collectAsStateWithLifecycle()
      val logcat by downloaderSettingsViewModel.downloaderDebug.collectAsStateWithLifecycle()
@@ -106,7 +107,7 @@ fun AdvancedDownloaderSettings(
                     SettingsSwitch(
                          modifier = Modifier.padding(2.dp),
                          checked = logcat,
-                         onCheckedChange = { downloaderSettingsViewModel.setDownloaderDebug(it) }
+                         onCheckedChange = downloaderSettingsViewModel::setDownloaderDebug
                     )
                },
                position = TilePosition.MIDDLE
@@ -127,7 +128,7 @@ fun AdvancedDownloaderSettings(
                               Connectivity.Cellular to "Cellular"
                          ),
                          selectedOption = wifi,
-                         onOptionSelected = { downloaderSettingsViewModel.setWifi(it) }
+                         onSelected = downloaderSettingsViewModel::setWifi
                     )
                },
                position = TilePosition.MIDDLE
@@ -148,7 +149,7 @@ fun AdvancedDownloaderSettings(
                               IpvConnection.Ipv6 to "IPV6"
                          ),
                          selectedOption = ipv,
-                         onOptionSelected = { downloaderSettingsViewModel.setIpvConnection(it) }
+                         onSelected = downloaderSettingsViewModel::setIpvConnection
                     )
                },
                position = TilePosition.MIDDLE
@@ -166,12 +167,22 @@ fun AdvancedDownloaderSettings(
                     SettingsSwitch(
                          modifier = Modifier.padding(2.dp),
                          checked = sponsorBlock,
-                         onCheckedChange = { downloaderSettingsViewModel.setSponsorBlock(it) }
+                         onCheckedChange =  downloaderSettingsViewModel::setSponsorBlock
                     )
                },
                dialogContent = {
-                    SponsorBlockChoices(
-                         downloaderSettingsViewModel = downloaderSettingsViewModel
+                    ModularFilterChip(
+                         enabled = sponsorBlock,
+                         optionList = listOf(
+                              "sponsor" to "Skip Sponsor",
+                              "selfpromo" to "Self Promo",
+                              "intro" to "Intro",
+                              "outro" to "Outro",
+                              "preview" to "Preview/Recap"
+                         ),
+                         selectedOptions = sponsorBlockCategories,
+                         onSelected = downloaderSettingsViewModel::setSponsorBlockCategories
+
                     )
                },
                position = TilePosition.MIDDLE
@@ -203,7 +214,7 @@ fun AdvancedDownloaderSettings(
                               Aria2cMode.Always to "Enabled"
                          ),
                          selectedOption = aria2cMode,
-                         onOptionSelected = { downloaderSettingsViewModel.setAria2cMode(it) }
+                         onSelected = downloaderSettingsViewModel::setAria2cMode
                     )
                },
                position = TilePosition.MIDDLE
@@ -238,7 +249,7 @@ fun AdvancedDownloaderSettings(
                               ExternalDownloaders.YtdlpNativeDownloader to "HLS Native"
                          ),
                          selectedOption = externalDownloaders,
-                         onOptionSelected = { downloaderSettingsViewModel.setExternalDownloaders(it) }
+                         onSelected = downloaderSettingsViewModel::setExternalDownloaders
                     )
                },
                position = TilePosition.MIDDLE
@@ -252,7 +263,7 @@ fun AdvancedDownloaderSettings(
                     SettingsSwitch(
                          modifier = Modifier.padding(2.dp),
                          checked = fingerprint,
-                         onCheckedChange = { downloaderSettingsViewModel.setFingerprint(it) }
+                         onCheckedChange = downloaderSettingsViewModel::setFingerprint
                     )
                },
                dialogAppearance = true,
@@ -280,9 +291,7 @@ fun AdvancedDownloaderSettings(
                     SettingsSwitch(
                          modifier = Modifier.padding(2.dp),
                          checked = quickDownloads,
-                         onCheckedChange = {
-                              downloaderSettingsViewModel.setQuickDownloads(it)
-                         }
+                         onCheckedChange = downloaderSettingsViewModel::setQuickDownloads
                     )
                },
                dialogAppearance = true,
@@ -350,7 +359,7 @@ fun AdvancedDownloaderSettings(
                     SettingsSwitch(
                          modifier = Modifier.padding(2.dp),
                          checked = quickJS,
-                         onCheckedChange = { downloaderSettingsViewModel.setQuickJS(it) }
+                         onCheckedChange = downloaderSettingsViewModel::setQuickJS
                     )
                },
                position = TilePosition.BOTTOM

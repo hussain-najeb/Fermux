@@ -102,7 +102,7 @@ fun DownloaderArgs(navController: NavController) {
                               AudioFormat.M4aFormat to "m4a"
                          ),
                          selectedOption = audioFormats,
-                         onOptionSelected = { downloaderSettingsViewModel.setAudioFormat(it) }
+                         onSelected = { downloaderSettingsViewModel.setAudioFormat(it) }
                     )
                },
                position = TilePosition.MIDDLE
@@ -124,7 +124,7 @@ fun DownloaderArgs(navController: NavController) {
                               VideoFormat.WebMFormat to "webm"
                          ),
                          selectedOption = videoFormats,
-                         onOptionSelected = { downloaderSettingsViewModel.setVideoFormat(it) }
+                         onSelected = { downloaderSettingsViewModel.setVideoFormat(it) }
                     )
                },
                position = TilePosition.MIDDLE
@@ -163,7 +163,7 @@ fun DownloaderArgs(navController: NavController) {
                               ThumbnailFormat.WebP to "webp",
                          ),
                          selectedOption = thumbnailFormat,
-                         onOptionSelected = { downloaderSettingsViewModel.setThumbnailFormat(it) }
+                         onSelected = { downloaderSettingsViewModel.setThumbnailFormat(it) }
                     )
                },
                position = TilePosition.MIDDLE

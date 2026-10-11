@@ -110,7 +110,7 @@ fun SimpleDownloaderPage(
                               YtdlpChannel.Master to "Master"
                          ),
                          selectedOption = updateChannel,
-                         onOptionSelected = { downloaderSettingsViewModel.checkYtdlpUpdate(it) }
+                         onSelected = { downloaderSettingsViewModel.checkYtdlpUpdate(it) }
                     )
                },
                position = TilePosition.TOP

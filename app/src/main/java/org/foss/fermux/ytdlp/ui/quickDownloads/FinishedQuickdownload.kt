@@ -50,7 +50,6 @@ fun FinalQuickDownload(
 
           Row(
                verticalAlignment = Alignment.CenterVertically,
-               modifier = Modifier.fillMaxWidth()
           ) {
                Box(
                     modifier = Modifier
