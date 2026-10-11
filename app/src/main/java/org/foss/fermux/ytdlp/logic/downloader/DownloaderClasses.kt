@@ -7,9 +7,6 @@ import org.foss.fermux.utils.MainScreens
 
 const val FERMUX_METADATA_MARKER = "FERMUX_METADATA_JSON:"
 
-/**
- * This class is used as a template class for the metadata shape that later gets used in the [org.foss.fermux.ytdlp.ui.history.HistoryCards] and information on the [org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates.FinishedCard] during download.
- */
 data class DownloadMetadata(
      val mediaId: String,
      val extractor: String,
@@ -24,9 +21,6 @@ data class DownloadMetadata(
      val url: String
 )
 
-/**
- * Sealed class used to manage the downloader state UI.
- */
 sealed class DownloadStatus {
      data object Idle : DownloadStatus()
      data object UserArgs : DownloadStatus()
@@ -37,7 +31,6 @@ sealed class DownloadStatus {
      data class Error(val errorMessage: String, val rawError: String) : DownloadStatus()
 }
 
-
 sealed class SequentialDownloader {
      data object SequentiallyIdle : SequentialDownloader()
      data object SequentiallyFetchingMetadata : SequentialDownloader()
@@ -45,7 +38,6 @@ sealed class SequentialDownloader {
      data class SequentiallyCompleted(val metadata: DownloadMetadata) : SequentialDownloader()
      data class SequentiallyErroring(val error: String) : SequentialDownloader()
 }
-
 
 data class ScreenInfo(
      val screen: MainScreens,

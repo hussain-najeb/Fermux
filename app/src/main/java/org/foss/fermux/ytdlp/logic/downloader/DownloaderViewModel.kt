@@ -1,6 +1,7 @@
 package org.foss.fermux.ytdlp.logic.downloader
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -33,7 +34,6 @@ class DownloaderViewModel : ViewModel() {
      var connection by mutableStateOf(Connectivity.Any)
      var downloadUrl by mutableStateOf("")
      var downloaderLogs by mutableStateOf("")
-     var urlSet = mutableSetOf("")
      private var activeProcess by mutableStateOf<UUID?>(null)
      private var downloaderJob: Job? = null
      private var currentMetadata: DownloadMetadata? = null
@@ -73,21 +73,6 @@ class DownloaderViewModel : ViewModel() {
           state = DownloadStatus.QuickDownload
      }
 
-     fun sequentialDownloads() {
-          if (urlSet.isEmpty()) return
-          state =
-     }
-     private fun downloadErrorHandler(e: Exception) {
-
-          DebugLogDownloader.errorDownloader("MetadataFetch", "Fetch failed: ${e.javaClass.simpleName}", e)
-
-          val raw = when (e) {
-               is TimeoutCancellationException -> "Timed out waiting for a response, retry the download"
-               else -> e.message ?: e.toString()
-          }
-          state = DownloadStatus.Error(flavorError.random(), raw)
-     }
-
      fun startingDownload(
           context: Context,
           audio: AudioQuality? = null,
@@ -95,8 +80,10 @@ class DownloaderViewModel : ViewModel() {
      ) {
           if (activeProcess != null || state !is DownloadStatus.UserArgs && state !is DownloadStatus.QuickDownload) {
                DebugLogDownloader.debugDownloader("DownloadAdmission", "Ignoring duplicate download request, active id=$activeProcess")
+               Log.d("DownloadAdmission", "Ignoring duplicate download request, active id=$activeProcess")
                return
           }
+
           state = DownloadStatus.LoadingMetadata
           currentMetadata = null
 
@@ -235,6 +222,17 @@ class DownloaderViewModel : ViewModel() {
                     downloaderLogs = ""
                }
           }
+     }
+
+     private fun downloadErrorHandler(e: Exception) {
+
+          DebugLogDownloader.errorDownloader("MetadataFetch", "Fetch failed: ${e.javaClass.simpleName}", e)
+
+          val raw = when (e) {
+               is TimeoutCancellationException -> "Timed out waiting for a response, retry the download"
+               else -> e.message ?: e.toString()
+          }
+          state = DownloadStatus.Error(flavorError.random(), raw)
      }
 
      /**
