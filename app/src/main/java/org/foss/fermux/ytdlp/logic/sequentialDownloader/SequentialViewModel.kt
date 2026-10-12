@@ -1,7 +1,6 @@
 package org.foss.fermux.ytdlp.logic.sequentialDownloader
 
 import android.content.Context
-import androidx.collection.mutableIntListOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,6 +14,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.foss.fermux.dataStore.DataStoreDownloaderSettings
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.*
+import java.util.*
 import kotlin.coroutines.cancellation.CancellationException
 
 const val SEQUENTIAL_URL = "url"
@@ -22,14 +22,14 @@ const val SEQUENTIAL_VIDEO = "video"
 const val SEQUENTIAL_AUDIO = "audio" // TODO. Must add these later
 
 
-class SequentialViewModel() : ViewModel() {
+open class SequentialViewModel() : ViewModel() {
 
      var state by mutableStateOf<SequentialDownloadQueueState?>(null)
      private var currentMetadata: DownloadMetadata? = null
      private var showLog by mutableStateOf(false)
      var downloaderLogs by mutableStateOf("")
-     var currentIndex = mutableIntListOf(0)
      private var downloaderJob: Job? = null
+     private var allIDs: List<UUID> = emptyList()
      var connection by mutableStateOf(Connectivity.Any)
 
 
@@ -56,10 +56,14 @@ class SequentialViewModel() : ViewModel() {
           context: Context,
           urls: List<String>
      ) {
-          state = SequentialDownloadQueueState(Phase.SequentiallyIdle)
+          state = SequentialDownloadQueueState(Phase.SequentiallyFetchingMetadata)
           currentMetadata = null
           val settingsTab = DataStoreDownloaderSettings(context.applicationContext)
 
+          if (urls.isEmpty()) {
+               state = SequentialDownloadQueueState(Phase.SequentialError)
+               return
+          }
 
           val requestedUrlBuilder = urls.map { url ->
                OneTimeWorkRequestBuilder<DownloadWorker>()
@@ -85,10 +89,12 @@ class SequentialViewModel() : ViewModel() {
                     }
                     chain.enqueue()
 
-
                     requestedUrlBuilder.forEachIndexed { index, request ->
                          workManager.getWorkInfoByIdFlow(request.id)
                               .onEach { workInfo ->
+
+                                   allIDs = requestedUrlBuilder.map { it.id }
+
                                    workInfo ?: return@onEach
                                    when (workInfo.state) {
                                         WorkInfo.State.RUNNING -> {
@@ -105,7 +111,7 @@ class SequentialViewModel() : ViewModel() {
                                              }
                                              val progress = workInfo.progress.getFloat("progress", 0f)
                                              state = state?.copy(
-                                                  currentIndex = index,
+                                                  currentIndex = index + 1,
                                                   totalCount = urls.size,
                                                   phase = Phase.SequentiallyDownloading,
                                                   logs = downloaderLogs,
@@ -120,26 +126,18 @@ class SequentialViewModel() : ViewModel() {
                                                        .getString("metadataJson")
                                                        ?.let { parseYtdlpMetadataJson(it) }
 
+                                             val updatedComplete = if (metadata != null) {
+                                                  state?.completed.orEmpty() + metadata
+                                             } else {
+                                                  state?.completed.orEmpty()
+                                             }
+
                                              state = state?.copy(
-                                                  phase = Phase.SequentiallyDownloading,
+                                                  phase = if (index == urls.lastIndex) Phase.SequentiallyCompleted else Phase.SequentiallyDownloading,
                                                   currentIndex = index + 1,
-                                                  totalCount = index,
+                                                  totalCount = urls.size,
                                                   currentMetadata = metadata,
-                                                  completed = listOf(
-                                                       metadata ?: DownloadMetadata(
-                                                            url = "",
-                                                            mediaId = "",
-                                                            extractor = "",
-                                                            title = "",
-                                                            thumbnail = null,
-                                                            duration = 0,
-                                                            uploader = null,
-                                                            audioQuality = null,
-                                                            size = null,
-                                                            format = "",
-                                                            resolution = ""
-                                                       )
-                                                  ),
+                                                  completed = updatedComplete
                                              )
                                              currentMetadata = null
                                         }
@@ -147,7 +145,7 @@ class SequentialViewModel() : ViewModel() {
                                         WorkInfo.State.FAILED -> {
                                              val error = workInfo.outputData.getString("error")
                                              error?.let {
-
+                                                  super.onCleared()
                                              }
                                              currentMetadata = null
                                         }
@@ -156,7 +154,6 @@ class SequentialViewModel() : ViewModel() {
                                              state = SequentialDownloadQueueState(
                                                   phase = Phase.SequentialCancel,
                                              )
-                                             downloaderLogs = ""
                                              currentMetadata = null
                                         }
 
@@ -167,12 +164,19 @@ class SequentialViewModel() : ViewModel() {
                               }
                               .launchIn(viewModelScope)
                     }
-
                } catch (e: CancellationException) {
-                    throw e
-               } finally {
                     downloaderLogs = ""
+                    throw e
+
                }
           }
      }
+
+
+
+
+
+
+
+
 }
