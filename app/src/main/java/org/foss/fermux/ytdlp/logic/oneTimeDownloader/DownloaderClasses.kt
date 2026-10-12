@@ -31,13 +31,32 @@ sealed class DownloadStatus {
      data class Error(val errorMessage: String, val rawError: String) : DownloadStatus()
 }
 
-sealed class SequentialDownloader {
-     data object SequentiallyIdle : SequentialDownloader()
-     data object SequentiallyFetchingMetadata : SequentialDownloader()
-     data class SequentiallyDownloading(val downloadProgress: Float, val metadata: DownloadMetadata?) : SequentialDownloader()
-     data class SequentiallyCompleted(val metadata: DownloadMetadata) : SequentialDownloader()
-     data class SequentiallyErroring(val error: String) : SequentialDownloader()
+data class SequentialDownloadQueueState(
+     val phase: Phase = Phase.SequentiallyIdle,
+     val currentIndex: Int = 0,
+     val totalCount: Int = 0,
+     val currentMetadata: DownloadMetadata? = null,
+     val currentProgress: Float = 0f,
+     val completed: List<DownloadMetadata> = emptyList(),
+     val failures: List<SequentialFailures> = emptyList(),
+     val logs: String = ""
+)
+
+enum class Phase {
+     SequentiallyIdle,
+     SequentiallyFetchingMetadata,
+     SequentiallyDownloading,
+     SequentiallyCompleted,
+     SequentialError,
+     SequentialCancel,
+     SequentiallyPaused
 }
+
+data class SequentialFailures(
+     val errorIndex: Int,
+     val errorLog: String,
+     val url: String
+)
 
 data class ScreenInfo(
      val screen: MainScreens,
