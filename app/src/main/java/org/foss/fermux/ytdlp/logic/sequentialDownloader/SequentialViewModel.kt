@@ -18,7 +18,7 @@ import org.foss.fermux.ytdlp.logic.oneTimeDownloader.*
 import java.util.*
 import kotlin.coroutines.cancellation.CancellationException
 
-const val SEQUENTIAL_URL = "url"
+const val SEQUENTIAL_URL = "seq_url"
 const val SEQUENTIAL_VIDEO = "video"
 const val SEQUENTIAL_AUDIO = "audio" // TODO. Must add these later
 

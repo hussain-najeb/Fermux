@@ -46,7 +46,7 @@ import org.foss.fermux.ytdlp.ui.quickDownloads.QuickDownloadsStateMachine
 
 
 @Composable
-fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animation between each transition so its smooth. App wide transition between each tab, not component animations
+fun HomeScreen(navController: NavHostController) { // TODO. Add in animation between each transition so its smooth. App wide transition between each tab, not component animations
 
      val downloaderViewModel: DownloaderViewModel = viewModel()
      val downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel()
@@ -112,7 +112,7 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
                     QuickDownloadsStateMachine(
                          downloaderViewModel.state,
                          downloaderViewModel,
-                         navController = navigationController
+                         navController = navController
                     )
                },
                enabled = disabled
@@ -165,7 +165,7 @@ fun HomeScreen(navigationController: NavHostController) { // TODO. Add in animat
                          route = screen.screen,
                          enabled = screen.enabled,
                          trailingContent = screen.trailingContent,
-                         navController = navigationController
+                         navController = navController
                     )
                }
           }

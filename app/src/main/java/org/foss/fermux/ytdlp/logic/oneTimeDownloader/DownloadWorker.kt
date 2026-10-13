@@ -23,6 +23,7 @@ import org.foss.fermux.database.DownloaderDb
 import org.foss.fermux.database.DownloadsDatabaseField
 import org.foss.fermux.utils.CopiedFile
 import org.foss.fermux.utils.DebugLogDownloader
+import org.foss.fermux.ytdlp.logic.sequentialDownloader.SEQUENTIAL_URL
 import kotlin.math.roundToInt
 
 /**
@@ -133,7 +134,9 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
           val quickVideo = settings.quickVideo.first()
           val quickFormat = settings.quickFormat.first()
 
-          val url = inputData.getString(URL) ?: return Result.failure()
+          val url = inputData.getString(SEQUENTIAL_URL)
+               ?: inputData.getString(URL)
+               ?: return Result.failure()
           val audioName = inputData.getString(AUDIO)
           val videoName = inputData.getString(VIDEO)
           val audio = audioName?.let { AudioQuality.valueOf(it) }

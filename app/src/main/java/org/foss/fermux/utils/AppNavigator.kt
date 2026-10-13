@@ -17,6 +17,7 @@ import org.foss.fermux.settings.ui.converter.SimpleFFmpegSetting
 import org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage
 import org.foss.fermux.terminal.ui.FermuxTerminalScreen
 import org.foss.fermux.ytdlp.ui.history.History
+import org.foss.fermux.ytdlp.ui.sequentialDownloader.SequentialIdle
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloadContent
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloaderArgs
 
@@ -47,6 +48,7 @@ sealed class Miscellaneous(val route: String) {
      object DownloaderLogs: Miscellaneous(route = "YtdlpLog")
      object DownloaderHistory: Miscellaneous(route = "History")
      object DownloaderArgs: Miscellaneous(route = "Downloader Arguments")
+     object SequentialDownloader: Miscellaneous(route = "Sequentially Downloaded")
 }
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -63,8 +65,8 @@ fun FermuxAppMainScreen() {
           composable(MainScreens.Home.route) { HomeScreen(navController) }
           composable(MainScreens.Terminal.route) { FermuxTerminalScreen() }
           composable(MainScreens.Settings.route) { SettingsScreen(navController) }
-          composable(MainScreens.Downloader.route) { DownloadContent(navController = navController) }
-          composable(MainScreens.Converter.route) { ConverterScreen(navController = navController) }
+          composable(MainScreens.Downloader.route) { DownloadContent(navController) }
+          composable(MainScreens.Converter.route) { ConverterScreen(navController) }
 
           // Settings Screens
           composable(SettingsScreens.SimpleDownloader.route) { SimpleDownloaderPage(navController) }
@@ -81,5 +83,6 @@ fun FermuxAppMainScreen() {
           composable(route = Miscellaneous.DownloaderLogs.route) { DownloaderLogs(navController) }
           composable(route = Miscellaneous.DownloaderArgs.route) { DownloaderArgs(navController) }
           composable(route = Miscellaneous.DownloaderHistory.route) { History(navController) }
+          composable(route = Miscellaneous.SequentialDownloader.route) { SequentialIdle(navController) }
      }
 }

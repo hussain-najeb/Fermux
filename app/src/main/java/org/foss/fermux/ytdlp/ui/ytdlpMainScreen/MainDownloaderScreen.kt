@@ -17,8 +17,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,7 +39,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.AppIconButton
 import org.foss.fermux.components.buttons.GlobalCancelButton
 import org.foss.fermux.components.buttons.ImageButton
 import org.foss.fermux.components.generalComponents.AppSnackBar
@@ -57,8 +54,8 @@ import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates.DownloaderCards
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun DownloadContent(
-     downloaderViewModel: DownloaderViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity),
-     navController: NavController
+     navController: NavController,
+     downloaderViewModel: DownloaderViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity)
 ) {
      val downloaderSettings: DownloaderSettingsViewModel = viewModel()
      val videoConversionWarning by downloaderSettings.videoComp.collectAsStateWithLifecycle()
@@ -76,7 +73,7 @@ fun DownloadContent(
           titleSize = 23.sp,
           onBack = { navController.popBackStack() },
           firstButton = { navController.navigate(Miscellaneous.DownloaderArgs.route) },
-          firstImage = R.drawable.add,
+          firstImage = R.drawable.prompt,
           secondButton = { navController.navigate(Miscellaneous.DownloaderHistory.route) },
           secondImage = R.drawable.history,
           snackbarHost = { AppSnackBar(snackbarHostState) }
@@ -183,10 +180,15 @@ fun DownloadContent(
                ) {
 
                     Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                         if (!doingTask) ImageButton(
+                              modifier = Modifier.padding(3.dp),
+                              image = R.drawable.sequence,
+                              onClick = { navController.navigate(Miscellaneous.SequentialDownloader.route)}
+                         )
                          // ClipBoard Button
-                         if (!doingTask) AppIconButton(
-                              icon = Icons.Default.ContentPaste,
-                              modifier = Modifier.size(60.dp).padding(3.dp),
+                         if (!doingTask) ImageButton(
+                              image = R.drawable.copy,
+                              modifier = Modifier.padding(3.dp),
                               onClick = {
                                    scope.launch {
                                         clipboard.getClipEntry()
@@ -204,7 +206,7 @@ fun DownloadContent(
                          )
                          // Download Button
                          ImageButton(
-                              modifier = Modifier.size(60.dp).padding(3.dp),
+                              modifier = Modifier.padding(3.dp),
                               image = R.drawable.download_side_bar,
                               enabled = !doingTask,
                               onClick = {

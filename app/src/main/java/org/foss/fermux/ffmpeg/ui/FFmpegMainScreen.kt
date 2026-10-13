@@ -1,14 +1,13 @@
 package org.foss.fermux.ffmpeg.ui
 
-import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
@@ -17,9 +16,8 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun ConverterScreen(
-     @SuppressLint("ContextCastToActivity") ffmpegViewModel: FFmpegViewModel =
-          viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity),
-     navController: NavController
+     navController: NavController,
+     ffmpegViewModel: FFmpegViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity)
 ) {
 
      LargeTopBarScaffold(

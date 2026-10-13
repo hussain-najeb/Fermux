@@ -38,22 +38,24 @@ fun SequentialStateMachine(
      ) { targetState ->
           when (targetState.phase) {
 
-               SequentialStatus.SequentiallyIdle -> {}
+               SequentialStatus.SequentiallyIdle -> {
+                    SequentialIdle(navController = navController)
+               }
 
                SequentialStatus.SequentiallyFetchingMetadata -> {
-                    SequentialMetadata()
+                   // SequentialMetadata()
                }
 
                SequentialStatus.SequentiallyDownloading -> {
-                    SequentialDownloading()
+                   // SequentialDownloading()
                }
 
                SequentialStatus.SequentiallyCompleted -> {
-                    SequentialSuccess()
+                   // SequentialSuccess()
                }
 
                SequentialStatus.SequentialError -> {
-                    SequentialError()
+                   // SequentialError()
                }
 
                else -> {}
