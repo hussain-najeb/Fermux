@@ -32,7 +32,7 @@ sealed class DownloadStatus {
 }
 
 data class SequentialDownloadQueueState(
-     val phase: Phase = Phase.SequentiallyIdle,
+     val phase: SequentialStatus = SequentialStatus.SequentiallyIdle,
      val currentIndex: Int = 0,
      val totalCount: Int = 0,
      val currentMetadata: DownloadMetadata? = null,
@@ -42,14 +42,14 @@ data class SequentialDownloadQueueState(
      val logs: String = ""
 )
 
-enum class Phase {
+enum class SequentialStatus {
      SequentiallyIdle,
      SequentiallyFetchingMetadata,
      SequentiallyDownloading,
      SequentiallyCompleted,
      SequentialError,
      SequentialCancel,
-     SequentiallyPaused
+     //SequentiallyPaused
 }
 
 data class SequentialFailures(
@@ -115,7 +115,7 @@ enum class VideoFormat(val videoFormat: String) {
 enum class Aria2cMode {
      Disabled,
      EdgeCaseOnly,
-     Always;
+     Always
 }
 
 enum class YtdlpChannel {

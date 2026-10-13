@@ -54,12 +54,12 @@ class SequentialViewModel() : ViewModel() {
      fun startSequentiallyDownloading(
           context: Context, urls: List<String>
      ) {
-          state = SequentialDownloadQueueState(Phase.SequentiallyFetchingMetadata)
+          state = SequentialDownloadQueueState(SequentialStatus.SequentiallyFetchingMetadata)
           currentMetadata = null
           val settingsTab = DataStoreDownloaderSettings(context.applicationContext)
 
           if (urls.isEmpty()) {
-               state = SequentialDownloadQueueState(Phase.SequentialError)
+               state = SequentialDownloadQueueState(SequentialStatus.SequentialError)
                return
           }
 
@@ -109,7 +109,7 @@ class SequentialViewModel() : ViewModel() {
                                         val progress = workInfo.progress.getFloat("progress", 0f)
 
                                         state = state?.copy(
-                                             phase = Phase.SequentiallyDownloading,
+                                             phase = SequentialStatus.SequentiallyDownloading,
                                              currentProgress = progress,
                                              currentMetadata = currentMetadata,
                                              logs = downloaderLogs,
@@ -136,7 +136,7 @@ class SequentialViewModel() : ViewModel() {
                                    }
 
                                    state = state?.copy(
-                                        phase = if (index == urls.lastIndex) Phase.SequentiallyCompleted else Phase.SequentiallyDownloading,
+                                        phase = if (index == urls.lastIndex) SequentialStatus.SequentiallyCompleted else SequentialStatus.SequentiallyDownloading,
                                         currentIndex = index,
                                         totalCount = urls.size,
                                         currentMetadata = metadata,
@@ -165,7 +165,7 @@ class SequentialViewModel() : ViewModel() {
 
                               WorkInfo.State.CANCELLED -> {
                                    state = state?.copy(
-                                        phase = Phase.SequentiallyDownloading,
+                                        phase = SequentialStatus.SequentiallyDownloading,
                                         currentMetadata = null,
                                         currentProgress = 0f
                                    )
@@ -177,7 +177,7 @@ class SequentialViewModel() : ViewModel() {
                          }
 
                     }
-                    state = state?.copy(phase = Phase.SequentiallyCompleted)
+                    state = state?.copy(phase = SequentialStatus.SequentiallyCompleted)
 
                } catch (e: CancellationException) {
                     throw e
@@ -187,7 +187,7 @@ class SequentialViewModel() : ViewModel() {
                          "Failed to enqueue id=${requestedUrlBuilder}",
                          e
                     )
-                    state = state?.copy(phase = Phase.SequentialError)
+                    state = state?.copy(phase = SequentialStatus.SequentialError)
                } finally {
                     downloaderLogs = ""
                }
@@ -200,7 +200,7 @@ class SequentialViewModel() : ViewModel() {
           downloaderLogs = ""
           downloaderJob?.cancel()
           currentMetadata = null
-          state = state?.copy(phase = Phase.SequentialCancel)
+          state = state?.copy(phase = SequentialStatus.SequentialCancel)
      }
 
      fun singleProcessDestroyer(context: Context, index: Int) {
