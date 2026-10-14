@@ -2,6 +2,7 @@ package org.foss.fermux.ytdlp.logic.sequentialDownloader
 
 import android.content.Context
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -23,11 +24,13 @@ const val SEQUENTIAL_VIDEO = "video"
 const val SEQUENTIAL_AUDIO = "audio" // TODO. Must add these later
 
 
-class SequentialViewModel() : ViewModel() {
+class SequentialViewModel(
+) : ViewModel() {
 
      var state by mutableStateOf<SequentialDownloadQueueState?>(null)
      private var currentMetadata: DownloadMetadata? = null
      private var showLog by mutableStateOf(false)
+     val downloadUrl = mutableStateListOf("")
      var downloaderLogs by mutableStateOf("")
      private var downloaderJob: Job? = null
      private var allIDs: List<UUID> = emptyList()
@@ -52,7 +55,8 @@ class SequentialViewModel() : ViewModel() {
 
 
      fun startSequentiallyDownloading(
-          context: Context, urls: List<String>
+          context: Context,
+          urls: List<String>
      ) {
           state = SequentialDownloadQueueState(SequentialStatus.SequentiallyFetchingMetadata)
           currentMetadata = null

@@ -76,14 +76,14 @@ fun LargeTopBarScaffold(
                          Row {
                               if (firstButton != null && firstImage != null)
                                    HelperButton(
-                                        modifier = Modifier.padding(10.dp).size(44.dp),
-                                        onClick = { firstButton.invoke() },
+                                        modifier = Modifier.padding(10.dp).size(49.dp),
+                                        onClick = firstButton::invoke,
                                         image = firstImage
                                    )
                               if (secondButton != null && secondImage != null)
                               HelperButton(
-                                   modifier = Modifier.padding(10.dp).size(44.dp),
-                                   onClick = { secondButton.invoke() },
+                                   modifier = Modifier.padding(10.dp).size(49.dp),
+                                   onClick = secondButton::invoke,
                                    image = secondImage
                               )
                          }

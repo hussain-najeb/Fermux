@@ -121,7 +121,9 @@ fun DownloadContent(
 
                     if (!doingTask) Box(modifier = Modifier.wrapContentSize()) {
                          OutlinedTextField(
-                              modifier = Modifier.fillMaxWidth().padding(start = 15.dp, end = 15.dp),
+                              modifier = Modifier
+                                   .fillMaxWidth()
+                                   .padding(start = 15.dp, end = 15.dp),
                               value = downloaderViewModel.downloadUrl,
                               isError = isError,
                               shape = RoundedCornerShape(8.dp),
@@ -146,7 +148,7 @@ fun DownloadContent(
                               onValueChange = { txt -> downloaderViewModel.downloadUrl = txt },
                               placeholder = {
                                    Text(
-                                        text = "Type URL here",
+                                        text = "Type URL Here",
                                         fontFamily = FontFamily.Default,
                                         textAlign = TextAlign.Start,
                                         color = FermuxColors.offWhiteTextColor,

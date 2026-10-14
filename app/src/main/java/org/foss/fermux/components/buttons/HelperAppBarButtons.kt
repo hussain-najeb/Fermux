@@ -13,7 +13,9 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -33,7 +35,6 @@ fun HelperButton(
 ) {
      val interactionSource = remember { MutableInteractionSource() }
      val isPressed by interactionSource.collectIsPressedAsState()
-     var isClickable by remember { mutableStateOf(true) }
 
      val iconColor by animateColorAsState(
           targetValue = if (isPressed) color.downriver else color.white,
@@ -52,7 +53,7 @@ fun HelperButton(
                scaleX = buttonAnimation
                scaleY = buttonAnimation
           }
-               .size(25.dp),
+               .size(35.dp),
           shape = RoundedCornerShape(8.dp),
           border = border,
           colors = ButtonDefaults.textButtonColors(
@@ -61,16 +62,13 @@ fun HelperButton(
           ),
           contentPadding = contentPadding,
           interactionSource = interactionSource,
-          onClick = {
-               if (isClickable) {
-                    isClickable = false
-                    onClick.invoke()
-               }
-          }
+          onClick = onClick::invoke
+
      ) {
           Icon(
                painter = painterResource(id = image),
                tint = iconColor,
+               modifier = Modifier.size(27.dp),
                contentDescription = "Back Button"
           )
      }
