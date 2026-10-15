@@ -39,6 +39,9 @@ interface DownloaderSettingsRepo {
      val quickFormat: Flow<QuickDownloadFormats>
      val quickVideo: Flow<QuickVideoQuality>
      val quickAudio: Flow<QuickAudioQuality>
+     val seqFormat: Flow<SeqFormat>
+     val seqAudio: Flow<SeqAudioQuality>
+     val seqVideo: Flow<SeqVideoQuality>
 
      suspend fun setDownloadPath(value: String)
      suspend fun setDownloaderBellState(value: Boolean)
@@ -72,6 +75,9 @@ interface DownloaderSettingsRepo {
      suspend fun setQuickFormat(value: QuickDownloadFormats)
      suspend fun setQuickVideo(value: QuickVideoQuality)
      suspend fun setQuickAudio(value: QuickAudioQuality)
+     suspend fun setSeqFormat(value: SeqFormat)
+     suspend fun setSqtVideo(value: SeqVideoQuality)
+     suspend fun setSeqAudio(value: SeqAudioQuality)
 }
 
 data class DownloaderSettingsSnapshot(
@@ -93,6 +99,9 @@ data class DownloaderSettingsSnapshot(
      val quickDownloadFormats: String?,
      val quickAudioQuality: String?,
      val quickVideoQuality: String?,
+     val seqFormat: String?,
+     val seqVideo: String?,
+     val seqAudio: String?
 )
 
 data class DownloaderArgumentsSnapshot(
@@ -149,6 +158,10 @@ val QUICK_DOWNLOADS = booleanPreferencesKey("quick_downloads")
 val QUICK_DOWNLOADS_FORMAT = stringPreferencesKey("quick_format")
 val QUICK_DOWNLOADS_VIDEO = stringPreferencesKey("quick_video")
 val QUICK_DOWNLOADS_AUDIO = stringPreferencesKey("quick_audio")
+
+val SEQ_FORMAT = stringPreferencesKey("seq_format")
+val SEQ_AUDIO = stringPreferencesKey("seq_audio")
+val SEQ_VIDEO = stringPreferencesKey("seq_video")
 
 class DataStoreDownloaderSettings(private val settingStore: DataStore<Preferences>) : DownloaderSettingsRepo {
 
@@ -248,6 +261,24 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
           preferences[QUICK_DOWNLOADS_AUDIO]
                ?.let { runCatching { QuickAudioQuality.valueOf(it) }.getOrNull() }
                ?: QuickAudioQuality.Best
+     }
+
+     override val seqFormat: Flow<SeqFormat> = settingStore.data.map { preferences ->
+          preferences[SEQ_FORMAT]
+               ?.let { runCatching { SeqFormat.valueOf(it) }.getOrNull() }
+               ?: SeqFormat.SeqVideo
+     }
+
+     override val seqAudio: Flow<SeqAudioQuality> = settingStore.data.map { preferences ->
+          preferences[SEQ_AUDIO]
+               ?.let { runCatching { SeqAudioQuality.valueOf(it) }.getOrNull() }
+               ?: SeqAudioQuality.Best
+     }
+
+     override val seqVideo: Flow<SeqVideoQuality> = settingStore.data.map { preferences ->
+          preferences[SEQ_VIDEO]
+               ?.let { runCatching { SeqVideoQuality.valueOf(it) }.getOrNull() }
+               ?: SeqVideoQuality.HD720
      }
 
      override suspend fun setDownloadPath(value: String) {
@@ -372,6 +403,18 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
           settingStore.edit { preferences -> preferences[QUICK_DOWNLOADS_AUDIO] = value.name }
      }
 
+     override suspend fun setSeqFormat(value: SeqFormat) {
+          TODO("Not yet implemented")
+     }
+
+     override suspend fun setSqtVideo(value: SeqVideoQuality) {
+          TODO("Not yet implemented")
+     }
+
+     override suspend fun setSeqAudio(value: SeqAudioQuality) {
+          TODO("Not yet implemented")
+     }
+
      override suspend fun setQuickVideo(value: QuickVideoQuality) {
           settingStore.edit { preferences -> preferences[QUICK_DOWNLOADS_VIDEO] = value.name }
      }
@@ -444,6 +487,9 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                     quickDownloadFormats = preferences[QUICK_DOWNLOADS_FORMAT],
                     quickAudioQuality = preferences[QUICK_DOWNLOADS_AUDIO],
                     quickVideoQuality = preferences[QUICK_DOWNLOADS_VIDEO],
+                    seqFormat = preferences[SEQ_FORMAT],
+                    seqVideo = preferences[SEQ_VIDEO],
+                    seqAudio = preferences[SEQ_AUDIO]
                )
                preferences.remove(key = DOWNLOAD_PATH)
                preferences.remove(key = DOWNLOADER_DEBUG)
@@ -463,6 +509,9 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                preferences.remove(key = QUICK_DOWNLOADS_VIDEO)
                preferences.remove(key = QUICK_DOWNLOADS_AUDIO)
                preferences.remove(key = QUICK_DOWNLOADS_FORMAT)
+               preferences.remove(key = SEQ_FORMAT)
+               preferences.remove(key = SEQ_VIDEO)
+               preferences.remove(key = SEQ_AUDIO)
           }
           return snapshot
      }
@@ -487,6 +536,9 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                preferences.restore(QUICK_DOWNLOADS_FORMAT, snapshot.quickDownloadFormats)
                preferences.restore(QUICK_DOWNLOADS_AUDIO, snapshot.quickAudioQuality)
                preferences.restore(QUICK_DOWNLOADS_VIDEO, snapshot.quickVideoQuality)
+               preferences.restore(SEQ_FORMAT, snapshot.seqFormat)
+               preferences.restore(SEQ_AUDIO, snapshot.seqAudio)
+               preferences.restore(SEQ_VIDEO, snapshot.seqVideo)
           }
      }
 }

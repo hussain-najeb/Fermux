@@ -39,7 +39,8 @@ data class SequentialDownloadQueueState(
      val currentProgress: Float = 0f,
      val completed: List<DownloadMetadata> = emptyList(),
      val failures: List<SequentialFailures> = emptyList(),
-     val logs: String = ""
+     val logs: String = "",
+     val showModalSheet: Boolean? = false
 )
 
 enum class SequentialStatus {
@@ -163,3 +164,23 @@ enum class QuickAudioQuality(val quickDownloadAudioQuality: String) {
      Low("9") // ~65 kbps (V9)
 }
 
+enum class SeqFormat(val seqFormat: String) {
+     SeqAudio("mp4"),
+     SeqVideo("mp3")
+}
+
+enum class SeqVideoQuality(val seqVideoQuality: String) {
+     HD1080("bv*[height<=1080]+ba/b[height<=1080]"),
+     HD720("bv*[height<=720]+ba/b[height<=720]"),
+     SD480("bv*[height<=480]+ba/b[height<=480]"),
+     Q360("bv*[height<=360]+ba/b[height<=360]"),
+     Q240("bv*[height<=240]+ba/b[height<=240]"),
+     Q144("bv*[height<=144]+ba/b[height<=144]")
+}
+
+enum class SeqAudioQuality(val seqAudioQuality: String) {
+     Best("0"),   // ~220-260 kbps (V0)
+     High("2"),   // ~170-210 kbps (V2)
+     Medium("5"), // ~100-140 kbps (V5 - yt-dlp default)
+     Low("9") // ~65 kbps (V9)
+}

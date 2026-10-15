@@ -198,7 +198,7 @@ fun SequentialIdle(
                               image = R.drawable.settings_2,
                               text = "Configure",
                               onClick = {
-
+                                   sequentialViewModel.showBottomSheet()
                               }
                          )
                     }

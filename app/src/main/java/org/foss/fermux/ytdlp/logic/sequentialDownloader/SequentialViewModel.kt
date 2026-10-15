@@ -212,4 +212,18 @@ class SequentialViewModel(
           skippedID += requestId
           WorkManager.getInstance(context).cancelWorkById(requestId)
      }
+
+     fun hideDeleteDialog() {
+          state = SequentialDownloadQueueState(
+               showModalSheet = false
+          )
+     }
+
+     fun showBottomSheet() {
+          state = SequentialDownloadQueueState(
+               showModalSheet = true
+          )
+     }
+
+
 }

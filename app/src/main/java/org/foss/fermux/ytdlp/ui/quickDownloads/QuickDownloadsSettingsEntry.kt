@@ -36,9 +36,7 @@ fun QuickDownloadSettingQuality(
                     QuickDownloadFormats.QuickAudio to "Audio"
                ),
                selectedOption = formatPick,
-               onSelected = {
-                    downloaderSettingsViewModel.setQuickFormat(it)
-               }
+               onSelected = downloaderSettingsViewModel::setQuickFormat
           )
 
           Spacer(modifier = Modifier.height(10.dp))
@@ -57,7 +55,7 @@ fun QuickDownloadSettingQuality(
                               ) + fadeOut(targetAlpha = 0.1f)
                          )
                },
-               contentKey = {it::class}
+               contentKey = { it::class }
           ) { targetState ->
                when (targetState) {
                     QuickDownloadFormats.QuickVideo -> {
@@ -87,9 +85,7 @@ fun QuickVideo(
                QuickVideoQuality.Q144 to "144p"
           ),
           selectedOption = video,
-          onSelected = {
-               downloaderSettingsViewModel.setQuickVideo(it)
-          }
+          onSelected = downloaderSettingsViewModel::setQuickVideo
      )
 }
 
@@ -106,8 +102,6 @@ fun QuickAudio(
                QuickAudioQuality.Low to "Low"
           ),
           selectedOption = audio,
-          onSelected = {
-               downloaderSettingsViewModel.setQuickAudio(it)
-          }
+          onSelected = downloaderSettingsViewModel::setQuickAudio
      )
 }
