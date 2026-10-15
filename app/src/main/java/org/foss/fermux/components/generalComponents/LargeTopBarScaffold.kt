@@ -23,7 +23,7 @@ import org.foss.fermux.ui.theme.FermuxColors
 fun LargeTopBarScaffold(
      modifier: Modifier = Modifier,
      title: String,
-     titleSize: TextUnit = 25.sp,
+     titleSize: TextUnit = 20.sp,
      onBack: (() -> Unit)? = null,
      firstButton: (()  -> Unit)? = null,
      secondButton: (() -> Unit)? = null,

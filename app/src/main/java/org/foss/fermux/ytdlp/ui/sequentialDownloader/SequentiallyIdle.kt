@@ -17,14 +17,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.CancelButton
 import org.foss.fermux.components.buttons.IconTextButton
@@ -164,52 +166,70 @@ fun SequentialIdle(
                          }
                     }
                     item {
-                              Row(
-                                   modifier = Modifier.animateItem(
-                                        placementSpec = MaterialTheme.motionScheme.fastEffectsSpec()
-                                   ),
-                                   horizontalArrangement = Arrangement.SpaceEvenly
-                              ) {
-                                   ImageButton(
-                                        modifier = Modifier.padding(5.dp),
-                                        image = R.drawable.add,
-                                        shape = RoundedCornerShape(16.dp),
-                                        border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),
-                                        onClick = { sequentialViewModel.downloadUrl.add("") }
-                                   )
-                              }
+                         Row(
+                              modifier = Modifier.animateItem(
+                                   placementSpec = MaterialTheme.motionScheme.fastEffectsSpec()
+                              ),
+                              horizontalArrangement = Arrangement.SpaceEvenly
+                         ) {
+                              ImageButton(
+                                   modifier = Modifier.padding(5.dp),
+                                   image = R.drawable.add,
+                                   shape = RoundedCornerShape(16.dp),
+                                   border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),
+                                   onClick = { sequentialViewModel.downloadUrl.add("") }
+                              )
+                         }
                     }
                }
 
-               Box(
+               Row(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.BottomEnd
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.SpaceEvenly
                ) {
-                    IconTextButton(
-                         modifier = Modifier
-                              .padding(end = 12.dp, bottom = 20.dp, top = 10.dp),
-                         image = R.drawable.download_side_bar,
-                         text = "Download All",
-                         enabled = true,
-                         onClick = {
-                              scope.launch {
-                                   snackbarHostState.showSnackbar(
-                                        message = "Starting Download",
-                                        duration = SnackbarDuration.Short
-                                   )
+                    Box(
+                         modifier = Modifier.weight(1f),
+                         contentAlignment = Alignment.BottomStart
+                    ) {
+                         IconTextButton(
+                              modifier = Modifier
+                                   .padding(12.dp),
+                              image = R.drawable.settings_2,
+                              text = "Configure",
+                              onClick = {
+
                               }
-                              sequentialViewModel.startSequentiallyDownloading(context, submittedUrls)
-                         },
-                    )
+                         )
+                    }
+
+                    Box(
+                         modifier = Modifier.weight(1f),
+                         contentAlignment = Alignment.BottomEnd
+                    ) {
+                         IconTextButton(
+                              modifier = Modifier
+                                   .padding(12.dp),
+                              image = R.drawable.download_side_bar,
+                              text = "Download All",
+                              enabled = true,
+                              onClick = {
+                                   sequentialViewModel.startSequentiallyDownloading(context, submittedUrls)
+                              },
+                         )
+                    }
                }
           }
      }
 
      if (dialogDismiss) SettingAlertDialog(
           onDismissRequest = { dialogDismiss = false },
-          title = "Sequential Download Info",
+          title = "Sequentially?",
           settingImage = R.drawable.sequence,
-          description = "Add a url for each text field and press the download button to download each one at a time, you don't have to fill all the text fields"
+          specialDescription = buildAnnotatedString {
+               withStyle(SpanStyle(FermuxColors.white)) { append("Add a url for each text field you want, each entry will be downloaded in the chosen sequence one at a time. Consider the arguments tab, yes, these also apply, and the general downloader settings as well.  The settings are") }
+               withStyle(SpanStyle(FermuxColors.warmBlue)) { append(" Atomic.") }
+          }
      )
 }
 
