@@ -6,8 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -78,15 +77,22 @@ fun IconTextButton(
                     scaleX = buttonAnimation
                     scaleY = buttonAnimation
                }
-               .size(40.dp),
+               .height(40.dp)
+               .widthIn(min = 40.dp),
           enabled = enabled == true,
           shape = RoundedCornerShape(8.dp),
-          colors = ButtonColors(
+          colors = ButtonDefaults.outlinedButtonColors(
                containerColor = containerColor,
                contentColor = contentColor,
                disabledContainerColor = FermuxColors.skyBlue,
                disabledContentColor = FermuxColors.downriver
           ),
+          border = border,
+          contentPadding = PaddingValues(
+               horizontal = 12.dp,
+               vertical = 8.dp
+          ),
+          interactionSource = interactionSource,
           elevation = ButtonDefaults.buttonElevation(
                defaultElevation = 10.dp,
                pressedElevation = 0.dp,
@@ -94,9 +100,6 @@ fun IconTextButton(
                hoveredElevation = 5.dp,
                disabledElevation = 0.dp
           ),
-          border = border,
-          contentPadding = contentPadding,
-          interactionSource = interactionSource,
           onClick = onClick
      ) {
           Icon(
@@ -105,12 +108,14 @@ fun IconTextButton(
                tint = iconColor,
                modifier = Modifier.rotate(iconRotate)
           )
+
+          Spacer(modifier = Modifier.width(8.dp))
+
           Text(
                text = text,
                fontSize = 15.sp,
-               color = textColor
+               color = textColor,
+               maxLines = 1
           )
      }
-
-
 }

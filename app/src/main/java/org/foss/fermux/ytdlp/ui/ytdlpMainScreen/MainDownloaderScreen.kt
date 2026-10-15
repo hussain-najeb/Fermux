@@ -20,7 +20,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,7 +61,7 @@ fun DownloadContent(
      val upToDate by downloaderSettings.upToDate.collectAsStateWithLifecycle()
      val currentVersionName by downloaderSettings.currentVersionName.collectAsStateWithLifecycle()
 
-     val snackbarHostState = remember { SnackbarHostState() }
+     val snackbarHostState = SnackbarHostState()
      val scope = rememberCoroutineScope()
      val doingTask = downloaderViewModel.state is DownloadStatus.LoadingMetadata || downloaderViewModel.state is DownloadStatus.Downloading || downloaderViewModel.state is DownloadStatus.UserArgs
      val isError = downloaderViewModel.state is DownloadStatus.Error

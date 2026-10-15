@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,10 +18,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.CancelButton
 import org.foss.fermux.components.buttons.IconTextButton
 import org.foss.fermux.components.buttons.ImageButton
+import org.foss.fermux.components.generalComponents.AppSnackBar
 import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.components.generalComponents.SettingAlertDialog
 import org.foss.fermux.ui.theme.FermuxColors
@@ -37,9 +37,11 @@ fun SequentialIdle(
      val sequentialViewModel: SequentialViewModel = viewModel()
      val context = LocalContext.current
 
-
-
      var dialogDismiss by remember { mutableStateOf(false) }
+
+     val snackbarHostState = remember { SnackbarHostState() }
+     val scope = rememberCoroutineScope()
+
 
      val submittedUrls = sequentialViewModel.downloadUrl
           .map(String::trim)
@@ -49,7 +51,8 @@ fun SequentialIdle(
           title = "Sequential Downloads",
           onBack = navController::popBackStack,
           firstButton = { dialogDismiss = !dialogDismiss },
-          firstImage = R.drawable.info
+          firstImage = R.drawable.info,
+          snackbarHost = { AppSnackBar(snackbarHostState) }
      ) { innerPadding ->
           Column(
                modifier = Modifier
@@ -130,14 +133,27 @@ fun SequentialIdle(
                     }
                }
 
-               IconTextButton(
-                    modifier = Modifier,
-                    image = R.drawable.download_side_bar,
-                    text = "Download All",
-                    enabled = true,
-                    onClick = { sequentialViewModel.startSequentiallyDownloading(context, submittedUrls) },
-               )
-
+               Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.BottomEnd
+               ) {
+                    IconTextButton(
+                         modifier = Modifier
+                              .padding(start = 8.dp, bottom = 20.dp, top = 10.dp),
+                         image = R.drawable.download_side_bar,
+                         text = "Download All",
+                         enabled = true,
+                         onClick = {
+                              scope.launch {
+                                   snackbarHostState.showSnackbar(
+                                        message = "Starting Download",
+                                        duration = SnackbarDuration.Short
+                                   )
+                              }
+                              sequentialViewModel.startSequentiallyDownloading(context, submittedUrls)
+                         },
+                    )
+               }
           }
      }
 
