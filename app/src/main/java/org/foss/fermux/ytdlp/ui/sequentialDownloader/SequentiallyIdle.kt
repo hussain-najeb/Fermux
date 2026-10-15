@@ -1,5 +1,11 @@
 package org.foss.fermux.ytdlp.ui.sequentialDownloader
 
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -71,65 +77,107 @@ fun SequentialIdle(
                          key = { index -> index }
 
                     ) { index ->
-                         OutlinedTextField(
+                         Column(
                               modifier = Modifier
-                                   .fillMaxWidth()
-                                   .padding(12.dp),
-                              value = sequentialViewModel.downloadUrl[index],
-                              onValueChange = { value ->
-                                   sequentialViewModel.downloadUrl[index] = value
-                              },
-                              placeholder = {
-                                   Text(
-                                        text = "Type URL Here",
-                                        fontFamily = FontFamily.Default,
-                                        textAlign = TextAlign.Start,
-                                        color = FermuxColors.offWhiteTextColor,
-                                        modifier = Modifier.padding(6.dp)
+                                   .fillMaxSize()
+                         ) {
+                              val visibilityState = remember {
+                                   MutableTransitionState(false).apply {
+                                        targetState = true
+                                   }
+                              }
+                              LaunchedEffect(
+                                   key1 = visibilityState.isIdle,
+                                   key2 = visibilityState.currentState
+                              ) {
+                                   if (
+                                        visibilityState.isIdle &&
+                                        !visibilityState.currentState &&
+                                        !visibilityState.targetState
+                                   ) {
+                                        sequentialViewModel.downloadUrl.removeAt(index)
+                                   }
+                              }
+                              androidx.compose.animation.AnimatedVisibility(
+                                   visibleState = visibilityState,
+                                   enter = slideInVertically(tween(170)) + fadeIn(tween(200)),
+                                   exit = slideOutVertically(tween(170)) + fadeOut(tween(200))
+                              ) {
+                                   OutlinedTextField(
+                                        modifier = Modifier
+                                             .fillMaxWidth()
+                                             .padding(6.dp),
+                                        value = sequentialViewModel.downloadUrl[index],
+                                        onValueChange = { value ->
+                                             sequentialViewModel.downloadUrl[index] = value
+                                        },
+                                        placeholder = {
+                                             Text(
+                                                  text = "Type URL Here",
+                                                  fontFamily = FontFamily.Default,
+                                                  textAlign = TextAlign.Start,
+                                                  color = FermuxColors.offWhiteTextColor,
+                                                  modifier = Modifier.padding(6.dp)
+                                             )
+                                        },
+                                        trailingIcon = {
+                                             androidx.compose.animation.AnimatedVisibility(
+                                                  visible = sequentialViewModel.downloadUrl.isNotEmpty(),
+                                                  enter = slideInVertically(tween(70)) + fadeIn(tween(100)),
+                                                  exit = slideOutVertically(tween(70)) + fadeOut(tween(100))
+                                             ) {
+                                                  CancelButton(
+                                                       modifier = Modifier.padding(5.dp),
+                                                       transparency = true,
+                                                       onClick = {
+                                                            visibilityState.targetState = false
+                                                       }
+                                                  )
+                                             }
+                                        },
+                                        shape = RoundedCornerShape(8.dp),
+                                        minLines = 1,
+                                        maxLines = 7,
+                                        colors = OutlinedTextFieldDefaults.colors(
+                                             focusedBorderColor = FermuxColors.fermuxSecondaryBorder,
+                                             unfocusedBorderColor = FermuxColors.fermuxGenericBorder,
+                                             focusedLabelColor = FermuxColors.fermuxPrimaryBorder,
+                                             unfocusedLabelColor = FermuxColors.offWhiteTextColor,
+                                             cursorColor = FermuxColors.fermuxGenericBorder,
+                                             focusedTextColor = Color.White,
+                                             unfocusedTextColor = Color.White,
+                                             errorTextColor = FermuxColors.fermuxLightErrorTextColor,
+                                             errorBorderColor = FermuxColors.fermuxLightErrorTextColor,
+                                             errorLabelColor = FermuxColors.fermuxLightErrorTextColor,
+                                             errorCursorColor = FermuxColors.fermuxLightErrorTextColor,
+                                             errorContainerColor = FermuxColors.fermuxErrorCardColor,
+                                             unfocusedContainerColor = FermuxColors.warmPurple,
+                                             focusedContainerColor = FermuxColors.inActiveTextField
+                                        ),
+                                        keyboardOptions = KeyboardOptions(
+                                             imeAction = ImeAction.Send,
+                                             capitalization = KeyboardCapitalization.None,
+                                             autoCorrectEnabled = false
+                                        ),
                                    )
-                              },
-                              shape = RoundedCornerShape(8.dp),
-                              minLines = 1,
-                              maxLines = 7,
-                              colors = OutlinedTextFieldDefaults.colors(
-                                   focusedBorderColor = FermuxColors.fermuxSecondaryBorder,
-                                   unfocusedBorderColor = FermuxColors.fermuxGenericBorder,
-                                   focusedLabelColor = FermuxColors.fermuxPrimaryBorder,
-                                   unfocusedLabelColor = FermuxColors.offWhiteTextColor,
-                                   cursorColor = FermuxColors.fermuxGenericBorder,
-                                   focusedTextColor = Color.White,
-                                   unfocusedTextColor = Color.White,
-                                   errorTextColor = FermuxColors.fermuxLightErrorTextColor,
-                                   errorBorderColor = FermuxColors.fermuxLightErrorTextColor,
-                                   errorLabelColor = FermuxColors.fermuxLightErrorTextColor,
-                                   errorCursorColor = FermuxColors.fermuxLightErrorTextColor,
-                                   errorContainerColor = FermuxColors.fermuxErrorCardColor,
-                                   unfocusedContainerColor = FermuxColors.warmPurple,
-                                   focusedContainerColor = FermuxColors.inActiveTextField
-                              ),
-                              keyboardOptions = KeyboardOptions(
-                                   imeAction = ImeAction.Send,
-                                   capitalization = KeyboardCapitalization.None,
-                                   autoCorrectEnabled = false
-                              ),
-                         )
+                              }
+                         }
                     }
                     item {
-                         Row(horizontalArrangement = Arrangement.SpaceEvenly) {
-                              ImageButton(
-                                   modifier = Modifier.padding(5.dp),
-                                   image = R.drawable.add,
-                                   shape = RoundedCornerShape(16.dp),
-                                   border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),
-                                   onClick = { sequentialViewModel.downloadUrl.add("") }
-                              )
-                              CancelButton(
-                                   modifier = Modifier.padding(5.dp),
-                                   onClick = {
-                                        sequentialViewModel.downloadUrl.remove("")
-                                   }
-                              )
-                         }
+                              Row(
+                                   modifier = Modifier.animateItem(
+                                        placementSpec = MaterialTheme.motionScheme.fastEffectsSpec()
+                                   ),
+                                   horizontalArrangement = Arrangement.SpaceEvenly
+                              ) {
+                                   ImageButton(
+                                        modifier = Modifier.padding(5.dp),
+                                        image = R.drawable.add,
+                                        shape = RoundedCornerShape(16.dp),
+                                        border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),
+                                        onClick = { sequentialViewModel.downloadUrl.add("") }
+                                   )
+                              }
                     }
                }
 
@@ -139,7 +187,7 @@ fun SequentialIdle(
                ) {
                     IconTextButton(
                          modifier = Modifier
-                              .padding(start = 8.dp, bottom = 20.dp, top = 10.dp),
+                              .padding(end = 12.dp, bottom = 20.dp, top = 10.dp),
                          image = R.drawable.download_side_bar,
                          text = "Download All",
                          enabled = true,

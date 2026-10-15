@@ -92,27 +92,29 @@ fun ErrorCard(
                modifier = Modifier.fillMaxWidth(),
                horizontalArrangement = Arrangement.SpaceBetween,
           ) {
-               Row {
-                    LogButton(
-                         modifier = Modifier.padding(start = 15.dp, end = 10.dp),
-                         onClick = { navController.navigate(Miscellaneous.DownloaderLogs.route) }
-                    )
-                    ErrorCopyButton(
-                         modifier = Modifier.padding(end = 10.dp),
-                         onClick = {
-                              scope.launch {
-                                   val clipData = ClipData.newPlainText("raw error", rawError)
-                                   clipboard.setClipEntry(ClipEntry(clipData))
+               Box {
+                    Row {
+                         LogButton(
+                              modifier = Modifier.padding(start = 15.dp, end = 10.dp),
+                              onClick = { navController.navigate(Miscellaneous.DownloaderLogs.route) }
+                         )
+                         ErrorCopyButton(
+                              modifier = Modifier.padding(end = 10.dp),
+                              onClick = {
+                                   scope.launch {
+                                        val clipData = ClipData.newPlainText("raw error", rawError)
+                                        clipboard.setClipEntry(ClipEntry(clipData))
+                                   }
                               }
-                         }
-                    )
+                         )
+                    }
                }
-          }
 
-          CancelButton(
-               modifier = Modifier.padding(end = 15.dp),
-               onClick = onCancel
-          )
+               CancelButton(
+                    modifier = Modifier.padding(end = 15.dp),
+                    onClick = onCancel
+               )
+          }
      }
 }
 

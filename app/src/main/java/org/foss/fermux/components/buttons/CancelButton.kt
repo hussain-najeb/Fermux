@@ -35,6 +35,7 @@ fun CancelButton(
      allowBorder: Boolean = true,
      border: BorderStroke? = BorderStroke(width = 1.dp, color = FermuxColors.fermuxHelperBorder),
      shape: Shape = RoundedCornerShape(16.dp),
+     transparency: Boolean = false,
      onClick: () -> Unit,
 ) {
 
@@ -71,17 +72,17 @@ fun CancelButton(
                .size(componentSize),
           interactionSource = interactionSource,
           contentPadding = PaddingValues(10.dp),
-          border = if (!allowBorder) null else border,
+          border = if (transparency) null else border,
           shape = shape,
           onClick = onClick,
           colors = ButtonDefaults.textButtonColors(
-               containerColor = containerColor,
+               containerColor = if (transparency) FermuxColors.transparent else containerColor,
           ),
      ) {
           Icon(
-               painter = painterResource(id = R.drawable.cancel_buttons),
+               painter = painterResource(id = if (transparency) R.drawable.close else R.drawable.cancel_buttons),
                contentDescription = null,
-               tint = iconColor,
+               tint = if (transparency) FermuxColors.white else iconColor,
                modifier = iconModifier
           )
      }

@@ -164,6 +164,7 @@ fun DownloadContent(
                                              modifier = Modifier
                                                   .size(50.dp)
                                                   .padding(end = 2.dp),
+                                             transparency = true,
                                              onClick = {
                                                   downloaderViewModel.downloadUrl = ""
                                              }
