@@ -1,10 +1,6 @@
 package org.foss.fermux.ytdlp.ui.sequentialDownloader
 
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -24,7 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.GlobalCancelButton
+import org.foss.fermux.components.buttons.CancelButton
+import org.foss.fermux.components.buttons.IconTextButton
 import org.foss.fermux.components.buttons.ImageButton
 import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.components.generalComponents.SettingAlertDialog
@@ -37,6 +35,8 @@ fun SequentialIdle(
 ) {
 
      val sequentialViewModel: SequentialViewModel = viewModel()
+     val context = LocalContext.current
+
 
 
      var dialogDismiss by remember { mutableStateOf(false) }
@@ -58,7 +58,7 @@ fun SequentialIdle(
           ) {
                LazyColumn(
                     modifier = Modifier
-                         .padding(8.dp)
+                         .padding(2.dp)
                          .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.SpaceEvenly
@@ -71,7 +71,7 @@ fun SequentialIdle(
                          OutlinedTextField(
                               modifier = Modifier
                                    .fillMaxWidth()
-                                   .padding(start = 15.dp, end = 15.dp),
+                                   .padding(12.dp),
                               value = sequentialViewModel.downloadUrl[index],
                               onValueChange = { value ->
                                    sequentialViewModel.downloadUrl[index] = value
@@ -82,7 +82,7 @@ fun SequentialIdle(
                                         fontFamily = FontFamily.Default,
                                         textAlign = TextAlign.Start,
                                         color = FermuxColors.offWhiteTextColor,
-                                        modifier = Modifier.padding(start = 9.dp, bottom = 5.dp)
+                                        modifier = Modifier.padding(6.dp)
                                    )
                               },
                               shape = RoundedCornerShape(8.dp),
@@ -104,34 +104,40 @@ fun SequentialIdle(
                                    unfocusedContainerColor = FermuxColors.warmPurple,
                                    focusedContainerColor = FermuxColors.inActiveTextField
                               ),
-                              trailingIcon = {
-                                   androidx.compose.animation.AnimatedVisibility(
-                                        visible = sequentialViewModel.downloadUrl.isNotEmpty(),
-                                        enter = slideInVertically(tween(70)) + fadeIn(tween(100)),
-                                        exit = slideOutVertically(tween(70)) + fadeOut(tween(100))
-                                   ) {
-                                        GlobalCancelButton(
-                                             modifier = Modifier.size(40.dp).padding(end = 3.dp), onClick = {
-                                                  sequentialViewModel.downloadUrl.remove("")
-                                             }
-                                        )
-                                   }
-                              },
                               keyboardOptions = KeyboardOptions(
                                    imeAction = ImeAction.Send,
                                    capitalization = KeyboardCapitalization.None,
                                    autoCorrectEnabled = false
                               ),
-                              )
-                    }
-                    item {
-                         ImageButton(
-                              modifier = Modifier,
-                              image = R.drawable.add,
-                              onClick = { sequentialViewModel.downloadUrl.add("") }
                          )
                     }
+                    item {
+                         Row(horizontalArrangement = Arrangement.SpaceEvenly) {
+                              ImageButton(
+                                   modifier = Modifier.padding(5.dp),
+                                   image = R.drawable.add,
+                                   shape = RoundedCornerShape(16.dp),
+                                   border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),
+                                   onClick = { sequentialViewModel.downloadUrl.add("") }
+                              )
+                              CancelButton(
+                                   modifier = Modifier.padding(5.dp),
+                                   onClick = {
+                                        sequentialViewModel.downloadUrl.remove("")
+                                   }
+                              )
+                         }
+                    }
                }
+
+               IconTextButton(
+                    modifier = Modifier,
+                    image = R.drawable.download_side_bar,
+                    text = "Download All",
+                    enabled = true,
+                    onClick = { sequentialViewModel.startSequentiallyDownloading(context, submittedUrls) },
+               )
+
           }
      }
 

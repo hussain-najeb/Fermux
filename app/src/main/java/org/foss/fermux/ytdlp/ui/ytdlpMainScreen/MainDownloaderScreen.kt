@@ -39,7 +39,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.GlobalCancelButton
+import org.foss.fermux.components.buttons.CancelButton
 import org.foss.fermux.components.buttons.ImageButton
 import org.foss.fermux.components.generalComponents.AppSnackBar
 import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
@@ -161,8 +161,11 @@ fun DownloadContent(
                                         enter = slideInVertically(tween(70)) + fadeIn(tween(100)),
                                         exit = slideOutVertically(tween(70)) + fadeOut(tween(100))
                                    ) {
-                                        GlobalCancelButton(
-                                             modifier = Modifier.size(40.dp).padding(end = 3.dp), onClick = {
+                                        CancelButton(
+                                             modifier = Modifier
+                                                  .size(50.dp)
+                                                  .padding(end = 2.dp),
+                                             onClick = {
                                                   downloaderViewModel.downloadUrl = ""
                                              }
                                         )
