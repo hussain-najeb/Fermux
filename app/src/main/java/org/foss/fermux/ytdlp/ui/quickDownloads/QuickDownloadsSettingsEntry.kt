@@ -77,9 +77,9 @@ fun QuickVideo(
      val video by downloaderSettingsViewModel.quickVideo.collectAsStateWithLifecycle()
      ModularSegmentedButtons(
           optionsList = listOf(
-               QuickVideoQuality.HD1080 to "FHD",
-               QuickVideoQuality.HD720 to "HD",
-               QuickVideoQuality.SD480 to "SD",
+               QuickVideoQuality.HD1080 to "1080p",
+               QuickVideoQuality.HD720 to "720p",
+               QuickVideoQuality.SD480 to "480p",
                QuickVideoQuality.Q360 to "360p",
                QuickVideoQuality.Q240 to "240p",
                QuickVideoQuality.Q144 to "144p"

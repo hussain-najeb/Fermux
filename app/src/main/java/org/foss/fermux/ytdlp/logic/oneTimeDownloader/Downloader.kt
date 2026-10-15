@@ -29,165 +29,177 @@ THEMOSTCOMPLETEYTDLPCLIENTINTHEWORLD
  */
 
 suspend fun downloaderLogic(
-     context: Context,
-     showDetails: Boolean,
-     aria2cMode: Aria2cMode = Aria2cMode.Always,
-     thumbnail: ThumbnailFormat = ThumbnailFormat.Png,
-     audioFormats: AudioFormat = AudioFormat.Mp3Format,
-     videoFormats: VideoFormat = VideoFormat.Mp4Format,
-     videoComp: Boolean,
-     externalDownloaders: ExternalDownloaders = ExternalDownloaders.Disabled,
-     url: String,
-     taskId: String,
-     sleepRequest: Int = 0,
-     playlistStatus: Boolean = false,
-     quickJs: Boolean = true,
-     fingerprinting: Boolean = true,
-     audioQuality: AudioQuality? = null,
-     videoQuality: VideoQuality? = null,
-     ipv: IpvConnection,
-     sponsorBlock: Boolean = true,
-     embedThumbnail: Boolean = true,
-     sponsorBlockCategories: Set<String> = emptySet(),
-     fragRetry: Int,
-     retries: Int,
-     quickDownloadFormats: QuickDownloadFormats = QuickDownloadFormats.QuickAudio,
-     quickAudioQuality: QuickAudioQuality? = null,
-     quickVideoQuality: QuickVideoQuality? = null,
-     onUpdate: (Float, String) -> Unit
+  context: Context,
+  showDetails: Boolean,
+  aria2cMode: Aria2cMode = Aria2cMode.Always,
+  thumbnail: ThumbnailFormat = ThumbnailFormat.Png,
+  audioFormats: AudioFormat = AudioFormat.Mp3Format,
+  videoFormats: VideoFormat = VideoFormat.Mp4Format,
+  videoComp: Boolean,
+  externalDownloaders: ExternalDownloaders = ExternalDownloaders.Disabled,
+  url: String,
+  taskId: String,
+  sleepRequest: Int = 0,
+  playlistStatus: Boolean = false,
+  quickJs: Boolean = true,
+  fingerprinting: Boolean = true,
+  audioQuality: AudioQuality? = null,
+  videoQuality: VideoQuality? = null,
+  ipv: IpvConnection,
+  sponsorBlock: Boolean = true,
+  embedThumbnail: Boolean = true,
+  sponsorBlockCategories: Set<String> = emptySet(),
+  fragRetry: Int,
+  retries: Int,
+  quickDownloadFormats: QuickDownloadFormats = QuickDownloadFormats.QuickAudio,
+  quickAudioQuality: QuickAudioQuality? = null,
+  quickVideoQuality: QuickVideoQuality? = null,
+  seqVideo: SeqVideoQuality? = null,
+  seqAudio: SeqAudioQuality? = null,
+  onUpdate: (Float, String) -> Unit
 ): List<CopiedFile> {
 
-     val baseDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) ?: context.filesDir
-     val downloadDir = File(baseDir, taskId).apply { mkdirs() }
-     val outputPath = "${downloadDir.absolutePath}/%(title)s.%(ext)s"
-     val request = YoutubeDLRequest(url)
+  val baseDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) ?: context.filesDir
+  val downloadDir = File(baseDir, taskId).apply { mkdirs() }
+  val outputPath = "${downloadDir.absolutePath}/%(title)s.%(ext)s"
+  val request = YoutubeDLRequest(url)
 
-     if (quickJs) {
-          request.addOption(
-               "--js-runtimes",
-               "quickjs:${context.applicationInfo.nativeLibraryDir}/libqjs-cli.so"
-          )
-     }
+  if (quickJs) {
+    request.addOption(
+      "--js-runtimes",
+      "quickjs:${context.applicationInfo.nativeLibraryDir}/libqjs-cli.so"
+    )
+  }
 
-     if (fingerprinting) {
-          request.addOption("--impersonate", "chrome")
-     }
+  if (fingerprinting) {
+    request.addOption("--impersonate", "chrome")
+  }
 
-     when (ipv) {
-          IpvConnection.Ipv6 -> request.addOption("--force-ipv6")
-          IpvConnection.Ipv4 -> request.addOption("--force-ipv4")
-          IpvConnection.Disabled -> Unit
-     }
+  when (ipv) {
+    IpvConnection.Ipv6 -> request.addOption("--force-ipv6")
+    IpvConnection.Ipv4 -> request.addOption("--force-ipv4")
+    IpvConnection.Disabled -> Unit
+  }
 
-     request.addOption("--no-simulate")
+  request.addOption("--no-simulate")
 
-     request.addOption("--print",
-          "before_dl:$FERMUX_METADATA_MARKER%(.{id,extractor_key,title,thumbnail,duration,uploader,filesize,filesize_approx,resolution,abr,ext,webpage_url})j"
-     )
+  request.addOption(
+    "--print",
+    "before_dl:$FERMUX_METADATA_MARKER%(.{id,extractor_key,title,thumbnail,duration,uploader,filesize,filesize_approx,resolution,abr,ext,webpage_url})j"
+  )
 
-     request.addOption("--progress")
+  request.addOption("--progress")
 
-     if (sleepRequest > 0) {
-          request.addOption("--sleep-requests", sleepRequest)
-     }
+  if (sleepRequest > 0) {
+    request.addOption("--sleep-requests", sleepRequest)
+  }
 
-     if (fragRetry > 10) {
-          request.addOption("--fragment-retries", argument = fragRetry)
-     }
+  if (fragRetry > 10) {
+    request.addOption("--fragment-retries", argument = fragRetry)
+  }
 
-     if (retries > 10) {
-          request.addOption("--retries", retries)
-     }
+  if (retries > 10) {
+    request.addOption("--retries", retries)
+  }
 
-     if (sponsorBlock && sponsorBlockCategories.isNotEmpty()) {
-          request.addOption("--sponsorblock-remove", sponsorBlockCategories.joinToString(","))
-     }
+  if (sponsorBlock && sponsorBlockCategories.isNotEmpty()) {
+    request.addOption("--sponsorblock-remove", sponsorBlockCategories.joinToString(","))
+  }
 
-     if (showDetails) {
-          request.addOption("-v")
-     }
+  if (showDetails) {
+    request.addOption("-v")
+  }
 
-     val shouldUseAria2c = when (aria2cMode) {
-          Aria2cMode.Always -> true
-          Aria2cMode.EdgeCaseOnly -> videoQuality != VideoQuality.HD1080
-          Aria2cMode.Disabled -> false
-     }
+  val shouldUseAria2c = when (aria2cMode) {
+    Aria2cMode.Always -> true
+    Aria2cMode.EdgeCaseOnly -> videoQuality != VideoQuality.HD1080
+    Aria2cMode.Disabled -> false
+  }
 
-     val aria2Argument = "aria2c:--summary-interval=1 -x 12 -s 12 -k 1M"
+  val aria2Argument = "aria2c:--summary-interval=1 -x 12 -s 12 -k 1M"
 
-     if (shouldUseAria2c) {
-          request.addOption("--downloader", "libaria2c.so")
-          request.addOption(
-               "--external-downloader-args", aria2Argument
-          )
-     }
+  if (shouldUseAria2c) {
+    request.addOption("--downloader", "libaria2c.so")
+    request.addOption(
+      "--external-downloader-args", aria2Argument
+    )
+  }
 
-     val hlsConcurrentFragments = 8
+  val hlsConcurrentFragments = 8
 
-     when {
-          shouldUseAria2c -> Unit
-          externalDownloaders == ExternalDownloaders.FFmpegAsExternal -> {
-               request.addOption("--hls-prefer-ffmpeg")
-          }
+  when {
+    shouldUseAria2c -> Unit
+    externalDownloaders == ExternalDownloaders.FFmpegAsExternal -> {
+      request.addOption("--hls-prefer-ffmpeg")
+    }
 
-          externalDownloaders == ExternalDownloaders.YtdlpNativeDownloader -> {
-               request.addOption("--concurrent-fragments", hlsConcurrentFragments)
-          }
+    externalDownloaders == ExternalDownloaders.YtdlpNativeDownloader -> {
+      request.addOption("--concurrent-fragments", hlsConcurrentFragments)
+    }
 
-          else -> Unit
-     }
+    else -> Unit
+  }
 
-     if (embedThumbnail &&
-          thumbnail != ThumbnailFormat.Off &&
-          videoFormats != VideoFormat.AviFormat &&
-          videoFormats != VideoFormat.WebMFormat
-     ) {
-          request.addOption("--convert-thumbnails", argument = thumbnail.thumbnailFormat)
-          request.addOption("--embed-thumbnail")
-     }
+  if (embedThumbnail &&
+    thumbnail != ThumbnailFormat.Off &&
+    videoFormats != VideoFormat.AviFormat &&
+    videoFormats != VideoFormat.WebMFormat
+  ) {
+    request.addOption("--convert-thumbnails", argument = thumbnail.thumbnailFormat)
+    request.addOption("--embed-thumbnail")
+  }
 
-     if (playlistStatus) {
-          request.addOption("--yes-playlist")
-     } else {
-          request.addOption("--no-playlist")
-     }
+  if (playlistStatus) {
+    request.addOption("--yes-playlist")
+  } else {
+    request.addOption("--no-playlist")
+  }
 
-     audioQuality?.let {
-          request.addOption("-x")
-          request.addOption("--audio-format", audioFormats.audioFormats)
-          request.addOption("--audio-quality", it.audioQuality)
-     }
-     videoQuality?.let {
-          request.addOption("-f", it.videoQuality)
-     }
+  audioQuality?.let {
+    request.addOption("-x")
+    request.addOption("--audio-format", audioFormats.audioFormats)
+    request.addOption("--audio-quality", it.audioQuality)
+  }
+  videoQuality?.let {
+    request.addOption("-f", it.videoQuality)
+  }
 
-     quickAudioQuality?.let {
-          request.addOption("-x")
-          request.addOption("--audio-format", quickDownloadFormats.quickDownloadFormats)
-          request.addOption("--audio-quality", it.quickDownloadAudioQuality)
-     }
+  quickAudioQuality?.let {
+    request.addOption("-x")
+    request.addOption("--audio-format", quickDownloadFormats.quickDownloadFormats)
+    request.addOption("--audio-quality", it.quickDownloadAudioQuality)
+  }
 
-     quickVideoQuality?.let {
-          request.addOption("-f", it.quickDownloadVideoQuality)
-          request.addOption("--merge-output-format", quickDownloadFormats.quickDownloadFormats)
-     }
+  quickVideoQuality?.let {
+    request.addOption("-f", it.quickDownloadVideoQuality)
+    request.addOption("--merge-output-format", quickDownloadFormats.quickDownloadFormats)
+  }
+
+  seqAudio?.let {
+    request.addOption("-x")
+    request.addOption("--audio-format", it.seqAudioQuality)
+    request.addOption("--audio-quality", it.seqAudioQuality)
+  }
+
+  seqVideo?.let {
+    request.addOption("-f", it.seqVideoQuality)
+    request.addOption("--merge-output-format", it.seqVideoQuality)
+  }
 
 
-     if (videoQuality != null && videoComp) {
-          request.addOption("--recode-video", videoFormats.videoFormat)
-     }
+  if (videoQuality != null && videoComp) {
+    request.addOption("--recode-video", videoFormats.videoFormat)
+  }
 
-     request.addOption("-i")
-     request.addOption("--embed-metadata")
-     request.addOption("-o", outputPath)
+  request.addOption("-i")
+  request.addOption("--embed-metadata")
+  request.addOption("-o", outputPath)
 
-     try {
+  try {
 
-          return execution(downloadDir, request, taskId, onUpdate, context)
+    return execution(downloadDir, request, taskId, onUpdate, context)
 
-     } finally {
-
-          downloadDir.deleteRecursively()
-
-     }
+  } finally {
+    downloadDir.deleteRecursively()
+  }
 }

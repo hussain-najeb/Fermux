@@ -214,15 +214,13 @@ class SequentialViewModel(
      }
 
      fun hideDeleteDialog() {
-          state = SequentialDownloadQueueState(
-               showModalSheet = false
-          )
+          state = state?.copy(showModalSheet = false)
+               ?: SequentialDownloadQueueState(showModalSheet = false)
      }
 
      fun showBottomSheet() {
-          state = SequentialDownloadQueueState(
-               showModalSheet = true
-          )
+          state = state?.copy(showModalSheet = true)
+               ?: SequentialDownloadQueueState(showModalSheet = true)
      }
 
 

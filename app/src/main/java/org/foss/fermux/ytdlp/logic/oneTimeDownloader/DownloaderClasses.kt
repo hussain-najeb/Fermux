@@ -40,7 +40,7 @@ data class SequentialDownloadQueueState(
      val completed: List<DownloadMetadata> = emptyList(),
      val failures: List<SequentialFailures> = emptyList(),
      val logs: String = "",
-     val showModalSheet: Boolean? = false
+     val showModalSheet: Boolean = false
 )
 
 enum class SequentialStatus {
@@ -165,8 +165,8 @@ enum class QuickAudioQuality(val quickDownloadAudioQuality: String) {
 }
 
 enum class SeqFormat(val seqFormat: String) {
-     SeqAudio("mp4"),
-     SeqVideo("mp3")
+     SeqAudio("mp3"),
+     SeqVideo("mp4")
 }
 
 enum class SeqVideoQuality(val seqVideoQuality: String) {

@@ -76,7 +76,7 @@ interface DownloaderSettingsRepo {
      suspend fun setQuickVideo(value: QuickVideoQuality)
      suspend fun setQuickAudio(value: QuickAudioQuality)
      suspend fun setSeqFormat(value: SeqFormat)
-     suspend fun setSqtVideo(value: SeqVideoQuality)
+     suspend fun setSeqVideo(value: SeqVideoQuality)
      suspend fun setSeqAudio(value: SeqAudioQuality)
 }
 
@@ -404,15 +404,15 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
      }
 
      override suspend fun setSeqFormat(value: SeqFormat) {
-          TODO("Not yet implemented")
+          settingStore.edit { preferences -> preferences[SEQ_FORMAT] = value.name }
      }
 
-     override suspend fun setSqtVideo(value: SeqVideoQuality) {
-          TODO("Not yet implemented")
+     override suspend fun setSeqVideo(value: SeqVideoQuality) {
+          settingStore.edit { preferences -> preferences[SEQ_VIDEO] = value.name }
      }
 
      override suspend fun setSeqAudio(value: SeqAudioQuality) {
-          TODO("Not yet implemented")
+          settingStore.edit { preferences -> preferences[SEQ_AUDIO] = value.name }
      }
 
      override suspend fun setQuickVideo(value: QuickVideoQuality) {
@@ -549,4 +549,3 @@ private fun <T> MutablePreferences.restore(
 ) {
      if (value == null) remove(key) else this[key] = value
 }
-
