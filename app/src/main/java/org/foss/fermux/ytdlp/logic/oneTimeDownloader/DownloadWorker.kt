@@ -198,6 +198,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWork
         quickDownloadFormats = quickFormat,
         quickAudioQuality = selectedQuickAudio,
         quickVideoQuality = selectedQuickVideo,
+        seqFormat = seqFormat,
         seqVideo = selectedSeqVideo,
         seqAudio = selectedSeqAudio,
         onUpdate = { progress, line ->

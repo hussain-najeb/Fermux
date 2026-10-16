@@ -29,7 +29,7 @@ fun SeqFetchMetadata(
 
             SeqCard(
                 modifier = Modifier.padding(6.dp),
-                title = item.metadata?.url ?: item.url,
+                title = item.metadata?.title ?: "null",
                 image = item.metadata?.thumbnail.orEmpty(),
                 onCancelRequest = {
                     sequentialViewModel.singleProcessDestroyer(
@@ -37,7 +37,7 @@ fun SeqFetchMetadata(
                         index = index
                     )
                 }
-            )
+            ) // TODO. Most Logic work is done (about fucking time) rest is UI, should make quick work of it next day (current day if you see this tomorrow)
 
 
         }
