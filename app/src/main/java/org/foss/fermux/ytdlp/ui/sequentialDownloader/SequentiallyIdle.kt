@@ -41,10 +41,10 @@ import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
 
 @Composable
 fun SequentialIdle(
-  navController: NavController
+  navController: NavController,
+  sequentialViewModel: SequentialViewModel
 ) {
 
-  val sequentialViewModel: SequentialViewModel = viewModel()
   val downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel()
   val context = LocalContext.current
 

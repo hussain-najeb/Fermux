@@ -3,6 +3,7 @@ package org.foss.fermux.utils
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -16,6 +17,7 @@ import org.foss.fermux.settings.ui.aboutPage.LibraryPage
 import org.foss.fermux.settings.ui.converter.SimpleFFmpegSetting
 import org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage
 import org.foss.fermux.terminal.ui.FermuxTerminalScreen
+import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
 import org.foss.fermux.ytdlp.ui.history.History
 import org.foss.fermux.ytdlp.ui.sequentialDownloader.SequentialIdle
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloadContent
@@ -55,6 +57,7 @@ sealed class Miscellaneous(val route: String) {
 fun FermuxAppMainScreen() {
 
      val navController = rememberNavController()
+     val seqView: SequentialViewModel = viewModel()
 
      NavHost(
           navController = navController,
@@ -83,6 +86,6 @@ fun FermuxAppMainScreen() {
           composable(route = Miscellaneous.DownloaderLogs.route) { DownloaderLogs(navController) }
           composable(route = Miscellaneous.DownloaderArgs.route) { DownloaderArgs(navController) }
           composable(route = Miscellaneous.DownloaderHistory.route) { History(navController) }
-          composable(route = Miscellaneous.SequentialDownloader.route) { SequentialIdle(navController) }
+          composable(route = Miscellaneous.SequentialDownloader.route) { SequentialIdle(navController,seqView) }
      }
 }
