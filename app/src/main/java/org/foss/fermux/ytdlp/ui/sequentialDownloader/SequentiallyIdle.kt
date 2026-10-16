@@ -233,7 +233,7 @@ fun SequentialIdle(
     }
   )
 
-  if (sequentialViewModel.state?.showModalSheet == true)
+  if (sequentialViewModel.showModalSheet)
     SequentialModalSheet(
       onDismissRequest = sequentialViewModel::hideDeleteDialog,
       downloaderSettingsViewModel = downloaderSettingsViewModel

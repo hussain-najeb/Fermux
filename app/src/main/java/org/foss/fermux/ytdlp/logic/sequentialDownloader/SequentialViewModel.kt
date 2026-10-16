@@ -28,8 +28,8 @@ class SequentialViewModel(
 ) : ViewModel() {
 
   var state by mutableStateOf<SequentialDownloadQueueState?>(null)
-  private var currentMetadata: DownloadMetadata? = null
-  private var showLog by mutableStateOf(false)
+  var showModalSheet by mutableStateOf(false)
+    private set
   val downloadUrl = mutableStateListOf("")
   var downloaderLogs by mutableStateOf("")
   private var downloaderJob: Job? = null
@@ -70,7 +70,6 @@ class SequentialViewModel(
 
     state = SequentialDownloadQueueState(
       phase = SequentialStatus.SequentiallyFetchingMetadata,
-      totalCount = urls.size,
       items = requestedUrlBuilder.mapIndexed { index, request ->
         SequentialItem(
           id = request.id,
@@ -78,7 +77,6 @@ class SequentialViewModel(
         )
       }
     )
-    currentMetadata = null
     val settingsTab = DataStoreDownloaderSettings(context.applicationContext)
 
     if (urls.isEmpty()) {
@@ -92,7 +90,6 @@ class SequentialViewModel(
     downloaderJob = viewModelScope.launch {
       try {
         val ytdlpDetails = settingsTab.ytdlpDetails.first()
-        showLog = ytdlpDetails
 
         val workManager = WorkManager.getInstance(context)
 
@@ -101,6 +98,7 @@ class SequentialViewModel(
           if (request.id in skippedID) {
             continue
           }
+          var currentMetadata: DownloadMetadata? = null
           workManager.enqueue(request)
 
           val finished = workManager
@@ -135,12 +133,7 @@ class SequentialViewModel(
 
 
                 state = state?.copy(
-                  phase = SequentialStatus.SequentiallyDownloading,
-                  currentProgress = progress,
-                  currentMetadata = currentMetadata,
-                  logs = downloaderLogs,
-                  currentIndex = index,
-                  totalCount = urls.size
+                  phase = SequentialStatus.SequentiallyDownloading
                 )
               }
             }
@@ -155,18 +148,8 @@ class SequentialViewModel(
                   .getString("metadataJson")
                   ?.let { parseYtdlpMetadataJson(it) }
 
-              val updatedComplete = if (metadata != null) {
-                state?.completed.orEmpty() + metadata
-              } else {
-                state?.completed.orEmpty()
-              }
-
               state = state?.copy(
-                phase = if (index == urls.lastIndex) SequentialStatus.SequentiallyCompleted else SequentialStatus.SequentiallyDownloading,
-                currentIndex = index,
-                totalCount = urls.size,
-                currentMetadata = metadata,
-                completed = updatedComplete
+                phase = if (index == urls.lastIndex) SequentialStatus.SequentiallyCompleted else SequentialStatus.SequentiallyDownloading
               )
 
               updateItem(request.id) { item ->
@@ -176,7 +159,6 @@ class SequentialViewModel(
                   metadata = metadata
                 )
               }
-              currentMetadata = null
             }
 
 
@@ -190,18 +172,6 @@ class SequentialViewModel(
                 )
               }
 
-              error?.let {
-                val failure = SequentialFailures(
-                  errorIndex = index,
-                  errorLog = it,
-                  url = urls[index]
-                )
-
-                state = state?.copy(
-                  failures = state?.failures.orEmpty() + failure
-                )
-              }
-              currentMetadata = null
               continue
             }
 
@@ -212,12 +182,6 @@ class SequentialViewModel(
                 )
               }
 
-              state = state?.copy(
-                phase = SequentialStatus.SequentiallyDownloading,
-                currentMetadata = null,
-                currentProgress = 0f
-              )
-              currentMetadata = null
               continue
             }
 
@@ -247,7 +211,6 @@ class SequentialViewModel(
     WorkManager.getInstance(context).cancelAllWorkByTag("destroy-all-monsters")
     downloaderLogs = ""
     downloaderJob?.cancel()
-    currentMetadata = null
     state = state?.copy(phase = SequentialStatus.SequentialCancel)
   }
 
@@ -258,13 +221,11 @@ class SequentialViewModel(
   }
 
   fun hideDeleteDialog() {
-    state = state?.copy(showModalSheet = false)
-      ?: SequentialDownloadQueueState(showModalSheet = false)
+    showModalSheet = false
   }
 
   fun showBottomSheet() {
-    state = state?.copy(showModalSheet = true)
-      ?: SequentialDownloadQueueState(showModalSheet = true)
+    showModalSheet = true
   }
 
   private fun updateItem(

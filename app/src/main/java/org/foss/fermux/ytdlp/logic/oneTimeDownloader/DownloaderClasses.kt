@@ -34,16 +34,20 @@ sealed class DownloadStatus {
 
 data class SequentialDownloadQueueState(
      val phase: SequentialStatus = SequentialStatus.SequentiallyIdle,
-     val currentIndex: Int = 0,
-     val items: List<SequentialItem> = emptyList(),
-     val totalCount: Int = 0,
-     val currentMetadata: DownloadMetadata? = null,
-     val currentProgress: Float = 0f,
-     val completed: List<DownloadMetadata> = emptyList(),
-     val failures: List<SequentialFailures> = emptyList(),
-     val logs: String = "",
-     val showModalSheet: Boolean = false
-)
+     val items: List<SequentialItem> = emptyList()
+) {
+     val currentItem: SequentialItem?
+          get() = items.firstOrNull { it.status.isActive }
+
+     val currentIndex: Int
+          get() = items.indexOfFirst { it.status.isActive }
+
+     val completedItems: List<SequentialItem>
+          get() = items.filter { it.status == SequentialItemStatus.Completed }
+
+     val failedItems: List<SequentialItem>
+          get() = items.filter { it.status == SequentialItemStatus.Failed }
+}
 
 enum class SequentialStatus {
      SequentiallyIdle,
@@ -54,12 +58,6 @@ enum class SequentialStatus {
      SequentialCancel,
      //SequentiallyPaused
 }
-
-data class SequentialFailures(
-     val errorIndex: Int,
-     val errorLog: String,
-     val url: String
-)
 
 data class SequentialItem(
      val id: UUID,
@@ -78,6 +76,10 @@ enum class SequentialItemStatus {
      Failed,
      Cancelled
 }
+
+private val SequentialItemStatus.isActive: Boolean
+     get() = this == SequentialItemStatus.FetchingMetadata ||
+          this == SequentialItemStatus.Downloading
 
 data class ScreenInfo(
      val screen: MainScreens,
