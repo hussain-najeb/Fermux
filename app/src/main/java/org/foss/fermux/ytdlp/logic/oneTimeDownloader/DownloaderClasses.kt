@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import org.foss.fermux.utils.MainScreens
+import java.util.*
 
 const val FERMUX_METADATA_MARKER = "FERMUX_METADATA_JSON:"
 
@@ -34,6 +35,7 @@ sealed class DownloadStatus {
 data class SequentialDownloadQueueState(
      val phase: SequentialStatus = SequentialStatus.SequentiallyIdle,
      val currentIndex: Int = 0,
+     val items: List<SequentialItem> = emptyList(),
      val totalCount: Int = 0,
      val currentMetadata: DownloadMetadata? = null,
      val currentProgress: Float = 0f,
@@ -58,6 +60,24 @@ data class SequentialFailures(
      val errorLog: String,
      val url: String
 )
+
+data class SequentialItem(
+     val id: UUID,
+     val url: String,
+     val status: SequentialItemStatus = SequentialItemStatus.Waiting,
+     val progress: Float = 0f,
+     val metadata: DownloadMetadata? = null,
+     val error: String? = null
+)
+
+enum class SequentialItemStatus {
+     Waiting,
+     FetchingMetadata,
+     Downloading,
+     Completed,
+     Failed,
+     Cancelled
+}
 
 data class ScreenInfo(
      val screen: MainScreens,
