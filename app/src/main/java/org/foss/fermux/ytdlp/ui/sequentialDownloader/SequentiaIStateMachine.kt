@@ -3,10 +3,6 @@ package org.foss.fermux.ytdlp.ui.sequentialDownloader
 import androidx.compose.animation.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import org.foss.fermux.components.generalComponents.MediumTopBarScaffold
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialDownloadQueueState
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialStatus
 import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
@@ -14,11 +10,9 @@ import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
 @Composable
 fun SequentialStateMachine(
     state: SequentialDownloadQueueState,
-    navController: NavController,
     sequentialViewModel: SequentialViewModel
 ) {
 
-    val context = LocalContext.current
     val spatialSpec = MaterialTheme.motionScheme
 
     AnimatedContent(
@@ -42,7 +36,6 @@ fun SequentialStateMachine(
 
             SequentialStatus.SequentiallyIdle -> {
                 SequentialIdle(
-                    navController = navController,
                     sequentialViewModel = sequentialViewModel
                 )
             }
@@ -68,26 +61,4 @@ fun SequentialStateMachine(
 
         }
     }
-}
-
-@Composable
-fun SequentialContent(
-    navController: NavController,
-    sequentialViewModel: SequentialViewModel = viewModel()
-) {
-        val state = sequentialViewModel.state
-
-
-
-    MediumTopBarScaffold(
-        title = "Sequential Downloader",
-        onBack = navController::popBackStack
-    ) {
-    SequentialStateMachine(
-        state = state,
-        navController = navController,
-        sequentialViewModel = sequentialViewModel
-    )
-}
-
 }

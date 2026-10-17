@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import org.foss.fermux.components.downloaderComponents.SeqCard
+import org.foss.fermux.components.downloaderComponents.SeqMetadataCard
 import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
 
 @Composable
@@ -15,7 +15,7 @@ fun SeqFetchMetadata(
         sequentialViewModel: SequentialViewModel
 ) {
 
-    val state = sequentialViewModel.state ?: return
+    val state = sequentialViewModel.state
     val context = LocalContext.current
 
     LazyColumn {
@@ -27,9 +27,8 @@ fun SeqFetchMetadata(
                 it.id == item.id
             }
 
-            SeqCard(
+            SeqMetadataCard(
                 modifier = Modifier.padding(6.dp),
-                title = item.metadata?.title ?: "null",
                 image = item.metadata?.thumbnail.orEmpty(),
                 onCancelRequest = {
                     sequentialViewModel.singleProcessDestroyer(

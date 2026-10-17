@@ -29,16 +29,19 @@ fun QuickDownloadsMetadata(
           color = FermuxColors.inActiveContainer,
           border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
      ) {
-
-          Text(
-               text = "Fetching video info...",
-               fontSize = 18.sp,
-               fontStyle = FontStyle.Normal,
-               fontFamily = FontFamily.Default,
-               textAlign = TextAlign.Start,
-               color = FermuxColors.skyBlue,
-               modifier = Modifier.padding(top = 12.dp, start = 10.dp)
-          )
+          Box(
+               modifier = Modifier.padding(8.dp),
+               contentAlignment = Alignment.CenterStart
+          ) {
+               Text(
+                    text = "Fetching video info...",
+                    fontSize = 18.sp,
+                    fontStyle = FontStyle.Normal,
+                    fontFamily = FontFamily.Default,
+                    textAlign = TextAlign.Start,
+                    color = FermuxColors.skyBlue
+               )
+          }
 
           Box(
                modifier = Modifier
@@ -60,5 +63,5 @@ fun QuickDownloadsMetadata(
 @Preview
 @Composable
 fun test7() {
-     QuickDownloadsMetadata()
+     QuickDownloadsMetadata(progress = 4f)
 }
