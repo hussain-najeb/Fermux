@@ -55,15 +55,23 @@ fun SequentialQueue(
                     }
 
                     SequentialItemStatus.Waiting -> {
-                        SeqWaitCard(
-                            onCancelRequest = {
-                                sequentialViewModel.singleProcessDestroyer(
-                                    context = context,
-                                    index = index
-                                )
-                            },
-                            modifier = Modifier
-                        )
+                      //  SeqCard(
+                      //      modifier = Modifier.padding(6.dp),
+                       //     item = item,
+                      //      onCancelRequest = {
+                     //           sequentialViewModel.singleProcessDestroyer(
+                      //              context = context,
+                     //               index = index
+                      //          )
+                      //      },
+                    //        sequentialViewModel = sequentialViewModel
+                    //    )
+                    }
+
+                    SequentialItemStatus.Downloading -> {
+                     //   SeqDownloadingCard(
+
+                       // )
                     }
 
                     else -> {
@@ -125,7 +133,7 @@ private fun SequentialItemStatusCard(
                 Text(
                     text = statusText,
                     color = FermuxColors.offWhiteTextColor,
-                    maxLines = 2,
+                    maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
             }

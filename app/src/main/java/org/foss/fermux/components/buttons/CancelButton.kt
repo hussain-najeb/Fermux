@@ -82,7 +82,7 @@ fun CancelButton(
           Icon(
                painter = painterResource(id = if (transparency) R.drawable.close else R.drawable.cancel_buttons),
                contentDescription = null,
-               tint = if (transparency) FermuxColors.white else iconColor,
+               tint = if (transparency) FermuxColors.fermuxTextError else iconColor,
                modifier = iconModifier
           )
      }

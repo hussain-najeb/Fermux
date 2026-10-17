@@ -28,7 +28,10 @@ fun QuickDownloading(
           color = FermuxColors.inActiveContainer,
           border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
      ) {
-          Box(modifier = Modifier.padding(), contentAlignment = Alignment.Center) {
+          Box(
+               modifier = Modifier.padding(),
+               contentAlignment = Alignment.Center
+          ) {
                progress?.let { value ->
                     LinearProgressIndicator(
                          progress = { (value / 100f).coerceIn(0f, 1f) },
@@ -42,11 +45,15 @@ fun QuickDownloading(
                }
           }
 
-          Box(modifier = Modifier.padding(end = 8.dp), contentAlignment = Alignment.CenterEnd) {
+          Box(
+               modifier = Modifier
+                    .padding(end = 8.dp),
+               contentAlignment = Alignment.CenterEnd
+          ) {
                CancelButton(
                     modifier = Modifier.wrapContentSize(),
-                    allowBorder = false,
-                    onClick = { onCancel() }
+                    onClick = { onCancel() },
+                    transparency = true
                )
           }
      }
