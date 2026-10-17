@@ -43,7 +43,7 @@ fun SequentialIdle(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .padding(8.dp)
     ) {
         LazyColumn(
@@ -86,6 +86,7 @@ fun SequentialIdle(
                     ) {
                         OutlinedTextField(
                             modifier = Modifier
+                                .padding(5.dp)
                                 .fillMaxWidth(),
                             value = sequentialViewModel.downloadUrl[index],
                             onValueChange = { value ->

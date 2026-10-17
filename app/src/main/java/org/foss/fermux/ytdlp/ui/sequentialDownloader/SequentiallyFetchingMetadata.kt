@@ -29,7 +29,6 @@ fun SeqFetchMetadata(
 
             SeqMetadataCard(
                 modifier = Modifier.padding(6.dp),
-                image = item.metadata?.thumbnail.orEmpty(),
                 onCancelRequest = {
                     sequentialViewModel.singleProcessDestroyer(
                         context = context,

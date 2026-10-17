@@ -30,7 +30,7 @@ fun QuickDownloadsMetadata(
           border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
      ) {
           Box(
-               modifier = Modifier.padding(8.dp),
+               modifier = Modifier.padding(12.dp),
                contentAlignment = Alignment.CenterStart
           ) {
                Text(
