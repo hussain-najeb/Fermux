@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import org.foss.fermux.components.generalComponents.MediumTopBarScaffold
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialDownloadQueueState
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialStatus
 import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
@@ -41,8 +42,8 @@ fun SequentialStateMachine(
 
             SequentialStatus.SequentiallyIdle -> {
                 SequentialIdle(
-                     navController = navController,
-                     sequentialViewModel = sequentialViewModel
+                    navController = navController,
+                    sequentialViewModel = sequentialViewModel
                 )
             }
 
@@ -74,18 +75,19 @@ fun SequentialContent(
     navController: NavController,
     sequentialViewModel: SequentialViewModel = viewModel()
 ) {
-    val state = sequentialViewModel.state
+        val state = sequentialViewModel.state
 
-    if (state == null) {
-        SequentialIdle(
-            navController = navController,
-            sequentialViewModel = sequentialViewModel
-        )
-    } else {
-        SequentialStateMachine(
-            state = state,
-            navController = navController,
-            sequentialViewModel = sequentialViewModel
-        )
-    }
+
+
+    MediumTopBarScaffold(
+        title = "Sequential Downloader",
+        onBack = navController::popBackStack
+    ) {
+    SequentialStateMachine(
+        state = state,
+        navController = navController,
+        sequentialViewModel = sequentialViewModel
+    )
+}
+
 }
