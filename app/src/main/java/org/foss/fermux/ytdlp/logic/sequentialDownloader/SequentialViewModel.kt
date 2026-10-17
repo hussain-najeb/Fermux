@@ -222,6 +222,9 @@ class SequentialViewModel(
     fun singleProcessDestroyer(context: Context, index: Int) {
         val requestId = allIDs.getOrNull(index) ?: return
         skippedID += requestId
+        updateItem(requestId) { item ->
+            item.copy(status = SequentialItemStatus.Cancelled)
+        }
         WorkManager.getInstance(context).cancelWorkById(requestId)
     }
 

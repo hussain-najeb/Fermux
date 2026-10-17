@@ -19,7 +19,8 @@ import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
 
 @Composable
 fun SequentialContent(
-    navController: NavController, sequentialViewModel: SequentialViewModel = viewModel()
+    navController: NavController,
+    sequentialViewModel: SequentialViewModel
 ) {
     val downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel()
     val state = sequentialViewModel.state
@@ -42,26 +43,14 @@ fun SequentialContent(
         }
     }
 
-
-//   TODO AsyncImage(
-//        model = image,
-//        contentDescription = null,
-//        modifier = Modifier.aspectRatio(4f/3f),
-//        placeholder = painterResource(R.drawable.file_image),
-//        error = painterResource(R.drawable.error_sign),
-//        fallback = painterResource(R.drawable.file_image),
-//        contentScale = ContentScale.Crop,
-//        clipToBounds = true,
-//    )
-
     if (dialogDismiss) SettingAlertDialog(
         onDismissRequest = { dialogDismiss = false },
         title = "Sequentially?",
         settingImage = R.drawable.sequence,
         specialDescription = buildAnnotatedString {
-            withStyle(SpanStyle(FermuxColors.white)) { append("Add a url for each text field you want, each entry will be downloaded in the chosen sequence one at a time. Consider the arguments tab, yes, these also apply, and the general downloader settings as well.  The settings are") }
-            withStyle(SpanStyle(FermuxColors.warmBlue)) { append(" Atomic.") }
-        })
+            withStyle(SpanStyle(FermuxColors.white)) { append("Add a URL for each text field, each entry will be downloaded in the chosen sequence one at a time.\n\nConsider the arguments tab, yes, they also apply, and the general downloader settings as well.\n\nThis tab was designed to work in the background, just press the download button and forget about the tab, each video will be downloaded without intervention.") }
+        }
+    )
 
     if (sequentialViewModel.showModalSheet) SequentialModalSheet(
         onDismissRequest = sequentialViewModel::hideDeleteDialog,

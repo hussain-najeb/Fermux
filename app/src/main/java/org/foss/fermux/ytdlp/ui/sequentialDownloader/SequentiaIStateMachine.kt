@@ -40,16 +40,13 @@ fun SequentialStateMachine(
                 )
             }
 
-            SequentialStatus.SequentiallyFetchingMetadata -> {
-                SeqFetchMetadata(sequentialViewModel = sequentialViewModel)
-            }
-
-            SequentialStatus.SequentiallyDownloading -> {
-                // SequentialDownloading()
-            }
-
+            SequentialStatus.SequentiallyFetchingMetadata,
+            SequentialStatus.SequentiallyDownloading,
             SequentialStatus.SequentiallyCompleted -> {
-                // SequentialSuccess()
+                SequentialQueue(
+                    state = targetState,
+                    sequentialViewModel = sequentialViewModel
+                )
             }
 
             SequentialStatus.SequentialError -> {
