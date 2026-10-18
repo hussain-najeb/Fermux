@@ -37,10 +37,12 @@ fun SeqCard(
     val statusText = when (status) { // TODO. Should probibly switch this for a loading bar
         SequentialItemStatus.FetchingMetadata -> "Fetching Metadata"
         SequentialItemStatus.Waiting -> "Waiting"
-        SequentialItemStatus.Downloading -> "Downloading ${item.progress.toInt()}%"
-        SequentialItemStatus.Completed -> "Download Completed"
-        SequentialItemStatus.Failed -> item.error ?: "Download Failed"
-        SequentialItemStatus.Cancelled -> "Cancelled"
+        else -> null
+        //SequentialItemStatus.Downloading -> "${item.progress.toInt()}% Downloaded"
+        //SequentialItemStatus.Completed -> "Download Complete"
+      //  SequentialItemStatus.Failed -> item.error ?: "Download Failed"
+
+      //  SequentialItemStatus.Cancelled -> "Cancelled" TODO. add a card for each of these
     }
 
     val statusBall = when (status) {
@@ -92,8 +94,8 @@ fun SeqCard(
                     contentDescription = null,
                     modifier = Modifier.aspectRatio(4f / 3f),
                     placeholder = painterResource(R.drawable.file_image),
-                    fallback = painterResource(R.drawable.error_sign), // TODO. Edit the size of this icon, its currently Massive
-                    contentScale = ContentScale.Crop,
+                    fallback = painterResource(R.drawable.clock_pause),
+                    contentScale = ContentScale.None,
                     clipToBounds = true,
                 )
             }
@@ -112,13 +114,15 @@ fun SeqCard(
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(2.dp)
                     )
-                    Text(
-                        text = statusText,
-                        color = FermuxColors.offWhiteTextColor,
-                        fontSize = 15.sp,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(top = 22.dp)
-                    )
+                    if (statusText != null) {
+                        Text(
+                            text = statusText,
+                            color = FermuxColors.offWhiteTextColor,
+                            fontSize = 15.sp,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(top = 22.dp)
+                        )
+                    }
 
                     Box(
                         modifier = Modifier.padding(),
