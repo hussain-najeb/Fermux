@@ -33,7 +33,7 @@ sealed class DownloadStatus {
 }
 
 data class SequentialDownloadQueueState(
-     val phase: SequentialStatus = SequentialStatus.SequentiallyIdle,
+     val phase: SequentialStatus = SequentialStatus.SeqIdle,
      val items: List<SequentialItem> = emptyList()
 ) {
      val currentItem: SequentialItem?
@@ -50,13 +50,9 @@ data class SequentialDownloadQueueState(
 }
 
 enum class SequentialStatus {
-     SequentiallyIdle,
-     SequentiallyFetchingMetadata,
-     SequentiallyDownloading,
-     SequentiallyCompleted,
-     SequentialError,
-     SequentialCancel,
-     //SequentiallyPaused
+     SeqIdle,
+     SeqDownload,
+     SeqDone,
 }
 
 data class SequentialItem(

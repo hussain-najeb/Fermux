@@ -34,14 +34,14 @@ fun SequentialStateMachine(
     ) { targetState ->
         when (targetState.phase) {
 
-            SequentialStatus.SequentiallyIdle -> {
+            SequentialStatus.SeqIdle -> {
                 SequentialIdle(
                     sequentialViewModel = sequentialViewModel
                 )
             }
 
             SequentialStatus.SequentiallyFetchingMetadata,
-            SequentialStatus.SequentiallyDownloading,
+            SequentialStatus.SeqDownload,
             SequentialStatus.SequentiallyCompleted -> {
                 SequentialQueue(
                     state = targetState,

@@ -27,7 +27,7 @@ const val SEQUENTIAL_AUDIO = "audio"
 class SequentialViewModel(
 ) : ViewModel() {
 
-    var state by mutableStateOf(SequentialDownloadQueueState(phase = SequentialStatus.SequentiallyIdle))
+    var state by mutableStateOf(SequentialDownloadQueueState(phase = SequentialStatus.SeqIdle))
         private set
     var showModalSheet by mutableStateOf(false)
         private set
@@ -70,7 +70,7 @@ class SequentialViewModel(
         }
 
         state = SequentialDownloadQueueState(
-            phase = SequentialStatus.SequentiallyFetchingMetadata,
+            phase = SequentialStatus.SeqDownload,
             items = requestedUrlBuilder.mapIndexed { index, request ->
                 SequentialItem(
                     id = request.id,
@@ -81,7 +81,6 @@ class SequentialViewModel(
         val settingsTab = DataStoreDownloaderSettings(context.applicationContext)
 
         if (urls.isEmpty()) {
-            state = SequentialDownloadQueueState(SequentialStatus.SequentialError)
             return
         }
 
@@ -131,15 +130,6 @@ class SequentialViewModel(
                                         metadata = currentMetadata
                                     )
                                 }
-
-
-                                state = state.copy(
-                                    phase = if (currentMetadata == null) {
-                                        SequentialStatus.SequentiallyFetchingMetadata
-                                    } else {
-                                        SequentialStatus.SequentiallyDownloading
-                                    }
-                                )
                             }
                         }
                         .first { workInfo ->
@@ -152,11 +142,6 @@ class SequentialViewModel(
                                 ?: finished.outputData
                                     .getString("metadataJson")
                                     ?.let { parseYtdlpMetadataJson(it) }
-
-                            state = state.copy(
-                                phase = if (index == urls.lastIndex) SequentialStatus.SequentiallyCompleted else SequentialStatus.SequentiallyDownloading
-                            )
-
                             updateItem(request.id) { item ->
                                 item.copy(
                                     status = SequentialItemStatus.Completed,
@@ -194,7 +179,7 @@ class SequentialViewModel(
                     }
 
                 }
-                state = state.copy(phase = SequentialStatus.SequentiallyCompleted)
+                state = state.copy(phase = SequentialStatus.SeqDone)
 
             } catch (e: CancellationException) {
                 throw e
@@ -204,7 +189,7 @@ class SequentialViewModel(
                     "Failed to enqueue id=${requestedUrlBuilder}",
                     e
                 )
-                state = state.copy(phase = SequentialStatus.SequentialError)
+                state = SequentialDownloadQueueState(phase = SequentialStatus.SeqDone)
             } finally {
                 downloaderLogs = ""
             }
@@ -216,7 +201,7 @@ class SequentialViewModel(
         WorkManager.getInstance(context).cancelAllWorkByTag("destroy-all-monsters")
         downloaderLogs = ""
         downloaderJob?.cancel()
-        state = state.copy(phase = SequentialStatus.SequentialCancel)
+        state = SequentialDownloadQueueState(phase = SequentialStatus.SeqIdle)
     }
 
     fun singleProcessDestroyer(context: Context, index: Int) {
