@@ -19,18 +19,15 @@ import org.foss.fermux.components.buttons.CancelButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialItem
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialItemStatus
-import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
 
 @Composable
 fun SeqWaitCard(
-    sequentialViewModel: SequentialViewModel,
     modifier: Modifier,
     status: SequentialItemStatus,
     item: SequentialItem,
     onCancelRequest: () -> Unit
 ) {
 
-    val state = sequentialViewModel.state
 
     val statusText = when (status) { // TODO. Should probably switch this for a loading bar
         SequentialItemStatus.Waiting -> "Waiting"
@@ -84,7 +81,7 @@ fun SeqWaitCard(
                 color = FermuxColors.mutedBlue
             ) {
                 AsyncImage(
-                    model = state.currentItem?.metadata?.thumbnail,
+                    model = item.metadata?.thumbnail,
                     contentDescription = null,
                     modifier = Modifier.aspectRatio(4f / 3f),
                     placeholder = painterResource(R.drawable.file_image),

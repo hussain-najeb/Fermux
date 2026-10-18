@@ -56,8 +56,7 @@ class SequentialViewModel(
 
 
     fun startSequentiallyDownloading(
-        context: Context,
-        urls: List<String>
+        context: Context, urls: List<String>
     ) {
 
         val requestedUrlBuilder = urls.map { url ->
@@ -70,41 +69,29 @@ class SequentialViewModel(
         }
 
         state = SequentialDownloadQueueState(
-            phase = SequentialStatus.SeqDownload,
-            items = requestedUrlBuilder.mapIndexed { index, request ->
+            phase = SequentialStatus.SeqDownload, items = requestedUrlBuilder.mapIndexed { index, request ->
                 SequentialItem(
-                    id = request.id,
-                    url = urls[index]
+                    id = request.id, url = urls[index]
                 )
-            }
-        )
+            })
         val settingsTab = DataStoreDownloaderSettings(context.applicationContext)
 
-        if (urls.isEmpty()) {
-            return
-        }
-
+        if (urls.isEmpty()) return
 
         allIDs = requestedUrlBuilder.map { it.id }
 
         downloaderJob = viewModelScope.launch {
             try {
                 val ytdlpDetails = settingsTab.ytdlpDetails.first()
-
                 val workManager = WorkManager.getInstance(context)
-
-                for ((index, request) in requestedUrlBuilder.withIndex()) {
-
+                for (request in requestedUrlBuilder) {
                     if (request.id in skippedID) {
                         continue
                     }
                     var currentMetadata: DownloadMetadata? = null
                     workManager.enqueue(request)
 
-                    val finished = workManager
-                        .getWorkInfoByIdFlow(request.id)
-                        .filterNotNull()
-                        .onEach { workInfo ->
+                    val finished = workManager.getWorkInfoByIdFlow(request.id).filterNotNull().onEach { workInfo ->
                             if (workInfo.state == WorkInfo.State.RUNNING) {
                                 if (ytdlpDetails) {
                                     val logs = workInfo.progress.getString("text")
@@ -125,28 +112,21 @@ class SequentialViewModel(
                                             SequentialItemStatus.FetchingMetadata
                                         } else {
                                             SequentialItemStatus.Downloading
-                                        },
-                                        progress = progress,
-                                        metadata = currentMetadata
+                                        }, progress = progress, metadata = currentMetadata
                                     )
                                 }
                             }
-                        }
-                        .first { workInfo ->
+                        }.first { workInfo ->
                             workInfo.state.isFinished
                         }
 
                     when (finished.state) {
                         WorkInfo.State.SUCCEEDED -> {
-                            val metadata = currentMetadata
-                                ?: finished.outputData
-                                    .getString("metadataJson")
-                                    ?.let { parseYtdlpMetadataJson(it) }
+                            val metadata = currentMetadata ?: finished.outputData.getString("metadataJson")
+                                ?.let { parseYtdlpMetadataJson(it) }
                             updateItem(request.id) { item ->
                                 item.copy(
-                                    status = SequentialItemStatus.Completed,
-                                    progress = 100f,
-                                    metadata = metadata
+                                    status = SequentialItemStatus.Completed, progress = 100f, metadata = metadata
                                 )
                             }
                         }
@@ -157,8 +137,7 @@ class SequentialViewModel(
 
                             updateItem(request.id) { item ->
                                 item.copy(
-                                    status = SequentialItemStatus.Failed,
-                                    error = error ?: "Download failed"
+                                    status = SequentialItemStatus.Failed, error = error ?: "Download failed"
                                 )
                             }
 
@@ -185,11 +164,9 @@ class SequentialViewModel(
                 throw e
             } catch (e: Exception) {
                 DebugLogDownloader.errorDownloader(
-                    "DownloadAdmission",
-                    "Failed to enqueue id=${requestedUrlBuilder}",
-                    e
+                    "DownloadAdmission", "Failed to enqueue id=${requestedUrlBuilder}", e
                 )
-                state = SequentialDownloadQueueState(phase = SequentialStatus.SeqDone)
+                state = state.copy(phase = SequentialStatus.SeqDone)
             } finally {
                 downloaderLogs = ""
             }
@@ -222,16 +199,14 @@ class SequentialViewModel(
     }
 
     private fun updateItem(
-        id: UUID,
-        update: (SequentialItem) -> SequentialItem
+        id: UUID, update: (SequentialItem) -> SequentialItem
     ) {
         val currentState = state
 
         state = currentState.copy(
             items = currentState.items.map { item ->
                 if (item.id == id) update(item) else item
-            }
-        )
+            })
     }
 
 }

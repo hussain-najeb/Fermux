@@ -3,6 +3,7 @@ package org.foss.fermux.ytdlp.ui.sequentialDownloader
 import androidx.compose.animation.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialDownloadQueueState
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialStatus
 import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
@@ -39,23 +40,17 @@ fun SequentialStateMachine(
                     sequentialViewModel = sequentialViewModel
                 )
             }
-
-            SequentialStatus.SequentiallyFetchingMetadata,
-            SequentialStatus.SeqDownload,
-            SequentialStatus.SequentiallyCompleted -> {
+            SequentialStatus.SeqDownload -> {
                 SequentialQueue(
                     state = targetState,
                     sequentialViewModel = sequentialViewModel
                 )
             }
-
-            SequentialStatus.SequentialError -> {
-                // SequentialError()
+            SequentialStatus.SeqDone -> {
+                SequentialDone(
+                    modifier = Modifier
+                )
             }
-
-            else -> {}
-
-
         }
     }
 }
