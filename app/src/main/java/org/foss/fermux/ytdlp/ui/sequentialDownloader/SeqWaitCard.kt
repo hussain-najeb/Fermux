@@ -3,13 +3,11 @@ package org.foss.fermux.ytdlp.ui.sequentialDownloader
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -24,7 +22,7 @@ import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialItemStatus
 import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
 
 @Composable
-fun SeqCard(
+fun SeqWaitCard(
     sequentialViewModel: SequentialViewModel,
     modifier: Modifier,
     status: SequentialItemStatus,
@@ -34,15 +32,11 @@ fun SeqCard(
 
     val state = sequentialViewModel.state
 
-    val statusText = when (status) { // TODO. Should probibly switch this for a loading bar
-        SequentialItemStatus.FetchingMetadata -> "Fetching Metadata"
+    val statusText = when (status) { // TODO. Should probably switch this for a loading bar
         SequentialItemStatus.Waiting -> "Waiting"
         else -> null
-        //SequentialItemStatus.Downloading -> "${item.progress.toInt()}% Downloaded"
-        //SequentialItemStatus.Completed -> "Download Complete"
-      //  SequentialItemStatus.Failed -> item.error ?: "Download Failed"
-
-      //  SequentialItemStatus.Cancelled -> "Cancelled" TODO. add a card for each of these
+        //  SequentialItemStatus.Failed -> item.error ?: "Download Failed"
+       // SequentialItemStatus.Cancelled -> "Cancelled" TODO. add a card for each of these
     }
 
     val statusBall = when (status) {
@@ -122,21 +116,6 @@ fun SeqCard(
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.padding(top = 22.dp)
                         )
-                    }
-
-                    Box(
-                        modifier = Modifier.padding(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                            LinearProgressIndicator(
-                                progress = { (item.progress / 100f).coerceIn(0f, 1f) },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(start = 8.dp, end = 65.dp),
-                                color = FermuxColors.deepBlue,
-                                trackColor = FermuxColors.white,
-                                strokeCap = StrokeCap.Round
-                            )
                     }
                 }
                 CancelButton(

@@ -42,7 +42,7 @@ fun SequentialQueue(
                         )
                     }
                     SequentialItemStatus.Waiting -> {
-                        SeqCard(
+                        SeqWaitCard(
                             modifier = Modifier.padding(6.dp),
                             item = item,
                             onCancelRequest = {
@@ -57,13 +57,31 @@ fun SequentialQueue(
                     }
 
                     SequentialItemStatus.Downloading -> {
-                     //   SeqDownloadingCard(
-
-                       // )
+                        SeqDownloadCard(
+                            modifier = Modifier.padding(6.dp),
+                            status = status,
+                            item = item,
+                            onCancelRequest = {
+                                sequentialViewModel.singleProcessDestroyer(
+                                    context = context,
+                                    index = index
+                                )
+                            }
+                        )
                     }
 
                     SequentialItemStatus.Completed -> {
-
+                        SeqDownloadCard(
+                            modifier = Modifier.padding(6.dp),
+                            status = status,
+                            item = item,
+                            onCancelRequest = {
+                                sequentialViewModel.singleProcessDestroyer(
+                                    context = context,
+                                    index = index
+                                )
+                            }
+                        )
                     }
                     SequentialItemStatus.Failed -> {
 

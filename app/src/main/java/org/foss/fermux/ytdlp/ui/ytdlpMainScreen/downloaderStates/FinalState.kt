@@ -38,7 +38,7 @@ import org.foss.fermux.ytdlp.logic.oneTimeDownloader.sizeFormatting
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.videoTime
 
 
-private enum class ProgressState { InProgress, Done }
+enum class ProgressState { InProgress, Done }
 
 @Composable
 fun FinishedDownloadCard(
