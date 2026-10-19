@@ -5,8 +5,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -26,7 +24,6 @@ import org.foss.fermux.components.buttons.CancelButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialItem
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialItemStatus
-import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates.ProgressState
 
 
 @Composable
@@ -37,13 +34,6 @@ fun SeqDownloadCard(
     onCancelRequest: () -> Unit
 ) {
 
-
-    val statusText = when (status) {
-        SequentialItemStatus.Downloading -> "${item.progress.toInt()}% Downloaded"
-        SequentialItemStatus.Completed -> "Download Complete"
-        else -> null
-    }
-
     val rotationDuration = rememberInfiniteTransition()
 
     val rotation by rotationDuration.animateFloat(
@@ -51,17 +41,12 @@ fun SeqDownloadCard(
         targetValue = 360f,
         animationSpec = infiniteRepeatable(
             animation = tween(
-                durationMillis = 5000,
+                durationMillis = 5500,
                 easing = LinearEasing
             ),
             repeatMode = RepeatMode.Restart
         )
     )
-
-    val downloadState = item.progress.let {
-        if (it >= 100f) ProgressState.Done else ProgressState.InProgress
-    }
-
 
     Surface(
         modifier = modifier
@@ -93,49 +78,26 @@ fun SeqDownloadCard(
                         contentScale = ContentScale.Crop,
                         clipToBounds = true,
                     )
-                    when (downloadState) {
-                        ProgressState.InProgress -> Column(
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .size(50.dp)
-                                .background(
-                                    color = FermuxColors.warmPurple.copy(alpha = 0.70f),
-                                    shape = RoundedCornerShape(8.dp)
-                                )
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.loading_circle),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .graphicsLayer {
-                                        rotationZ = rotation
-                                    }
-                                    .padding(10.dp)
-                                    .align(Alignment.CenterHorizontally),
-                                tint = FermuxColors.white
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .size(30.dp)
+                            .background(
+                                color = FermuxColors.warmPurple.copy(alpha = 0.70f),
+                                shape = RoundedCornerShape(8.dp)
                             )
-                        }
-
-                        ProgressState.Done -> Column(
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.loading_circle),
+                            contentDescription = null,
                             modifier = Modifier
-                                .align(Alignment.Center)
-                                .size(50.dp)
-                                .background(
-                                    color = FermuxColors.warmPurple.copy(alpha = 0.70f),
-                                    shape = RoundedCornerShape(8.dp)
-                                )
-                        ) {
-                            Icon(
-                                Icons.Default.Check,
-                                contentDescription = "Download Complete",
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(10.dp)
-                                    .align(Alignment.CenterHorizontally),
-                                tint = FermuxColors.white
-                            )
-                        }
+                                .graphicsLayer {
+                                    rotationZ = rotation
+                                }
+                                .padding(10.dp)
+                                .align(Alignment.Center),
+                            tint = FermuxColors.white
+                        )
                     }
                 }
             }
@@ -154,15 +116,14 @@ fun SeqDownloadCard(
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(2.dp)
                     )
-                    if (statusText != null) {
-                        Text(
-                            text = statusText,
-                            color = FermuxColors.offWhiteTextColor,
-                            fontSize = 13.sp,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.padding(top = 22.dp)
-                        )
-                    }
+                    Text(
+                        text = "${item.progress.toInt()}% Downloaded",
+                        color = FermuxColors.offWhiteTextColor,
+                        fontSize = 13.sp,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(top = 22.dp)
+                    )
+
                 }
                 CancelButton(
                     modifier = Modifier

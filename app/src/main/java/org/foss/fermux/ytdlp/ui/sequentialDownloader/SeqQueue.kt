@@ -52,7 +52,6 @@ fun SequentialQueue(
                                 )
                             },
                             status = status,
-                            sequentialViewModel = sequentialViewModel
                         )
                     }
 
@@ -71,16 +70,9 @@ fun SequentialQueue(
                     }
 
                     SequentialItemStatus.Completed -> {
-                        SeqDownloadCard(
-                            modifier = Modifier.padding(6.dp),
-                            status = status,
+                        SeqCompletedCard(
                             item = item,
-                            onCancelRequest = {
-                                sequentialViewModel.singleProcessDestroyer(
-                                    context = context,
-                                    index = index
-                                )
-                            }
+                            modifier = Modifier.padding(6.dp)
                         )
                     }
                     SequentialItemStatus.Failed -> {
@@ -94,61 +86,3 @@ fun SequentialQueue(
         }
     }
 }
-
-//@Composable
-//private fun SequentialItemStatusCard(
-//    modifier: Modifier,
-//    item: SequentialItem,
-//    status: SequentialItemStatus,
-//    onCancelRequest: () -> Unit
-//) {
-//    val statusText = when (status) {
-//        SequentialItemStatus.Waiting -> "Waiting"
-//        SequentialItemStatus.Downloading -> "Downloading ${item.progress.toInt()}%"
-//        SequentialItemStatus.Completed -> "Completed"
-//        SequentialItemStatus.Failed -> item.error ?: "Download failed"
-//        SequentialItemStatus.Cancelled -> "Cancelled"
-//        SequentialItemStatus.FetchingMetadata -> "Fetching metadata"
-//    }
-//
-//    Surface(
-//        modifier = modifier.fillMaxWidth(),
-//        color = FermuxColors.darkPurple,
-//        shape = RoundedCornerShape(12.dp),
-//        border = BorderStroke(1.dp, FermuxColors.warmPurple),
-//        tonalElevation = 12.dp,
-//        shadowElevation = 12.dp
-//    ) {
-//        Row(
-//            modifier = Modifier.padding(12.dp),
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            Column(
-//                modifier = Modifier.weight(1f)
-//            ) {
-//                Text(
-//                    text = item.metadata?.title ?: item.url,
-//                    color = FermuxColors.white,
-//                    maxLines = 2,
-//                    overflow = TextOverflow.Ellipsis
-//                )
-//                Text(
-//                    text = statusText,
-//                    color = FermuxColors.offWhiteTextColor,
-//                    maxLines = 1,
-//                    overflow = TextOverflow.Ellipsis
-//                )
-//            }
-//
-//            if (status == SequentialItemStatus.Waiting ||
-//                status == SequentialItemStatus.Downloading
-//            ) {
-//                CancelButton(
-//                    modifier = Modifier.padding(start = 8.dp),
-//                    transparency = true,
-//                    onClick = onCancelRequest
-//                )
-//            }
-//        }
-//    }
-//}
