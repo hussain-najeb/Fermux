@@ -32,8 +32,6 @@ class SequentialViewModel(
     var showModalSheet by mutableStateOf(false)
         private set
     val downloadUrl = mutableStateListOf("")
-    var currentLogs by mutableStateOf("")
-        private set
     private var downloaderJob: Job? = null
     private var allIDs: List<UUID> = emptyList()
     private val skippedID = mutableSetOf<UUID>()
@@ -55,13 +53,11 @@ class SequentialViewModel(
         }
     }
 
-
-
-
-
-        fun startSequentiallyDownloading(
-        context: Context, urls: List<String>
+    fun startSequentiallyDownloading(
+        context: Context,
+        urls: List<String>
     ) {
+        if (urls.isEmpty()) return
 
         val requestedUrlBuilder = urls.map { url ->
             OneTimeWorkRequestBuilder<DownloadWorker>().addTag("destroy-all-workers")
@@ -73,14 +69,15 @@ class SequentialViewModel(
         }
 
         state = SequentialDownloadQueueState(
-            phase = SequentialStatus.SeqDownload, items = requestedUrlBuilder.mapIndexed { index, request ->
+            phase = SequentialStatus.SeqDownload,
+            items = requestedUrlBuilder.mapIndexed { index, request ->
                 SequentialItem(
                     id = request.id, url = urls[index]
                 )
-            })
+            }
+        )
         val settingsTab = DataStoreDownloaderSettings(context.applicationContext)
 
-        if (urls.isEmpty()) return
 
         allIDs = requestedUrlBuilder.map { it.id }
 
@@ -96,33 +93,36 @@ class SequentialViewModel(
                     workManager.enqueue(request)
 
                     val finished = workManager.getWorkInfoByIdFlow(request.id).filterNotNull().onEach { workInfo ->
-                            if (workInfo.state == WorkInfo.State.RUNNING) {
-                                if (ytdlpDetails) {
-                                    val logs = workInfo.progress.getString("text")
-                                    if (!logs.isNullOrBlank()) {
-                                        currentLogs += logs
-                                    }
-                                }
-                                if (currentMetadata == null) {
-                                    workInfo.progress.getString("metadataJson")?.let { json ->
-                                        currentMetadata = parseYtdlpMetadataJson(json)
-                                    }
-                                }
-                                val progress = workInfo.progress.getFloat("progress", 0f)
-
-                                updateItem(request.id) { item ->
-                                    item.copy(
-                                        status = if (currentMetadata == null) {
-                                            SequentialItemStatus.FetchingMetadata
-                                        } else {
-                                            SequentialItemStatus.Downloading
-                                        }, progress = progress, metadata = currentMetadata
-                                    )
+                        if (workInfo.state == WorkInfo.State.RUNNING) {
+                            if (currentMetadata == null) {
+                                workInfo.progress.getString("metadataJson")?.let { json ->
+                                    currentMetadata = parseYtdlpMetadataJson(json)
                                 }
                             }
-                        }.first { workInfo ->
-                            workInfo.state.isFinished
+                            val progress = workInfo.progress.getFloat("progress", 0f)
+                            val logChunk = workInfo.progress.getString("text")
+
+                            updateItem(request.id) { item ->
+                                item.copy(
+                                    status = if (currentMetadata == null) {
+                                        SequentialItemStatus.FetchingMetadata
+                                    } else {
+                                        SequentialItemStatus.Downloading
+                                    },
+                                    progress = progress,
+                                    metadata = currentMetadata,
+                                    logs = if (logChunk.isNullOrBlank() && ytdlpDetails) {
+                                        item.logs
+                                    } else {
+                                        item.logs + logChunk
+                                    }
+
+                                )
+                            }
                         }
+                    }.first { workInfo ->
+                        workInfo.state.isFinished
+                    }
 
                     when (finished.state) {
                         WorkInfo.State.SUCCEEDED -> {
@@ -145,7 +145,6 @@ class SequentialViewModel(
                                 item.copy(
                                     status = SequentialItemStatus.Failed,
                                     error = error ?: "Download failed",
-                                    logs = currentLogs
                                 )
                             }
 
@@ -181,7 +180,6 @@ class SequentialViewModel(
 
     fun allDestroyer(context: Context) {
         WorkManager.getInstance(context).cancelAllWorkByTag("destroy-all-monsters")
-        currentLogs = ""
         downloaderJob?.cancel()
         state = SequentialDownloadQueueState(phase = SequentialStatus.SeqIdle)
     }

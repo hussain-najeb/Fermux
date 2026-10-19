@@ -17,6 +17,7 @@ import org.foss.fermux.settings.ui.aboutPage.LibraryPage
 import org.foss.fermux.settings.ui.converter.SimpleFFmpegSetting
 import org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage
 import org.foss.fermux.terminal.ui.FermuxTerminalScreen
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialDownloadQueueState
 import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
 import org.foss.fermux.ytdlp.ui.history.History
 import org.foss.fermux.ytdlp.ui.sequentialDownloader.SeqLogs
@@ -61,6 +62,8 @@ fun FermuxAppMainScreen() {
      val navController = rememberNavController()
      val seqView: SequentialViewModel = viewModel()
 
+     val seqItem = SequentialDownloadQueueState()
+
      NavHost(
           navController = navController,
           startDestination = MainScreens.Home.route
@@ -88,6 +91,6 @@ fun FermuxAppMainScreen() {
           composable(route = Miscellaneous.DownloaderArgs.route) { DownloaderArgs(navController) }
           composable(route = Miscellaneous.DownloaderHistory.route) { History(navController) }
           composable(route = Miscellaneous.SequentialDownloader.route) { SequentialContent(navController, seqView) }
-          composable(route = Miscellaneous.DownloaderSeqLogs.route) { SeqLogs(navController, seqView) }
+          composable(route = Miscellaneous.DownloaderSeqLogs.route) { SeqLogs(navController, seqItem) }
      }
 }
