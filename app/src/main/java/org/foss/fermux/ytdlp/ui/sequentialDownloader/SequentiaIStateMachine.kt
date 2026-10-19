@@ -3,6 +3,7 @@ package org.foss.fermux.ytdlp.ui.sequentialDownloader
 import androidx.compose.animation.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialDownloadQueueState
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialStatus
 import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
@@ -10,7 +11,8 @@ import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
 @Composable
 fun SequentialStateMachine(
     state: SequentialDownloadQueueState,
-    sequentialViewModel: SequentialViewModel
+    sequentialViewModel: SequentialViewModel,
+    navController: NavController
 ) {
 
     val spatialSpec = MaterialTheme.motionScheme
@@ -42,11 +44,15 @@ fun SequentialStateMachine(
             SequentialStatus.SeqDownload -> {
                 SequentialQueue(
                     state = targetState,
-                    sequentialViewModel = sequentialViewModel
+                    sequentialViewModel = sequentialViewModel,
+                    navController = navController
                 )
             }
             SequentialStatus.SeqDone -> {
-                SequentialDone(state = targetState)
+                SequentialDone(
+                    state = targetState,
+                    navController = navController
+                )
             }
         }
     }

@@ -32,8 +32,8 @@ import org.foss.fermux.utils.DebugClass
 fun LoggingScreen(
      loggingTitle: String,
      logs: String,
-     debugLogs: List<DebugClass>,
-     debugSwitch: Boolean,
+     debugLogs: List<DebugClass>? = null,
+     debugSwitch: Boolean? =  false,
      expanded: Boolean,
      navController: NavController
 ) {
@@ -117,7 +117,7 @@ fun LoggingScreen(
                                    .fillMaxSize()
                                    .padding(horizontal = 10.dp, vertical = 12.dp)
                          ) {
-                              if (debugLogs.isEmpty()) {
+                              if (debugLogs.isNullOrEmpty()) {
                                    item {
                                         Text(
                                              text = "No downloader debug logs captured yet",
@@ -141,7 +141,7 @@ fun LoggingScreen(
                          }
                     }
                }
-               if (debugSwitch) {
+               if (debugSwitch == true) {
                     ErrorCopyButton(
                          modifier = Modifier
                               .padding(7.dp)
@@ -149,14 +149,14 @@ fun LoggingScreen(
                               .size(50.dp),
                          onClick = {
                               scope.launch {
-                                   val formattedDebugLogs = debugLogs.joinToString("\n\n") { log ->
-                                        buildString {
-                                             append("${log.timestamp} ${log.tag} ${log.level} ${log.message}")
-                                             log.throwable?.let {
-                                                  appendLine()
-                                                  append(it.stackTraceToString())
-                                             }
-                                        }
+                                   val formattedDebugLogs = debugLogs?.joinToString("\n\n") { log ->
+                                       buildString {
+                                           append("${log.timestamp} ${log.tag} ${log.level} ${log.message}")
+                                           log.throwable?.let {
+                                               appendLine()
+                                               append(it.stackTraceToString())
+                                           }
+                                       }
                                    }
                                    val clipData = ClipData.newPlainText("debug logs", formattedDebugLogs)
                                    clipboard.setClipEntry(ClipEntry(clipData))

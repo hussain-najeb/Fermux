@@ -61,7 +61,8 @@ data class SequentialItem(
      val status: SequentialItemStatus = SequentialItemStatus.Waiting,
      val progress: Float = 0f,
      val metadata: DownloadMetadata? = null,
-     val error: String? = null
+     val error: String? = null,
+     val logs: String = ""
 )
 
 enum class SequentialItemStatus {

@@ -32,7 +32,8 @@ class SequentialViewModel(
     var showModalSheet by mutableStateOf(false)
         private set
     val downloadUrl = mutableStateListOf("")
-    var downloaderLogs by mutableStateOf("")
+    var currentLogs by mutableStateOf("")
+        private set
     private var downloaderJob: Job? = null
     private var allIDs: List<UUID> = emptyList()
     private val skippedID = mutableSetOf<UUID>()
@@ -55,12 +56,15 @@ class SequentialViewModel(
     }
 
 
-    fun startSequentiallyDownloading(
+
+
+
+        fun startSequentiallyDownloading(
         context: Context, urls: List<String>
     ) {
 
         val requestedUrlBuilder = urls.map { url ->
-            OneTimeWorkRequestBuilder<DownloadWorker>().addTag("destroy-all-monsters") // godzilla reference?
+            OneTimeWorkRequestBuilder<DownloadWorker>().addTag("destroy-all-workers")
                 .setInputData(
                     workDataOf(
                         SEQUENTIAL_URL to url
@@ -96,7 +100,7 @@ class SequentialViewModel(
                                 if (ytdlpDetails) {
                                     val logs = workInfo.progress.getString("text")
                                     if (!logs.isNullOrBlank()) {
-                                        downloaderLogs = (downloaderLogs + logs)
+                                        currentLogs += logs
                                     }
                                 }
                                 if (currentMetadata == null) {
@@ -126,7 +130,9 @@ class SequentialViewModel(
                                 ?.let { parseYtdlpMetadataJson(it) }
                             updateItem(request.id) { item ->
                                 item.copy(
-                                    status = SequentialItemStatus.Completed, progress = 100f, metadata = metadata
+                                    status = SequentialItemStatus.Completed,
+                                    progress = 100f,
+                                    metadata = metadata
                                 )
                             }
                         }
@@ -137,7 +143,9 @@ class SequentialViewModel(
 
                             updateItem(request.id) { item ->
                                 item.copy(
-                                    status = SequentialItemStatus.Failed, error = error ?: "Download failed"
+                                    status = SequentialItemStatus.Failed,
+                                    error = error ?: "Download failed",
+                                    logs = currentLogs
                                 )
                             }
 
@@ -167,16 +175,13 @@ class SequentialViewModel(
                     "DownloadAdmission", "Failed to enqueue id=${requestedUrlBuilder}", e
                 )
                 state = state.copy(phase = SequentialStatus.SeqDone)
-            } finally {
-                downloaderLogs = ""
             }
-
         }
     }
 
     fun allDestroyer(context: Context) {
         WorkManager.getInstance(context).cancelAllWorkByTag("destroy-all-monsters")
-        downloaderLogs = ""
+        currentLogs = ""
         downloaderJob?.cancel()
         state = SequentialDownloadQueueState(phase = SequentialStatus.SeqIdle)
     }
@@ -199,14 +204,15 @@ class SequentialViewModel(
     }
 
     private fun updateItem(
-        id: UUID, update: (SequentialItem) -> SequentialItem
+        id: UUID,
+        update: (SequentialItem) -> SequentialItem
     ) {
         val currentState = state
 
         state = currentState.copy(
             items = currentState.items.map { item ->
                 if (item.id == id) update(item) else item
-            })
+            }
+        )
     }
-
 }

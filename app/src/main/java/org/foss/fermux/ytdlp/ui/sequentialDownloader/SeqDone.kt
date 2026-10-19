@@ -6,13 +6,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialDownloadQueueState
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialItemStatus
 
 @Composable
 fun SequentialDone(
     state: SequentialDownloadQueueState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController
 ) {
     LazyColumn(modifier = modifier) {
         items(
@@ -28,11 +30,16 @@ fun SequentialDone(
                 }
 
                 SequentialItemStatus.Failed -> {
-                    SeqFailedCard()
+                    SeqFailedCard(
+                        modifier = Modifier.padding(6.dp),
+                        navController = navController
+                    )
                 }
 
                 SequentialItemStatus.Cancelled -> {
-                    SeqCancelledCard()
+                    SeqCancelledCard(
+                        modifier = Modifier.padding(6.dp)
+                    )
                 }
 
                 else -> Unit

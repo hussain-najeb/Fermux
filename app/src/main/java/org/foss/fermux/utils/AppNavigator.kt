@@ -19,6 +19,7 @@ import org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage
 import org.foss.fermux.terminal.ui.FermuxTerminalScreen
 import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
 import org.foss.fermux.ytdlp.ui.history.History
+import org.foss.fermux.ytdlp.ui.sequentialDownloader.SeqLogs
 import org.foss.fermux.ytdlp.ui.sequentialDownloader.SequentialContent
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloadContent
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloaderArgs
@@ -51,6 +52,7 @@ sealed class Miscellaneous(val route: String) {
      object DownloaderHistory: Miscellaneous(route = "History")
      object DownloaderArgs: Miscellaneous(route = "Downloader Arguments")
      object SequentialDownloader: Miscellaneous(route = "Sequentially Downloaded")
+     object DownloaderSeqLogs: Miscellaneous(route = "Seq Logs")
 }
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -62,7 +64,6 @@ fun FermuxAppMainScreen() {
      NavHost(
           navController = navController,
           startDestination = MainScreens.Home.route
-
      ) {
           // Main Screens
           composable(MainScreens.Home.route) { HomeScreen(navController) }
@@ -86,6 +87,7 @@ fun FermuxAppMainScreen() {
           composable(route = Miscellaneous.DownloaderLogs.route) { DownloaderLogs(navController) }
           composable(route = Miscellaneous.DownloaderArgs.route) { DownloaderArgs(navController) }
           composable(route = Miscellaneous.DownloaderHistory.route) { History(navController) }
-          composable(route = Miscellaneous.SequentialDownloader.route) { SequentialContent(navController,seqView) }
+          composable(route = Miscellaneous.SequentialDownloader.route) { SequentialContent(navController, seqView) }
+          composable(route = Miscellaneous.DownloaderSeqLogs.route) { SeqLogs(navController, seqView) }
      }
 }

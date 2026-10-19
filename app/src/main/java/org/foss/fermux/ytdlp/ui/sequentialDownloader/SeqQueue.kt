@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import org.foss.fermux.components.downloaderComponents.SeqMetadataCard
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialDownloadQueueState
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialItemStatus
@@ -16,7 +17,8 @@ import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
 @Composable
 fun SequentialQueue(
     state: SequentialDownloadQueueState,
-    sequentialViewModel: SequentialViewModel
+    sequentialViewModel: SequentialViewModel,
+    navController: NavController
 ) {
     val context = LocalContext.current
 
@@ -58,7 +60,6 @@ fun SequentialQueue(
                     SequentialItemStatus.Downloading -> {
                         SeqDownloadCard(
                             modifier = Modifier.padding(6.dp),
-                            status = status,
                             item = item,
                             onCancelRequest = {
                                 sequentialViewModel.singleProcessDestroyer(
@@ -76,10 +77,15 @@ fun SequentialQueue(
                         )
                     }
                     SequentialItemStatus.Failed -> {
-
+                        SeqFailedCard(
+                            modifier = Modifier.padding(6.dp),
+                            navController = navController
+                        )
                     }
                     SequentialItemStatus.Cancelled -> {
-
+                        SeqCancelledCard(
+                            modifier = Modifier.padding(6.dp)
+                        )
                     }
                 }
             }

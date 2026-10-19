@@ -38,7 +38,8 @@ fun SequentialContent(
         ) {
             SequentialStateMachine(
                 state = state,
-                sequentialViewModel = sequentialViewModel
+                sequentialViewModel = sequentialViewModel,
+                navController = navController
             )
         }
     }

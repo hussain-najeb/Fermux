@@ -184,6 +184,7 @@ class DownloaderViewModel : ViewModel() {
                                              )
                                         )
                                         activeProcess = null
+                                        downloaderLogs = ""
                                    }
 
                                    WorkInfo.State.FAILED -> {
@@ -218,8 +219,6 @@ class DownloaderViewModel : ViewModel() {
                          activeProcess = null
                          downloadErrorHandler(e)
                     }
-               } finally {
-                    downloaderLogs = ""
                }
           }
      }

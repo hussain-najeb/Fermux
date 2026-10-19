@@ -63,24 +63,17 @@ object DebugLogDownloader {
                )
           )
      }
-
      private fun addDownloaderLogs(entry: DebugClass) {
           _downloaderLog.update { currentLogs ->
                currentLogs + entry
           }
      }
-
      val downloaderLogcat = downloaderLog
 }
 
 object DebugLogFFmpeg {
      private val _enabled = MutableStateFlow(false)
      val enabled = _enabled.asStateFlow()
-
-     fun setEnable(value: Boolean) {
-          _enabled.value = value
-     }
-
      private val _ffmpegLog = MutableStateFlow<List<DebugClass>>(emptyList())
      val ffmpegLog: StateFlow<List<DebugClass>> = _ffmpegLog.asStateFlow()
 
@@ -106,8 +99,6 @@ object DebugLogFFmpeg {
           message: String,
           throwable: Throwable?
      ) {
-          if (!DebugLogFFmpeg.enabled.value) return
-
           Log.e(tag, message, throwable)
 
           DebugLogFFmpeg.addFFmpegLog(
@@ -119,7 +110,6 @@ object DebugLogFFmpeg {
                )
           )
      }
-
      private fun addFFmpegLog(entry: DebugClass) {
           _ffmpegLog.update { currentLog ->
                currentLog + entry
@@ -127,6 +117,4 @@ object DebugLogFFmpeg {
      }
 
      val ffmpegLogcat = ffmpegLog
-
-
 }

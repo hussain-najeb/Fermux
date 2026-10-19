@@ -23,13 +23,11 @@ import org.foss.fermux.R
 import org.foss.fermux.components.buttons.CancelButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialItem
-import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialItemStatus
 
 
 @Composable
 fun SeqDownloadCard(
     modifier: Modifier,
-    status: SequentialItemStatus,
     item: SequentialItem,
     onCancelRequest: () -> Unit
 ) {
