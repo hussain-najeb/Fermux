@@ -31,7 +31,7 @@ class SequentialViewModel(
         private set
     var showModalSheet by mutableStateOf(false)
         private set
-    val downloadUrl = mutableStateListOf("")
+    var downloadUrl = mutableStateListOf("")
     private var downloaderJob: Job? = null
     private var allIDs: List<UUID> = emptyList()
     private val skippedID = mutableSetOf<UUID>()
@@ -179,7 +179,7 @@ class SequentialViewModel(
     }
 
     fun allDestroyer(context: Context) {
-        WorkManager.getInstance(context).cancelAllWorkByTag("destroy-all-monsters")
+        WorkManager.getInstance(context).cancelAllWorkByTag("destroy-all-workers")
         downloaderJob?.cancel()
         state = SequentialDownloadQueueState(phase = SequentialStatus.SeqIdle)
     }

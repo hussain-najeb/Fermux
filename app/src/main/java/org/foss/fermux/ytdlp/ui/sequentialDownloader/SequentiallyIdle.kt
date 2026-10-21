@@ -3,7 +3,6 @@ package org.foss.fermux.ytdlp.ui.sequentialDownloader
 import androidx.compose.animation.*
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.CancelButton
 import org.foss.fermux.components.buttons.FilterButton
-import org.foss.fermux.components.buttons.ImageButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
 
@@ -166,12 +164,12 @@ fun SequentialIdle(
                 modifier = Modifier.weight(1f),
                 contentAlignment = Alignment.BottomCenter
             ) {
-                ImageButton(
+                FilterButton(
                     modifier = Modifier.padding(5.dp),
                     image = R.drawable.add,
-                    shape = RoundedCornerShape(8.dp),
-                    border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),
-                    onClick = { sequentialViewModel.downloadUrl.add("") }
+                    onClick = {
+                        sequentialViewModel.downloadUrl.add("")
+                    }
                 )
             }
 

@@ -39,7 +39,7 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.CancelButton
-import org.foss.fermux.components.buttons.ImageButton
+import org.foss.fermux.components.buttons.FilterButton
 import org.foss.fermux.components.generalComponents.AppSnackBar
 import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
@@ -53,8 +53,8 @@ import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates.DownloaderCards
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun DownloadContent(
-     navController: NavController,
-     downloaderViewModel: DownloaderViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity)
+    navController: NavController,
+    downloaderViewModel: DownloaderViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity)
 ) {
      val downloaderSettings: DownloaderSettingsViewModel = viewModel()
      val videoConversionWarning by downloaderSettings.videoComp.collectAsStateWithLifecycle()
@@ -63,7 +63,8 @@ fun DownloadContent(
 
      val snackbarHostState = SnackbarHostState()
      val scope = rememberCoroutineScope()
-     val doingTask = downloaderViewModel.state is DownloadStatus.LoadingMetadata || downloaderViewModel.state is DownloadStatus.Downloading || downloaderViewModel.state is DownloadStatus.UserArgs
+     val doingTask =
+          downloaderViewModel.state is DownloadStatus.LoadingMetadata || downloaderViewModel.state is DownloadStatus.Downloading || downloaderViewModel.state is DownloadStatus.UserArgs
      val isError = downloaderViewModel.state is DownloadStatus.Error
      val clipboard = LocalClipboard.current
 
@@ -181,19 +182,19 @@ fun DownloadContent(
                }
 
                Box(
-                    contentAlignment = Alignment.BottomEnd, modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                         .fillMaxSize(),
+                    contentAlignment = Alignment.BottomEnd
                ) {
-
-                    Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                         if (!doingTask) ImageButton(
-                              modifier = Modifier.padding(3.dp),
-                              image = R.drawable.sequence,
-                              onClick = { navController.navigate(Miscellaneous.SequentialDownloader.route)}
-                         )
+                    Column(
+                         modifier = Modifier.fillMaxSize(),
+                         verticalArrangement = Arrangement.Bottom,
+                         horizontalAlignment = Alignment.End
+                    ) {
                          // ClipBoard Button
-                         if (!doingTask) ImageButton(
+                         if (!doingTask) FilterButton(
                               image = R.drawable.copy,
-                              modifier = Modifier.padding(3.dp),
+                              modifier = Modifier.padding(15.dp),
                               onClick = {
                                    scope.launch {
                                         clipboard.getClipEntry()
@@ -210,8 +211,8 @@ fun DownloadContent(
                               }
                          )
                          // Download Button
-                         ImageButton(
-                              modifier = Modifier.padding(3.dp),
+                         FilterButton(
+                              modifier = Modifier.padding(15.dp),
                               image = R.drawable.download_side_bar,
                               enabled = !doingTask,
                               onClick = {
@@ -227,6 +228,20 @@ fun DownloadContent(
                               }
                          )
                     }
+                    Box(
+                         modifier = Modifier
+                              .fillMaxSize(),
+                         contentAlignment = Alignment.BottomStart
+                    ) {
+                         // SeqDownload Button
+                         if (!doingTask) FilterButton(
+                              modifier = Modifier.padding(15.dp),
+                              image = R.drawable.sequence,
+                              onClick = {
+                                   navController.navigate(Miscellaneous.SequentialDownloader.route)
+                              }
+                         )
+                    }
                }
           }
      }
@@ -236,34 +251,34 @@ fun DownloadContent(
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 private fun Connections() {
-     val context = LocalContext.current
-     val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
-     val network = connectivityManager.activeNetwork
-     val capabilities = connectivityManager.getNetworkCapabilities(network)
-     val hasValidatedInternet = capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) == true
-     val connectedToCellular = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) == true
-     val connectedToVPN = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_VPN) == true
-     val connectedToEthernet = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) == true
-     val connectedToAriDrop = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI_AWARE) == true
-     val connectedToUsb = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_USB) == true
-     val networkDescriptions = when {
-          capabilities == null -> "You aren't connected to a network, please connect to use this tab."
-          !hasValidatedInternet -> "You don't seem to have internet access, please connect to a sufficient network"
-          connectedToVPN -> "Using Cloudflare DNS?"
-          connectedToCellular -> "Cellular? Really?"
-          connectedToEthernet -> "Wow, Ethernet? How did you do that?"
-          connectedToAriDrop -> "Interesting choice for a network connection"
-          connectedToUsb -> "Network over Usb? Interesting"
-          else -> null
-     }
-     if (networkDescriptions != null) {
-          Text(
-               text = networkDescriptions,
-               color = FermuxColors.white,
-               fontSize = 16.sp,
-               fontStyle = FontStyle.Italic,
-               fontFamily = FontFamily.Default,
-               modifier = Modifier.padding(10.dp)
-          )
-     }
+    val context = LocalContext.current
+    val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
+    val network = connectivityManager.activeNetwork
+    val capabilities = connectivityManager.getNetworkCapabilities(network)
+    val hasValidatedInternet = capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) == true
+    val connectedToCellular = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) == true
+    val connectedToVPN = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_VPN) == true
+    val connectedToEthernet = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) == true
+    val connectedToAriDrop = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI_AWARE) == true
+    val connectedToUsb = capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_USB) == true
+    val networkDescriptions = when {
+        capabilities == null -> "You aren't connected to a network, please connect to use this tab."
+        !hasValidatedInternet -> "You don't seem to have internet access, please connect to a sufficient network"
+        connectedToVPN -> "Using Cloudflare DNS?"
+        connectedToCellular -> "Cellular? Really?"
+        connectedToEthernet -> "Wow, Ethernet? How did you do that?"
+        connectedToAriDrop -> "Interesting choice for a network connection"
+        connectedToUsb -> "Network over Usb? Interesting"
+        else -> null
+    }
+    if (networkDescriptions != null) {
+        Text(
+            text = networkDescriptions,
+            color = FermuxColors.white,
+            fontSize = 16.sp,
+            fontStyle = FontStyle.Italic,
+            fontFamily = FontFamily.Default,
+            modifier = Modifier.padding(10.dp)
+        )
+    }
 }

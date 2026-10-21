@@ -40,7 +40,9 @@ fun SequentialQueue(
                                     context = context,
                                     index = index
                                 )
-                            }
+
+                            },
+                            sequentialViewModel = sequentialViewModel
                         )
                     }
                     SequentialItemStatus.Waiting -> {
@@ -66,7 +68,8 @@ fun SequentialQueue(
                                     context = context,
                                     index = index
                                 )
-                            }
+                            },
+                            sequentialViewModel = sequentialViewModel
                         )
                     }
 

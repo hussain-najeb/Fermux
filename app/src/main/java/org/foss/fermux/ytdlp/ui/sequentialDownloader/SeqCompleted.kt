@@ -38,7 +38,7 @@ fun SeqCompletedCard(
         ) {
             Surface(
                 modifier = Modifier.aspectRatio(4f / 3f).align(Alignment.CenterVertically),
-                shape = RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp),
+                shape = RoundedCornerShape(topEnd = 6.dp, bottomEnd = 6.dp),
                 color = FermuxColors.mutedBlue
             ) {
                 Box(

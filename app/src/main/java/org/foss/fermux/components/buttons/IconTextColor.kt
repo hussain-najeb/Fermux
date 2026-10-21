@@ -22,14 +22,13 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun IconTextButton(
-     modifier: Modifier,
+     modifier: Modifier = Modifier,
      image: Int,
      text: String,
      enabled: Boolean? = true,
      border: BorderStroke? = BorderStroke(1.5.dp, FermuxColors.transparent),
      rotation1: Float = 0f,
      rotation2: Float = 0f,
-     contentPadding: PaddingValues = PaddingValues(0.dp),
      onClick: () -> Unit,
 ) {
 
