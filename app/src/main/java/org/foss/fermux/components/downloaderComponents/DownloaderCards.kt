@@ -17,7 +17,7 @@ fun DownloaderCard(
      modifier: Modifier = Modifier,
      color: FermuxColor = FermuxColors,
      errorBackground: Boolean = false,
-     shape: Shape = RoundedCornerShape(8.dp),
+     shape: Shape = RoundedCornerShape(5.dp),
      border: BorderStroke? = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),
      content: @Composable () -> Unit
 ) {
