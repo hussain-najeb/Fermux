@@ -29,7 +29,6 @@ import org.foss.fermux.ui.theme.FermuxColors
 @Composable
 fun AppTextButton(
      modifier: Modifier = Modifier,
-     isError: Boolean? = false,
      text: String,
      activeColor: Color = FermuxColors.downriver,
      inActiveColor: Color = FermuxColors.white,
@@ -60,9 +59,9 @@ fun AppTextButton(
                scaleX = buttonAnimation
                scaleY = buttonAnimation
           }
-               .width(90.dp),
+               .width(70.dp),
           elevation = ButtonDefaults.buttonElevation(
-               defaultElevation = 10.dp,
+               defaultElevation = 7.dp,
                pressedElevation = 0.dp,
                focusedElevation = 3.dp,
                hoveredElevation = 5.dp,
@@ -100,7 +99,6 @@ fun test13 () {
           AppTextButton(
                modifier = Modifier,
                onClick = {},
-               isError = true,
                text = "Delete"
           )
      }

@@ -38,27 +38,23 @@ fun DeleteDatabaseDialog(
                }
           }
 
-          // TODO, make this look better
-
           Surface(
                modifier = Modifier
-                    .height(150.dp)
+                    .height(130.dp)
                     .fillMaxWidth()
                     .padding(8.dp),
                shape = RoundedCornerShape(12.dp),
-               color = FermuxColors.warmPurple,
+               color = FermuxColors.darkPurple,
                border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),
           ) {
                Column(
-                    modifier = Modifier
-                         .padding(2.dp)
-
+                    modifier = Modifier.padding(2.dp)
                ) {
                     Box(
                          modifier = Modifier
                               .fillMaxWidth()
-                              .padding(start = 2.dp, top = 8.dp),
-                         contentAlignment = Alignment.Center
+                              .padding(8.dp),
+                         contentAlignment = Alignment.TopCenter
                     ) {
                          Text(
                               text = "Confirm Deletion",
@@ -73,22 +69,20 @@ fun DeleteDatabaseDialog(
                               .fillMaxSize()
                               .padding(5.dp),
                          verticalAlignment = Alignment.Bottom,
-                         horizontalArrangement = Arrangement.End
+                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                          AppTextButton(
                               modifier = Modifier
-                                   .padding(start = 5.dp, bottom = 5.dp, top = 5.dp, end = 95.dp)
-                                   .align(Alignment.Bottom),
-                              text = "Delete",
-                              isError = true,
-                              onClick = deletedItem,
+                                   .padding(5.dp),
+                              text = "Cancel",
+                              onClick = onDismissRequest
                          )
                          AppTextButton(
                               modifier = Modifier
-                                   .padding(5.dp)
-                                   .align(Alignment.Bottom),
-                              text = "Cancel",
-                              onClick = onDismissRequest
+                                   .padding(5.dp),
+                              inActiveColor = FermuxColors.fermuxTextError,
+                              text = "Delete",
+                              onClick = deletedItem,
                          )
                     }
                }
