@@ -52,7 +52,7 @@ fun History(
      var databaseImage by remember { mutableStateOf(true) }
 
      state.selectedDelete?.let { item ->
-          DeleteDialog(
+          DeleteDatabaseDialog(
                onDismissRequest = { downloadsDatabaseViewModel.hideDeleteDialog() },
                deletedItem = { downloadsDatabaseViewModel.deleteDownload(item) }
           )

@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -22,7 +23,7 @@ import org.foss.fermux.components.buttons.AppTextButton
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
-fun DeleteDialog(
+fun DeleteDatabaseDialog(
      deletedItem: () -> Unit,
      onDismissRequest: () -> Unit
 ) {
@@ -36,6 +37,8 @@ fun DeleteDialog(
                     setDimAmount(0.6f)
                }
           }
+
+          // TODO, make this look better
 
           Surface(
                modifier = Modifier
@@ -74,7 +77,8 @@ fun DeleteDialog(
                     ) {
                          AppTextButton(
                               modifier = Modifier
-                                   .padding(start = 5.dp, bottom = 5.dp, top = 5.dp, end = 95.dp)                                   .align(Alignment.Bottom),
+                                   .padding(start = 5.dp, bottom = 5.dp, top = 5.dp, end = 95.dp)
+                                   .align(Alignment.Bottom),
                               text = "Delete",
                               isError = true,
                               onClick = deletedItem,
@@ -89,5 +93,19 @@ fun DeleteDialog(
                     }
                }
           }
+     }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF15152e)
+@Composable
+fun test18() {
+     Column(
+          modifier = Modifier
+               .fillMaxSize()
+     ) {
+          DeleteDatabaseDialog(
+              onDismissRequest = {},
+              deletedItem = {},
+          )
      }
 }

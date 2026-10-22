@@ -1,6 +1,5 @@
 package org.foss.fermux.ffmpeg.ui.ffmpegStateCards
 
-import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
@@ -21,7 +20,7 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun MidConversionProcess(
-     @SuppressLint("ContextCastToActivity") ffmpegViewModel: FFmpegViewModel = viewModel(
+     ffmpegViewModel: FFmpegViewModel = viewModel(
           viewModelStoreOwner = LocalActivity.current as ComponentActivity
      )
 ) {
@@ -31,13 +30,10 @@ fun MidConversionProcess(
           modifier = Modifier
                .fillMaxSize()
      ) {
-          FFmpegCard(
-               modifier = Modifier
-                    .padding(5.dp),
-          ) {
+          FFmpegCard {
                if (ffmpegViewModel.inputUri != null) {
                     Box(
-                         modifier = Modifier.aspectRatio(16f / 9f)
+                         modifier = Modifier.fillMaxSize()
                     ) {
                          MediaThumbnailImage(
                               uri = ffmpegViewModel.inputUri,

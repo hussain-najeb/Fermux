@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -30,6 +31,8 @@ fun AppTextButton(
      modifier: Modifier = Modifier,
      isError: Boolean? = false,
      text: String,
+     activeColor: Color = FermuxColors.downriver,
+     inActiveColor: Color = FermuxColors.white,
      onClick: () -> Unit
 ) {
 
@@ -37,13 +40,8 @@ fun AppTextButton(
      val isPressed by interactionSource.collectIsPressedAsState()
 
      val textColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.white,
+          targetValue = if (isPressed) activeColor else inActiveColor,
           animationSpec = tween(150)
-     )
-
-     val errorColor by animateColorAsState(
-          if (isPressed) FermuxColors.downriver else FermuxColors.fermuxTextError,
-          animationSpec = tween()
      )
 
      val containerColor by animateColorAsState(
@@ -85,7 +83,7 @@ fun AppTextButton(
                textAlign = TextAlign.Center,
                fontSize = 15.sp,
                fontWeight = FontWeight.SemiBold,
-               color = if (isError != false) errorColor else textColor
+               color = textColor
           )
      }
 }

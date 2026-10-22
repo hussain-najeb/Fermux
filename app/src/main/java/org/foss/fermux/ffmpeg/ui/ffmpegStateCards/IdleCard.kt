@@ -1,8 +1,8 @@
 package org.foss.fermux.ffmpeg.ui.ffmpegStateCards
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.ImageButton
+import org.foss.fermux.components.buttons.FilterButton
 import org.foss.fermux.components.ffmpegComponents.FFmpegCard
 import org.foss.fermux.ffmpeg.logic.FFmpegStatus
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
@@ -25,9 +25,8 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun IdleCard(
-     @SuppressLint("ContextCastToActivity")
      ffmpegViewModel: FFmpegViewModel = viewModel(
-          viewModelStoreOwner = LocalContext.current as ComponentActivity
+          viewModelStoreOwner = LocalActivity.current as ComponentActivity
      )
 ) {
      val context = LocalContext.current
@@ -56,7 +55,7 @@ fun IdleCard(
                .fillMaxSize()
      ) {
           FFmpegCard(
-               modifier = Modifier.padding(10.dp)
+               modifier = Modifier.padding(15.dp)
           ) {
                if (ffmpegViewModel.inputUri == null) {
                     Column(
@@ -67,18 +66,20 @@ fun IdleCard(
                     ) {
                          Text(
                               text = "Upload A File",
-                              fontSize = 23.sp,
+                              fontSize = 20.sp,
                               fontWeight = W500,
                               color = FermuxColors.white,
                          )
 
                          Spacer(modifier = Modifier.height(20.dp))
 
-                         ImageButton(
+                         FilterButton(
                               image = R.drawable.upload,
-                              componentSize = 60.dp,
-                              contentPadding = PaddingValues(13.dp),
-                              onClick = { fileLauncher.launch(arrayOf("*/*")) }
+                              activeColor = FermuxColors.fermuxFFmpegGreen,
+                              activeIconColor = FermuxColors.white,
+                              onClick = {
+                                   fileLauncher.launch(arrayOf("*/*"))
+                              }
                          )
                     }
                } // TODO. Add the crop and edit stuff in the same thing like the downloader, a sidebar type of thing.

@@ -22,7 +22,7 @@ fun FFmpegCard(
      content: @Composable (ColumnScope.() -> Unit)? = null
 ) {
      Card(
-          modifier = modifier.aspectRatio(16f/9f),
+          modifier = modifier.fillMaxWidth(),
           shape = shape,
           elevation = CardDefaults.cardElevation(
                defaultElevation = 15.dp,
