@@ -215,6 +215,8 @@ fun DownloadContent(
                               modifier = Modifier.padding(15.dp),
                               image = R.drawable.download_side_bar,
                               enabled = !doingTask,
+                              activeColor = FermuxColors.fermuxErrorCardColor,
+                              activeIconColor = FermuxColors.white,
                               onClick = {
                                    downloaderViewModel.userPickedArgs()
                                    if (downloaderViewModel.downloadUrl.isEmpty()) {
