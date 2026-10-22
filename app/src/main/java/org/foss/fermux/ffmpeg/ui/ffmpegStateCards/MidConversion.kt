@@ -5,13 +5,11 @@ import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.foss.fermux.components.buttons.CancelButton
 import org.foss.fermux.components.ffmpegComponents.FFmpegCard
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.ui.MediaThumbnailImage
@@ -28,36 +26,34 @@ fun MidConversionProcess(
 
      Column(
           modifier = Modifier
-               .fillMaxSize()
+               .fillMaxWidth()
      ) {
-          FFmpegCard {
+          FFmpegCard(
+               modifier = Modifier
+                    .padding(15.dp)
+          ) {
                if (ffmpegViewModel.inputUri != null) {
                     Box(
-                         modifier = Modifier.fillMaxSize()
+                         modifier = Modifier
+                              .fillMaxWidth()
                     ) {
                          MediaThumbnailImage(
                               uri = ffmpegViewModel.inputUri,
-                              contentScale = ContentScale.Crop,
+                              contentScale = ContentScale.None,
                               modifier = Modifier
-                                   .fillMaxSize()
+                                   .fillMaxWidth()
                                    .background(FermuxColors.fermuxSurface)
-                         )
-
-                         CancelButton(
-                              modifier = Modifier
-                                   .padding(10.dp)
-                                   .align(Alignment.TopStart),
-                              onClick = { ffmpegViewModel.cancelButton(context) }
+                                   .aspectRatio(16f/9f)
                          )
                     }
                }
-               Column(
-                    modifier = Modifier
-                         .wrapContentSize()
-                         .background(FermuxColors.warmPurple)
-               ) {
-                    FormatList(ffmpegViewModel)
-               }
+          }
+          Column(
+               modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp)
+          ) {
+               FormatList(ffmpegViewModel)
           }
      }
 }

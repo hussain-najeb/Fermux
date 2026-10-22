@@ -13,7 +13,7 @@ fun buildDynamicFFmpegArgs(
 
      when (targetFormat.category) {
 
-          MediaKind.VIDEO -> {
+          MediaKind.Video -> {
                val profile = requireNotNull(targetFormat.videoEncodingProfile) {
                     "Missing video encoding profile for $targetFormat"
                }
@@ -46,17 +46,18 @@ fun buildDynamicFFmpegArgs(
                }
           }
 
-          MediaKind.AUDIO -> {
+          MediaKind.Audio -> {
                prefs.audioBitrate?.let { args += listOf("-b:a", it) }
                if (prefs.monoDownmix) args += listOf("-ac", "1")
                if (prefs.normalizeAudio) args += listOf("-af", "loudnorm")
           }
 
-          MediaKind.IMAGE -> {
+          MediaKind.Image -> {
                // Format-specific base arguments were added above.
           }
 
-          MediaKind.IDLE -> {}
+          MediaKind.Idle -> null
+          MediaKind.Cancel -> null
      }
 
      prefs.threadLimit?.let {

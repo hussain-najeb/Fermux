@@ -2,12 +2,14 @@ package org.foss.fermux.ffmpeg.ui.formatStates
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import org.foss.fermux.R
 import org.foss.fermux.components.ffmpegComponents.FFmpegTiles
 import org.foss.fermux.ffmpeg.logic.FFmpegTargetFormat
@@ -33,7 +35,7 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                     description = "Choose a different media kind",
                     image = R.drawable.back_arrow,
                     onClick = onBack,
-                    position = TilePosition.MIDDLE
+                    position = TilePosition.TOP
                )
           )
           if (ffmpegViewModel.isVideoTargetSupported(FFmpegTargetFormat.MP4)) {
@@ -130,7 +132,7 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
                                    )
                               }
                          },
-                         position = TilePosition.MIDDLE
+                         position = TilePosition.BOTTOM
                     )
                )
           }
@@ -139,6 +141,7 @@ fun VideoConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
      Column(
           modifier = Modifier
                .fillMaxWidth()
+               .padding(bottom = 15.dp)
                .verticalScroll(scrollState)
      ) {
           videoOption.forEach { option ->

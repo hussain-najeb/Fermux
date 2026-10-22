@@ -62,7 +62,7 @@ class FFmpegViewModel : ViewModel() {
           inputVideoCodec = null
           inputAudioCodec = null
 
-          if (uri != null && inputKind == MediaKind.VIDEO) {
+          if (uri != null && inputKind == MediaKind.Video) {
                val extractor = MediaExtractor()
                try {
                     extractor.setDataSource(context, uri, null)
@@ -95,7 +95,7 @@ class FFmpegViewModel : ViewModel() {
      )
 
      fun isVideoTargetSupported(target: FFmpegTargetFormat): Boolean {
-          if (target.category != MediaKind.VIDEO) return true
+          if (target.category != MediaKind.Video) return true
 
           val allowedVideo = videoRemuxAllowlist[target]
           val allowedAudio = audioRemuxAllowlist[target]
@@ -105,19 +105,19 @@ class FFmpegViewModel : ViewModel() {
           return videoOk && audioOk
      }
 
-     private fun isConversionAllowed(target: FFmpegTargetFormat): Boolean {
+     private fun isConversionAllowed(): Boolean {
           val input = inputKind ?: return false
           return when (input) {
-               MediaKind.AUDIO -> true
-               MediaKind.VIDEO -> true
-               MediaKind.IMAGE -> true
-               MediaKind.IDLE -> false
+               MediaKind.Audio -> true
+               MediaKind.Video -> true
+               MediaKind.Image -> true
+               else -> false
           }
      }
 
      fun startingConversion(context: Context, inputUri: Uri, targetFormat: FFmpegTargetFormat) {
           updateInputKind(context)
-          if (!isConversionAllowed(targetFormat)) {
+          if (!isConversionAllowed()) {
                fail(
                     flavourFailMessage = flavourMessage.random(),
                     rawError = "Cannot convert $inputKind input to ${targetFormat.descriptor}"
@@ -208,18 +208,18 @@ private fun detectInputKind(context: Context, uri: Uri): MediaKind? {
      val mime = context.contentResolver.getType(uri)
      if (mime != null) {
           return when {
-               mime.startsWith("video/") -> MediaKind.VIDEO
-               mime.startsWith("audio/") -> MediaKind.AUDIO
-               mime.startsWith("image/") -> MediaKind.IMAGE
+               mime.startsWith("video/") -> MediaKind.Video
+               mime.startsWith("audio/") -> MediaKind.Audio
+               mime.startsWith("image/") -> MediaKind.Image
                else -> null
           }
      }
      val ext = MimeTypeMap.getFileExtensionFromUrl(uri.toString()).lowercase()
      val guessedMime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext) ?: return null
      return when {
-          guessedMime.startsWith("video/") -> MediaKind.VIDEO
-          guessedMime.startsWith("audio/") -> MediaKind.AUDIO
-          guessedMime.startsWith("image/") -> MediaKind.IMAGE
+          guessedMime.startsWith("video/") -> MediaKind.Video
+          guessedMime.startsWith("audio/") -> MediaKind.Audio
+          guessedMime.startsWith("image/") -> MediaKind.Image
           else -> null
      }
 }

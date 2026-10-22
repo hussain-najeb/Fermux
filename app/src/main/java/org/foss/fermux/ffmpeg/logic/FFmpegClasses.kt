@@ -15,7 +15,13 @@ sealed class FFmpegStatus {
      ) : FFmpegStatus()
 }
 
-enum class MediaKind { IDLE, VIDEO, AUDIO, IMAGE }
+enum class MediaKind {
+     Idle,
+     Video,
+     Audio,
+     Image,
+     Cancel
+}
 
 data class VideoEncodingProfile(
      val softwareVideoArgs: List<String>,
@@ -35,7 +41,7 @@ enum class FFmpegTargetFormat(
 
      MP4(
           "mp4",
-          category = MediaKind.VIDEO,
+          category = MediaKind.Video,
           mimeType = "video/mp4",
           ffmpegExtraArgs = emptyList(),
           descriptor = "video(mp4)",
@@ -48,7 +54,7 @@ enum class FFmpegTargetFormat(
      ),
      MKV(
           "mkv",
-          category = MediaKind.VIDEO,
+          category = MediaKind.Video,
           mimeType = "video/x-matroska",
           ffmpegExtraArgs = emptyList(),
           descriptor = "video(mkv)",
@@ -61,7 +67,7 @@ enum class FFmpegTargetFormat(
      ),
      MOV(
           "mov",
-          category = MediaKind.VIDEO,
+          category = MediaKind.Video,
           mimeType = "video/quicktime",
           ffmpegExtraArgs = emptyList(),
           descriptor = "video(mov)",
@@ -74,7 +80,7 @@ enum class FFmpegTargetFormat(
      ),
      AVI(
           "avi",
-          category = MediaKind.VIDEO,
+          category = MediaKind.Video,
           mimeType = "video/x-msvideo",
           ffmpegExtraArgs = emptyList(),
           descriptor = "video(avi)",
@@ -87,7 +93,7 @@ enum class FFmpegTargetFormat(
      ),
      WEBM(
           "webm",
-          category = MediaKind.VIDEO,
+          category = MediaKind.Video,
           mimeType = "video/webm",
           ffmpegExtraArgs = emptyList(),
           descriptor = "video(webm)",
@@ -101,56 +107,56 @@ enum class FFmpegTargetFormat(
 
      WAV(
           "wav",
-          category = MediaKind.AUDIO,
+          category = MediaKind.Audio,
           mimeType = "audio/wav",
           ffmpegExtraArgs = listOf("-vn", "-c:a", "pcm_s16le"),
           descriptor = "audio(wav)"
      ),
      MP3(
           "mp3",
-          category = MediaKind.AUDIO,
+          category = MediaKind.Audio,
           mimeType = "audio/mp3",
           ffmpegExtraArgs = listOf("-vn", "-c:a", "libmp3lame"),
           descriptor = "audio(mp3)"
      ),
      M4A(
           "m4a",
-          category = MediaKind.AUDIO,
+          category = MediaKind.Audio,
           mimeType = "audio/mp4",
           ffmpegExtraArgs = listOf("-vn", "-c:a", "aac"),
           descriptor = "audio(m4a)"
      ),
      FLAC(
           "flac",
-          category = MediaKind.AUDIO,
+          category = MediaKind.Audio,
           mimeType = "audio/flac",
           ffmpegExtraArgs = listOf("-vn", "-c:a", "flac"),
           descriptor = "audio(flac)"
      ),
      OGG(
           "ogg",
-          category = MediaKind.AUDIO,
+          category = MediaKind.Audio,
           mimeType = "audio/ogg",
           ffmpegExtraArgs = listOf("-vn", "-c:a", "vorbis","-strict", "-2"),
           descriptor = "audio(ogg)"
      ),
      GIF(
           "gif",
-          category = MediaKind.IMAGE,
+          category = MediaKind.Image,
           mimeType = "image/gif",
           ffmpegExtraArgs = emptyList(),
           descriptor = "image(gif)"
      ),
      JPG(
           "jpg",
-          category = MediaKind.IMAGE,
+          category = MediaKind.Image,
           mimeType = "image/jpeg",
           ffmpegExtraArgs = listOf("-frames:v", "1"),
           descriptor = "image(jpeg)"
      ),
      PNG(
           "png",
-          category = MediaKind.IMAGE,
+          category = MediaKind.Image,
           mimeType = "image/png",
           ffmpegExtraArgs = listOf("-frames:v", "1"),
           descriptor = "image(png)"

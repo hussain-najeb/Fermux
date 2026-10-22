@@ -3,15 +3,19 @@ package org.foss.fermux.ffmpeg.ui.formatStates
 import androidx.compose.animation.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.logic.MediaKind
 
 
 @Composable
-fun FormatList(ffmpegViewModel: FFmpegViewModel) {
+fun FormatList(
+     ffmpegViewModel: FFmpegViewModel
+) {
 
-     var pickedKind by remember { mutableStateOf(MediaKind.IDLE) }
+     var pickedKind by remember { mutableStateOf(MediaKind.Idle) }
      val spatialSpec = MaterialTheme.motionScheme
+     val context = LocalContext.current
 
      AnimatedContent(
           targetState = pickedKind,
@@ -30,24 +34,28 @@ fun FormatList(ffmpegViewModel: FFmpegViewModel) {
           label = "DownloaderCardTransition",
      ) { targetState ->
           when (targetState) {
-               MediaKind.IDLE -> IdleConversionState(
+               MediaKind.Idle -> IdleConversionState(
                     onPick = { pickedKind = it }
                )
 
-               MediaKind.AUDIO -> AudioConversionState(
+               MediaKind.Audio -> AudioConversionState(
                     ffmpegViewModel,
-                    onBack = { pickedKind = MediaKind.IDLE }
+                    onBack = { pickedKind = MediaKind.Idle }
                )
 
-               MediaKind.VIDEO -> VideoConversionState(
+               MediaKind.Video -> VideoConversionState(
                     ffmpegViewModel,
-                    onBack = { pickedKind = MediaKind.IDLE }
+                    onBack = { pickedKind = MediaKind.Idle }
                )
 
-               MediaKind.IMAGE -> ImageConversionState(
+               MediaKind.Image -> ImageConversionState(
                     ffmpegViewModel,
-                    onBack = { pickedKind = MediaKind.IDLE }
+                    onBack = { pickedKind = MediaKind.Idle }
                )
+
+               MediaKind.Cancel -> {
+                    ffmpegViewModel.cancelButton(context)
+               }
           }
      }
 }

@@ -18,12 +18,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.foss.fermux.ui.theme.FermuxColors
 
 
 @Composable
 fun FFmpegTiles(
+     modifier: Modifier = Modifier,
      title: String,
      description: String,
      shape: Shape = RoundedCornerShape(8.dp),
@@ -52,7 +55,7 @@ fun FFmpegTiles(
                .fillMaxWidth()
      ) {
           Surface(
-               modifier = Modifier.padding(1.dp),
+               modifier = modifier.padding(1.dp),
                shape = shape,
                contentColor = contentColor,
                interactionSource = interactionSource,
@@ -93,11 +96,15 @@ fun FFmpegTiles(
                          Text(
                               text = title,
                               maxLines = 1,
+                              fontSize = 17.sp,
+                              overflow = TextOverflow.Ellipsis,
                               style = MaterialTheme.typography.titleLarge
                          )
                          Text(
                               text = description,
                               maxLines = 4,
+                              fontSize = 14.sp,
+                              overflow = TextOverflow.Ellipsis,
                               style = MaterialTheme.typography.bodyMedium
                          )
                     }
