@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.foss.fermux.components.ffmpegComponents.FFmpegCard
@@ -22,8 +21,6 @@ fun MidConversionProcess(
           viewModelStoreOwner = LocalActivity.current as ComponentActivity
      )
 ) {
-     val context = LocalContext.current
-
      Column(
           modifier = Modifier
                .fillMaxWidth()
