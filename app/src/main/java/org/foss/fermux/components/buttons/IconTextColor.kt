@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -27,6 +28,8 @@ fun IconTextButton(
      text: String,
      enabled: Boolean? = true,
      border: BorderStroke? = BorderStroke(1.5.dp, FermuxColors.transparent),
+     activeColor: Color = FermuxColors.skyBlue,
+     inActiveColor: Color = FermuxColors.mutedBlue,
      rotation1: Float = 0f,
      rotation2: Float = 0f,
      onClick: () -> Unit,
@@ -34,6 +37,7 @@ fun IconTextButton(
 
      val interactionSource = remember { MutableInteractionSource() }
      val isPressed by interactionSource.collectIsPressedAsState()
+
      val containerColor by animateColorAsState(
           targetValue = if (isPressed) FermuxColors.fermuxActiveButton else FermuxColors.fermuxInActiveButton,
           animationSpec = tween(200),
@@ -41,7 +45,7 @@ fun IconTextButton(
      )
 
      val contentColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.white,
+          targetValue = if (isPressed) activeColor else inActiveColor,
           animationSpec = tween(200),
           label = "Fermux Text Colors",
      )

@@ -24,15 +24,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.foss.fermux.R
-import org.foss.fermux.ui.theme.FermuxColor
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun CancelButton(
      modifier: Modifier = Modifier,
      componentSize: Dp = 50.dp,
-     color: FermuxColor = FermuxColors,
-     allowBorder: Boolean = true,
      border: BorderStroke? = BorderStroke(width = 1.dp, color = FermuxColors.fermuxHelperBorder),
      shape: Shape = RoundedCornerShape(16.dp),
      transparency: Boolean = false,
@@ -49,19 +46,16 @@ fun CancelButton(
      )
 
      val containerColor by animateColorAsState(
-          targetValue = if (isPressed) color.fermuxActiveButton else color.fermuxInActiveButton,
+          targetValue = if (isPressed) FermuxColors.fermuxActiveButton else FermuxColors.fermuxInActiveButton,
           animationSpec = tween(200),
           label = "Fermux Button Colors",
      )
 
      val iconColor by animateColorAsState(
-          targetValue = if (isPressed) color.downriver else color.fermuxTextError,
+          targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.fermuxTextError,
           animationSpec = tween(150),
           label = "Fermux Icon Color"
      )
-
-     val iconModifier = Modifier.fillMaxSize()
-
 
      OutlinedButton(
           modifier = modifier
@@ -83,7 +77,7 @@ fun CancelButton(
                painter = painterResource(id = if (transparency) R.drawable.close else R.drawable.cancel_buttons),
                contentDescription = null,
                tint = if (transparency) FermuxColors.fermuxTextError else iconColor,
-               modifier = iconModifier
+               modifier = Modifier.fillMaxSize()
           )
      }
 

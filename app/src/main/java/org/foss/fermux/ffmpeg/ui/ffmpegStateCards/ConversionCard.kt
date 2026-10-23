@@ -1,9 +1,8 @@
-
 package org.foss.fermux.ffmpeg.ui.ffmpegStateCards
 
-import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,8 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.CancelButton
-import org.foss.fermux.components.buttons.ImageButton
+import org.foss.fermux.components.buttons.AppTextButton
+import org.foss.fermux.components.buttons.IconTextButton
 import org.foss.fermux.components.ffmpegComponents.FFmpegCard
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.ui.MediaThumbnailImage
@@ -32,96 +31,100 @@ import org.foss.fermux.utils.Miscellaneous
 private enum class ProgressState { InProgress, Done }
 
 
-@SuppressLint("ContextCastToActivity")
 @Composable
 fun ConversionCard(
-     progress: Float? = null,
-     pickedFileUri: Uri?,
-     navController: NavController
+    progress: Float? = null,
+    pickedFileUri: Uri?,
+    navController: NavController
 ) {
-     val ffmpegViewModel: FFmpegViewModel = viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity)
-     val context = LocalContext.current
+    val ffmpegViewModel: FFmpegViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity)
+    val context = LocalContext.current
 
 
-     val conversionState = progress?.let {
-          if (it >= 100f) ProgressState.Done else ProgressState.InProgress
-     }
+    val conversionState = progress?.let {
+        if (it >= 100f) ProgressState.Done else ProgressState.InProgress
+    }
 
-     Column(
-          modifier = Modifier.fillMaxWidth()
-     ) {
-          FFmpegCard(
-               modifier = Modifier.padding(10.dp)
-          ) {
-               Box(
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        FFmpegCard(
+            modifier = Modifier.padding(15.dp)
+        ) {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                MediaThumbnailImage(
+                    uri = pickedFileUri,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
-                         .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-               ) {
-                    MediaThumbnailImage(
-                         uri = pickedFileUri,
-                         contentScale = ContentScale.Crop,
-                         modifier = Modifier
-                              .fillMaxWidth()
-                              .aspectRatio(16f / 9f)
-                              .background(FermuxColors.fermuxSurface)
-                    )
-                    progress?.let {
-                         when (conversionState) {
-                              ProgressState.InProgress -> Column(
-                                   modifier = Modifier
-                                        .align(Alignment.Center)
-                                        .size(50.dp)
-                                        .background(
-                                             color = FermuxColors.warmPurple.copy(alpha = 0.70f),
-                                             shape = RoundedCornerShape(10.dp)
-                                        )
-                              ) {
-                                   CircularWavyProgressIndicator(
-                                        progress = { progress / 100f },
-                                        color = FermuxColors.fermuxGenericBorder,
-                                        trackColor = FermuxColors.fermuxTertiaryBorder,
-                                        modifier = Modifier
-                                             .padding(8.dp)
-                                             .align(Alignment.CenterHorizontally)
-                                   )
-                              }
+                        .fillMaxWidth()
+                        .background(FermuxColors.fermuxSurface)
+                        .aspectRatio(16f / 9f)
+                )
+                progress?.let {
+                    when (conversionState) {
+                        ProgressState.InProgress -> Column(
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .size(50.dp)
+                                .background(
+                                    color = FermuxColors.warmPurple.copy(alpha = 0.70f),
+                                    shape = RoundedCornerShape(10.dp)
+                                )
+                        ) {
+                            CircularWavyProgressIndicator(
+                                progress = { progress / 100f },
+                                color = FermuxColors.fermuxGenericBorder,
+                                trackColor = FermuxColors.fermuxTertiaryBorder,
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .align(Alignment.CenterHorizontally)
+                            )
+                        }
 
-                              ProgressState.Done -> Column(
-                                   modifier = Modifier
-                                        .align(Alignment.Center)
-                                        .background(
-                                             color = FermuxColors.warmPurple.copy(alpha = 0.75f),
-                                             shape = RoundedCornerShape(10.dp)
-                                        )
-                              ) {
-                                   Icon(
-                                        Icons.Default.Check,
-                                        contentDescription = "ffmpeg Success",
-                                        modifier = Modifier
-                                             .padding(8.dp)
-                                             .align(Alignment.CenterHorizontally),
-                                        tint = FermuxColors.white
-                                   )
-                              }
-
-                              null -> Unit
-                         }
-                         ImageButton(
-                              modifier = Modifier
-                                   .align(Alignment.BottomStart)
-                                   .padding(10.dp),
-                              image = R.drawable.logs,
-                              onClick = { navController.navigate(Miscellaneous.FFmpegLog.route) }
-                         )
+                        ProgressState.Done -> Column(
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .background(
+                                    color = FermuxColors.warmPurple.copy(alpha = 0.75f),
+                                    shape = RoundedCornerShape(10.dp)
+                                )
+                        ) {
+                            Icon(
+                                Icons.Default.Check,
+                                contentDescription = "ffmpeg Success",
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .align(Alignment.CenterHorizontally),
+                                tint = FermuxColors.white
+                            )
+                        }
+                        null -> Unit
                     }
-                    CancelButton(
-                         modifier = Modifier
-                              .padding(10.dp)
-                              .align(Alignment.TopStart),
-                         onClick = { ffmpegViewModel.cancelButton(context) }
-                    )
-               }
-          }
-     }
+                }
+            }
+        }
+        Row(
+            modifier = Modifier
+                .padding(15.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            IconTextButton(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically),
+                text = "Cancel",
+                image = R.drawable.close,
+                onClick = { ffmpegViewModel.cancelButton(context) }
+            )
+            AppTextButton(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically),
+                text = "View Logs",
+                onClick = { navController.navigate(Miscellaneous.FFmpegLog.route) }
+            )
+        }
+    }
 }

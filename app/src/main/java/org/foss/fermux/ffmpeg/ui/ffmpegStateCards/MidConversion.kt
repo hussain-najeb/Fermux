@@ -36,7 +36,7 @@ fun MidConversionProcess(
                     ) {
                          MediaThumbnailImage(
                               uri = ffmpegViewModel.inputUri,
-                              contentScale = ContentScale.None,
+                              contentScale = ContentScale.Crop,
                               modifier = Modifier
                                    .fillMaxWidth()
                                    .background(FermuxColors.fermuxSurface)

@@ -59,9 +59,9 @@ fun AppTextButton(
                scaleX = buttonAnimation
                scaleY = buttonAnimation
           }
-               .width(70.dp),
+               .width(90.dp),
           elevation = ButtonDefaults.buttonElevation(
-               defaultElevation = 7.dp,
+               defaultElevation = 12.dp,
                pressedElevation = 0.dp,
                focusedElevation = 3.dp,
                hoveredElevation = 5.dp,
@@ -81,6 +81,7 @@ fun AppTextButton(
                text = text,
                textAlign = TextAlign.Center,
                fontSize = 15.sp,
+               modifier = Modifier.padding(2.dp),
                fontWeight = FontWeight.SemiBold,
                color = textColor
           )
