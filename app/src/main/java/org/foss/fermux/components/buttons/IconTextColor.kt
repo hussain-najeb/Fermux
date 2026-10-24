@@ -30,6 +30,8 @@ fun IconTextButton(
      border: BorderStroke? = BorderStroke(1.5.dp, FermuxColors.transparent),
      activeColor: Color = FermuxColors.skyBlue,
      inActiveColor: Color = FermuxColors.mutedBlue,
+     activeIconColor: Color = FermuxColors.downriver,
+     inActiveIconColor: Color = FermuxColors.white,
      rotation1: Float = 0f,
      rotation2: Float = 0f,
      onClick: () -> Unit,
@@ -39,7 +41,7 @@ fun IconTextButton(
      val isPressed by interactionSource.collectIsPressedAsState()
 
      val containerColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.fermuxActiveButton else FermuxColors.fermuxInActiveButton,
+          targetValue = if (isPressed) activeColor else inActiveColor,
           animationSpec = tween(200),
           label = "Fermux Button Colors",
      )
@@ -51,7 +53,7 @@ fun IconTextButton(
      )
 
      val iconColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.white,
+          targetValue = if (isPressed) activeIconColor else inActiveIconColor,
           animationSpec = tween(durationMillis = 200),
           label = "Fermux Icon Colors"
      )
@@ -63,7 +65,7 @@ fun IconTextButton(
      )
 
      val textColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.white,
+          targetValue = if (isPressed) activeIconColor else inActiveIconColor,
           animationSpec = tween(200),
 
      )

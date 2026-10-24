@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.AppTextButton
 import org.foss.fermux.components.buttons.IconTextButton
 import org.foss.fermux.components.ffmpegComponents.FFmpegCard
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
@@ -116,12 +115,15 @@ fun ConversionCard(
                 modifier = Modifier
                     .align(Alignment.CenterVertically),
                 text = "Cancel",
+                activeColor = FermuxColors.fermuxErrorCardColor,
+                activeIconColor = FermuxColors.white,
                 image = R.drawable.close,
                 onClick = { ffmpegViewModel.cancelButton(context) }
             )
-            AppTextButton(
+            IconTextButton(
                 modifier = Modifier
                     .align(Alignment.CenterVertically),
+                image = R.drawable.log,
                 text = "View Logs",
                 onClick = { navController.navigate(Miscellaneous.FFmpegLog.route) }
             )

@@ -49,7 +49,7 @@ fun AppTextButton(
      )
 
      val buttonAnimation by animateFloatAsState(
-          targetValue = if (isPressed) 0.90f else 1f,
+          targetValue = if (isPressed) 0.90f else 1.0f,
           animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
           label = "Fermux Button Animation"
      )
@@ -59,7 +59,7 @@ fun AppTextButton(
                scaleX = buttonAnimation
                scaleY = buttonAnimation
           }
-               .width(90.dp),
+               .wrapContentSize(),
           elevation = ButtonDefaults.buttonElevation(
                defaultElevation = 12.dp,
                pressedElevation = 0.dp,
@@ -81,7 +81,7 @@ fun AppTextButton(
                text = text,
                textAlign = TextAlign.Center,
                fontSize = 15.sp,
-               modifier = Modifier.padding(2.dp),
+               modifier = Modifier.padding(start = 15.dp, end = 15.dp),
                fontWeight = FontWeight.SemiBold,
                color = textColor
           )

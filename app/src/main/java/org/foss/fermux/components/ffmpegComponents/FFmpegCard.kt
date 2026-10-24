@@ -44,8 +44,10 @@ fun FFmpegCard(
 fun test17() {
      Column(modifier = Modifier.fillMaxSize()) {
           FFmpegCard(
-               modifier = Modifier.fillMaxWidth().padding(15.dp),
-               shape = RoundedCornerShape(5.dp)
+               modifier = Modifier
+                    .aspectRatio(16f/9f)
+                    .padding(15.dp),
+               shape = RoundedCornerShape(6.dp)
           )
      }
 }
