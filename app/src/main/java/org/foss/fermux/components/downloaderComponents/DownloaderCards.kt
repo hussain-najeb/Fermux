@@ -14,22 +14,21 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun DownloaderCard(
-     modifier: Modifier = Modifier,
-     color: FermuxColor = FermuxColors,
-     errorBackground: Boolean = false,
-     shape: Shape = RoundedCornerShape(5.dp),
-     border: BorderStroke? = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),
-     content: @Composable () -> Unit
+    modifier: Modifier = Modifier,
+    color: FermuxColor = FermuxColors,
+    errorBackground: Boolean = false,
+    shape: Shape = RoundedCornerShape(6.dp),
+    border: BorderStroke? = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),
+    content: @Composable () -> Unit
 ) {
-     Card(
-          modifier = modifier
-               .padding(16.dp),
-          shape = shape,
-          colors = CardDefaults.cardColors(
-               containerColor = if (errorBackground) color.fermuxErrorCardColor else color.fermuxSurface
-          ),
-          border = border
-     ) {
-               content()
-     }
+    Card(
+        modifier = modifier.padding(15.dp),
+        shape = shape,
+        colors = CardDefaults.cardColors(
+            containerColor = if (errorBackground) color.fermuxErrorCardColor else color.fermuxSurface
+        ),
+        border = border
+    ) {
+        content()
+    }
 }
