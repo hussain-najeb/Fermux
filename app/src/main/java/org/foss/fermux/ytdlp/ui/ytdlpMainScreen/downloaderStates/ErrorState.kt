@@ -1,7 +1,6 @@
 package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates
 
 import android.content.ClipData
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -20,7 +19,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.IconTextButton
@@ -43,8 +41,7 @@ fun ErrorCard(
             .fillMaxWidth()
     ) {
         DownloaderCard(
-            modifier = Modifier.aspectRatio(16f / 9f),
-            border = BorderStroke(1.dp, FermuxColors.white)
+            modifier = Modifier.aspectRatio(16f / 9f)
         ) {
             Box(
                 modifier = Modifier.fillMaxSize()
@@ -123,7 +120,6 @@ fun ErrorCard(
 @Preview
 @Composable
 fun Test2() {
-    val navController = rememberNavController()
     Column(
         modifier = Modifier
             .fillMaxSize()

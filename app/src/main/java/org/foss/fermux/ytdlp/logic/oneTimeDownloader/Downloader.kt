@@ -126,8 +126,6 @@ suspend fun downloaderLogic(
         )
     }
 
-    val hlsConcurrentFragments = 8
-
     when {
         shouldUseAria2c -> Unit
         externalDownloaders == ExternalDownloaders.FFmpegAsExternal -> {
@@ -135,7 +133,7 @@ suspend fun downloaderLogic(
         }
 
         externalDownloaders == ExternalDownloaders.YtdlpNativeDownloader -> {
-            request.addOption("--concurrent-fragments", hlsConcurrentFragments)
+            request.addOption("--concurrent-fragments", 8)
         }
 
         else -> Unit

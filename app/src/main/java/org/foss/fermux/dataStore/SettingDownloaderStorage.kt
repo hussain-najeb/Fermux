@@ -121,13 +121,7 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings_
 // ytdlp downloader tab.
 
 // TODO. for args
-//  1- Add encoder options, like AV1/H.264/VP9
 //  4- notification on failure
-//  5- Queue behavior: pause/resume whole queue, queue ordering, priority, auto-start queued downloads, maximum active jobs.
-
-
-// TODO. for settings.
-//  1- sequential downloads, one after the other, so one is done, the other is executed right after
 
 val DOWNLOAD_PATH = stringPreferencesKey("download_path")
 val DOWNLOADER_BELL_STATE = booleanPreferencesKey("bellState")

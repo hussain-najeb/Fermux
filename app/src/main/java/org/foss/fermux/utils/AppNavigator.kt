@@ -7,8 +7,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navDeepLink
 import org.foss.fermux.components.downloaderComponents.DownloaderLogs
-import org.foss.fermux.ffmpeg.ui.ConverterScreen
 import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.FFmpegLogs
 import org.foss.fermux.main.HomeScreen
 import org.foss.fermux.settings.ui.SettingsScreen
@@ -26,71 +26,72 @@ import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloadContent
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloaderArgs
 
 
-sealed class MainScreens(val route: String ) {
-     object Home: MainScreens("home")
-     object Settings: MainScreens("settings")
-     object Downloader: MainScreens("downloader")
-     object Converter: MainScreens("converter")
-     object Terminal: MainScreens("terminal")
+sealed class MainScreens(val route: String) {
+    object Home : MainScreens("home")
+    object Settings : MainScreens("settings")
+    object Downloader : MainScreens("downloader")
+    object Converter : MainScreens("converter")
+    object Terminal : MainScreens("terminal")
 }
 
 sealed class SettingsScreens(val route: String) {
-     object SimpleDownloader: SettingsScreens(route = "simple downloader")
-     object SimpleFFmpeg: SettingsScreens(route = "simple FFmpeg")
-     object SimpleTerminal: SettingsScreens(route = "simple terminal")
-     object Themes: SettingsScreens(route = "themes")
-     object AboutAppPage: SettingsScreens(route = "about")
-     object LibraryPage: SettingsScreens(route = "Library")
+    object SimpleDownloader : SettingsScreens(route = "simple downloader")
+    object SimpleFFmpeg : SettingsScreens(route = "simple FFmpeg")
+    object SimpleTerminal : SettingsScreens(route = "simple terminal")
+    object Themes : SettingsScreens(route = "themes")
+    object AboutAppPage : SettingsScreens(route = "about")
+    object LibraryPage : SettingsScreens(route = "Library")
 
 }
 
 // Miscellaneous navigation
 sealed class Miscellaneous(val route: String) {
-     // FFmpeg Screens
-     object FFmpegLog: Miscellaneous(route = "FFmpeg Logs")
-     // Downloader Screens
-     object DownloaderLogs: Miscellaneous(route = "YtdlpLog")
-     object DownloaderHistory: Miscellaneous(route = "History")
-     object DownloaderArgs: Miscellaneous(route = "Downloader Arguments")
-     object SequentialDownloader: Miscellaneous(route = "Sequentially Downloaded")
-     object DownloaderSeqLogs: Miscellaneous(route = "Seq Logs")
+    // FFmpeg Screens
+    object FFmpegLog : Miscellaneous(route = "FFmpeg Logs")
+
+    // Downloader Screens
+    object DownloaderLogs : Miscellaneous(route = "YtdlpLog")
+    object DownloaderHistory : Miscellaneous(route = "History")
+    object DownloaderArgs : Miscellaneous(route = "Downloader Arguments")
+    object SequentialDownloader : Miscellaneous(route = "Sequentially Downloaded")
+    object DownloaderSeqLogs : Miscellaneous(route = "Seq Logs")
 }
+
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun FermuxAppMainScreen() {
 
-     val navController = rememberNavController()
-     val seqView: SequentialViewModel = viewModel()
+    val navController = rememberNavController()
+    val seqView: SequentialViewModel = viewModel()
 
-     val seqItem = SequentialDownloadQueueState()
+    val seqItem = SequentialDownloadQueueState()
 
-     NavHost(
-          navController = navController,
-          startDestination = MainScreens.Home.route
-     ) {
-          // Main Screens
-          composable(MainScreens.Home.route) { HomeScreen(navController) }
-          composable(MainScreens.Terminal.route) { FermuxTerminalScreen() }
-          composable(MainScreens.Settings.route) { SettingsScreen(navController) }
-          composable(MainScreens.Downloader.route) { DownloadContent(navController) }
-          composable(MainScreens.Converter.route) { ConverterScreen(navController) }
+    NavHost(
+        navController = navController,
+        startDestination = MainScreens.Home.route
+    ) {
+        // Main Screens
+        composable(MainScreens.Home.route) { HomeScreen(navController) }
+        composable(MainScreens.Terminal.route) { FermuxTerminalScreen() }
+        composable(MainScreens.Settings.route) { SettingsScreen(navController) }
+        composable(route = MainScreens.Downloader.route, deepLinks = listOf(navDeepLink { uriPattern = "fermux://downloader" })) { DownloadContent(navController) }
 
-          // Settings Screens
-          composable(SettingsScreens.SimpleDownloader.route) { SimpleDownloaderPage(navController) }
-          composable(SettingsScreens.SimpleFFmpeg.route) { SimpleFFmpegSetting(navController) }
-          composable(SettingsScreens.SimpleTerminal.route) { }
-          composable(SettingsScreens.Themes.route) { }
-          composable(SettingsScreens.AboutAppPage.route) { AboutPage(navController) }
-          composable(SettingsScreens.LibraryPage.route) { LibraryPage(navController) }
+        // Settings Screens
+        composable(SettingsScreens.SimpleDownloader.route) { SimpleDownloaderPage(navController) }
+        composable(SettingsScreens.SimpleFFmpeg.route) { SimpleFFmpegSetting(navController) }
+        composable(SettingsScreens.SimpleTerminal.route) { }
+        composable(SettingsScreens.Themes.route) { }
+        composable(SettingsScreens.AboutAppPage.route) { AboutPage(navController) }
+        composable(SettingsScreens.LibraryPage.route) { LibraryPage(navController) }
 
-          // FFmpeg
-          composable(route = Miscellaneous.FFmpegLog.route) { FFmpegLogs(navController) }
+        // FFmpeg
+        composable(route = Miscellaneous.FFmpegLog.route) { FFmpegLogs(navController) }
 
-          // Ytdlp
-          composable(route = Miscellaneous.DownloaderLogs.route) { DownloaderLogs(navController) }
-          composable(route = Miscellaneous.DownloaderArgs.route) { DownloaderArgs(navController) }
-          composable(route = Miscellaneous.DownloaderHistory.route) { History(navController) }
-          composable(route = Miscellaneous.SequentialDownloader.route) { SequentialContent(navController, seqView) }
-          composable(route = Miscellaneous.DownloaderSeqLogs.route) { SeqLogs(navController, seqItem) }
-     }
+        // Ytdlp
+        composable(route = Miscellaneous.DownloaderLogs.route) { DownloaderLogs(navController) }
+        composable(route = Miscellaneous.DownloaderArgs.route) { DownloaderArgs(navController) }
+        composable(route = Miscellaneous.DownloaderHistory.route) { History(navController) }
+        composable(route = Miscellaneous.SequentialDownloader.route) { SequentialContent(navController, seqView) }
+        composable(route = Miscellaneous.DownloaderSeqLogs.route) { SeqLogs(navController, seqItem) }
+    }
 }
