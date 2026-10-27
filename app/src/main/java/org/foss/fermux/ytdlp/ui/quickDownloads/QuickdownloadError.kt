@@ -14,8 +14,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import org.foss.fermux.R
 import org.foss.fermux.components.buttons.CancelButton
-import org.foss.fermux.components.buttons.LogButton
+import org.foss.fermux.components.buttons.FilterButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.Miscellaneous
 
@@ -54,10 +55,10 @@ fun QuickdownloadError(
                contentAlignment = Alignment.CenterEnd
           ) {
                Row(modifier = Modifier.padding(end = 5.dp)) {
-                    LogButton(
+                    FilterButton(
                          onClick = { navController.navigate(Miscellaneous.DownloaderLogs.route) },
-                         shape = RoundedCornerShape(8.dp),
-                         modifier = Modifier.padding(end = 4.dp)
+                         modifier = Modifier.padding(end = 4.dp),
+                         image = R.drawable.log
                     )
                     CancelButton(
                          shape = RoundedCornerShape(8.dp),

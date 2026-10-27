@@ -100,6 +100,7 @@ private fun FinishedCardContent(
                }
 
                Description(metadata)
+               
           }
           Row(
                modifier = Modifier

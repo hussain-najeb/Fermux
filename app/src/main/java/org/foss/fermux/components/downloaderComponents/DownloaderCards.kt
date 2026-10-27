@@ -16,7 +16,6 @@ import org.foss.fermux.ui.theme.FermuxColors
 fun DownloaderCard(
     modifier: Modifier = Modifier,
     color: FermuxColor = FermuxColors,
-    errorBackground: Boolean = false,
     shape: Shape = RoundedCornerShape(6.dp),
     border: BorderStroke? = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),
     content: @Composable () -> Unit
@@ -25,7 +24,11 @@ fun DownloaderCard(
         modifier = modifier.padding(15.dp),
         shape = shape,
         colors = CardDefaults.cardColors(
-            containerColor = if (errorBackground) color.fermuxErrorCardColor else color.fermuxSurface
+            containerColor = color.fermuxSurface
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 15.dp,
+            pressedElevation = 4.dp
         ),
         border = border
     ) {

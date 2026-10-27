@@ -19,8 +19,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.IconTextButton
@@ -32,7 +30,6 @@ import org.foss.fermux.ui.theme.JetbrainsMono
 fun FFmpegErrorMassage(
     errorMessage: String,
     rawError: String,
-    navController: NavController,
     onCancel: () -> Unit
 ) {
 
@@ -48,7 +45,6 @@ fun FFmpegErrorMassage(
         FFmpegCard(
             modifier = Modifier
                 .height(450.dp)
-                .padding(15.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -88,10 +84,10 @@ fun FFmpegErrorMassage(
             }
         }
         Row(
-             modifier = Modifier
-                 .fillMaxWidth()
-                 .padding(15.dp),
-             horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 15.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconTextButton(
                 text = "Copy Error",
@@ -118,33 +114,30 @@ fun FFmpegErrorMassage(
 @Preview(showBackground = true, backgroundColor = 0xFF15152e)
 @Composable
 fun test19() {
-    val navController = rememberNavController()
-
-Column(
-    modifier = Modifier
-        .fillMaxSize()
-) {
-    FFmpegErrorMassage(
-        rawError = "ffmpeg version 9.0.2 Copyright (c) 2000-2026 the FFmpeg developers\n" +
-             "  built with Android (13691557, +pgo, +bolt, +lto, +mlgo, based on r522817d) clang version 18.0.4 (https://android.googlesource.com/toolchain/llvm-project d8003a456d14a3deb8054cdaa529ffbf02d9b262)\n" +
-             "  configuration: Android build\n" +
-             "  libavutil      61.  1.102 / 61.  1.102\n" +
-             "  libavcodec     63.  1.102 / 63.  1.102\n" +
-             "  libavformat    63.  1.102 / 63.  1.102\n" +
-             "  libavdevice    63.  1.102 / 63.  1.102\n" +
-             "  libavfilter    12.  1.102 / 12.  1.102\n" +
-             "  libswscale     10.  1.102 / 10.  1.102\n" +
-             "  libswresample   7.  1.102 /  7.  1.102\n" +
-             "Input #0, jpeg_pipe, from '/data/user/0/org.foss.fermux/cache/input_b7a12f5b-7ae3-47d7-8518-e8959420933c.tmp':\n" +
-             "  Duration: N/A, bitrate: N/A\n" +
-             "  Stream #0:0: Video: mjpeg (Baseline), yuvj420p(pc, bt470bg/unknown/unknown), 256x144 [SAR 1:1 DAR 16:9], 25 fps, 25 tbr, 25 tbn\n" +
-             "Output #0, flac, to '/data/user/0/org.foss.fermux/cache/output_b7a12f5b-7ae3-47d7-8518-e8959420933c.flac':\n" +
-             "[out#0/flac @ 0x7c3a2a611b00] Output file does not contain any stream\n" +
-             "Error opening output file /data/user/0/org.foss.fermux/cache/output_b7a12f5b-7ae3-47d7-8518-e8959420933c.flac.\n" +
-             "Error opening output files: Invalid argument\n",
-        errorMessage = "SomeError as well",
-        navController = navController,
-        onCancel = {},
-    )
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        FFmpegErrorMassage(
+            rawError = "ffmpeg version 9.0.2 Copyright (c) 2000-2026 the FFmpeg developers\n" +
+                 "  built with Android (13691557, +pgo, +bolt, +lto, +mlgo, based on r522817d) clang version 18.0.4 (https://android.googlesource.com/toolchain/llvm-project d8003a456d14a3deb8054cdaa529ffbf02d9b262)\n" +
+                 "  configuration: Android build\n" +
+                 "  libavutil      61.  1.102 / 61.  1.102\n" +
+                 "  libavcodec     63.  1.102 / 63.  1.102\n" +
+                 "  libavformat    63.  1.102 / 63.  1.102\n" +
+                 "  libavdevice    63.  1.102 / 63.  1.102\n" +
+                 "  libavfilter    12.  1.102 / 12.  1.102\n" +
+                 "  libswscale     10.  1.102 / 10.  1.102\n" +
+                 "  libswresample   7.  1.102 /  7.  1.102\n" +
+                 "Input #0, jpeg_pipe, from '/data/user/0/org.foss.fermux/cache/input_b7a12f5b-7ae3-47d7-8518-e8959420933c.tmp':\n" +
+                 "  Duration: N/A, bitrate: N/A\n" +
+                 "  Stream #0:0: Video: mjpeg (Baseline), yuvj420p(pc, bt470bg/unknown/unknown), 256x144 [SAR 1:1 DAR 16:9], 25 fps, 25 tbr, 25 tbn\n" +
+                 "Output #0, flac, to '/data/user/0/org.foss.fermux/cache/output_b7a12f5b-7ae3-47d7-8518-e8959420933c.flac':\n" +
+                 "[out#0/flac @ 0x7c3a2a611b00] Output file does not contain any stream\n" +
+                 "Error opening output file /data/user/0/org.foss.fermux/cache/output_b7a12f5b-7ae3-47d7-8518-e8959420933c.flac.\n" +
+                 "Error opening output files: Invalid argument\n",
+            errorMessage = "SomeError as well",
+            onCancel = {},
+        )
     }
 }
