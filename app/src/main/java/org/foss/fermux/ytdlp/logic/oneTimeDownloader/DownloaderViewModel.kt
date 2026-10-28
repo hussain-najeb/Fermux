@@ -102,6 +102,7 @@ class DownloaderViewModel : ViewModel() {
           activeProcess = requestedUrls.id
 
           DebugLogDownloader.debugDownloader("DownloadAdmission", "Prepared download id=${requestedUrls.id}")
+          Log.d("DownloadAdmission", "Prepared download id=${requestedUrls.id}")
 
           downloaderJob = viewModelScope.launch {
                try {
@@ -206,7 +207,6 @@ class DownloaderViewModel : ViewModel() {
                          }
                          .launchIn(viewModelScope)
 
-
                } catch (e: CancellationException) {
                     throw e
                } catch (e: Exception) {
@@ -224,11 +224,9 @@ class DownloaderViewModel : ViewModel() {
      }
 
      private fun downloadErrorHandler(e: Exception) {
-
           DebugLogDownloader.errorDownloader("MetadataFetch", "Fetch failed: ${e.javaClass.simpleName}", e)
-
           val raw = when (e) {
-               is TimeoutCancellationException -> "Timed out waiting for a response, retry the download"
+               is TimeoutCancellationException -> "Timed out waiting for a response, check network connection"
                else -> e.message ?: e.toString()
           }
           state = DownloadStatus.Error(flavorError.random(), raw)

@@ -195,9 +195,7 @@ suspend fun downloaderLogic(
     request.addOption("-o", outputPath)
 
     try {
-
         return execution(downloadDir, request, taskId, onUpdate, context)
-
     } finally {
         downloadDir.deleteRecursively()
     }

@@ -341,6 +341,6 @@ private suspend fun DownloadWorker.historyRegistration(
 
     } catch (e: Exception) {
         DebugLogDownloader.errorDownloader("fermux", "failed to save audio JSON", e)
-        DebugLogDownloader.errorDownloader("fermux", "failed to save video JSON", e)
+        Log.e("fermux", "failed to save video JSON", e)
     }
 }

@@ -23,7 +23,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
@@ -31,6 +30,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -130,20 +130,17 @@ fun DownloadContent(
                               minLines = 1,
                               maxLines = 7,
                               colors = OutlinedTextFieldDefaults.colors(
-                                   focusedBorderColor = FermuxColors.fermuxSecondaryBorder,
-                                   unfocusedBorderColor = FermuxColors.fermuxGenericBorder,
-                                   focusedLabelColor = FermuxColors.fermuxPrimaryBorder,
-                                   unfocusedLabelColor = FermuxColors.offWhiteTextColor,
-                                   cursorColor = FermuxColors.fermuxGenericBorder,
-                                   focusedTextColor = Color.White,
-                                   unfocusedTextColor = Color.White,
+                                   focusedBorderColor = FermuxColors.fermuxGenericBorder,
+                                   unfocusedBorderColor = FermuxColors.fermuxHelperBorder,
+                                   focusedLabelColor = FermuxColors.gray,
+                                   cursorColor = FermuxColors.white,
                                    errorTextColor = FermuxColors.fermuxLightErrorTextColor,
-                                   errorBorderColor = FermuxColors.fermuxLightErrorTextColor,
+                                   errorBorderColor = FermuxColors.fermuxHelperBorder,
                                    errorLabelColor = FermuxColors.fermuxLightErrorTextColor,
                                    errorCursorColor = FermuxColors.fermuxLightErrorTextColor,
-                                   errorContainerColor = FermuxColors.fermuxErrorCardColor,
+                                   errorContainerColor = FermuxColors.darkPurple,
                                    unfocusedContainerColor = FermuxColors.warmPurple,
-                                   focusedContainerColor = FermuxColors.inActiveTextField
+                                   focusedContainerColor = FermuxColors.darkPurple
                               ),
                               onValueChange = { txt -> downloaderViewModel.downloadUrl = txt },
                               placeholder = {
@@ -283,4 +280,46 @@ private fun Connections() {
             modifier = Modifier.padding(10.dp)
         )
     }
+}
+
+
+@Preview(showBackground = true, backgroundColor = 0xFF15152e)
+@Composable
+fun test20() {
+     Column(
+          modifier = Modifier.fillMaxSize()
+     ) {
+          val value = ""
+          var pressed = false
+          Button(
+               onClick = { pressed != pressed
+               pressed = true},
+               shape = RoundedCornerShape(8.dp),
+               content = {
+                    Text("press")
+               }
+          )
+          OutlinedTextField(
+              modifier = Modifier
+                   .padding(5.dp)
+                   .fillMaxWidth(),
+              isError = true,
+               value = value,
+               onValueChange = {},
+              shape = RoundedCornerShape(5.dp),
+               colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = FermuxColors.fermuxGenericBorder,
+                    unfocusedBorderColor = FermuxColors.fermuxHelperBorder,
+                    focusedLabelColor = FermuxColors.gray,
+                    cursorColor = FermuxColors.white,
+                    errorTextColor = FermuxColors.fermuxLightErrorTextColor,
+                    errorBorderColor = FermuxColors.fermuxHelperBorder,
+                    errorLabelColor = FermuxColors.fermuxLightErrorTextColor,
+                    errorCursorColor = FermuxColors.fermuxLightErrorTextColor,
+                    errorContainerColor = FermuxColors.darkPurple,
+                    unfocusedContainerColor = FermuxColors.warmPurple,
+                    focusedContainerColor = FermuxColors.darkPurple
+               ),
+          )
+     }
 }

@@ -6,8 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -20,7 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.foss.fermux.R
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
@@ -88,6 +89,20 @@ fun FilterButton(
             tint = iconColor,
             modifier = iconModifier.size(30.dp),
             contentDescription = "Undo",
+        )
+    }
+}
+
+@Preview(backgroundColor = 0xFF102f60, showBackground = true)
+@Composable
+fun FilterButtonPreview() {
+    Column(
+        modifier = Modifier.fillMaxSize()
+            .padding(5.dp)
+    ) {
+        FilterButton(
+            onClick = {},
+            image = R.drawable.undo
         )
     }
 }

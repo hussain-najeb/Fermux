@@ -123,9 +123,10 @@ fun Test2() {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(0.dp)
     ) {
         ErrorCard(
-            flavourMessage = ".....Something About an error??",
+            flavourMessage = "aw;oidfnao??",
             rawError = ".....Imagine This Is An Error.....Imagine This Is An Error.....Imagine This Is An Error.....Imagine This Is An Error.....Imagine This Is An Error.....Imagine This Is An Error.....Imagine This Is An Error",
             onCancel = {},
         )

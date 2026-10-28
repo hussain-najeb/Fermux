@@ -1,6 +1,7 @@
 package org.foss.fermux.ytdlp.ui.sequentialDownloader
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -10,9 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.foss.fermux.R
 import org.foss.fermux.ui.theme.FermuxColors
 
@@ -24,7 +24,7 @@ fun SeqCancelledCard(
         modifier = modifier
             .fillMaxWidth()
             .height(100.dp),
-        color = FermuxColors.warmPurple,
+        color = FermuxColors.mutedBlue,
         shape = RoundedCornerShape(12.dp),
         border = BorderStroke(1.dp, FermuxColors.warmPurple),
         tonalElevation = 12.dp,
@@ -33,28 +33,51 @@ fun SeqCancelledCard(
         Row(
             modifier = Modifier.fillMaxWidth()
         ) {
-            Box(
+            Surface(
                 modifier = Modifier
-                    .aspectRatio(4f/3f)
+                    .aspectRatio(4f / 3f)
+                    .align(Alignment.CenterVertically),
+                shape = RoundedCornerShape(topEnd = 6.dp, bottomEnd = 6.dp),
+                color = FermuxColors.mutedBlue
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.cancel_buttons),
-                    contentDescription = null
-                )
+                Box(
+                    modifier = Modifier.background(FermuxColors.fermuxSurface),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.close),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(60.dp),
+                        tint = FermuxColors.white
+                    )
+                }
             }
             Box(
                 modifier = Modifier
-                    .weight(1f),
-                contentAlignment = Alignment.CenterStart
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Queue Entry Cancelled",
+                    text = "Downloader process canceled",
                     color = FermuxColors.white,
-                    fontSize = 14.sp,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(10.dp)
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF102f60)
+@Composable
+fun test21() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        SeqCancelledCard(
+            modifier = Modifier
+                .padding(10.dp)
+                .fillMaxWidth()
+        )
     }
 }
