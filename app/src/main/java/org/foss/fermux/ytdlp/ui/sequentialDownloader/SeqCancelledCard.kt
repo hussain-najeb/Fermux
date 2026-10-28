@@ -55,8 +55,9 @@ fun SeqCancelledCard(
             }
             Box(
                 modifier = Modifier
+                    .padding(10.dp)
                     .fillMaxSize(),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.CenterStart
             ) {
                 Text(
                     text = "Downloader process canceled",

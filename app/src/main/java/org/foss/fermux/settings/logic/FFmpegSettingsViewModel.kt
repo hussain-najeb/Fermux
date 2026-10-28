@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 import org.foss.fermux.dataStore.DataStoreFFmpegSettings
 import org.foss.fermux.dataStore.FFmpegSettingsRepo
 import org.foss.fermux.dataStore.FFmpegSettingsSnapshot
-import org.foss.fermux.utils.DebugLogDownloader
 
 
 class FFmpegSettingsViewModel(application: Application) : AndroidViewModel(application) {
@@ -46,11 +45,6 @@ class FFmpegSettingsViewModel(application: Application) : AndroidViewModel(appli
 
      fun setFFmpegBellState(value: Boolean) {
           viewModelScope.launch { ffmpegSettings.setFFmpegBellState(value) }
-     }
-
-     fun setFFmpegDebug(value: Boolean) {
-          DebugLogDownloader.setEnable(value)
-          viewModelScope.launch { ffmpegSettings.setFFmpegDebug(value) }
      }
 
      fun setNormalizeAudio(value: Boolean) {

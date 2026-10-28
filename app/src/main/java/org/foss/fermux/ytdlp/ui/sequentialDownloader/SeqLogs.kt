@@ -9,12 +9,14 @@ import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
 fun SeqLogs(
     navController: NavController,
     sequentialViewModel: SequentialViewModel,
-    itemId: String
 ) {
-    val item = sequentialViewModel.state.items.firstOrNull { it.toString() == itemId }
+    val item = sequentialViewModel.state.items.firstOrNull()
+    val logs = item?.logs.orEmpty().ifBlank {
+        item?.error ?: "No logs were recorded for this download."
+    }
     LoggingScreen(
         loggingTitle = "Logs",
-        logs = item?.logs.orEmpty(),
+        logs = logs,
         navController = navController
     )
 }

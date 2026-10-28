@@ -1,8 +1,6 @@
 package org.foss.fermux.settings.ui.converter
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -39,7 +37,6 @@ fun AdvancedFFmpegSettings(
      snackbarHostState: SnackbarHostState
 ) {
 
-     val logcat by ffmpegSettingsViewModel.ffmpegDebug.collectAsStateWithLifecycle()
      val crf by ffmpegSettingsViewModel.videoCrf.collectAsStateWithLifecycle()
      val enableVideoCompression by ffmpegSettingsViewModel.enableVideoCompression.collectAsStateWithLifecycle()
      val threadLimit by ffmpegSettingsViewModel.threadLimit.collectAsStateWithLifecycle()
@@ -98,27 +95,6 @@ fun AdvancedFFmpegSettings(
                          trackRange = 18f..28f,
                          onOptionSelected = ffmpegSettingsViewModel::setVideoCrf
                     )
-               },
-               position = TilePosition.MIDDLE
-          ),
-          InfoListClass(
-               title = if (logcat) "Debug Logging On" else "Debug Logging Off",
-               description = "Write diagnostic messages to Logcat",
-               icon = Icons.Default.BugReport,
-               liner = true,
-               content = {
-                    SettingsSwitch(
-                         checked = logcat,
-                         onCheckedChange = ffmpegSettingsViewModel::setFFmpegDebug
-                    )
-               },
-               dialogAppearance = true,
-               dialogTitle = "Debugging",
-               dialogImage = R.drawable.log,
-               specialDescription = buildAnnotatedString {
-                    withStyle(SpanStyle(FermuxColors.white)) { append("When enabled, this setting makes the logs from ") }
-                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("WorkManager ") }
-                    withStyle(SpanStyle(FermuxColors.white)) { append("appear in the logging screen, which is useful for deep debugging and app inspection.") }
                },
                position = TilePosition.MIDDLE
           ),

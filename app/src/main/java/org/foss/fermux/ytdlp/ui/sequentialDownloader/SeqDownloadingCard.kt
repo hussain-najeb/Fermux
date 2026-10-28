@@ -77,7 +77,7 @@ onCancelRequest: () -> Unit
                 ) {
                     Box(
                         modifier = Modifier
-                            .background(FermuxColors.fermuxSurface)
+                            .background(FermuxColors.darkPurple)
                     ) {
                         AsyncImage(
                             model = item.metadata?.thumbnail,
@@ -88,7 +88,7 @@ onCancelRequest: () -> Unit
                         Box(
                             modifier = Modifier
                                 .align(Alignment.Center)
-                                .size(30.dp)
+                                .size(40.dp)
                                 .background(
                                     color = FermuxColors.warmPurple.copy(alpha = 0.70f),
                                     shape = RoundedCornerShape(8.dp)
@@ -101,7 +101,7 @@ onCancelRequest: () -> Unit
                                     .graphicsLayer {
                                         rotationZ = rotation
                                     }
-                                    .padding(10.dp)
+                                    .padding(5.dp)
                                     .align(Alignment.Center),
                                 tint = FermuxColors.white
                             )

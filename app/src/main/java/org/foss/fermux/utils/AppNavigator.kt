@@ -92,6 +92,6 @@ fun FermuxAppMainScreen() {
         composable(route = Miscellaneous.DownloaderArgs.route) { DownloaderArgs(navController) }
         composable(route = Miscellaneous.DownloaderHistory.route) { History(navController) }
         composable(route = Miscellaneous.SequentialDownloader.route) { SequentialContent(navController, seqView) }
-        composable(route = Miscellaneous.DownloaderSeqLogs.route) { SeqLogs(navController, seqItem) }
+        composable(route = Miscellaneous.DownloaderSeqLogs.route) { SeqLogs(navController, sequentialViewModel = seqView) }
     }
 }
