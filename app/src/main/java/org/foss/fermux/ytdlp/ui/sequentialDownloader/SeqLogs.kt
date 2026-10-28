@@ -12,7 +12,7 @@ fun SeqLogs(
 ) {
     val item = sequentialViewModel.state.items.firstOrNull()
     val logs = item?.logs.orEmpty().ifBlank {
-        item?.error ?: "No logs were recorded for this download."
+        item?.error ?: "No logs were recorded for this download"
     }
     LoggingScreen(
         loggingTitle = "Logs",

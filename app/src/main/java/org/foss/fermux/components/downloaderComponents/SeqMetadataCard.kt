@@ -12,8 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.CancelButton
@@ -25,9 +27,10 @@ import kotlin.time.Duration.Companion.milliseconds
 @Composable
 fun SeqMetadataCard(
     modifier: Modifier,
-    sequentialViewModel: SequentialViewModel,
     onCancelRequest: () -> Unit
 ) {
+
+    val sequentialViewModel: SequentialViewModel = viewModel()
 
     val context = LocalContext.current
 
@@ -61,10 +64,10 @@ fun SeqMetadataCard(
             ) {
                 Surface(
                     modifier = Modifier
-                        .aspectRatio(4f / 3f)
+                        .aspectRatio(4f/3f)
                         .align(Alignment.CenterVertically),
                     shape = RoundedCornerShape(topEnd = 6.dp, bottomEnd = 6.dp),
-                    color = FermuxColors.mutedBlue
+                    color = FermuxColors.fermuxSurface
                 ) {
                     Box(
                         modifier = Modifier,
@@ -101,7 +104,7 @@ fun SeqMetadataCard(
                             minLines = 1,
                             fontStyle = FontStyle.Italic,
                             color = FermuxColors.offWhiteTextColor,
-                            fontSize = 14.sp,
+                            fontSize = 13.sp,
                         )
                     }
                     Box(
@@ -135,5 +138,18 @@ fun SeqMetadataCard(
                 }
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun test22() {
+    Column(
+        modifier = Modifier.fillMaxSize().padding(5.dp)
+    ) {
+        SeqMetadataCard(
+            modifier = Modifier,
+            onCancelRequest = {}
+        )
     }
 }

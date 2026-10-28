@@ -29,29 +29,34 @@ fun SeqWaitCard(
 ) {
 
 
-    val statusText = when (status) { // TODO. Should probably switch this for a loading bar
+    val statusText = when (status) {
         SequentialItemStatus.Waiting -> "Waiting"
         else -> null
         //  SequentialItemStatus.Failed -> item.error ?: "Download Failed"
-       // SequentialItemStatus.Cancelled -> "Cancelled" TODO. add a card for each of these
+        // SequentialItemStatus.Cancelled -> "Cancelled" TODO. add a card for each of these
     }
 
     val statusBall = when (status) {
         SequentialItemStatus.FetchingMetadata -> {
 
         }
+
         SequentialItemStatus.Waiting -> {
 
         }
+
         SequentialItemStatus.Downloading -> {
 
         }
+
         SequentialItemStatus.Completed -> {
 
         }
+
         SequentialItemStatus.Cancelled -> {
 
         }
+
         SequentialItemStatus.Failed -> {
 
         }
@@ -78,7 +83,7 @@ fun SeqWaitCard(
                     .aspectRatio(4f / 3f)
                     .align(Alignment.CenterVertically),
                 shape = RoundedCornerShape(topEnd = 6.dp, bottomEnd = 6.dp),
-                color = FermuxColors.mutedBlue
+                color = FermuxColors.fermuxSurface
             ) {
                 AsyncImage(
                     model = item.metadata?.thumbnail,
@@ -93,36 +98,54 @@ fun SeqWaitCard(
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(top = 10.dp, start = 5.dp)
-                    .fillMaxHeight()
+                    .fillMaxSize()
             ) {
-                Column {
-                    Text(
-                        text = item.metadata?.title ?: item.url,
-                        color = FermuxColors.white,
-                        maxLines = 2,
-                        fontSize = 16.sp,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(2.dp)
-                    )
-                    if (statusText != null) {
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(12.dp),
+                        contentAlignment = Alignment.TopStart
+                    ) {
                         Text(
-                            text = statusText,
-                            color = FermuxColors.offWhiteTextColor,
-                            fontSize = 15.sp,
+                            text = item.metadata?.title ?: item.url,
+                            color = FermuxColors.white,
+                            maxLines = 2,
+                            fontSize = 16.sp,
                             overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.padding(top = 22.dp)
                         )
                     }
+                    if (statusText != null) {
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(12.dp),
+                            contentAlignment = Alignment.TopStart
+                        ) {
+                            Text(
+                                text = statusText,
+                                color = FermuxColors.offWhiteTextColor,
+                                fontSize = 15.sp,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
+                    }
                 }
-                CancelButton(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(end = 1.dp, top = 5.dp),
-                    transparency = true,
-                    onClick = onCancelRequest
-                )
             }
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxSize()
+                        .padding(3.dp),
+                    contentAlignment = Alignment.CenterEnd
+                ) {
+                    CancelButton(
+                        transparency = true,
+                        onClick = onCancelRequest
+                    )
+                }
         }
     }
 }

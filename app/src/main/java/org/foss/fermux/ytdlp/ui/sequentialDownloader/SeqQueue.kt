@@ -42,7 +42,6 @@ fun SequentialQueue(
                                 )
 
                             },
-                            sequentialViewModel = sequentialViewModel
                         )
                     }
                     SequentialItemStatus.Waiting -> {

@@ -31,7 +31,7 @@ fun SeqFailedCard(
             .fillMaxWidth()
             .clickable { navController.navigate(Miscellaneous.DownloaderSeqLogs.route) }
             .height(100.dp),
-        color = FermuxColors.mutedBlue,
+        color = FermuxColors.darkPurple,
         shape = RoundedCornerShape(12.dp),
         border = BorderStroke(1.dp, FermuxColors.fermuxLightErrorTextColor),
         tonalElevation = 12.dp,

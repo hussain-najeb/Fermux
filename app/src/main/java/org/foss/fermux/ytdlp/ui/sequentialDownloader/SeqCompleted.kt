@@ -33,17 +33,15 @@ fun SeqCompletedCard(
         tonalElevation = 12.dp,
         shadowElevation = 12.dp
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth()
-        ) {
+        Row(modifier = Modifier.fillMaxWidth()) {
             Surface(
-                modifier = Modifier.aspectRatio(4f / 3f).align(Alignment.CenterVertically),
+                modifier = Modifier
+                    .aspectRatio(4f / 3f)
+                    .align(Alignment.CenterVertically),
                 shape = RoundedCornerShape(topEnd = 6.dp, bottomEnd = 6.dp),
                 color = FermuxColors.mutedBlue
             ) {
-                Box(
-                    modifier = Modifier.background(FermuxColors.fermuxSurface)
-                ) {
+                Box(modifier = Modifier.background(FermuxColors.fermuxSurface)) {
                     AsyncImage(
                         model = item.metadata?.thumbnail,
                         contentDescription = null,
@@ -51,7 +49,7 @@ fun SeqCompletedCard(
                         clipToBounds = true,
                     )
                     Box(
-                        modifier = Modifier.align(Alignment.Center).size(30.dp).background(
+                        modifier = Modifier.align(Alignment.Center).size(50.dp).background(
                             color = FermuxColors.warmPurple.copy(alpha = 0.70f),
                             shape = RoundedCornerShape(8.dp)
                         )
@@ -65,26 +63,34 @@ fun SeqCompletedCard(
                     }
                 }
             }
-            Box(
-                modifier = Modifier.weight(1f).padding(top = 10.dp, start = 5.dp).fillMaxHeight()
-            ) {
-                Column {
+            Column {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(12.dp),
+                    contentAlignment = Alignment.TopStart
+                ) {
                     Text(
-                        text = item.metadata?.title ?: item.url,
+                        text = "dw'lkmdaonmdpiauwndaiunwdop[aiknd",
+                        //  text = item.metadata?.title ?: item.url,
                         color = FermuxColors.white,
                         maxLines = 2,
                         fontSize = 16.sp,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(2.dp)
                     )
+                }
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(12.dp),
+                    contentAlignment = Alignment.BottomStart
+                ) {
                     Text(
                         text = "Download Done",
                         color = FermuxColors.offWhiteTextColor,
                         fontSize = 13.sp,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(top = 22.dp)
                     )
-
                 }
             }
         }

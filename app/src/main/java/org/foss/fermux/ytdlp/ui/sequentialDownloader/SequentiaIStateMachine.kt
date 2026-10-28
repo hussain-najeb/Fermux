@@ -54,7 +54,6 @@ fun SequentialStateMachine(
                 SequentialDone(
                     state = targetState,
                     navController = navController,
-                    sequentialViewModel = sequentialViewModel
                 )
             }
         }

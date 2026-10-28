@@ -1,7 +1,6 @@
 package org.foss.fermux.ytdlp.ui.sequentialDownloader
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -38,10 +37,9 @@ fun SeqCancelledCard(
                     .aspectRatio(4f / 3f)
                     .align(Alignment.CenterVertically),
                 shape = RoundedCornerShape(topEnd = 6.dp, bottomEnd = 6.dp),
-                color = FermuxColors.warmPurple
+                color = FermuxColors.fermuxSurface
             ) {
                 Box(
-                    modifier = Modifier.background(FermuxColors.fermuxSurface),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -68,7 +66,7 @@ fun SeqCancelledCard(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF102f60)
+@Preview(showBackground = true, backgroundColor = 0xFF15152e)
 @Composable
 fun test21() {
     Column(

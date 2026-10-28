@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.IconTextButton
@@ -22,10 +23,10 @@ import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
 fun SequentialDone(
     state: SequentialDownloadQueueState,
     modifier: Modifier = Modifier,
-    navController: NavController,
-    sequentialViewModel: SequentialViewModel
+    navController: NavController
 ) {
 
+    val sequentialViewModel: SequentialViewModel = viewModel()
     val context = LocalContext.current
 
     Column {
