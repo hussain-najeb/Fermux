@@ -1,6 +1,7 @@
 package org.foss.fermux.ytdlp.logic.sequentialDownloader
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -20,7 +21,7 @@ import java.util.*
 import kotlin.coroutines.cancellation.CancellationException
 
 const val SEQUENTIAL_URL = "seq_url"
-const val SEQUENTIAL_VIDEO = "video"
+const val SEQUENTIAL_VIDEO = "video" // TODO. ADD these at some point
 const val SEQUENTIAL_AUDIO = "audio"
 
 
@@ -78,9 +79,7 @@ class SequentialViewModel(
         )
         val settingsTab = DataStoreDownloaderSettings(context.applicationContext)
 
-
         allIDs = requestedUrlBuilder.map { it.id }
-
         downloaderJob = viewModelScope.launch {
             try {
                 val ytdlpDetails = settingsTab.ytdlpDetails.first()
@@ -137,7 +136,6 @@ class SequentialViewModel(
                             }
                         }
 
-
                         WorkInfo.State.FAILED -> {
                             val error = finished.outputData.getString("error")
 
@@ -170,9 +168,8 @@ class SequentialViewModel(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                DebugLogDownloader.errorDownloader(
-                    "DownloadAdmission", "Failed to enqueue id=${requestedUrlBuilder}", e
-                )
+                DebugLogDownloader.errorDownloader("DownloadAdmission", "Failed to enqueue id=${requestedUrlBuilder}", e)
+                Log.e("DownloadAdmission", "Failed to enqueue id=${requestedUrlBuilder}", e)
                 state = state.copy(phase = SequentialStatus.SeqDone)
             }
         }
@@ -181,6 +178,7 @@ class SequentialViewModel(
     fun allDestroyer(context: Context) {
         WorkManager.getInstance(context).cancelAllWorkByTag("destroy-all-workers")
         downloaderJob?.cancel()
+        downloadUrl = mutableStateListOf("")
         state = SequentialDownloadQueueState(phase = SequentialStatus.SeqIdle)
     }
 

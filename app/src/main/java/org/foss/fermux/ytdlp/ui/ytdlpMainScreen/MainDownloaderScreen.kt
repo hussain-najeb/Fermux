@@ -134,6 +134,8 @@ fun DownloadContent(
                                    unfocusedBorderColor = FermuxColors.fermuxHelperBorder,
                                    focusedLabelColor = FermuxColors.gray,
                                    cursorColor = FermuxColors.white,
+                                   focusedTextColor = FermuxColors.white,
+                                   unfocusedTextColor = FermuxColors.white,
                                    errorTextColor = FermuxColors.fermuxLightErrorTextColor,
                                    errorBorderColor = FermuxColors.fermuxHelperBorder,
                                    errorLabelColor = FermuxColors.fermuxLightErrorTextColor,

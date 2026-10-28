@@ -11,7 +11,6 @@ interface FFmpegSettingsRepo {
 
      val audioBitrate: Flow<String>
      val ffmpegBellState: Flow<Boolean>
-     val ffmpegDebug: Flow<Boolean>
      val normalizeAudio: Flow<Boolean>
      val monoDownmix: Flow<Boolean>
      val enableVideoCompression: Flow<Boolean>
@@ -22,7 +21,6 @@ interface FFmpegSettingsRepo {
 
      suspend fun setAudioBitrate(value: String)
      suspend fun setFFmpegBellState(value: Boolean)
-     suspend fun setFFmpegDebug(value: Boolean)
      suspend fun setNormalizeAudio(value: Boolean)
      suspend fun setMonoDownmix(value: Boolean)
      suspend fun setEnableVideoCompression(value: Boolean)
@@ -36,7 +34,6 @@ interface FFmpegSettingsRepo {
 
 data class FFmpegSettingsSnapshot(
      val audioBitrate: String?,
-     val ffmpegDebug: Boolean?,
      val normalizeAudio: Boolean?,
      val monoDownmix: Boolean?,
      val enableVideoCompression: Boolean?,
@@ -48,7 +45,6 @@ data class FFmpegSettingsSnapshot(
 
 val AUDIO_BITRATE_KEY = stringPreferencesKey("ffmpeg_audio_bitrate")
 val FFMPEG_BELL_STATE = booleanPreferencesKey("ffmpeg_notifs")
-val FFMPEG_DEBUG = booleanPreferencesKey("debug_switch")
 val NORMALIZE_AUDIO_KEY = booleanPreferencesKey("ffmpeg_normalize_audio")
 val MONO_DOWNMIX_KEY = booleanPreferencesKey("ffmpeg_mono_downmix")
 val ENABLE_VIDEO_COMPRESSION_KEY = booleanPreferencesKey("ffmpeg_enable_video_compression")
@@ -66,9 +62,6 @@ class DataStoreFFmpegSettings(private val settingStore: DataStore<Preferences>) 
           settingStore.data.map { preferences -> preferences[AUDIO_BITRATE_KEY] ?: "" }
      override val ffmpegBellState: Flow<Boolean> =
                settingStore.data.map { preferences -> preferences[FFMPEG_BELL_STATE] ?: false }
-
-     override val ffmpegDebug: Flow<Boolean> =
-          settingStore.data.map { preferences -> preferences[FFMPEG_DEBUG] ?: false }
      override val normalizeAudio: Flow<Boolean> =
           settingStore.data.map { preferences -> preferences[NORMALIZE_AUDIO_KEY] ?: false }
      override val monoDownmix: Flow<Boolean> = settingStore.data.map { it[MONO_DOWNMIX_KEY] ?: false }
@@ -86,11 +79,6 @@ class DataStoreFFmpegSettings(private val settingStore: DataStore<Preferences>) 
      override suspend fun setFFmpegBellState(value: Boolean) {
           settingStore.edit { preferences -> preferences[FFMPEG_BELL_STATE] = value }
      }
-
-     override suspend fun setFFmpegDebug(value: Boolean) {
-          settingStore.edit { preferences -> preferences[FFMPEG_DEBUG] = value }
-     }
-
 
      override suspend fun setNormalizeAudio(value: Boolean) {
           settingStore.edit { preferences -> preferences[NORMALIZE_AUDIO_KEY] = value }
@@ -132,7 +120,6 @@ class DataStoreFFmpegSettings(private val settingStore: DataStore<Preferences>) 
           settingStore.edit { preferences ->
                snapshot = FFmpegSettingsSnapshot(
                     audioBitrate = preferences[AUDIO_BITRATE_KEY],
-                    ffmpegDebug = preferences[FFMPEG_DEBUG],
                     normalizeAudio = preferences[NORMALIZE_AUDIO_KEY],
                     monoDownmix = preferences[MONO_DOWNMIX_KEY],
                     enableVideoCompression = preferences[ENABLE_VIDEO_COMPRESSION_KEY],
@@ -142,7 +129,6 @@ class DataStoreFFmpegSettings(private val settingStore: DataStore<Preferences>) 
                     threadLimit = preferences[THREAD_LIMIT_KEY]
                )
                preferences.remove(AUDIO_BITRATE_KEY)
-               preferences.remove(FFMPEG_DEBUG)
                preferences.remove(NORMALIZE_AUDIO_KEY)
                preferences.remove(MONO_DOWNMIX_KEY)
                preferences.remove(ENABLE_VIDEO_COMPRESSION_KEY)
@@ -157,7 +143,6 @@ class DataStoreFFmpegSettings(private val settingStore: DataStore<Preferences>) 
      override suspend fun restoreFFmpeg(snapshot: FFmpegSettingsSnapshot) {
           settingStore.edit { preferences ->
                preferences.restore(AUDIO_BITRATE_KEY, snapshot.audioBitrate)
-               preferences.restore(FFMPEG_DEBUG, snapshot.ffmpegDebug)
                preferences.restore(NORMALIZE_AUDIO_KEY, snapshot.normalizeAudio)
                preferences.restore(MONO_DOWNMIX_KEY, snapshot.monoDownmix)
                preferences.restore(ENABLE_VIDEO_COMPRESSION_KEY, snapshot.enableVideoCompression)

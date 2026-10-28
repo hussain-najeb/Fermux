@@ -15,7 +15,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
@@ -117,20 +116,19 @@ fun SequentialIdle(
                             minLines = 1,
                             maxLines = 7,
                             colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = FermuxColors.fermuxSecondaryBorder,
-                                unfocusedBorderColor = FermuxColors.fermuxGenericBorder,
-                                focusedLabelColor = FermuxColors.fermuxPrimaryBorder,
-                                unfocusedLabelColor = FermuxColors.offWhiteTextColor,
-                                cursorColor = FermuxColors.fermuxGenericBorder,
-                                focusedTextColor = Color.White,
-                                unfocusedTextColor = Color.White,
+                                focusedBorderColor = FermuxColors.fermuxGenericBorder,
+                                unfocusedBorderColor = FermuxColors.fermuxHelperBorder,
+                                focusedLabelColor = FermuxColors.gray,
+                                cursorColor = FermuxColors.white,
+                                focusedTextColor = FermuxColors.white,
+                                unfocusedTextColor = FermuxColors.white,
                                 errorTextColor = FermuxColors.fermuxLightErrorTextColor,
-                                errorBorderColor = FermuxColors.fermuxLightErrorTextColor,
+                                errorBorderColor = FermuxColors.fermuxHelperBorder,
                                 errorLabelColor = FermuxColors.fermuxLightErrorTextColor,
                                 errorCursorColor = FermuxColors.fermuxLightErrorTextColor,
-                                errorContainerColor = FermuxColors.fermuxErrorCardColor,
+                                errorContainerColor = FermuxColors.darkPurple,
                                 unfocusedContainerColor = FermuxColors.warmPurple,
-                                focusedContainerColor = FermuxColors.inActiveTextField
+                                focusedContainerColor = FermuxColors.darkPurple
                             ),
                             keyboardOptions = KeyboardOptions(
                                 imeAction = ImeAction.Send,

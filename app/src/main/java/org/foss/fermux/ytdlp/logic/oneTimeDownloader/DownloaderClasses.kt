@@ -38,15 +38,6 @@ data class SequentialDownloadQueueState(
 ) {
      val currentItem: SequentialItem?
           get() = items.firstOrNull { it.status.isActive }
-
-     val currentIndex: Int
-          get() = items.indexOfFirst { it.status.isActive }
-
-     val completedItems: List<SequentialItem>
-          get() = items.filter { it.status == SequentialItemStatus.Completed }
-
-     val failedItems: List<SequentialItem>
-          get() = items.filter { it.status == SequentialItemStatus.Failed }
 }
 
 enum class SequentialStatus {

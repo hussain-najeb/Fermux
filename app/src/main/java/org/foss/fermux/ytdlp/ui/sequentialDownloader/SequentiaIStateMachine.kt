@@ -41,6 +41,7 @@ fun SequentialStateMachine(
                     sequentialViewModel = sequentialViewModel
                 )
             }
+
             SequentialStatus.SeqDownload -> {
                 SequentialQueue(
                     state = targetState,
@@ -48,6 +49,7 @@ fun SequentialStateMachine(
                     navController = navController
                 )
             }
+
             SequentialStatus.SeqDone -> {
                 SequentialDone(
                     state = targetState,

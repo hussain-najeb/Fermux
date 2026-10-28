@@ -24,8 +24,6 @@ class FFmpegSettingsViewModel(application: Application) : AndroidViewModel(appli
 
      val ffmpegBellState: StateFlow<Boolean> = ffmpegSettings.ffmpegBellState
           .stateIn(viewModelScope, SharingStarted.Lazily, false)
-     val ffmpegDebug: StateFlow<Boolean> = ffmpegSettings.ffmpegDebug
-          .stateIn(viewModelScope, SharingStarted.Lazily, false)
      val normalizeAudio: StateFlow<Boolean> = ffmpegSettings.normalizeAudio
           .stateIn(viewModelScope, SharingStarted.Lazily, false)
      val monoDownmix: StateFlow<Boolean> = ffmpegSettings.monoDownmix

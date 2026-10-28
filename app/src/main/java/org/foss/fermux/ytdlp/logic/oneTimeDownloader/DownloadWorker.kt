@@ -29,12 +29,6 @@ import org.foss.fermux.utils.DebugLogDownloader
 import org.foss.fermux.ytdlp.logic.sequentialDownloader.SEQUENTIAL_URL
 import kotlin.math.roundToInt
 
-/**
- * The downloads worker for background, asynchronous work.
- * This class handles most of the settings work for the [org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage]
- * page and [DownloaderSettingsTab] as well as handling the history cards.
- */
-
 class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
     private val downloaderWorkNotif: NotificationManager
@@ -62,7 +56,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWork
 
     val openRoute = PendingIntent.getActivity(
         applicationContext,
-      id.hashCode(),
+        id.hashCode(),
         routeSetup,
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
@@ -283,18 +277,16 @@ class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWork
 
         } catch (e: CancellationException) {
             val destroyed = YoutubeDL.destroyProcessById(taskId)
-            DebugLogDownloader.errorDownloader(
-                "DownloadWorker",
-                "Cancelled id=$taskId stopReason=$stopReason destroyed=$destroyed",
-                e
-            )
+            DebugLogDownloader.errorDownloader("DownloadWorker", "Cancelled id=$taskId stopReason=$stopReason destroyed=$destroyed", e)
+            Log.e("DownloadWorker", "Cancelled id=$taskId stopReason=$stopReason destroyed=$destroyed", e)
             throw e
         } catch (e: Exception) {
             DebugLogDownloader.errorDownloader("DownloadWorker", "Failed id=$taskId attempt=$runAttemptCount", e)
+            Log.e("DownloadWorker", "Failed id=$taskId attempt=$runAttemptCount", e)
             val error = e.message
                 ?.take(9_000)
                 ?: "Download failed"
-          downloaderWorkNotif.notify(DOWNLOAD_NOTIFICATION_ID, onFailureNotif())
+            downloaderWorkNotif.notify(DOWNLOAD_NOTIFICATION_ID, onFailureNotif())
             Result.failure(workDataOf("error" to error))
         }
     }

@@ -24,7 +24,7 @@ fun SeqCancelledCard(
         modifier = modifier
             .fillMaxWidth()
             .height(100.dp),
-        color = FermuxColors.mutedBlue,
+        color = FermuxColors.darkPurple,
         shape = RoundedCornerShape(12.dp),
         border = BorderStroke(1.dp, FermuxColors.warmPurple),
         tonalElevation = 12.dp,
@@ -38,7 +38,7 @@ fun SeqCancelledCard(
                     .aspectRatio(4f / 3f)
                     .align(Alignment.CenterVertically),
                 shape = RoundedCornerShape(topEnd = 6.dp, bottomEnd = 6.dp),
-                color = FermuxColors.mutedBlue
+                color = FermuxColors.warmPurple
             ) {
                 Box(
                     modifier = Modifier.background(FermuxColors.fermuxSurface),
