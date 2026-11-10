@@ -33,7 +33,7 @@ fun SeqDownloadCard(
     modifier: Modifier,
     item: SequentialItem,
     sequentialViewModel: SequentialViewModel,
-onCancelRequest: () -> Unit
+    onCancelRequest: () -> Unit
 ) {
 
     val context = LocalContext.current

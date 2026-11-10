@@ -19,303 +19,306 @@ import org.foss.fermux.ytdlp.logic.oneTimeDownloader.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(application) {
-     private val settingsTab = DataStoreDownloaderSettings(application.applicationContext)
+    private val settingsTab = DataStoreDownloaderSettings(application.applicationContext)
 
-     init {
-          viewModelScope.launch {
-               settingsTab.downloaderDebug.collect {
-                    DebugLogDownloader.setEnable(it)
-               }
-          }
-     }
+    init {
+        viewModelScope.launch {
+            settingsTab.downloaderDebug.collect {
+                DebugLogDownloader.setEnable(it)
+            }
+        }
+    }
 
-     val downloadPath: StateFlow<String> = settingsTab.downloadPath
-          .stateIn(viewModelScope, SharingStarted.Lazily, "")
+    val downloadPath: StateFlow<String> = settingsTab.downloadPath
+        .stateIn(viewModelScope, SharingStarted.Lazily, "")
 
-     val downloaderBellState: StateFlow<Boolean> = settingsTab.downloaderBellState
-          .stateIn(viewModelScope, SharingStarted.Lazily, false)
+    val downloaderBellState: StateFlow<Boolean> = settingsTab.downloaderBellState
+        .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
-     val quickJS: StateFlow<Boolean> = settingsTab.quickJS
-          .stateIn(viewModelScope, SharingStarted.Lazily, true )
+    val quickJS: StateFlow<Boolean> = settingsTab.quickJS
+        .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
-     val downloaderDebug: StateFlow<Boolean> = settingsTab.downloaderDebug
-          .stateIn(viewModelScope, SharingStarted.Lazily, false)
+    val downloaderDebug: StateFlow<Boolean> = settingsTab.downloaderDebug
+        .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
-     val fingerprint: StateFlow<Boolean> = settingsTab.fingerprinting
-          .stateIn(viewModelScope, SharingStarted.Lazily, true)
+    val fingerprint: StateFlow<Boolean> = settingsTab.fingerprinting
+        .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
-     val sleepRequest: StateFlow<Int> = settingsTab.sleepRequest
-          .stateIn(viewModelScope, SharingStarted.Lazily, 0)
+    val sleepRequest: StateFlow<Int> = settingsTab.sleepRequest
+        .stateIn(viewModelScope, SharingStarted.Lazily, 0)
 
-     val playlistState: StateFlow<Boolean> = settingsTab.playlistStatus
-          .stateIn(viewModelScope, SharingStarted.Lazily, true)
+    val playlistState: StateFlow<Boolean> = settingsTab.playlistStatus
+        .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
-     val aria2cMode: StateFlow<Aria2cMode> = settingsTab.aria2cMode
-     .stateIn(viewModelScope, SharingStarted.Lazily, Aria2cMode.Disabled)
+    val aria2cMode: StateFlow<Aria2cMode> = settingsTab.aria2cMode
+        .stateIn(viewModelScope, SharingStarted.Lazily, Aria2cMode.Disabled)
 
-     val thumbnailFormat: StateFlow<ThumbnailFormat> = settingsTab.thumbnailFormat
-          .stateIn(viewModelScope, SharingStarted.Lazily, ThumbnailFormat.Png)
+    val thumbnailFormat: StateFlow<ThumbnailFormat> = settingsTab.thumbnailFormat
+        .stateIn(viewModelScope, SharingStarted.Lazily, ThumbnailFormat.Png)
 
-     val audioFormats: StateFlow<AudioFormat> = settingsTab.audioFormat
-          .stateIn(viewModelScope, SharingStarted.Lazily, AudioFormat.Mp3Format)
+    val audioFormats: StateFlow<AudioFormat> = settingsTab.audioFormat
+        .stateIn(viewModelScope, SharingStarted.Lazily, AudioFormat.Mp3Format)
 
-     val videoFormats: StateFlow<VideoFormat> = settingsTab.videoFormat
-          .stateIn(viewModelScope, SharingStarted.Lazily, VideoFormat.Mp4Format)
+    val videoFormats: StateFlow<VideoFormat> = settingsTab.videoFormat
+        .stateIn(viewModelScope, SharingStarted.Lazily, VideoFormat.Mp4Format)
 
-     val videoComp: StateFlow<Boolean> = settingsTab.videoComp
-          .stateIn(viewModelScope, SharingStarted.Lazily, false)
+    val videoComp: StateFlow<Boolean> = settingsTab.videoComp
+        .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
-     val externalDownloaders: StateFlow<ExternalDownloaders> = settingsTab.externalDownloaders
-          .stateIn(viewModelScope, SharingStarted.Lazily, ExternalDownloaders.YtdlpNativeDownloader)
+    val externalDownloaders: StateFlow<ExternalDownloaders> = settingsTab.externalDownloaders
+        .stateIn(viewModelScope, SharingStarted.Lazily, ExternalDownloaders.YtdlpNativeDownloader)
 
-     val history: StateFlow<Boolean> = settingsTab.history
-          .stateIn(viewModelScope, SharingStarted.Lazily, true)
+    val history: StateFlow<Boolean> = settingsTab.history
+        .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
-     val embedThumbnail: StateFlow<Boolean> = settingsTab.embedThumbnail
-          .stateIn(viewModelScope, SharingStarted.Lazily, true)
+    val embedThumbnail: StateFlow<Boolean> = settingsTab.embedThumbnail
+        .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
-     val ytdlpDetails: StateFlow<Boolean> = settingsTab.ytdlpDetails
-          .stateIn(viewModelScope, SharingStarted.Lazily, false)
+    val ytdlpDetails: StateFlow<Boolean> = settingsTab.ytdlpDetails
+        .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
-     val sponsorBlock: StateFlow<Boolean> = settingsTab.sponsorBlock
-          .stateIn(viewModelScope, SharingStarted.Lazily, true)
+    val sponsorBlock: StateFlow<Boolean> = settingsTab.sponsorBlock
+        .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
-     val sponsorBlockCategories: StateFlow<Set<String>> = settingsTab.sponsorBlockCategories
-          .stateIn(viewModelScope, SharingStarted.Lazily, setOf("sponsor", "selfpromo", "interaction"))
+    val sponsorBlockCategories: StateFlow<Set<String>> = settingsTab.sponsorBlockCategories
+        .stateIn(viewModelScope, SharingStarted.Lazily, setOf("sponsor", "selfpromo", "interaction"))
 
-     val upToDate: StateFlow<Boolean> = settingsTab.upToDate
-          .stateIn(viewModelScope, SharingStarted.Lazily, false)
+    val upToDate: StateFlow<Boolean> = settingsTab.upToDate
+        .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
-     val ytdlpChannel: StateFlow<YtdlpChannel> = settingsTab.ytdlpChannel
-          .stateIn(viewModelScope, SharingStarted.Lazily, YtdlpChannel.Nightly)
+    val ytdlpChannel: StateFlow<YtdlpChannel> = settingsTab.ytdlpChannel
+        .stateIn(viewModelScope, SharingStarted.Lazily, YtdlpChannel.Nightly)
 
-     val wifi: StateFlow<Connectivity> = settingsTab.wifi
-          .stateIn(viewModelScope, SharingStarted.Lazily, Connectivity.Any)
+    val wifi: StateFlow<Connectivity> = settingsTab.wifi
+        .stateIn(viewModelScope, SharingStarted.Lazily, Connectivity.Any)
 
-     val ipv: StateFlow<IpvConnection> = settingsTab.ipvConnection
-          .stateIn(viewModelScope, SharingStarted.Lazily, IpvConnection.Disabled)
+    val ipv: StateFlow<IpvConnection> = settingsTab.ipvConnection
+        .stateIn(viewModelScope, SharingStarted.Lazily, IpvConnection.Disabled)
 
-     val fragRetries: StateFlow<Int> = settingsTab.fragRetries
-          .stateIn(viewModelScope, SharingStarted.Lazily, 10)
+    val fragRetries: StateFlow<Int> = settingsTab.fragRetries
+        .stateIn(viewModelScope, SharingStarted.Lazily, 10)
 
-     val retries: StateFlow<Int> = settingsTab.retries
-          .stateIn(viewModelScope, SharingStarted.Lazily, 10)
+    val retries: StateFlow<Int> = settingsTab.retries
+        .stateIn(viewModelScope, SharingStarted.Lazily, 10)
 
-     val quickDownloads: StateFlow<Boolean> = settingsTab.quickDownloads
-          .stateIn(viewModelScope, SharingStarted.Lazily, true)
+    val quickDownloads: StateFlow<Boolean> = settingsTab.quickDownloads
+        .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
-     val quickFormat: StateFlow<QuickDownloadFormats> = settingsTab.quickFormat
-          .stateIn(viewModelScope, SharingStarted.Lazily, QuickDownloadFormats.QuickVideo)
+    val quickFormat: StateFlow<QuickDownloadFormats> = settingsTab.quickFormat
+        .stateIn(viewModelScope, SharingStarted.Lazily, QuickDownloadFormats.QuickVideo)
 
-     val quickAudio: StateFlow<QuickAudioQuality> = settingsTab.quickAudio
-          .stateIn(viewModelScope, SharingStarted.Lazily, QuickAudioQuality.Best)
+    val quickAudio: StateFlow<QuickAudioQuality> = settingsTab.quickAudio
+        .stateIn(viewModelScope, SharingStarted.Lazily, QuickAudioQuality.Best)
 
-     val quickVideo: StateFlow<QuickVideoQuality> = settingsTab.quickVideo
-          .stateIn(viewModelScope, SharingStarted.Lazily, QuickVideoQuality.HD1080)
+    val quickVideo: StateFlow<QuickVideoQuality> = settingsTab.quickVideo
+        .stateIn(viewModelScope, SharingStarted.Lazily, QuickVideoQuality.HD1080)
 
-     val seqFormat: StateFlow<SeqFormat> = settingsTab.seqFormat
-          .stateIn(viewModelScope, SharingStarted.Lazily, SeqFormat.SeqVideo)
+    val seqFormat: StateFlow<SeqFormat> = settingsTab.seqFormat
+        .stateIn(viewModelScope, SharingStarted.Lazily, SeqFormat.SeqVideo)
 
-     val seqAudio: StateFlow<SeqAudioQuality> = settingsTab.seqAudio
-          .stateIn(viewModelScope, SharingStarted.Lazily, SeqAudioQuality.Best)
+    val seqAudio: StateFlow<SeqAudioQuality> = settingsTab.seqAudio
+        .stateIn(viewModelScope, SharingStarted.Lazily, SeqAudioQuality.Best)
 
-     val seqVideo: StateFlow<SeqVideoQuality> = settingsTab.seqVideo
-          .stateIn(viewModelScope, SharingStarted.Lazily, SeqVideoQuality.HD720)
-
-     fun setSleepRequest(value: Int) {
-          viewModelScope.launch { settingsTab.setSleepRequest(value) }
-     }
-
-     fun setAria2cMode(value: Aria2cMode) {
-          viewModelScope.launch { settingsTab.setAria2cMode(value) }
-     }
-
-     fun setThumbnailFormat(value: ThumbnailFormat) {
-          viewModelScope.launch { settingsTab.setThumbnail(value) }
-     }
-
-     fun setAudioFormat(value: AudioFormat) {
-          viewModelScope.launch { settingsTab.setAudioFormat(value) }
-     }
-
-     fun setVideoFormat(value: VideoFormat) {
-          viewModelScope.launch { settingsTab.setVideoFormat(value) }
-     }
-
-     fun setVideoComp(value: Boolean) {
-          viewModelScope.launch { settingsTab.setVideoComp(value) }
-     }
-
-     fun setExternalDownloaders(value: ExternalDownloaders) {
-          viewModelScope.launch { settingsTab.setExternalDownloader(value) }
-     }
-
-     fun setPlaylistState(value: Boolean) {
-          viewModelScope.launch { settingsTab.setPlaylistStatus(value) }
-     }
-
-     fun setEmbedThumbnail(value: Boolean) {
-          viewModelScope.launch { settingsTab.setEmbedThumbnail(value) }
-     }
+    val seqVideo: StateFlow<SeqVideoQuality> = settingsTab.seqVideo
+        .stateIn(viewModelScope, SharingStarted.Lazily, SeqVideoQuality.HD720)
+
+    fun setSleepRequest(value: Int) {
+        viewModelScope.launch { settingsTab.setSleepRequest(value) }
+    }
+
+    fun setAria2cMode(value: Aria2cMode) {
+        viewModelScope.launch { settingsTab.setAria2cMode(value) }
+    }
+
+    fun setThumbnailFormat(value: ThumbnailFormat) {
+        viewModelScope.launch { settingsTab.setThumbnail(value) }
+    }
+
+    fun setAudioFormat(value: AudioFormat) {
+        viewModelScope.launch { settingsTab.setAudioFormat(value) }
+    }
+
+    fun setVideoFormat(value: VideoFormat) {
+        viewModelScope.launch { settingsTab.setVideoFormat(value) }
+    }
+
+    fun setVideoComp(value: Boolean) {
+        viewModelScope.launch { settingsTab.setVideoComp(value) }
+    }
+
+    fun setExternalDownloaders(value: ExternalDownloaders) {
+        viewModelScope.launch { settingsTab.setExternalDownloader(value) }
+    }
+
+    fun setPlaylistState(value: Boolean) {
+        viewModelScope.launch { settingsTab.setPlaylistStatus(value) }
+    }
+
+    fun setEmbedThumbnail(value: Boolean) {
+        viewModelScope.launch { settingsTab.setEmbedThumbnail(value) }
+    }
 
-     fun setHistory(value: Boolean) {
-          viewModelScope.launch { settingsTab.setHistory(value) }
-     }
+    fun setHistory(value: Boolean) {
+        viewModelScope.launch { settingsTab.setHistory(value) }
+    }
 
-     fun setQuickJS(value: Boolean) {
-          viewModelScope.launch { settingsTab.setQuickJS(value) }
-     }
+    fun setQuickJS(value: Boolean) {
+        viewModelScope.launch { settingsTab.setQuickJS(value) }
+    }
 
-     fun setDownloaderDebug(value: Boolean) {
-          DebugLogDownloader.setEnable(value)
-          viewModelScope.launch { settingsTab.setDownloaderDebug(value) }
-     }
+    fun setDownloaderDebug(value: Boolean) {
+        DebugLogDownloader.setEnable(value)
+        viewModelScope.launch { settingsTab.setDownloaderDebug(value) }
+    }
 
-     fun setFingerprint(value: Boolean) {
-          viewModelScope.launch { settingsTab.setFingerprinting(value) }
-     }
+    fun setFingerprint(value: Boolean) {
+        viewModelScope.launch { settingsTab.setFingerprinting(value) }
+    }
 
-     fun setYtdlpDetails(value: Boolean) {
-          viewModelScope.launch { settingsTab.setYtdlpDetails(value) }
-     }
+    fun setYtdlpDetails(value: Boolean) {
+        viewModelScope.launch { settingsTab.setYtdlpDetails(value) }
+    }
 
-     fun setSponsorBlock(value: Boolean) {
-          viewModelScope.launch { settingsTab.setSponsorBlock(value) }
-     }
+    fun setSponsorBlock(value: Boolean) {
+        viewModelScope.launch { settingsTab.setSponsorBlock(value) }
+    }
 
-     fun setSponsorBlockCategories(value: Set<String>) {
-          viewModelScope.launch { settingsTab.setSponsorBlockCategories(value) }
-     }
+    fun setSponsorBlockCategories(value: Set<String>) {
+        viewModelScope.launch { settingsTab.setSponsorBlockCategories(value) }
+    }
 
-     fun setDownloadPath(value: String) {
-          viewModelScope.launch { settingsTab.setDownloadPath(value) }
-     }
+    fun setDownloadPath(value: String) {
+        viewModelScope.launch { settingsTab.setDownloadPath(value) }
+    }
 
-     fun setDownloaderBellState(value: Boolean) {
-          viewModelScope.launch { settingsTab.setDownloaderBellState(value) }
-     }
+    fun setDownloaderBellState(value: Boolean) {
+        viewModelScope.launch { settingsTab.setDownloaderBellState(value) }
+    }
 
-     fun setWifi(value: Connectivity) {
-          viewModelScope.launch { settingsTab.setWifi(value) }
-     }
+    fun setWifi(value: Connectivity) {
+        viewModelScope.launch { settingsTab.setWifi(value) }
+    }
 
-     fun setIpvConnection(value: IpvConnection) {
-          viewModelScope.launch { settingsTab.setIpvConnection(value) }
-     }
+    fun setIpvConnection(value: IpvConnection) {
+        viewModelScope.launch { settingsTab.setIpvConnection(value) }
+    }
 
-     fun setFragRetries(value: Int) {
-          viewModelScope.launch { settingsTab.setFragRetries(value) }
-     }
+    fun setFragRetries(value: Int) {
+        viewModelScope.launch { settingsTab.setFragRetries(value) }
+    }
 
-     fun setRetries(value: Int) {
-          viewModelScope.launch { settingsTab.setRetries(value) }
-     }
+    fun setRetries(value: Int) {
+        viewModelScope.launch { settingsTab.setRetries(value) }
+    }
 
-     fun setQuickDownloads(value: Boolean) {
-          viewModelScope.launch { settingsTab.setQuickDownloads(value) }
-     }
+    fun setQuickDownloads(value: Boolean) {
+        viewModelScope.launch { settingsTab.setQuickDownloads(value) }
+    }
 
-     suspend fun resetDownloaderSettings(): DownloaderSettingsSnapshot {
-          return settingsTab.resetYtdlp()
-     }
+    suspend fun resetDownloaderSettings(): DownloaderSettingsSnapshot {
+        return settingsTab.resetYtdlp()
+    }
 
-     suspend fun restoreDownloaderSettings(snapshot: DownloaderSettingsSnapshot) {
-          settingsTab.restoreYtdlp(snapshot)
-     }
+    suspend fun restoreDownloaderSettings(snapshot: DownloaderSettingsSnapshot) {
+        settingsTab.restoreYtdlp(snapshot)
+    }
 
-     suspend fun resetArguments(): DownloaderArgumentsSnapshot {
-          return settingsTab.resetArgs()
-     }
+    suspend fun resetArguments(): DownloaderArgumentsSnapshot {
+        return settingsTab.resetArgs()
+    }
 
-     suspend fun restoreArguments(snapshot: DownloaderArgumentsSnapshot) {
-          settingsTab.restoreArgs(snapshot)
-     }
+    suspend fun restoreArguments(snapshot: DownloaderArgumentsSnapshot) {
+        settingsTab.restoreArgs(snapshot)
+    }
 
-     fun setQuickFormat(value: QuickDownloadFormats) {
-          viewModelScope.launch { settingsTab.setQuickFormat(value) }
-     }
+    fun setQuickFormat(value: QuickDownloadFormats) {
+        viewModelScope.launch { settingsTab.setQuickFormat(value) }
+    }
 
-     fun setQuickVideo(value: QuickVideoQuality) {
-          viewModelScope.launch { settingsTab.setQuickVideo(value) }
-     }
+    fun setQuickVideo(value: QuickVideoQuality) {
+        viewModelScope.launch { settingsTab.setQuickVideo(value) }
+    }
 
-     fun setQuickAudio(value: QuickAudioQuality) {
-          viewModelScope.launch { settingsTab.setQuickAudio(value) }
-     }
+    fun setQuickAudio(value: QuickAudioQuality) {
+        viewModelScope.launch { settingsTab.setQuickAudio(value) }
+    }
 
-     fun setSeqFormat(value: SeqFormat) {
-          viewModelScope.launch { settingsTab.setSeqFormat(value) }
-     }
+    fun setSeqFormat(value: SeqFormat) {
+        viewModelScope.launch { settingsTab.setSeqFormat(value) }
+    }
 
-     fun setSeqAudio(value: SeqAudioQuality) {
-          viewModelScope.launch { settingsTab.setSeqAudio(value) }
-     }
+    fun setSeqAudio(value: SeqAudioQuality) {
+        viewModelScope.launch { settingsTab.setSeqAudio(value) }
+    }
 
-     fun setSeqVideo(value: SeqVideoQuality) {
-          viewModelScope.launch { settingsTab.setSeqVideo(value) }
-     }
+    fun setSeqVideo(value: SeqVideoQuality) {
+        viewModelScope.launch { settingsTab.setSeqVideo(value) }
+    }
 
-     private val isUpdatingYtdlp = AtomicBoolean(false)
+    private val isUpdatingYtdlp = AtomicBoolean(false)
 
-     private val _isCheckingForUpdate = MutableStateFlow(false)
+    private val _isCheckingForUpdate = MutableStateFlow(false)
 
-     val isCheckingForUpdate: StateFlow<Boolean> = _isCheckingForUpdate
+    val isCheckingForUpdate: StateFlow<Boolean> = _isCheckingForUpdate
 
-     private val _ytdlpUpdateStatus = MutableStateFlow<String?>(null)
+    private val _ytdlpUpdateStatus = MutableStateFlow<String?>(null)
 
-     val ytdlpUpdateStatus: StateFlow<String?> = _ytdlpUpdateStatus
+    val ytdlpUpdateStatus: StateFlow<String?> = _ytdlpUpdateStatus
 
-     private val _currentVersionName = MutableStateFlow(YoutubeDL.getInstance().versionName(getApplication()) ?: "Unknown")
+    private val _currentVersionName =
+        MutableStateFlow(YoutubeDL.getInstance().versionName(getApplication()) ?: "Unknown")
 
-     val currentVersionName: StateFlow<String> = _currentVersionName
+    val currentVersionName: StateFlow<String> = _currentVersionName
 
 
-     fun checkYtdlpUpdate(channel: YtdlpChannel) {
-          if (!isUpdatingYtdlp.compareAndSet(false, true)) return
+    fun checkYtdlpUpdate(channel: YtdlpChannel) {
+        if (!isUpdatingYtdlp.compareAndSet(false, true)) return
 
-          _isCheckingForUpdate.value = true
+        _isCheckingForUpdate.value = true
 
-          viewModelScope.launch(Dispatchers.IO) {
-               _ytdlpUpdateStatus.value = "Updating yt-dlp..."
+        viewModelScope.launch(Dispatchers.IO) {
+            _ytdlpUpdateStatus.value = "Updating yt-dlp..."
 
-               try {
-                    settingsTab.setYtdlpChannel(channel)
+            try {
+                settingsTab.setYtdlpChannel(channel)
 
-                    val updateChannel = when (channel) {
-                         YtdlpChannel.Stable -> YoutubeDL.UpdateChannel.STABLE
-                         YtdlpChannel.Nightly -> YoutubeDL.UpdateChannel.NIGHTLY
-                         YtdlpChannel.Master -> YoutubeDL.UpdateChannel.MASTER
+                val updateChannel = when (channel) {
+                    YtdlpChannel.Stable -> YoutubeDL.UpdateChannel.STABLE
+                    YtdlpChannel.Nightly -> YoutubeDL.UpdateChannel.NIGHTLY
+                    YtdlpChannel.Master -> YoutubeDL.UpdateChannel.MASTER
+                }
+
+                val result = YoutubeDL.getInstance().updateYoutubeDL(
+                    appContext = getApplication(),
+                    updateChannel = updateChannel
+                )
+
+                _ytdlpUpdateStatus.value = when (result) {
+                    YoutubeDL.UpdateStatus.DONE -> {
+                        settingsTab.setUpToDate(true)
+                        "yt-dlp updated successfully"
                     }
 
-                    val result = YoutubeDL.getInstance().updateYoutubeDL(
-                         appContext = getApplication(),
-                         updateChannel = updateChannel
-                    )
-
-                    _ytdlpUpdateStatus.value = when (result) {
-                         YoutubeDL.UpdateStatus.DONE -> {
-                              settingsTab.setUpToDate(true)
-                              "yt-dlp updated successfully"
-                         }
-                         YoutubeDL.UpdateStatus.ALREADY_UP_TO_DATE -> {
-                              settingsTab.setUpToDate(true)
-                              "yt-dlp is already up to date"
-                         }
-                         null -> {
-                              settingsTab.setUpToDate(false)
-                              "dlp update completed with an unknown result"
-                         }
+                    YoutubeDL.UpdateStatus.ALREADY_UP_TO_DATE -> {
+                        settingsTab.setUpToDate(true)
+                        "yt-dlp is already up to date"
                     }
 
-                    _currentVersionName.value = YoutubeDL.getInstance().versionName(getApplication()) ?: "Unknown"
-               } catch (e: Exception) {
-                    Log.e("fermuxYtdlpUpdater", "yt-dlp update failed", e)
-                    _ytdlpUpdateStatus.value =
-                         "Update failed"
-               } finally {
-                    _isCheckingForUpdate.value = false
-                    isUpdatingYtdlp.set(false)
-               }
-          }
-     }
+                    null -> {
+                        settingsTab.setUpToDate(false)
+                        "dlp update completed with an unknown result"
+                    }
+                }
+
+                _currentVersionName.value = YoutubeDL.getInstance().versionName(getApplication()) ?: "Unknown"
+            } catch (e: Exception) {
+                Log.e("fermuxYtdlpUpdater", "yt-dlp update failed", e)
+                _ytdlpUpdateStatus.value =
+                    "Update failed"
+            } finally {
+                _isCheckingForUpdate.value = false
+                isUpdatingYtdlp.set(false)
+            }
+        }
+    }
 }

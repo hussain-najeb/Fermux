@@ -17,7 +17,6 @@ import org.foss.fermux.settings.ui.aboutPage.LibraryPage
 import org.foss.fermux.settings.ui.converter.SimpleFFmpegSetting
 import org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage
 import org.foss.fermux.terminal.ui.FermuxTerminalScreen
-import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialDownloadQueueState
 import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
 import org.foss.fermux.ytdlp.ui.history.History
 import org.foss.fermux.ytdlp.ui.sequentialDownloader.SeqLogs
@@ -48,7 +47,6 @@ sealed class SettingsScreens(val route: String) {
 sealed class Miscellaneous(val route: String) {
     // FFmpeg Screens
     object FFmpegLog : Miscellaneous(route = "FFmpeg Logs")
-
     // Downloader Screens
     object DownloaderLogs : Miscellaneous(route = "YtdlpLog")
     object DownloaderHistory : Miscellaneous(route = "History")
@@ -63,8 +61,6 @@ fun FermuxAppMainScreen() {
 
     val navController = rememberNavController()
     val seqView: SequentialViewModel = viewModel()
-
-    val seqItem = SequentialDownloadQueueState()
 
     NavHost(
         navController = navController,

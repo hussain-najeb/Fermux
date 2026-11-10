@@ -29,7 +29,7 @@ import org.foss.fermux.utils.DebugLogDownloader
 import org.foss.fermux.ytdlp.logic.sequentialDownloader.SEQUENTIAL_URL
 import kotlin.math.roundToInt
 
-class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
+class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorker(context, params) {
 
     private val downloaderWorkNotif: NotificationManager
         get() = applicationContext.getSystemService(

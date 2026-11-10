@@ -1,105 +1,107 @@
 plugins {
-     alias(libs.plugins.android.application)
-     alias(libs.plugins.kotlin.compose)
-     alias(libs.plugins.kotlin.serialization)
-     alias(libs.plugins.ksp)
-     }
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
+}
 
 
 android {
-     namespace = "org.foss.fermux"
-     compileSdk = 37
+    namespace = "org.foss.fermux"
+    compileSdk = 37
 
-     packaging {
-          jniLibs {
-               useLegacyPackaging = true
-               keepDebugSymbols += setOf(
-                    "**/libffmpeg.so",
-                    "**/libffprobe.so",
-                    "**/libffmpeg.zip.so"
-               )
-          }
-     }
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+        splits {
+            abi {
+                isEnable = true
+                reset()
+                include("arm64-v8a", "armeabi-v7a", "x86", "x86_64")
+            }
+        }
+    }
 
-     defaultConfig {
-          applicationId = "org.foss.fermux"
-          minSdk = 29
+    defaultConfig {
+        applicationId = "org.foss.fermux"
+        minSdk = 29
 
-          //noinspection EditedTargetSdkVersion
-          targetSdk = 37
-          versionCode = 1
-          versionName = "0.5"
+        //noinspection EditedTargetSdkVersion
+        targetSdk = 37
+        versionCode = 1
+        versionName = "0.5"
 
-          testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-     }
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
 
-     buildTypes {
-          release {
-               isMinifyEnabled = false
-               proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-               signingConfig = signingConfigs.getByName("debug")
-          }
-     }
-     compileOptions {
-          sourceCompatibility = JavaVersion.VERSION_17
-          targetCompatibility = JavaVersion.VERSION_17
-     }
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("debug")
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
 
-     //noinspection WrongGradleMethod
-     kotlin {
-          compilerOptions {
-               jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
-               freeCompilerArgs.addAll("-opt-in=androidx.compose.material3.ExperimentalMaterial3ExpressiveApi")
-          }
-     }
+    //noinspection WrongGradleMethod
+    kotlin {
+        compilerOptions {
+            jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+            freeCompilerArgs.addAll("-opt-in=androidx.compose.material3.ExperimentalMaterial3ExpressiveApi")
+        }
+    }
 
-     buildFeatures {
-          buildConfig = true
-          compose = true
-     }
+    buildFeatures {
+        buildConfig = true
+        compose = true
+    }
 
-     testOptions {
-          unitTests.all {
-               it.useJUnitPlatform()
-          }
-     }
+    testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
+        }
+    }
 }
 
 dependencies {
-     implementation(libs.androidx.room.runtime)
-     implementation(libs.androidx.room.ktx)
-     ksp(libs.androidx.room.compiler)
-     implementation(libs.coil)
-     implementation(libs.coil.video)
-     implementation(libs.androidx.navigation.compose)
-     implementation(libs.kotlinx.serialization.json)
-     implementation(libs.datastore.preferences)
-     implementation(libs.androidx.compose.foundation.layout)
-     implementation(libs.coil.network.okhttp)
-     implementation(libs.androidx.compose.material.icons.extended)
-     implementation(libs.androidx.core.ktx)
-     implementation(libs.androidx.lifecycle.runtime.ktx)
-     implementation(libs.androidx.activity.compose)
-     implementation(platform(libs.androidx.compose.bom))
-     implementation(libs.androidx.compose.ui)
-     implementation(libs.androidx.compose.ui.graphics)
-     implementation(libs.androidx.compose.ui.tooling.preview)
-     implementation(libs.androidx.compose.material3)
-     implementation(libs.androidx.compose.foundation)
-     implementation(libs.androidx.work.runtime.ktx)
-     implementation(libs.androidx.media3.exoplayer)
-     implementation(libs.androidx.compose.animation)
-     testImplementation(libs.junit.jupiter)
-     testRuntimeOnly(libs.junit.platform.launcher)
-     testImplementation(libs.kotlinx.coroutines.test)
-     androidTestImplementation(libs.androidx.junit)
-     androidTestImplementation(libs.androidx.espresso.core)
-     debugImplementation(libs.androidx.compose.ui.tooling)
-     debugImplementation(libs.androidx.compose.ui.test.manifest)
-     implementation(libs.jackson.databind)
-     implementation(libs.common)
-     implementation(libs.jackson.annotations)
-     implementation(files("libs/youtubedl-android-local.aar"))
-     implementation(files("libs/ffmpeg-android-local.aar"))
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.coil)
+    implementation(libs.coil.video)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.datastore.preferences)
+    implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.coil.network.okhttp)
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.compose.animation)
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
+    testImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+    implementation(libs.jackson.databind)
+    implementation(libs.common)
+    implementation(libs.jackson.annotations)
+    implementation(files("libs/youtubedl-android-local.aar"))
+    implementation(files("libs/ffmpeg-android-local.aar"))
     implementation(files("libs/aria2c-android-local.aar"))
 }

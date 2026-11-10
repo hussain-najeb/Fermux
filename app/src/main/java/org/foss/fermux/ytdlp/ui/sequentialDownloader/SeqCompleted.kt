@@ -71,8 +71,7 @@ fun SeqCompletedCard(
                     contentAlignment = Alignment.TopStart
                 ) {
                     Text(
-                        text = "dw'lkmdaonmdpiauwndaiunwdop[aiknd",
-                        //  text = item.metadata?.title ?: item.url,
+                        text = item.metadata?.title ?: item.url,
                         color = FermuxColors.white,
                         maxLines = 2,
                         fontSize = 16.sp,

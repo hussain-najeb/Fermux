@@ -29,7 +29,6 @@ class DownloaderViewModel : ViewModel() {
      companion object {
           private const val DOWNLOAD_WORK_NAME = "fermux_actived_download"
      }
-
      var state by mutableStateOf<DownloadStatus>(DownloadStatus.Idle)
      var connection by mutableStateOf(Connectivity.Any)
      var downloadUrl by mutableStateOf("")
