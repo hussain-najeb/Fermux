@@ -4,7 +4,6 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.yausername.youtubedl_android.YoutubeDL
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,6 +15,7 @@ import org.foss.fermux.dataStore.DownloaderArgumentsSnapshot
 import org.foss.fermux.dataStore.DownloaderSettingsSnapshot
 import org.foss.fermux.utils.DebugLogDownloader
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.*
+import org.foss.youtube.next.YoutubeDL
 import java.util.concurrent.atomic.AtomicBoolean
 
 class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(application) {
@@ -283,9 +283,9 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
                 settingsTab.setYtdlpChannel(channel)
 
                 val updateChannel = when (channel) {
-                    YtdlpChannel.Stable -> YoutubeDL.UpdateChannel.STABLE
-                    YtdlpChannel.Nightly -> YoutubeDL.UpdateChannel.NIGHTLY
-                    YtdlpChannel.Master -> YoutubeDL.UpdateChannel.MASTER
+                    YtdlpChannel.Stable -> YoutubeDL.UpdateChannel.Stable
+                    YtdlpChannel.Nightly -> YoutubeDL.UpdateChannel.Nightly
+                    YtdlpChannel.Master -> YoutubeDL.UpdateChannel.Master
                 }
 
                 val result = YoutubeDL.getInstance().updateYoutubeDL(
@@ -294,12 +294,12 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
                 )
 
                 _ytdlpUpdateStatus.value = when (result) {
-                    YoutubeDL.UpdateStatus.DONE -> {
+                    YoutubeDL.UpdateStatus.Done -> {
                         settingsTab.setUpToDate(true)
                         "yt-dlp updated successfully"
                     }
 
-                    YoutubeDL.UpdateStatus.ALREADY_UP_TO_DATE -> {
+                    YoutubeDL.UpdateStatus.AlreadyUpToDate -> {
                         settingsTab.setUpToDate(true)
                         "yt-dlp is already up to date"
                     }

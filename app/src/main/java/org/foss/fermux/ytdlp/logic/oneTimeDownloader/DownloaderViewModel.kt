@@ -8,7 +8,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.*
-import com.yausername.youtubedl_android.YoutubeDL
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.TimeoutCancellationException
@@ -18,6 +17,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.foss.fermux.dataStore.DataStoreDownloaderSettings
 import org.foss.fermux.utils.DebugLogDownloader
+import org.foss.youtube.next.YoutubeDL
 import java.util.*
 
 
@@ -240,7 +240,7 @@ class DownloaderViewModel : ViewModel() {
       */
      fun cancelButton(context: Context) {
           activeProcess?.let { id ->
-               YoutubeDL.destroyProcessById(id.toString())
+               YoutubeDL.destroyProcessById(id)
                WorkManager.getInstance(context).cancelWorkById(id)
           }
           downloaderJob?.cancel()

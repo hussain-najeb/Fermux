@@ -32,10 +32,7 @@ import org.foss.fermux.components.downloaderComponents.FermuxDownloadDescription
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.Miscellaneous
-import org.foss.fermux.ytdlp.logic.oneTimeDownloader.DownloadMetadata
-import org.foss.fermux.ytdlp.logic.oneTimeDownloader.resolutionFormatting
-import org.foss.fermux.ytdlp.logic.oneTimeDownloader.sizeFormatting
-import org.foss.fermux.ytdlp.logic.oneTimeDownloader.videoTime
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.*
 
 
 enum class ProgressState { InProgress, Done }
@@ -43,6 +40,7 @@ enum class ProgressState { InProgress, Done }
 @Composable
 fun FinishedDownloadCard(
      metadata: DownloadMetadata,
+     status: DownloadStatus,
      progress: Float? = null,
      onCancel: () -> Unit,
      navController: NavController,
@@ -62,6 +60,7 @@ fun FinishedDownloadCard(
 
      FinishedCardContent(
           metadata = metadata,
+          status = status,
           progress = progress,
           onCancel = onCancel,
           navController = navController,
@@ -72,6 +71,7 @@ fun FinishedDownloadCard(
 @Composable
 private fun FinishedCardContent(
      metadata: DownloadMetadata,
+     status: DownloadStatus,
      progress: Float? = null,
      onCancel: () -> Unit,
      navController: NavController,
@@ -108,7 +108,7 @@ private fun FinishedCardContent(
                     .padding(horizontal = 16.dp),
                verticalAlignment = Alignment.CenterVertically
           ) {
-               if (showYtdlpDetails) {
+               if (showYtdlpDetails && status is DownloadStatus.Downloading) {
                     IconTextButton(
                          text = "View Logs",
                          image = R.drawable.log,
@@ -119,7 +119,7 @@ private fun FinishedCardContent(
                Spacer(modifier = Modifier.weight(1f))
 
                IconTextButton(
-                    text = "New Download",
+                    text = if (status is DownloadStatus.Downloading) "Cancel" else "New Download",
                     image = R.drawable.undo,
                     onClick = { onCancel() }
                )
@@ -281,24 +281,27 @@ fun test3() {
 
      Column(modifier = Modifier.fillMaxSize()) {
 
-          FinishedCardContent(
-               metadata = DownloadMetadata(
-                    mediaId = "",
-                    url = "",
-                    extractor = "",
-                    title = "Example Video Title, TEST....TEST. This is a test",
-                    thumbnail = "/home/Hussain/Downloads/tempdev/thumbnail.webp",
-                    duration = 578,
-                    uploader = "Example uploader, Youtube Channel, Or Null",
-                    size = 35345455,
-                    format = "",
-                    audioQuality = 125.6,
-                    resolution = "720p"
-               ),
-               onCancel = {},
-               navController = navController,
-               progress = 100F,
-               showYtdlpDetails = true
-          )
+          // To use this, remove "status", its less annoying that way.
+
+
+//          FinishedCardContent(
+//               metadata = DownloadMetadata(
+//                    mediaId = "",
+//                    url = "",
+//                    extractor = "",
+//                    title = "Example Video Title, TEST....TEST. This is a test",
+//                    thumbnail = "/home/Hussain/Downloads/tempdev/thumbnail.webp",
+//                    duration = 578,
+//                    uploader = "Example uploader, Youtube Channel, Or Null",
+//                    size = 35345455,
+//                    format = "",
+//                    audioQuality = 125.6,
+//                    resolution = "720p"
+//               ),
+//               onCancel = {},
+//               navController = navController,
+//               progress = 100F,
+//               showYtdlpDetails = true
+//          )
      }
 }

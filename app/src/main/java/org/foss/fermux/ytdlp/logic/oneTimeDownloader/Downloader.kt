@@ -2,9 +2,10 @@ package org.foss.fermux.ytdlp.logic.oneTimeDownloader
 
 import android.content.Context
 import android.os.Environment
-import com.yausername.youtubedl_android.YoutubeDLRequest
 import org.foss.fermux.utils.CopiedFile
+import org.foss.youtube.next.YoutubeDLRequest
 import java.io.File
+import java.util.*
 
 /*
  * Todo:
@@ -24,7 +25,7 @@ import java.io.File
  */
 
 /*
-TODO. I probably need BG-Utils with deno JS runtime with ytdlp PO solver in the main yausername lib, could be a PR and some change, just chuck in the whole thing
+TODO. I probably need BG-Utils with deno JS runtime with ytdlp PO solver in the main lib, could be a PR and some change, just chuck in the whole thing
 THEMOSTCOMPLETEYTDLPCLIENTINTHEWORLD
  */
 
@@ -38,7 +39,7 @@ suspend fun downloaderLogic(
   videoComp: Boolean,
   externalDownloaders: ExternalDownloaders = ExternalDownloaders.Disabled,
   url: String,
-  taskId: String,
+  taskId: UUID,
   sleepRequest: Int = 0,
   playlistStatus: Boolean = false,
   quickJs: Boolean = true,
@@ -61,9 +62,16 @@ suspend fun downloaderLogic(
 ): List<CopiedFile> {
 
     val baseDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) ?: context.filesDir
-    val downloadDir = File(baseDir, taskId).apply { mkdirs() }
+    val downloadDir = File(baseDir, taskId.toString()).apply { mkdirs() }
     val outputPath = "${downloadDir.absolutePath}/%(title)s.%(ext)s"
     val request = YoutubeDLRequest(url)
+
+    request.addOption("--no-simulate")
+    request.addOption(
+        "--print",
+        "before_dl:$FERMUX_METADATA_MARKER%(.{id,extractor_key,title,thumbnail,duration,uploader,filesize,filesize_approx,resolution,abr,ext,webpage_url})j"
+    )
+    request.addOption("--progress")
 
     if (quickJs) {
         request.addOption(
@@ -82,15 +90,6 @@ suspend fun downloaderLogic(
         IpvConnection.Disabled -> Unit
     }
 
-    request.addOption("--no-simulate")
-
-    request.addOption(
-        "--print",
-        "before_dl:$FERMUX_METADATA_MARKER%(.{id,extractor_key,title,thumbnail,duration,uploader,filesize,filesize_approx,resolution,abr,ext,webpage_url})j"
-    )
-
-    request.addOption("--progress")
-
     if (sleepRequest > 0) {
         request.addOption("--sleep-requests", sleepRequest)
     }
@@ -105,10 +104,6 @@ suspend fun downloaderLogic(
 
     if (sponsorBlock && sponsorBlockCategories.isNotEmpty()) {
         request.addOption("--sponsorblock-remove", sponsorBlockCategories.joinToString(","))
-    }
-
-    if (showDetails) {
-        request.addOption("-v")
     }
 
     val shouldUseAria2c = when (aria2cMode) {
@@ -185,11 +180,13 @@ suspend fun downloaderLogic(
         request.addOption("--merge-output-format", seqFormat.seqFormat)
     }
 
-
     if (videoQuality != null && videoComp) {
         request.addOption("--recode-video", videoFormats.videoFormat)
     }
 
+    if (showDetails) {
+        request.addOption("-v")
+    }
     request.addOption("-i")
     request.addOption("--embed-metadata")
     request.addOption("-o", outputPath)

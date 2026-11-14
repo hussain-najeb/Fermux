@@ -13,7 +13,6 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.net.toUri
 import androidx.work.*
-import com.yausername.youtubedl_android.YoutubeDL
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.first
@@ -27,6 +26,7 @@ import org.foss.fermux.main.MainActivity
 import org.foss.fermux.utils.CopiedFile
 import org.foss.fermux.utils.DebugLogDownloader
 import org.foss.fermux.ytdlp.logic.sequentialDownloader.SEQUENTIAL_URL
+import org.foss.youtube.next.YoutubeDL
 import kotlin.math.roundToInt
 
 class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorker(context, params) {
@@ -133,7 +133,7 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
             createDownloaderForegroundInfo()
         )
 
-        val taskId = id.toString()
+        val taskId = id
         val workerJob = currentCoroutineContext().job
 
         DebugLogDownloader.debugDownloader("DownloadWorker", "Started id=$taskId attempt=$runAttemptCount")
