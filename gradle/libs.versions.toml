@@ -5,35 +5,36 @@ agp = "9.1.1"
 coil = "3.6.3"
 coilNetworkOkhttp = "3.6.3"
 coilVideo = "3.6.3"
-common = "0.18.1"
 coreKtx = "1.19.1"
-jacksonAnnotations = "2.22"
-jacksonDatabind = "2.22.4"
+jacksonAnnotations = "2.23"
+jacksonDatabind = "2.23.0"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.11.0"
 activityCompose = "1.13.0"
 navigationCompose = "2.10.2"
 kotlin = "2.4.21"
-composeBom = "2026.10.01"
-material3 = "1.5.0-beta02"
+composeBom = "2026.11.00"
+material3 = "1.5.0-rc01"
 workManager = "2.12.0"
 datastore = "1.3.0"
 kotlinSerialization = "2.4.21"
 media3Exoplayer = "1.11.1"
 junitJupiter = "6.1.3"
 coroutines = "1.11.0"
+youtubedlNext = "v0.1.2"
 
 
 [libraries]
+youtubedl-android-next-x86 = { group ="com.github.hussain-najeb.youtubedl-android-next", name ="youtubedl-android-next-natives-x86_64", version.ref = "youtubedlNext" }
+youtubedl-android-next = { group = "com.github.hussain-najeb", name = "youtubedl-android-next", version.ref = "youtubedlNext" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 coil-video = { module = "io.coil-kt.coil3:coil-video", version.ref = "coilVideo" }
-common = { module = "io.github.junkfood02.youtubedl-android:common", version.ref = "common" }
 jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jacksonAnnotations" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jacksonDatabind" }
-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.11.0" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.13.0" }
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 coil = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }

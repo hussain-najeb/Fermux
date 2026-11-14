@@ -68,6 +68,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.youtubedl.android.next)
+    debugImplementation(libs.youtubedl.android.next.x86)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
@@ -99,9 +101,5 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation(libs.jackson.databind)
-    implementation(libs.common)
     implementation(libs.jackson.annotations)
-    implementation(files("libs/youtubedl-android-local.aar"))
-    implementation(files("libs/ffmpeg-android-local.aar"))
-    implementation(files("libs/aria2c-android-local.aar"))
 }
