@@ -115,7 +115,7 @@ fun History(
                                 ) {
                                     IconTextButton(
                                         modifier = Modifier.padding(start = 4.dp),
-                                        text = if (state.sorting == DownloadsSorter.TitleASC) "Sort Z-A" else "Sort A-Z",
+                                        text = "Sort A-Z",
                                         image = if (state.sorting == DownloadsSorter.TitleASC) R.drawable.sort_descending else R.drawable.sort_ascending,
                                         onClick = {
                                             downloadsDatabaseViewModel.titleSorter()
@@ -123,7 +123,7 @@ fun History(
                                     )
                                     IconTextButton(
                                         modifier = Modifier.padding(start = 4.dp),
-                                        text = if (state.sorting == DownloadsSorter.SizeASC) "Sort By Biggest" else "Sort By Smallest",
+                                        text = "Sort By Size",
                                         image = if (state.sorting == DownloadsSorter.SizeASC) R.drawable.database_fill else R.drawable.database_empty,
                                         onClick = {
                                             downloadsDatabaseViewModel.sizeSorter()

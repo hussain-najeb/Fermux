@@ -12,7 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.foss.fermux.components.buttons.CancelButton
+import org.foss.fermux.R
+import org.foss.fermux.components.buttons.IconTextButton
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
@@ -23,22 +24,22 @@ fun QuickDownloading(
     Surface(
         modifier = Modifier
             .padding(8.dp)
-            .height(60.dp)
+            .height(80.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
-        color = FermuxColors.inActiveContainer,
+        color = FermuxColors.darkPurple,
         border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
     ) {
         Box(
-            modifier = Modifier.padding(),
-            contentAlignment = Alignment.Center
+            modifier = Modifier.padding(top = 19.dp),
+            contentAlignment = Alignment.TopCenter
         ) {
             progress?.let { value ->
                 LinearProgressIndicator(
                     progress = { (value / 100f).coerceIn(0f, 1f) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 8.dp, end = 65.dp),
+                        .padding(start = 8.dp, end = 8.dp),
                     color = FermuxColors.deepBlue,
                     trackColor = FermuxColors.white,
                     strokeCap = StrokeCap.Round
@@ -47,14 +48,14 @@ fun QuickDownloading(
         }
 
         Box(
-            modifier = Modifier
-                .padding(end = 8.dp),
-            contentAlignment = Alignment.CenterEnd
+            modifier = Modifier.padding(7.dp),
+            contentAlignment = Alignment.BottomCenter
         ) {
-            CancelButton(
+            IconTextButton(
+                text = "Cancel",
+                image = R.drawable.cancel_buttons,
                 modifier = Modifier.wrapContentSize(),
-                onClick = { onCancel() },
-                transparency = true
+                onClick = { onCancel() }
             )
         }
     }

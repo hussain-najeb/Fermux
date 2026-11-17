@@ -14,7 +14,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.foss.fermux.components.buttons.CancelButton
+import org.foss.fermux.R
+import org.foss.fermux.components.buttons.IconTextButton
 import org.foss.fermux.ui.theme.FermuxColors
 
 
@@ -26,15 +27,15 @@ fun FinalQuickDownload(
     Surface(
         modifier = Modifier
             .padding(8.dp)
-            .height(60.dp)
+            .height(80.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
-        color = FermuxColors.inActiveContainer,
+        color = FermuxColors.darkPurple,
         border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
     ) {
         Box(
             modifier = Modifier
-                .padding(6.dp),
+                .padding(top = 6.dp, bottom = 6.dp, start = 15.dp),
             contentAlignment = Alignment.CenterStart
         ) {
             Text(
@@ -43,9 +44,8 @@ fun FinalQuickDownload(
                 fontStyle = FontStyle.Normal,
                 fontFamily = FontFamily.Default,
                 textAlign = TextAlign.Start,
-                color = FermuxColors.skyBlue,
-
-                )
+                color = FermuxColors.white,
+            )
         }
 
         Row(
@@ -57,8 +57,9 @@ fun FinalQuickDownload(
                     .padding(top = 5.dp, bottom = 5.dp, end = 8.dp),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                CancelButton(
-                    shape = RoundedCornerShape(8.dp),
+                IconTextButton(
+                    text = "Return",
+                    image = R.drawable.undo,
                     onClick = { onCancel() },
                 )
             }

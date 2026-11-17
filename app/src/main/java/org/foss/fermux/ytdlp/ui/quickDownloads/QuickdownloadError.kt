@@ -11,11 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.CancelButton
 import org.foss.fermux.components.buttons.FilterButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.Miscellaneous
@@ -29,11 +30,11 @@ fun QuickdownloadError(
     Surface(
         modifier = Modifier
             .padding(8.dp)
-            .height(60.dp)
+            .height(80.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
-        color = FermuxColors.fermuxErrorCardColor,
-        border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
+        color = FermuxColors.darkPurple,
+        border = BorderStroke(1.dp, FermuxColors.fermuxLightErrorTextColor)
     ) {
         Box(
             modifier = Modifier
@@ -47,7 +48,7 @@ fun QuickdownloadError(
                 fontStyle = FontStyle.Normal,
                 fontFamily = FontFamily.Default,
                 textAlign = TextAlign.Start,
-                color = FermuxColors.white,
+                color = FermuxColors.fermuxTextError,
                 modifier = Modifier.padding(start = 2.dp)
             )
         }
@@ -57,17 +58,34 @@ fun QuickdownloadError(
                 .fillMaxWidth(),
             contentAlignment = Alignment.CenterEnd
         ) {
-            Row(modifier = Modifier.padding(end = 5.dp)) {
+            Row(
+                modifier = Modifier.padding(5.dp),
+                horizontalArrangement = Arrangement.spacedBy(7.dp)
+            ) {
                 FilterButton(
                     onClick = { navController.navigate(Miscellaneous.DownloaderLogs.route) },
-                    modifier = Modifier.padding(end = 4.dp),
                     image = R.drawable.log
                 )
-                CancelButton(
-                    shape = RoundedCornerShape(8.dp),
+                FilterButton(
+                    modifier = Modifier.padding(end = 5.dp),
+                    image = R.drawable.close,
                     onClick = { onCancel() }
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun test22() {
+
+    val nav = rememberNavController()
+
+    Column(verticalArrangement = Arrangement.Center) {
+        QuickdownloadError(
+            navController = nav,
+            onCancel = {}
+        )
     }
 }
