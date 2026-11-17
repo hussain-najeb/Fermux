@@ -13,8 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.foss.fermux.R
+import org.foss.fermux.components.buttons.FilterButton
 import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.components.settingsComponents.TileOptions
 import org.foss.fermux.settings.logic.InfoListClass
@@ -34,9 +36,17 @@ fun AboutPage(navController: NavController) {
             title = "README Page",
             description = "Check Github Repo for more info",
             icon = Icons.Default.Description,
-             onClick = {
-                  context.openUrl()
-             },
+            liner = true,
+            content = {
+                FilterButton(
+                    modifier = Modifier.padding(3.dp),
+                    border = true,
+                    image = R.drawable.open_link,
+                    onClick = {
+                        context.openUrl("https://github.com/hussain-najeb/Fermux")
+                    }
+                )
+            },
             position = TilePosition.SOLO
         ),
         InfoListClass(
@@ -50,7 +60,7 @@ fun AboutPage(navController: NavController) {
             description = "Press to see all the versions of dependencies and libraries the app uses",
             image = R.drawable.library,
             onClick = { navController.navigate(SettingsScreens.LibraryPage.route) },
-            position = TilePosition.SOLO
+            position = TilePosition.SOLO // TODO. Add link buttons for each dependency, also fix it by adding the same dialog based stuff in ffmpeg and downloader to it.
         )
     )
 
