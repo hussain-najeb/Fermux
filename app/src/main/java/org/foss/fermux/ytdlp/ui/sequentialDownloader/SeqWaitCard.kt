@@ -31,9 +31,9 @@ fun SeqWaitCard(
 
     val statusText = when (status) {
         SequentialItemStatus.Waiting -> "Waiting"
+        SequentialItemStatus.Cancelled -> "Cancelled" // TODO. add a card for each of these
+        SequentialItemStatus.Failed -> item.error ?: "Download Failed"
         else -> null
-        //  SequentialItemStatus.Failed -> item.error ?: "Download Failed"
-        // SequentialItemStatus.Cancelled -> "Cancelled" TODO. add a card for each of these
     }
 
     val statusBall = when (status) {

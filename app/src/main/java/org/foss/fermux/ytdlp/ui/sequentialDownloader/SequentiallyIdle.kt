@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,7 +38,6 @@ fun SequentialIdle(
         .map(String::trim)
         .filter(String::isNotBlank)
 
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -45,7 +45,7 @@ fun SequentialIdle(
     ) {
         LazyColumn(
             modifier = Modifier
-                .padding(2.dp)
+                .padding(start = 2.dp, end = 2.dp, bottom = 80.dp)
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
@@ -140,50 +140,64 @@ fun SequentialIdle(
                 }
             }
         }
+    }
 
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.SpaceEvenly
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        Surface(
+            shape = RoundedCornerShape(topEnd = 8.dp, topStart = 8.dp),
+            color = FermuxColors.darkPurple,
+            modifier = Modifier.height(88.dp)
         ) {
-            Box(
-                modifier = Modifier.weight(1f),
-                contentAlignment = Alignment.BottomStart
+            Row(
+                modifier = Modifier
+                    .padding(9.dp)
+                    .fillMaxSize(),
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                FilterButton(
-                    modifier = Modifier
-                        .padding(5.dp),
-                    image = R.drawable.settings_2,
-                    onClick = sequentialViewModel::showBottomSheet
-                )
-            }
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.BottomStart
+                ) {
+                    FilterButton(
+                        modifier = Modifier
+                            .padding(5.dp),
+                        image = R.drawable.settings_2,
+                        onClick = sequentialViewModel::showBottomSheet
+                    )
+                }
 
-            Box(
-                modifier = Modifier.weight(1f),
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                FilterButton(
-                    modifier = Modifier.padding(5.dp),
-                    image = R.drawable.add,
-                    onClick = {
-                        sequentialViewModel.downloadUrl.add("")
-                    }
-                )
-            }
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.BottomCenter
+                ) {
+                    FilterButton(
+                        modifier = Modifier.padding(5.dp),
+                        image = R.drawable.add,
+                        onClick = {
+                            sequentialViewModel.downloadUrl.add("")
+                        }
+                    )
+                }
 
-            Box(
-                modifier = Modifier.weight(1f),
-                contentAlignment = Alignment.BottomEnd
-            ) {
-                FilterButton(
-                    modifier = Modifier
-                        .padding(5.dp),
-                    image = R.drawable.download_side_bar,
-                    enabled = true,
-                    onClick = {
-                        sequentialViewModel.startSequentiallyDownloading(context, submittedUrls)
-                    },
-                )
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.BottomEnd
+                ) {
+                    FilterButton(
+                        modifier = Modifier
+                            .padding(5.dp),
+                        image = R.drawable.download_side_bar,
+                        enabled = true,
+                        onClick = {
+                            sequentialViewModel.startSequentiallyDownloading(context, submittedUrls)
+                        },
+                    )
+                }
             }
         }
     }

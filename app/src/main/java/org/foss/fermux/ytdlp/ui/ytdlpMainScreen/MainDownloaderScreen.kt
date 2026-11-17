@@ -59,8 +59,6 @@ fun DownloadContent(
      val downloaderSettings: DownloaderSettingsViewModel = viewModel()
      val videoConversionWarning by downloaderSettings.videoComp.collectAsStateWithLifecycle()
      val upToDate by downloaderSettings.upToDate.collectAsStateWithLifecycle()
-     val currentVersionName by downloaderSettings.currentVersionName.collectAsStateWithLifecycle()
-
      val snackbarHostState = SnackbarHostState()
      val scope = rememberCoroutineScope()
      val doingTask =
@@ -68,10 +66,11 @@ fun DownloadContent(
      val isError = downloaderViewModel.state is DownloadStatus.Error
      val clipboard = LocalClipboard.current
 
+
+
      LargeTopBarScaffold(
           title = "Downloader",
-          titleSize = 23.sp,
-          onBack = { navController.popBackStack() },
+          onBack = navController::popBackStack,
           firstButton = { navController.navigate(Miscellaneous.DownloaderArgs.route) },
           firstImage = R.drawable.prompt,
           secondButton = { navController.navigate(Miscellaneous.DownloaderHistory.route) },
@@ -92,7 +91,7 @@ fun DownloadContent(
                          .background(FermuxColors.background)
                ) {
                     if (!upToDate) Text(
-                         text = "Version $currentVersionName of ytdlp is outdated, update the downloader in the preferences",
+                         text = "The current ytdlp version of is outdated, update the downloader in the preferences tab.",
                          color = FermuxColors.offWhiteTextColor,
                          fontSize = 14.sp,
                          fontStyle = FontStyle.Normal,
@@ -101,14 +100,15 @@ fun DownloadContent(
                     )
 
                     if (videoConversionWarning) Text(
-                         text = "Video Conversion is on, don't cancel the download if it looks stuck.",
+                         text = "Video Conversion is on, don't cancel the download if it looks stuck, ffmpeg is doing magic.",
                          color = FermuxColors.white,
                          fontSize = 16.sp,
                          fontStyle = FontStyle.Italic,
                          fontFamily = FontFamily.Default,
                          modifier = Modifier.padding(5.dp)
                     )
-                    Connections()
+
+                    Connections() // Just some stuff with the various connection types
 
                     DownloaderCards(
                          downloaderViewModel.state,

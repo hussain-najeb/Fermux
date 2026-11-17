@@ -35,9 +35,7 @@ fun SeqMetadataCard(
     val context = LocalContext.current
 
     val message = listOf(
-        "Works On My Machine...",
-        "HTTP 200 In My Heart...",
-        "Teaching JSON Some Manners...",
+        "HTTP 200?...",
         "Downloading Metadata...",
     )
 
