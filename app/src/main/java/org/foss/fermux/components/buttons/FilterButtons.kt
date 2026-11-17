@@ -15,6 +15,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -43,20 +44,17 @@ fun FilterButton(
 
     val iconColor by animateColorAsState(
         targetValue = if (isPressed) activeIconColor else inActiveIconColor,
-        animationSpec = tween(durationMillis = 200),
-        label = "Fermux Icon Colors"
+        animationSpec = tween(durationMillis = 200)
     )
      val containerColor by animateColorAsState(
           targetValue = if (isPressed) activeColor else inActiveColor,
-          animationSpec = tween(durationMillis = 250),
-          label = "Fermux Container Color"
+          animationSpec = tween(durationMillis = 250)
      )
 
 
     val buttonAnimation by animateFloatAsState(
         targetValue = if (isPressed) 0.90f else 1f,
-        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-        label = "Fermux Button Animation"
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
     )
 
     OutlinedButton(
@@ -73,7 +71,7 @@ fun FilterButton(
             focusedElevation = 3.dp,
             hoveredElevation = 5.dp,
             disabledElevation = 0.dp
-        ), // TODO. Add more elevation to buttons, they look better that way
+        ),
         border = if (border == true) BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
         else BorderStroke(1.dp, FermuxColors.transparent),
         colors = ButtonDefaults.textButtonColors(
@@ -98,7 +96,9 @@ fun FilterButton(
 fun FilterButtonPreview() {
     Column(
         modifier = Modifier.fillMaxSize()
-            .padding(5.dp)
+            .padding(5.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         FilterButton(
             onClick = {},
