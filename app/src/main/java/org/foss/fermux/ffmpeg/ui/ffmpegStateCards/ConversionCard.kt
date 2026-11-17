@@ -114,10 +114,10 @@ fun ConversionCard(
             IconTextButton(
                 modifier = Modifier
                     .align(Alignment.CenterVertically),
-                text = "Cancel",
+                text = if (conversionState == ProgressState.Done) "Return" else "Cancel",
                 activeColor = FermuxColors.fermuxErrorCardColor,
                 activeIconColor = FermuxColors.white,
-                image = R.drawable.close,
+                image = if (conversionState == ProgressState.Done) R.drawable.undo else R.drawable.close,
                 onClick = { ffmpegViewModel.cancelButton(context) }
             )
             IconTextButton(

@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
 import org.foss.fermux.components.downloaderComponents.DownloaderLogs
+import org.foss.fermux.ffmpeg.ui.ConverterScreen
 import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.FFmpegLogs
 import org.foss.fermux.main.HomeScreen
 import org.foss.fermux.settings.ui.SettingsScreen
@@ -32,7 +33,6 @@ sealed class MainScreens(val route: String) {
 sealed class SettingsScreens(val route: String) {
     object SimpleDownloader : SettingsScreens(route = "simple downloader")
     object SimpleFFmpeg : SettingsScreens(route = "simple FFmpeg")
-    object Themes : SettingsScreens(route = "themes")
     object AboutAppPage : SettingsScreens(route = "about")
     object LibraryPage : SettingsScreens(route = "Library")
 
@@ -64,11 +64,11 @@ fun FermuxAppMainScreen() {
         composable(MainScreens.Home.route) { HomeScreen(navController) }
         composable(MainScreens.Settings.route) { SettingsScreen(navController) }
         composable(route = MainScreens.Downloader.route, deepLinks = listOf(navDeepLink { uriPattern = "fermux://downloader" })) { DownloadContent(navController) }
+        composable(route = MainScreens.Converter.route) { ConverterScreen(navController) }
 
         // Settings Screens
         composable(SettingsScreens.SimpleDownloader.route) { SimpleDownloaderPage(navController) }
         composable(SettingsScreens.SimpleFFmpeg.route) { SimpleFFmpegSetting(navController) }
-        composable(SettingsScreens.Themes.route) { }
         composable(SettingsScreens.AboutAppPage.route) { AboutPage(navController) }
         composable(SettingsScreens.LibraryPage.route) { LibraryPage(navController) }
 

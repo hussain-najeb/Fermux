@@ -22,7 +22,7 @@ fun ConverterScreen(
 
      LargeTopBarScaffold(
           title = "Converter",
-          onBack = { navController.popBackStack() }
+          onBack = navController::popBackStack
      ) { paddingValues ->
           Column(
                modifier = Modifier

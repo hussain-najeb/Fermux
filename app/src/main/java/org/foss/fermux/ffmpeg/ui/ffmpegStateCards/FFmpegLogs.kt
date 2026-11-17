@@ -15,7 +15,7 @@ fun FFmpegLogs(
      val ffmpegViewModel: FFmpegViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity)
 
      LoggingScreen(
-          loggingTitle = "Downloader Logs",
+          loggingTitle = "FFmpeg Logs",
           logs = ffmpegViewModel.FFmpegLogs,
           navController = navController
      )

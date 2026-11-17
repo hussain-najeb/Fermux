@@ -44,7 +44,6 @@ import org.foss.fermux.ytdlp.ui.quickDownloads.QuickDownloadsStateMachine
 //  option for the quick downloads to be off, synchronization is key, these CAN NOT happen asynchronously!
 //  also add a "cancel" button
 
-
 @Composable
 fun HomeScreen(navController: NavHostController) { // TODO. Add in animation between each transition so its smooth. App wide transition between each tab, not component animations
 
@@ -112,7 +111,7 @@ fun HomeScreen(navController: NavHostController) { // TODO. Add in animation bet
             title = "Converter",
             description = "A hardware accelerated, powerful conversion tab based on FFmpeg",
             image = R.drawable.ffmpeg,
-            onClick = {},
+            onClick = null,
             enabled = true
         ),
         ScreenInfo(
@@ -120,7 +119,7 @@ fun HomeScreen(navController: NavHostController) { // TODO. Add in animation bet
             title = "Preferences",
             description = "An extensive Preferences tab for all your options",
             image = R.drawable.prefs,
-            onClick = {},
+            onClick = null,
             enabled = true
         ),
     )

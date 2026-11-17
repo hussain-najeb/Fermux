@@ -20,7 +20,8 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
-import org.foss.fermux.components.buttons.ErrorCopyButton
+import org.foss.fermux.R
+import org.foss.fermux.components.buttons.IconTextButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ui.theme.JetbrainsMono
 
@@ -75,11 +76,12 @@ fun LoggingScreen(
                     )
                 }
             }
-            ErrorCopyButton(
+            IconTextButton(
                 modifier = Modifier
-                    .padding(7.dp)
-                    .align(Alignment.Start)
-                    .size(50.dp),
+                    .padding(10.dp)
+                    .align(Alignment.Start),
+                image = R.drawable.copy,
+                text = "Copy Logs",
                 onClick = {
                     scope.launch {
                         val clipData = ClipData.newPlainText("logs", logs)
