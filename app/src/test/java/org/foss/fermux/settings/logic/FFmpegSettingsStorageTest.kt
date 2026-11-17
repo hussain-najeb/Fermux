@@ -94,7 +94,6 @@ class FFmpegSettingsStorageTest {
           val setting = newFixture().repositoryOfTheProdCode
 
           setting.setAudioBitrate("192k")
-          setting.setFFmpegDebug(true)
           setting.setNormalizeAudio(true)
           setting.setMonoDownmix(true)
           setting.setEnableVideoCompression(true)
@@ -107,7 +106,6 @@ class FFmpegSettingsStorageTest {
           setting.restoreFFmpeg(snapshot)
 
           assertEquals("192k", setting.audioBitrate.first())
-          assertTrue(setting.ffmpegDebug.first())
           assertTrue(setting.normalizeAudio.first())
           assertTrue(setting.monoDownmix.first())
           assertTrue(setting.enableVideoCompression.first())

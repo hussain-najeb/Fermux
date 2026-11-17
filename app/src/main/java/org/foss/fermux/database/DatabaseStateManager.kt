@@ -10,7 +10,6 @@ data class DownloadsStateManager(
 )
 
 
-// TODO. add "most recent" to the dao and make it a sorting option.
 enum class DownloadsSorter {
      TitleASC,
      SizeASC,

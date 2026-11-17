@@ -2,7 +2,7 @@ package org.foss.fermux.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-data class FermuxColor( // TODO. edit the bad naming on these
+data class FermuxColor(
 
      // Fermux button colors
      val fermuxInActiveButton: Color = Color(0xFF303258),
@@ -66,5 +66,3 @@ data class FermuxColor( // TODO. edit the bad naming on these
 )
 
 val FermuxColors = FermuxColor()
-// TODO. Spilt each color to its own class, so its better organized
-

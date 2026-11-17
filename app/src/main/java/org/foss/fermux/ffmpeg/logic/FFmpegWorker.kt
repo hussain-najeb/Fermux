@@ -18,7 +18,6 @@ import org.foss.fermux.R
 import org.foss.fermux.dataStore.DataStoreFFmpegSettings
 import org.foss.fermux.dataStore.FFmpegSettingsRepo
 import org.foss.fermux.settings.logic.buildDynamicFFmpegArgs
-import org.foss.fermux.utils.DebugLogFFmpeg
 import org.foss.fermux.utils.copyFileToDownloads
 import java.io.BufferedReader
 import java.io.File
@@ -140,7 +139,7 @@ private fun createFFmpegNotif(
                     val ffprobeBinary = File(nativeLibDir, "libfermux_ffprobe.so")
 
                     if (!ffmpegBinary.exists() || !ffprobeBinary.exists()) {
-                         DebugLogFFmpeg.debugFFmpeg("ffmpegBinary", "FFmpeg lib binaries not found at: $ffmpegBinary, $ffprobeBinary"  )
+                         Log.d("ffmpegBinary", "FFmpeg lib binaries not found at: $ffmpegBinary, $ffprobeBinary")
                          return failure(
                               workDataOf("error" to "ffmpeg lib binary not found")
                          )
@@ -199,7 +198,7 @@ private fun createFFmpegNotif(
                                    while (reader.readLine().also { line = it } != null) {
                                         val logOutput = line!!
                                         output.appendLine(logOutput)
-                                        DebugLogFFmpeg.debugFFmpeg("Fermux FFmpeg Output", logOutput)
+                                        Log.d("Fermux FFmpeg Output", logOutput)
                                         val now = System.currentTimeMillis()
                                         var progressDoneSign = false
 
@@ -262,7 +261,7 @@ private fun createFFmpegNotif(
                               }
                          } else {
                               val logs = output.toString().take(8_000)
-                              DebugLogFFmpeg.debugFFmpeg("fermuxFFmpeg", "FFmpeg failed with rc: $exitCode\n$logs")
+                              Log.d("fermuxFFmpeg", "FFmpeg failed with rc: $exitCode\n$logs")
                               failure(workDataOf("error" to logs))
                          }
                     } finally {
@@ -272,7 +271,6 @@ private fun createFFmpegNotif(
                          }
                     }
                } catch (e: CancellationException) {
-                    DebugLogFFmpeg.errorFFmpeg("fermuxFFmpeg", "FFmpeg conversion cancelled id=$id stopReason=$stopReason", e)
                     Log.e("fermuxFFmpeg", "FFmpeg conversion cancelled id=$id stopReason=$stopReason", e)
                     throw e
                } finally {
@@ -280,7 +278,7 @@ private fun createFFmpegNotif(
                     if (outputFile.exists()) outputFile.delete()
                }
           } catch (e: Exception) {
-               DebugLogFFmpeg.errorFFmpeg("fermuxFFmpeg", "FFmpeg worker crashed", e)
+               Log.e("fermuxFFmpeg", "FFmpeg worker crashed", e)
                val error = e.message
                     ?.take(4_000)
                     ?: "FFmpeg logging failed"

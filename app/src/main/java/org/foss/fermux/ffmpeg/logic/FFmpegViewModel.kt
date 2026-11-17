@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.MediaExtractor
 import android.media.MediaFormat
 import android.net.Uri
+import android.util.Log
 import android.webkit.MimeTypeMap
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,7 +19,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.foss.fermux.utils.DebugLogFFmpeg
 import java.util.*
 
 
@@ -74,7 +74,7 @@ class FFmpegViewModel : ViewModel() {
                          }
                     }
                } catch (e: Exception) {
-                    DebugLogFFmpeg.errorFFmpeg("fermux ffmpeg error update input kind", "failed for some reason", e)
+                    Log.e("fermux ffmpeg error update input kind", "failed for some reason", e)
                } finally {
                     extractor.release()
                }

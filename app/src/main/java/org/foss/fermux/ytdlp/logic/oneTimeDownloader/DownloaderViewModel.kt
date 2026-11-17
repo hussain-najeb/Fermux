@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.foss.fermux.dataStore.DataStoreDownloaderSettings
-import org.foss.fermux.utils.DebugLogDownloader
 import org.foss.youtube.next.YoutubeDL
 import java.util.*
 
@@ -78,7 +77,6 @@ class DownloaderViewModel : ViewModel() {
           video: VideoQuality? = null
      ) {
           if (activeProcess != null || state !is DownloadStatus.UserArgs && state !is DownloadStatus.QuickDownload) {
-               DebugLogDownloader.debugDownloader("DownloadAdmission", "Ignoring duplicate download request, active id=$activeProcess")
                Log.d("DownloadAdmission", "Ignoring duplicate download request, active id=$activeProcess")
                return
           }
@@ -101,7 +99,6 @@ class DownloaderViewModel : ViewModel() {
 
           activeProcess = requestedUrls.id
 
-          DebugLogDownloader.debugDownloader("DownloadAdmission", "Prepared download id=${requestedUrls.id}")
           Log.d("DownloadAdmission", "Prepared download id=${requestedUrls.id}")
 
           downloaderJob = viewModelScope.launch {
@@ -117,7 +114,7 @@ class DownloaderViewModel : ViewModel() {
                     val observedId = if (existingWork != null) {
                          activeProcess = existingWork.id
 
-                         DebugLogDownloader.debugDownloader(
+                         Log.d(
                               "DownloadAdmission",
                               "Keeping existing download id=${existingWork.id} state=${existingWork.state}"
                          )
@@ -125,7 +122,7 @@ class DownloaderViewModel : ViewModel() {
                          existingWork.id
                     } else {
 
-                         DebugLogDownloader.debugDownloader(
+                         Log.d(
                               "DownloadAdmission",
                               "Enqueue unique download id=${requestedUrls.id}"
                          )
@@ -210,7 +207,7 @@ class DownloaderViewModel : ViewModel() {
                } catch (e: CancellationException) {
                     throw e
                } catch (e: Exception) {
-                    DebugLogDownloader.errorDownloader(
+                    Log.e(
                          "DownloadAdmission",
                          "Failed to enqueue id=${requestedUrls.id}",
                          e
@@ -224,7 +221,7 @@ class DownloaderViewModel : ViewModel() {
      }
 
      private fun downloadErrorHandler(e: Exception) {
-          DebugLogDownloader.errorDownloader("MetadataFetch", "Fetch failed: ${e.javaClass.simpleName}", e)
+          Log.e("MetadataFetch", "Fetch failed: ${e.javaClass.simpleName}", e)
           val raw = when (e) {
                is TimeoutCancellationException -> "Timed out waiting for a response, check network connection"
                else -> e.message ?: e.toString()

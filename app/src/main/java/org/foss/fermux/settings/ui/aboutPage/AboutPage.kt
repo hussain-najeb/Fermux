@@ -50,7 +50,6 @@ fun AboutPage(navController: NavController) {
                position = TilePosition.SOLO
           ),
           InfoListClass(
-               // TODO. Make so it checks if there is an update an have it tell the user. Maybe an auto updater for the app.
                title = "App Version",
                description = "The current version of the app is $versionName",
                icon = Icons.Outlined.Info,

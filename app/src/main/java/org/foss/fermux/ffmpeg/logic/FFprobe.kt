@@ -1,8 +1,8 @@
 package org.foss.fermux.ffmpeg.logic
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.foss.fermux.utils.DebugLogFFmpeg
 import java.io.File
 import java.io.IOException
 
@@ -32,7 +32,7 @@ suspend fun ffprobeProgress(
                val output = progressProcess.inputStream.bufferedReader().use { it.readText() }
                val exitCode = progressProcess.waitFor()
                if (exitCode != 0) {
-                    DebugLogFFmpeg.debugFFmpeg("ffprobe progress error", "failed to parse progress at: $exitCode")
+                    Log.d("ffprobe progress error", "failed to parse progress at: $exitCode")
                     return@withContext null
                }
 
@@ -43,7 +43,7 @@ suspend fun ffprobeProgress(
                     ?.let { (it * 1_000_000.0).toLong()}
 
           } catch (e: IOException) {
-               DebugLogFFmpeg.errorFFmpeg("FFmpegWorkManager", "Could not probe input duration", e)
+               Log.e("FFmpegWorkManager", "Could not probe input duration", e)
                null
           }
 

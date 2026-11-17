@@ -20,5 +20,3 @@ fun SeqLogs(
         navController = navController
     )
 }
-
-// TODO. remember to remove the Debug feature from the app

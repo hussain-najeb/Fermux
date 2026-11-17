@@ -16,7 +16,6 @@ interface DownloaderSettingsRepo {
      val sleepRequest: Flow<Int>
      val embedThumbnail: Flow<Boolean>
      val quickJS: Flow<Boolean>
-     val downloaderDebug: Flow<Boolean>
      val fingerprinting: Flow<Boolean>
      val aria2cMode: Flow<Aria2cMode>
      val thumbnailFormat: Flow<ThumbnailFormat>
@@ -53,7 +52,6 @@ interface DownloaderSettingsRepo {
      suspend fun setVideoComp(value: Boolean)
      suspend fun setExternalDownloader(value: ExternalDownloaders)
      suspend fun setQuickJS(value: Boolean)
-     suspend fun setDownloaderDebug(value: Boolean)
      suspend fun setFingerprinting(value: Boolean)
      suspend fun setEmbedThumbnail(value: Boolean)
      suspend fun setHistory(value: Boolean)
@@ -82,7 +80,6 @@ interface DownloaderSettingsRepo {
 
 data class DownloaderSettingsSnapshot(
      val downloadPath: String?,
-     val downloaderDebug: Boolean?,
      val sleepRequest: Int?,
      val aria2cMode: String?,
      val ytdlpDetails: Boolean?,
@@ -132,7 +129,6 @@ val EXTERNAL_DOWNLOADER = stringPreferencesKey("set_external_downloaders_for_ytd
 val DOWNLOADING_DETAILS = booleanPreferencesKey("download_details")
 val HISTORY = booleanPreferencesKey("history")
 val QUICK_JS = booleanPreferencesKey("quickJs")
-val DOWNLOADER_DEBUG = booleanPreferencesKey("debug_button")
 val FINGERPRINT = booleanPreferencesKey("fingerprint")
 val EMBED_THUMBNAIL = booleanPreferencesKey("embed_thumbnail")
 val PLAYLIST_STATUS = booleanPreferencesKey("playlist_status")
@@ -166,7 +162,6 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
      override val embedThumbnail: Flow<Boolean> =
           settingStore.data.map { preferences -> preferences[EMBED_THUMBNAIL] ?: true }
      override val quickJS: Flow<Boolean> = settingStore.data.map { preferences -> preferences[QUICK_JS] ?: true }
-     override val downloaderDebug: Flow<Boolean> = settingStore.data.map { preferences -> preferences[DOWNLOADER_DEBUG] ?: false }
      override val fingerprinting: Flow<Boolean> = settingStore.data.map { preferences -> preferences[FINGERPRINT] ?: true }
      override val aria2cMode: Flow<Aria2cMode> = settingStore.data.map { preferences ->
           preferences[ARIA2C_MODE_KEY]
@@ -338,10 +333,6 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
           settingStore.edit { preferences -> preferences[QUICK_JS] = value }
      }
 
-     override suspend fun setDownloaderDebug(value: Boolean) {
-          settingStore.edit { preferences -> preferences[DOWNLOADER_DEBUG] = value }
-     }
-
      override suspend fun setFingerprinting(value: Boolean) {
           settingStore.edit { preferences -> preferences[FINGERPRINT] = value }
      }
@@ -461,7 +452,6 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
           settingStore.edit { preferences ->
                snapshot = DownloaderSettingsSnapshot(
                     downloadPath = preferences[DOWNLOAD_PATH],
-                    downloaderDebug = preferences[DOWNLOADER_DEBUG],
                     sleepRequest = preferences[SLEEP_REQUEST_KEY],
                     aria2cMode = preferences[ARIA2C_MODE_KEY],
                     ytdlpDetails = preferences[DOWNLOADING_DETAILS],
@@ -483,7 +473,6 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                     seqAudio = preferences[SEQ_AUDIO]
                )
                preferences.remove(key = DOWNLOAD_PATH)
-               preferences.remove(key = DOWNLOADER_DEBUG)
                preferences.remove(key = SLEEP_REQUEST_KEY)
                preferences.remove(key = ARIA2C_MODE_KEY)
                preferences.remove(key = DOWNLOADING_DETAILS)
@@ -510,7 +499,6 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
      override suspend fun restoreYtdlp(snapshot: DownloaderSettingsSnapshot) {
           settingStore.edit { preferences ->
                preferences.restore(DOWNLOAD_PATH, snapshot.downloadPath)
-               preferences.restore(DOWNLOADER_DEBUG, snapshot.downloaderDebug)
                preferences.restore(SLEEP_REQUEST_KEY, snapshot.sleepRequest)
                preferences.restore(ARIA2C_MODE_KEY, snapshot.aria2cMode)
                preferences.restore(DOWNLOADING_DETAILS, snapshot.ytdlpDetails)

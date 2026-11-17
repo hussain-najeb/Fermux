@@ -13,21 +13,12 @@ import kotlinx.coroutines.launch
 import org.foss.fermux.dataStore.DataStoreDownloaderSettings
 import org.foss.fermux.dataStore.DownloaderArgumentsSnapshot
 import org.foss.fermux.dataStore.DownloaderSettingsSnapshot
-import org.foss.fermux.utils.DebugLogDownloader
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.*
 import org.foss.youtube.next.YoutubeDL
 import java.util.concurrent.atomic.AtomicBoolean
 
 class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(application) {
     private val settingsTab = DataStoreDownloaderSettings(application.applicationContext)
-
-    init {
-        viewModelScope.launch {
-            settingsTab.downloaderDebug.collect {
-                DebugLogDownloader.setEnable(it)
-            }
-        }
-    }
 
     val downloadPath: StateFlow<String> = settingsTab.downloadPath
         .stateIn(viewModelScope, SharingStarted.Lazily, "")
@@ -37,9 +28,6 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
     val quickJS: StateFlow<Boolean> = settingsTab.quickJS
         .stateIn(viewModelScope, SharingStarted.Lazily, true)
-
-    val downloaderDebug: StateFlow<Boolean> = settingsTab.downloaderDebug
-        .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
     val fingerprint: StateFlow<Boolean> = settingsTab.fingerprinting
         .stateIn(viewModelScope, SharingStarted.Lazily, true)
@@ -164,11 +152,6 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
     fun setQuickJS(value: Boolean) {
         viewModelScope.launch { settingsTab.setQuickJS(value) }
-    }
-
-    fun setDownloaderDebug(value: Boolean) {
-        DebugLogDownloader.setEnable(value)
-        viewModelScope.launch { settingsTab.setDownloaderDebug(value) }
     }
 
     fun setFingerprint(value: Boolean) {

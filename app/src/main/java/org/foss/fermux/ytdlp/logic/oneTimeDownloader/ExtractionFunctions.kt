@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.CancellationException
 import org.foss.fermux.utils.CopiedFile
-import org.foss.fermux.utils.DebugLogDownloader
 import org.foss.fermux.utils.fileCopyFilter
 import org.foss.youtube.next.YoutubeDL
 import org.foss.youtube.next.YoutubeDLRequest
@@ -36,15 +35,15 @@ suspend fun execution(
         val message = e.message.orEmpty()
         val thumbnailEmbeddingFailed = "EmbedThumbnailPPError" in message || "Unable to embed using ffprobe & ffmpeg" in message
         if (!thumbnailEmbeddingFailed) throw e
-        DebugLogDownloader.debugDownloader("downloadWorker", "Thumbnail embedding failed; keeping media without artwork")
+        Log.d("downloadWorker", "Thumbnail embedding failed; keeping media without artwork")
         onUpdate(100f, "[EmbedThumbnail] Failed; kept download without the thumbnail")
         null
     }
 
     response?.let {
-        DebugLogDownloader.debugDownloader("fermux", "exit=${it.exitCode}")
-        DebugLogDownloader.debugDownloader("fermux", "out=${it.out}")
-        DebugLogDownloader.debugDownloader("fermux", "err=${it.err}")
+        Log.d("fermux", "exit=${it.exitCode}")
+        Log.d("fermux", "out=${it.out}")
+        Log.d("fermux", "err=${it.err}")
     }
 
     return fileCopyFilter(context, privateDirectory = downloadDir, subfolderName = "downloader")
@@ -96,7 +95,6 @@ fun parseYtdlpMetadataJson(json: String): DownloadMetadata? {
         //     )
 
     } catch (e: Exception) {
-        DebugLogDownloader.errorDownloader("downloader JSON metadata parsing", "JSON metadata failed to be parsed", e)
         Log.e("downloader JSON metadata parsing", "JSON metadata failed to be parsed", e)
         null
     }

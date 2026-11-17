@@ -15,14 +15,11 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.foss.fermux.dataStore.DataStoreDownloaderSettings
-import org.foss.fermux.utils.DebugLogDownloader
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.*
 import java.util.*
 import kotlin.coroutines.cancellation.CancellationException
 
 const val SEQUENTIAL_URL = "seq_url"
-const val SEQUENTIAL_VIDEO = "video" // TODO. ADD these at some point
-const val SEQUENTIAL_AUDIO = "audio"
 
 
 class SequentialViewModel(
@@ -168,7 +165,6 @@ class SequentialViewModel(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                DebugLogDownloader.errorDownloader("DownloadAdmission", "Failed to enqueue id=${requestedUrlBuilder}", e)
                 Log.e("DownloadAdmission", "Failed to enqueue id=${requestedUrlBuilder}", e)
                 state = state.copy(phase = SequentialStatus.SeqDone)
             }

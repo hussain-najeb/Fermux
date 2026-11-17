@@ -130,7 +130,6 @@ class DownloaderSettingsTest {
           val categories = setOf("sponsor", "music_offtopic")
 
           setting.setDownloadPath("/downloads")
-          setting.setDownloaderDebug(true)
           setting.setSleepRequest(10)
           setting.setAria2cMode(Aria2cMode.EdgeCaseOnly)
           setting.setYtdlpDetails(false)
@@ -146,7 +145,6 @@ class DownloaderSettingsTest {
           setting.restoreYtdlp(snapshot)
 
           assertEquals("/downloads", setting.downloadPath.first())
-          assertTrue(setting.downloaderDebug.first())
           assertEquals(10, setting.sleepRequest.first())
           assertEquals(Aria2cMode.EdgeCaseOnly, setting.aria2cMode.first())
           assertEquals(ExternalDownloaders.Disabled, setting.externalDownloaders.first())

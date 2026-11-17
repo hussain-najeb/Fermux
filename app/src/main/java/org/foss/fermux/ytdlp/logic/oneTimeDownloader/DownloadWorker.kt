@@ -28,7 +28,6 @@ import org.foss.fermux.database.DownloaderDb
 import org.foss.fermux.database.DownloadsDatabaseField
 import org.foss.fermux.main.MainActivity
 import org.foss.fermux.utils.CopiedFile
-import org.foss.fermux.utils.DebugLogDownloader
 import org.foss.fermux.ytdlp.logic.sequentialDownloader.SEQUENTIAL_URL
 import org.foss.youtube.next.YoutubeDL
 import kotlin.math.roundToInt
@@ -161,7 +160,6 @@ class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWork
         val taskId = id
         val workerJob = currentCoroutineContext().job
 
-        DebugLogDownloader.debugDownloader("DownloadWorker", "Started id=$taskId attempt=$runAttemptCount")
         Log.d("DownloadWorker", "Started id=$taskId attempt=$runAttemptCount")
 
         val settings = DataStoreDownloaderSettings(applicationContext)
@@ -293,7 +291,6 @@ class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWork
                     }
                 },
             )
-            DebugLogDownloader.debugDownloader("DownloadWorker", "Succeeded id=$taskId")
             Log.d("DownloadWorker", "Succeeded id=$taskId")
 
             historyRegistration(capturedMetadataJson, history, downloaderInstance)
@@ -304,15 +301,9 @@ class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWork
 
         } catch (e: CancellationException) {
             val destroyed = YoutubeDL.destroyProcessById(taskId)
-            DebugLogDownloader.errorDownloader(
-                "DownloadWorker",
-                "Cancelled id=$taskId stopReason=$stopReason destroyed=$destroyed",
-                e
-            )
             Log.e("DownloadWorker", "Cancelled id=$taskId stopReason=$stopReason destroyed=$destroyed", e)
             throw e
         } catch (e: Exception) {
-            DebugLogDownloader.errorDownloader("DownloadWorker", "Failed id=$taskId attempt=$runAttemptCount", e)
             Log.e("DownloadWorker", "Failed id=$taskId attempt=$runAttemptCount", e)
             val error = e.message
                 ?.take(9_000)
@@ -357,13 +348,11 @@ private suspend fun DownloadWorker.historyRegistration(
                 }
             } catch (e: Exception) {
                 Log.e("DownloadWorker", "Failed to save download to database", e)
-                DebugLogDownloader.errorDownloader("DownloadWorker", "Failed to save download to database", e)
             }
 
         }
 
     } catch (e: Exception) {
-        DebugLogDownloader.errorDownloader("fermux", "failed to save audio JSON", e)
         Log.e("fermux", "failed to save video JSON", e)
     }
 }

@@ -1,8 +1,6 @@
 package org.foss.fermux.settings.ui.downloader
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -50,7 +48,6 @@ fun AdvancedDownloaderSettings(
   val sponsorBlockCategories by downloaderSettingsViewModel.sponsorBlockCategories.collectAsStateWithLifecycle()
   val quickJS by downloaderSettingsViewModel.quickJS.collectAsStateWithLifecycle()
   val fingerprint by downloaderSettingsViewModel.fingerprint.collectAsStateWithLifecycle()
-  val logcat by downloaderSettingsViewModel.downloaderDebug.collectAsStateWithLifecycle()
   val quickDownloads by downloaderSettingsViewModel.quickDownloads.collectAsStateWithLifecycle()
   // ModularSegmentedButtons vals
   val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
@@ -89,28 +86,6 @@ fun AdvancedDownloaderSettings(
         )
       },
       position = TilePosition.TOP
-    ),
-    InfoListClass(
-      title = if (logcat) "Debug Logging On" else "Debug Logging Off",
-      description = "Write diagnostic messages to Logcat",
-      icon = Icons.Default.BugReport,
-      liner = true,
-      dialogAppearance = true,
-      dialogTitle = "Debugging",
-      dialogImage = R.drawable.log,
-      specialDescription = buildAnnotatedString {
-        withStyle(SpanStyle(FermuxColors.white)) { append("When enabled, this setting makes the logs from ") }
-        withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("WorkManager ") }
-        withStyle(SpanStyle(FermuxColors.white)) { append("appear in the logging screen, which is useful for deep debugging and app inspection.") }
-      },
-      content = {
-        SettingsSwitch(
-          modifier = Modifier.padding(2.dp),
-          checked = logcat,
-          onCheckedChange = downloaderSettingsViewModel::setDownloaderDebug
-        )
-      },
-      position = TilePosition.MIDDLE
     ),
     InfoListClass(
       title = "Connection Type",
