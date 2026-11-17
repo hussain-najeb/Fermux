@@ -30,6 +30,4 @@ interface DownloadsDao {
 
      @Query("SELECT * FROM downloads ORDER BY size DESC")
      fun getDownloadsOrderBySizeDESC(): Flow<List<DownloadsDatabaseField>>
-
-     // @Query("SELECT * FROM downloads ORDER BY format ") TODO. Implement this
 }

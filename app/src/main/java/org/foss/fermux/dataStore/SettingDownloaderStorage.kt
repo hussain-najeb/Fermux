@@ -118,10 +118,7 @@ data class DownloaderArgumentsSnapshot(
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings_tab")
 
-// ytdlp downloader tab.
 
-// TODO. for args
-//  4- notification on failure
 
 val DOWNLOAD_PATH = stringPreferencesKey("download_path")
 val DOWNLOADER_BELL_STATE = booleanPreferencesKey("bellState")

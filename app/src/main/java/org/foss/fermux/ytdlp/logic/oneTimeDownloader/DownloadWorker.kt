@@ -1,16 +1,20 @@
 package org.foss.fermux.ytdlp.logic.oneTimeDownloader
 
+import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.work.*
 import kotlinx.coroutines.CancellationException
@@ -61,7 +65,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWork
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
 
-    private fun onFailureNotif(): Notification {
+    private fun createFailureNotif(text: String): Notification {
         createDownloaderNotifChannel()
 
         return NotificationCompat.Builder(
@@ -70,12 +74,27 @@ class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWork
         )
             .setSmallIcon(R.drawable.download_notif_cancel)
             .setContentTitle("Download failed")
-            .setContentText("Download failed, press to view error")
+            .setContentText(text.take(120))
+            .setCategory(NotificationCompat.CATEGORY_ERROR)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
             .setOngoing(false)
             .setOnlyAlertOnce(true)
             .setContentIntent(openRoute)
             .build()
+    }
 
+    private fun showFailure(message: String) {
+        val granted = Build.VERSION.SDK_INT < 33 ||
+            ContextCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+
+        if (granted) {
+            NotificationManagerCompat.from(applicationContext)
+                .notify(FAILURE_NOTIFICATION_ID, createFailureNotif(message))
+        }
     }
 
     private fun createDownloadNotif(
@@ -124,6 +143,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWork
     companion object {
         private const val DOWNLOAD_CHANNEL_ID = "Downloader_Notifs"
         private const val DOWNLOAD_NOTIFICATION_ID = 1001
+        private const val FAILURE_NOTIFICATION_ID = 1003
     }
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
@@ -297,7 +317,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWork
             val error = e.message
                 ?.take(9_000)
                 ?: "Download failed"
-            downloaderWorkNotif.notify(DOWNLOAD_NOTIFICATION_ID, onFailureNotif())
+            showFailure(e.localizedMessage ?: "Unknown error")
             Result.failure(workDataOf("error" to error))
         }
     }
