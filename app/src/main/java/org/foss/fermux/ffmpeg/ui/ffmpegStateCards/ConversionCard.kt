@@ -100,6 +100,7 @@ fun ConversionCard(
                                 tint = FermuxColors.white
                             )
                         }
+
                         null -> Unit
                     }
                 }

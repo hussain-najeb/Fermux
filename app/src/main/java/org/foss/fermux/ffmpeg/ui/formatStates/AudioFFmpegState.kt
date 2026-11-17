@@ -20,112 +20,112 @@ import org.foss.fermux.settings.logic.TilePosition
 @Composable
 fun AudioConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
 
-     val context = LocalContext.current
-     val scrollState = rememberScrollState()
+    val context = LocalContext.current
+    val scrollState = rememberScrollState()
 
-     LaunchedEffect(ffmpegViewModel.inputUri) {
-          ffmpegViewModel.updateInputKind(context)
-     }
+    LaunchedEffect(ffmpegViewModel.inputUri) {
+        ffmpegViewModel.updateInputKind(context)
+    }
 
-     val audioOptions = listOf(
-          InfoListClass(
-               title = "Back",
-               description = "Choose a different media kind",
-               image = R.drawable.back_arrow,
-               onClick = onBack,
-               position = TilePosition.TOP
-          ),
-          InfoListClass(
-               title = "MP3",
-               description = "Best compatible format",
-               image = R.drawable.mp3,
-               onClick = {
-                    ffmpegViewModel.selectedFormat = FFmpegTargetFormat.MP3
-                    ffmpegViewModel.inputUri?.let { uri ->
-                         ffmpegViewModel.startingConversion(context, uri, FFmpegTargetFormat.MP3)
-                    }
-               },
-               position = TilePosition.MIDDLE
-          ),
-          InfoListClass(
-               title = "FLAC",
-               description = "Flac is a lossless audio format with a big files size",
-               image = R.drawable.flac,
-               onClick = {
-                    ffmpegViewModel.selectedFormat = FFmpegTargetFormat.FLAC
-                    ffmpegViewModel.inputUri?.let { uri ->
-                         ffmpegViewModel.startingConversion(
-                              context,
-                              inputUri = uri,
-                              targetFormat = FFmpegTargetFormat.FLAC
-                         )
-                    }
-               },
-               position = TilePosition.MIDDLE
-          ),
-          InfoListClass(
-               title = "WAV",
-               description = "A WAV file gives the highest possible audio quality, but a MASSIVE file size",
-               image = R.drawable.wav,
-               onClick = {
-                    ffmpegViewModel.selectedFormat = FFmpegTargetFormat.WAV
-                    ffmpegViewModel.inputUri?.let { uri ->
-                         ffmpegViewModel.startingConversion(
-                              context,
-                              inputUri = uri,
-                              targetFormat = FFmpegTargetFormat.WAV
-                         )
-                    }
-               },
-               position = TilePosition.MIDDLE
-          ),
-          InfoListClass(
-               title = "OGG",
-               description = "OGG is a lower quality format, with a much lower file size",
-               image = R.drawable.ogg,
-               onClick = {
-                    ffmpegViewModel.selectedFormat = FFmpegTargetFormat.OGG
-                    ffmpegViewModel.inputUri?.let { uri ->
-                         ffmpegViewModel.startingConversion(
-                              context,
-                              inputUri = uri,
-                              targetFormat = FFmpegTargetFormat.OGG
-                         )
-                    }
-               },
-               position = TilePosition.MIDDLE
-          ),
-          InfoListClass(
-               title = "M4A",
-               description = "M4A is a modern, high-efficiency format that is smaller than WAV and FLAC and better quality than OGG",
-               image = R.drawable.m4p,
-               onClick = {
-                    ffmpegViewModel.selectedFormat = FFmpegTargetFormat.M4A
-                    ffmpegViewModel.inputUri?.let { uri ->
-                         ffmpegViewModel.startingConversion(
-                              context,
-                              inputUri = uri,
-                              targetFormat = FFmpegTargetFormat.M4A
-                         )
-                    }
-               },
-               position = TilePosition.BOTTOM
-          ),
-     )
-     Column(
-          modifier = Modifier
-               .fillMaxWidth()
-               .padding(bottom = 15.dp)
-               .verticalScroll(scrollState)
-     ) {
-          audioOptions.forEach { option ->
-               FFmpegTiles(
-                    title = option.title,
-                    description = option.description,
-                    image = option.image,
-                    onClick = option.onClick,
-                    shape = option.position.TileShaper()
-               )
-          }
-     }
+    val audioOptions = listOf(
+        InfoListClass(
+            title = "Back",
+            description = "Choose a different media kind",
+            image = R.drawable.back_arrow,
+            onClick = onBack,
+            position = TilePosition.TOP
+        ),
+        InfoListClass(
+            title = "MP3",
+            description = "Best compatible format",
+            image = R.drawable.mp3,
+            onClick = {
+                ffmpegViewModel.selectedFormat = FFmpegTargetFormat.MP3
+                ffmpegViewModel.inputUri?.let { uri ->
+                    ffmpegViewModel.startingConversion(context, uri, FFmpegTargetFormat.MP3)
+                }
+            },
+            position = TilePosition.MIDDLE
+        ),
+        InfoListClass(
+            title = "FLAC",
+            description = "Flac is a lossless audio format with a big files size",
+            image = R.drawable.flac,
+            onClick = {
+                ffmpegViewModel.selectedFormat = FFmpegTargetFormat.FLAC
+                ffmpegViewModel.inputUri?.let { uri ->
+                    ffmpegViewModel.startingConversion(
+                        context,
+                        inputUri = uri,
+                        targetFormat = FFmpegTargetFormat.FLAC
+                    )
+                }
+            },
+            position = TilePosition.MIDDLE
+        ),
+        InfoListClass(
+            title = "WAV",
+            description = "A WAV file gives the highest possible audio quality, but a MASSIVE file size",
+            image = R.drawable.wav,
+            onClick = {
+                ffmpegViewModel.selectedFormat = FFmpegTargetFormat.WAV
+                ffmpegViewModel.inputUri?.let { uri ->
+                    ffmpegViewModel.startingConversion(
+                        context,
+                        inputUri = uri,
+                        targetFormat = FFmpegTargetFormat.WAV
+                    )
+                }
+            },
+            position = TilePosition.MIDDLE
+        ),
+        InfoListClass(
+            title = "OGG",
+            description = "OGG is a lower quality format, with a much lower file size",
+            image = R.drawable.ogg,
+            onClick = {
+                ffmpegViewModel.selectedFormat = FFmpegTargetFormat.OGG
+                ffmpegViewModel.inputUri?.let { uri ->
+                    ffmpegViewModel.startingConversion(
+                        context,
+                        inputUri = uri,
+                        targetFormat = FFmpegTargetFormat.OGG
+                    )
+                }
+            },
+            position = TilePosition.MIDDLE
+        ),
+        InfoListClass(
+            title = "M4A",
+            description = "M4A is a modern, high-efficiency format that is smaller than WAV and FLAC and better quality than OGG",
+            image = R.drawable.m4p,
+            onClick = {
+                ffmpegViewModel.selectedFormat = FFmpegTargetFormat.M4A
+                ffmpegViewModel.inputUri?.let { uri ->
+                    ffmpegViewModel.startingConversion(
+                        context,
+                        inputUri = uri,
+                        targetFormat = FFmpegTargetFormat.M4A
+                    )
+                }
+            },
+            position = TilePosition.BOTTOM
+        ),
+    )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 15.dp)
+            .verticalScroll(scrollState)
+    ) {
+        audioOptions.forEach { option ->
+            FFmpegTiles(
+                title = option.title,
+                description = option.description,
+                image = option.image,
+                onClick = option.onClick,
+                shape = option.position.TileShaper()
+            )
+        }
+    }
 }

@@ -24,215 +24,215 @@ import java.util.*
 
 class FFmpegViewModel : ViewModel() {
 
-     var inputUri by mutableStateOf<Uri?>(null)
-     var FFmpegLogs by mutableStateOf("")
-     var state by mutableStateOf<FFmpegStatus>(FFmpegStatus.Idle)
-     var selectedFormat by mutableStateOf(FFmpegTargetFormat.WAV)
-     var inputKind by mutableStateOf<MediaKind?>(null)
-     private var activeProcess by mutableStateOf<UUID?>(null)
-     var inputVideoCodec by mutableStateOf<String?>(null)
-     var inputAudioCodec by mutableStateOf<String?>(null)
-     private var ffmpegJob: Job? = null
-     val flavourMessage = listOf(
-          "Oh no, did you convert audio to video?",
-          "This is always problematic",
-          "Good luck solving it",
-          "It's a skill issue"
-     )
+    var inputUri by mutableStateOf<Uri?>(null)
+    var FFmpegLogs by mutableStateOf("")
+    var state by mutableStateOf<FFmpegStatus>(FFmpegStatus.Idle)
+    var selectedFormat by mutableStateOf(FFmpegTargetFormat.WAV)
+    var inputKind by mutableStateOf<MediaKind?>(null)
+    private var activeProcess by mutableStateOf<UUID?>(null)
+    var inputVideoCodec by mutableStateOf<String?>(null)
+    var inputAudioCodec by mutableStateOf<String?>(null)
+    private var ffmpegJob: Job? = null
+    val flavourMessage = listOf(
+        "Oh no, did you convert audio to video?",
+        "This is always problematic",
+        "Good luck solving it",
+        "It's a skill issue"
+    )
 
-     private fun fail(flavourFailMessage: String, rawError: String) {
-          state = FFmpegStatus.Error(flavourFailMessage, rawError)
-     }
+    private fun fail(flavourFailMessage: String, rawError: String) {
+        state = FFmpegStatus.Error(flavourFailMessage, rawError)
+    }
 
-     fun typeErrorClarification(context: Context) {
-          val uri = inputUri
-          val mime = uri?.let { context.contentResolver.getType(it) }
-          val extension = uri?.let { MimeTypeMap.getFileExtensionFromUrl(it.toString()) }
+    fun typeErrorClarification(context: Context) {
+        val uri = inputUri
+        val mime = uri?.let { context.contentResolver.getType(it) }
+        val extension = uri?.let { MimeTypeMap.getFileExtensionFromUrl(it.toString()) }
 
-          fail(
-               flavourFailMessage = flavourMessage.random(),
-               rawError = "This input is unsupported, check this info:\n" + "uri = $uri\n" + "mime = ${mime ?: "Unknown"}\n" + "extension = ${extension?.takeIf { it.isNotBlank() } ?: "Unknown"}"
-          )
-     }
+        fail(
+            flavourFailMessage = flavourMessage.random(),
+            rawError = "This input is unsupported, check this info:\n" + "uri = $uri\n" + "mime = ${mime ?: "Unknown"}\n" + "extension = ${extension?.takeIf { it.isNotBlank() } ?: "Unknown"}"
+        )
+    }
 
-     fun updateInputKind(context: Context) {
-          val uri = inputUri
-          inputKind = uri?.let { detectInputKind(context, it) }
+    fun updateInputKind(context: Context) {
+        val uri = inputUri
+        inputKind = uri?.let { detectInputKind(context, it) }
 
-          inputVideoCodec = null
-          inputAudioCodec = null
+        inputVideoCodec = null
+        inputAudioCodec = null
 
-          if (uri != null && inputKind == MediaKind.Video) {
-               val extractor = MediaExtractor()
-               try {
-                    extractor.setDataSource(context, uri, null)
-                    for (i in 0 until extractor.trackCount) {
-                         val mime = extractor.getTrackFormat(i).getString(MediaFormat.KEY_MIME) ?: continue
-                         when {
-                              mime.startsWith("video/") && inputVideoCodec == null -> inputVideoCodec = mime
-                              mime.startsWith("audio/") && inputAudioCodec == null -> inputAudioCodec = mime
-                         }
+        if (uri != null && inputKind == MediaKind.Video) {
+            val extractor = MediaExtractor()
+            try {
+                extractor.setDataSource(context, uri, null)
+                for (i in 0 until extractor.trackCount) {
+                    val mime = extractor.getTrackFormat(i).getString(MediaFormat.KEY_MIME) ?: continue
+                    when {
+                        mime.startsWith("video/") && inputVideoCodec == null -> inputVideoCodec = mime
+                        mime.startsWith("audio/") && inputAudioCodec == null -> inputAudioCodec = mime
                     }
-               } catch (e: Exception) {
-                    Log.e("fermux ffmpeg error update input kind", "failed for some reason", e)
-               } finally {
-                    extractor.release()
-               }
-          }
-     }
+                }
+            } catch (e: Exception) {
+                Log.e("fermux ffmpeg error update input kind", "failed for some reason", e)
+            } finally {
+                extractor.release()
+            }
+        }
+    }
 
 
-     private val videoRemuxAllowlist = mapOf(
-          FFmpegTargetFormat.MP4 to setOf("video/avc", "video/hevc", "video/av01", "video/mp4v-es"),
-          FFmpegTargetFormat.MOV to setOf("video/avc", "video/hevc", "video/mp4v-es"),
-          FFmpegTargetFormat.AVI to setOf("video/avc", "video/mp4v-es"),
-          FFmpegTargetFormat.WEBM to setOf("video/av01", "video/x-vnd.on2.vp8", "video/x-vnd.on2.vp9"),
-     )
+    private val videoRemuxAllowlist = mapOf(
+        FFmpegTargetFormat.MP4 to setOf("video/avc", "video/hevc", "video/av01", "video/mp4v-es"),
+        FFmpegTargetFormat.MOV to setOf("video/avc", "video/hevc", "video/mp4v-es"),
+        FFmpegTargetFormat.AVI to setOf("video/avc", "video/mp4v-es"),
+        FFmpegTargetFormat.WEBM to setOf("video/av01", "video/x-vnd.on2.vp8", "video/x-vnd.on2.vp9"),
+    )
 
-     private val audioRemuxAllowlist = mapOf(
-          FFmpegTargetFormat.MOV to setOf("audio/mp4a-latm", "audio/raw"),
-          FFmpegTargetFormat.AVI to setOf("audio/mpeg", "audio/raw"),
-     )
+    private val audioRemuxAllowlist = mapOf(
+        FFmpegTargetFormat.MOV to setOf("audio/mp4a-latm", "audio/raw"),
+        FFmpegTargetFormat.AVI to setOf("audio/mpeg", "audio/raw"),
+    )
 
-     fun isVideoTargetSupported(target: FFmpegTargetFormat): Boolean {
-          if (target.category != MediaKind.Video) return true
+    fun isVideoTargetSupported(target: FFmpegTargetFormat): Boolean {
+        if (target.category != MediaKind.Video) return true
 
-          val allowedVideo = videoRemuxAllowlist[target]
-          val allowedAudio = audioRemuxAllowlist[target]
+        val allowedVideo = videoRemuxAllowlist[target]
+        val allowedAudio = audioRemuxAllowlist[target]
 
-          val videoOk = inputVideoCodec == null || allowedVideo == null || inputVideoCodec in allowedVideo
-          val audioOk = inputAudioCodec == null || allowedAudio == null || inputAudioCodec in allowedAudio
-          return videoOk && audioOk
-     }
+        val videoOk = inputVideoCodec == null || allowedVideo == null || inputVideoCodec in allowedVideo
+        val audioOk = inputAudioCodec == null || allowedAudio == null || inputAudioCodec in allowedAudio
+        return videoOk && audioOk
+    }
 
-     private fun isConversionAllowed(): Boolean {
-          val input = inputKind ?: return false
-          return when (input) {
-               MediaKind.Audio -> true
-               MediaKind.Video -> true
-               MediaKind.Image -> true
-               else -> false
-          }
-     }
+    private fun isConversionAllowed(): Boolean {
+        val input = inputKind ?: return false
+        return when (input) {
+            MediaKind.Audio -> true
+            MediaKind.Video -> true
+            MediaKind.Image -> true
+            else -> false
+        }
+    }
 
-     fun startingConversion(context: Context, inputUri: Uri, targetFormat: FFmpegTargetFormat) {
-          updateInputKind(context)
-          if (!isConversionAllowed()) {
-               fail(
-                    flavourFailMessage = flavourMessage.random(),
-                    rawError = "Cannot convert $inputKind input to ${targetFormat.descriptor}"
-               )
-               return
-          }
+    fun startingConversion(context: Context, inputUri: Uri, targetFormat: FFmpegTargetFormat) {
+        updateInputKind(context)
+        if (!isConversionAllowed()) {
+            fail(
+                flavourFailMessage = flavourMessage.random(),
+                rawError = "Cannot convert $inputKind input to ${targetFormat.descriptor}"
+            )
+            return
+        }
 
-          ffmpegJob = viewModelScope.launch {
+        ffmpegJob = viewModelScope.launch {
 
-               val originalName = getDisplayName(context, inputUri) ?: "Converted_to_${UUID.randomUUID()}"
+            val originalName = getDisplayName(context, inputUri) ?: "Converted_to_${UUID.randomUUID()}"
 
-               val inputData = workDataOf(
-                    "FFMPEG_URI_FILE" to inputUri.toString(),
-                    "TARGET_FORMAT" to targetFormat.name,
-                    "ORIGINAL_FILE_NAME" to originalName,
-                    "OUTPUT_MIME_TYPE" to targetFormat.mimeType,
-               )
+            val inputData = workDataOf(
+                "FFMPEG_URI_FILE" to inputUri.toString(),
+                "TARGET_FORMAT" to targetFormat.name,
+                "ORIGINAL_FILE_NAME" to originalName,
+                "OUTPUT_MIME_TYPE" to targetFormat.mimeType,
+            )
 
-               val request = OneTimeWorkRequestBuilder<FFmpegWorker>()
-                    .setInputData(inputData)
-                    .build()
+            val request = OneTimeWorkRequestBuilder<FFmpegWorker>()
+                .setInputData(inputData)
+                .build()
 
-               val workManager = WorkManager.getInstance(context)
-               workManager.enqueue(request)
+            val workManager = WorkManager.getInstance(context)
+            workManager.enqueue(request)
 
-               activeProcess = request.id
+            activeProcess = request.id
 
-               state = FFmpegStatus.Converting( 0f, targetFormat, inputUri, FFmpegLogs)
+            state = FFmpegStatus.Converting(0f, targetFormat, inputUri, FFmpegLogs)
 
-               workManager.getWorkInfoByIdFlow(request.id).onEach { workInfo ->
-                    workInfo ?: return@onEach
-                    when (workInfo.state) {
-                         WorkInfo.State.RUNNING -> {
+            workManager.getWorkInfoByIdFlow(request.id).onEach { workInfo ->
+                workInfo ?: return@onEach
+                when (workInfo.state) {
+                    WorkInfo.State.RUNNING -> {
 
-                              val progress = workInfo.progress.getFloat("progress", 0f)
-                              val logs = workInfo.progress.getString("line")
+                        val progress = workInfo.progress.getFloat("progress", 0f)
+                        val logs = workInfo.progress.getString("line")
 
-                              if (!logs.isNullOrBlank()) {
-                                   FFmpegLogs = (FFmpegLogs + "\n" + logs)
-                              }
-                              state = FFmpegStatus.Converting(progress, targetFormat, inputUri, FFmpegLogs)
-                         }
-
-                         WorkInfo.State.SUCCEEDED -> {
-                              state = FFmpegStatus.Loaded(targetFormat, inputUri, FFmpegLogs)
-                              activeProcess = null
-                         }
-
-                         WorkInfo.State.FAILED -> {
-                              val rawError =
-                                   workInfo.outputData.getString("error") ?: "Unknown error (worker returned no data)"
-                              fail(
-                                   flavourFailMessage = flavourMessage.random(),
-                                   rawError = rawError
-                              )
-                              activeProcess = null
-                         }
-
-                         WorkInfo.State.CANCELLED -> {
-                              state = FFmpegStatus.Idle
-                              activeProcess = null
-                         }
-
-                         else -> {}
+                        if (!logs.isNullOrBlank()) {
+                            FFmpegLogs = (FFmpegLogs + "\n" + logs)
+                        }
+                        state = FFmpegStatus.Converting(progress, targetFormat, inputUri, FFmpegLogs)
                     }
-               }
-                    .launchIn(viewModelScope)
-          }
-     }
+
+                    WorkInfo.State.SUCCEEDED -> {
+                        state = FFmpegStatus.Loaded(targetFormat, inputUri, FFmpegLogs)
+                        activeProcess = null
+                    }
+
+                    WorkInfo.State.FAILED -> {
+                        val rawError =
+                            workInfo.outputData.getString("error") ?: "Unknown error (worker returned no data)"
+                        fail(
+                            flavourFailMessage = flavourMessage.random(),
+                            rawError = rawError
+                        )
+                        activeProcess = null
+                    }
+
+                    WorkInfo.State.CANCELLED -> {
+                        state = FFmpegStatus.Idle
+                        activeProcess = null
+                    }
+
+                    else -> {}
+                }
+            }
+                .launchIn(viewModelScope)
+        }
+    }
 
 
-     fun cancelButton(context: Context) {
-          activeProcess?.let { id ->
-               WorkManager.getInstance(context).cancelWorkById(id)
-          }
+    fun cancelButton(context: Context) {
+        activeProcess?.let { id ->
+            WorkManager.getInstance(context).cancelWorkById(id)
+        }
 
-          ffmpegJob?.cancel()
-          ffmpegJob = null
-          state = FFmpegStatus.Idle
-          inputUri = null
-          FFmpegLogs = ""
-          selectedFormat = FFmpegTargetFormat.WAV
-          activeProcess = null
-     }
+        ffmpegJob?.cancel()
+        ffmpegJob = null
+        state = FFmpegStatus.Idle
+        inputUri = null
+        FFmpegLogs = ""
+        selectedFormat = FFmpegTargetFormat.WAV
+        activeProcess = null
+    }
 }
 
 private fun detectInputKind(context: Context, uri: Uri): MediaKind? {
-     val mime = context.contentResolver.getType(uri)
-     if (mime != null) {
-          return when {
-               mime.startsWith("video/") -> MediaKind.Video
-               mime.startsWith("audio/") -> MediaKind.Audio
-               mime.startsWith("image/") -> MediaKind.Image
-               else -> null
-          }
-     }
-     val ext = MimeTypeMap.getFileExtensionFromUrl(uri.toString()).lowercase()
-     val guessedMime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext) ?: return null
-     return when {
-          guessedMime.startsWith("video/") -> MediaKind.Video
-          guessedMime.startsWith("audio/") -> MediaKind.Audio
-          guessedMime.startsWith("image/") -> MediaKind.Image
-          else -> null
-     }
+    val mime = context.contentResolver.getType(uri)
+    if (mime != null) {
+        return when {
+            mime.startsWith("video/") -> MediaKind.Video
+            mime.startsWith("audio/") -> MediaKind.Audio
+            mime.startsWith("image/") -> MediaKind.Image
+            else -> null
+        }
+    }
+    val ext = MimeTypeMap.getFileExtensionFromUrl(uri.toString()).lowercase()
+    val guessedMime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext) ?: return null
+    return when {
+        guessedMime.startsWith("video/") -> MediaKind.Video
+        guessedMime.startsWith("audio/") -> MediaKind.Audio
+        guessedMime.startsWith("image/") -> MediaKind.Image
+        else -> null
+    }
 }
 
 private fun getDisplayName(context: Context, uri: Uri): String? {
-     return context.contentResolver.query(
-          uri,
-          arrayOf(android.provider.OpenableColumns.DISPLAY_NAME),
-          null, null, null
-     )?.use { cursor ->
-          if (cursor.moveToFirst()) {
-               val inx = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
-               if (inx >= 0) cursor.getString(inx) else null
-          } else null
-     }
+    return context.contentResolver.query(
+        uri,
+        arrayOf(android.provider.OpenableColumns.DISPLAY_NAME),
+        null, null, null
+    )?.use { cursor ->
+        if (cursor.moveToFirst()) {
+            val inx = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
+            if (inx >= 0) cursor.getString(inx) else null
+        } else null
+    }
 }

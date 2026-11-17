@@ -16,25 +16,25 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun ConverterScreen(
-     navController: NavController,
-     ffmpegViewModel: FFmpegViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity)
+    navController: NavController,
+    ffmpegViewModel: FFmpegViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity)
 ) {
 
-     LargeTopBarScaffold(
-          title = "Converter",
-          onBack = navController::popBackStack
-     ) { paddingValues ->
-          Column(
-               modifier = Modifier
-                    .background(FermuxColors.background)
-                    .fillMaxSize()
-                    .padding(paddingValues)
-          ) {
-               FFmepgState(
-                    ffmpegViewModel.state,
-                    navController = navController,
-                    ffmpegViewModel = ffmpegViewModel
-               )
-          }
-     }
+    LargeTopBarScaffold(
+        title = "Converter",
+        onBack = navController::popBackStack
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .background(FermuxColors.background)
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            FFmepgState(
+                ffmpegViewModel.state,
+                navController = navController,
+                ffmpegViewModel = ffmpegViewModel
+            )
+        }
+    }
 }

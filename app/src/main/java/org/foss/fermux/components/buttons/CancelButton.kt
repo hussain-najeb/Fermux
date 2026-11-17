@@ -28,57 +28,57 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun CancelButton(
-     modifier: Modifier = Modifier,
-     componentSize: Dp = 50.dp,
-     border: BorderStroke? = BorderStroke(width = 1.dp, color = FermuxColors.fermuxHelperBorder),
-     shape: Shape = RoundedCornerShape(16.dp),
-     transparency: Boolean = false,
-     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    componentSize: Dp = 50.dp,
+    border: BorderStroke? = BorderStroke(width = 1.dp, color = FermuxColors.fermuxHelperBorder),
+    shape: Shape = RoundedCornerShape(16.dp),
+    transparency: Boolean = false,
+    onClick: () -> Unit,
 ) {
 
-     val interactionSource = remember { MutableInteractionSource() }
-     val isPressed by interactionSource.collectIsPressedAsState()
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
 
-     val buttonAnimation by animateFloatAsState(
-          targetValue = if (isPressed) 0.90f else 1.0f,
-          animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-          label = "Fermux Button Animation"
-     )
+    val buttonAnimation by animateFloatAsState(
+        targetValue = if (isPressed) 0.90f else 1.0f,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        label = "Fermux Button Animation"
+    )
 
-     val containerColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.fermuxActiveButton else FermuxColors.fermuxInActiveButton,
-          animationSpec = tween(200),
-          label = "Fermux Button Colors",
-     )
+    val containerColor by animateColorAsState(
+        targetValue = if (isPressed) FermuxColors.fermuxActiveButton else FermuxColors.fermuxInActiveButton,
+        animationSpec = tween(200),
+        label = "Fermux Button Colors",
+    )
 
-     val iconColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.fermuxTextError,
-          animationSpec = tween(150),
-          label = "Fermux Icon Color"
-     )
+    val iconColor by animateColorAsState(
+        targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.fermuxTextError,
+        animationSpec = tween(150),
+        label = "Fermux Icon Color"
+    )
 
-     OutlinedButton(
-          modifier = modifier
-               .graphicsLayer {
-                    scaleX = buttonAnimation
-                    scaleY = buttonAnimation
-               }
-               .size(componentSize),
-          interactionSource = interactionSource,
-          contentPadding = PaddingValues(10.dp),
-          border = if (transparency) null else border,
-          shape = shape,
-          onClick = onClick,
-          colors = ButtonDefaults.textButtonColors(
-               containerColor = if (transparency) FermuxColors.transparent else containerColor,
-          ),
-     ) {
-          Icon(
-               painter = painterResource(id = if (transparency) R.drawable.close else R.drawable.cancel_buttons),
-               contentDescription = null,
-               tint = if (transparency) FermuxColors.fermuxTextError else iconColor,
-               modifier = Modifier.fillMaxSize()
-          )
-     }
+    OutlinedButton(
+        modifier = modifier
+            .graphicsLayer {
+                scaleX = buttonAnimation
+                scaleY = buttonAnimation
+            }
+            .size(componentSize),
+        interactionSource = interactionSource,
+        contentPadding = PaddingValues(10.dp),
+        border = if (transparency) null else border,
+        shape = shape,
+        onClick = onClick,
+        colors = ButtonDefaults.textButtonColors(
+            containerColor = if (transparency) FermuxColors.transparent else containerColor,
+        ),
+    ) {
+        Icon(
+            painter = painterResource(id = if (transparency) R.drawable.close else R.drawable.cancel_buttons),
+            contentDescription = null,
+            tint = if (transparency) FermuxColors.fermuxTextError else iconColor,
+            modifier = Modifier.fillMaxSize()
+        )
+    }
 
 }

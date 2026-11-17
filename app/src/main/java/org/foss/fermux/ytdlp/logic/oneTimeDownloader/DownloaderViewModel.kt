@@ -25,228 +25,231 @@ const val AUDIO = "audio"
 const val URL = "url"
 
 class DownloaderViewModel : ViewModel() {
-     companion object {
-          private const val DOWNLOAD_WORK_NAME = "fermux_actived_download"
-     }
-     var state by mutableStateOf<DownloadStatus>(DownloadStatus.Idle)
-     var connection by mutableStateOf(Connectivity.Any)
-     var downloadUrl by mutableStateOf("")
-     var downloaderLogs by mutableStateOf("")
-     private var activeProcess by mutableStateOf<UUID?>(null)
-     private var downloaderJob: Job? = null
-     private var currentMetadata: DownloadMetadata? = null
+    companion object {
+        private const val DOWNLOAD_WORK_NAME = "fermux_actived_download"
+    }
 
-     var showYtdlpDetails by mutableStateOf(false)
-     val flavorError = listOf(
-          "Oh, something must have gone wrong",
-          "Could be a connection issue, check your internet connection",
-          "Must have been a network issue",
-          "What does an LLM say about it?",
-          "Did you paste a URL?"
-     )
+    var state by mutableStateOf<DownloadStatus>(DownloadStatus.Idle)
+    var connection by mutableStateOf(Connectivity.Any)
+    var downloadUrl by mutableStateOf("")
+    var downloaderLogs by mutableStateOf("")
+    private var activeProcess by mutableStateOf<UUID?>(null)
+    private var downloaderJob: Job? = null
+    private var currentMetadata: DownloadMetadata? = null
 
-     val wifiConstraint = when (connection) {
-          Connectivity.Wifi -> {
-               Constraints.Builder()
-                    .setRequiredNetworkType(NetworkType.UNMETERED)
-                    .build()
-          }
-          Connectivity.Cellular -> {
-               Constraints.Builder()
-                    .setRequiredNetworkType(NetworkType.CONNECTED)
-                    .build()
-          }
-          Connectivity.Any -> {
-               Constraints.NONE
-          }
-     }
+    var showYtdlpDetails by mutableStateOf(false)
+    val flavorError = listOf(
+        "Oh, something must have gone wrong",
+        "Could be a connection issue, check your internet connection",
+        "Must have been a network issue",
+        "What does an LLM say about it?",
+        "Did you paste a URL?"
+    )
 
-     fun userPickedArgs() {
-          if (downloadUrl.isBlank()) return
-          state = DownloadStatus.UserArgs
-     }
+    val wifiConstraint = when (connection) {
+        Connectivity.Wifi -> {
+            Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.UNMETERED)
+                .build()
+        }
 
-     fun quickDownloads() {
-          if (downloadUrl.isBlank()) return
-          state = DownloadStatus.QuickDownload
-     }
+        Connectivity.Cellular -> {
+            Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+        }
 
-     fun startingDownload(
-          context: Context,
-          audio: AudioQuality? = null,
-          video: VideoQuality? = null
-     ) {
-          if (activeProcess != null || state !is DownloadStatus.UserArgs && state !is DownloadStatus.QuickDownload) {
-               Log.d("DownloadAdmission", "Ignoring duplicate download request, active id=$activeProcess")
-               return
-          }
+        Connectivity.Any -> {
+            Constraints.NONE
+        }
+    }
 
-          state = DownloadStatus.LoadingMetadata
-          currentMetadata = null
+    fun userPickedArgs() {
+        if (downloadUrl.isBlank()) return
+        state = DownloadStatus.UserArgs
+    }
 
-          val settingsTab = DataStoreDownloaderSettings(context.applicationContext)
-          val requestedUrls = OneTimeWorkRequestBuilder<DownloadWorker>()
-               .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-               .setInputData(
-                    workDataOf(
-                         URL to downloadUrl,
-                         AUDIO to audio?.name,
-                         VIDEO to video?.name
+    fun quickDownloads() {
+        if (downloadUrl.isBlank()) return
+        state = DownloadStatus.QuickDownload
+    }
+
+    fun startingDownload(
+        context: Context,
+        audio: AudioQuality? = null,
+        video: VideoQuality? = null
+    ) {
+        if (activeProcess != null || state !is DownloadStatus.UserArgs && state !is DownloadStatus.QuickDownload) {
+            Log.d("DownloadAdmission", "Ignoring duplicate download request, active id=$activeProcess")
+            return
+        }
+
+        state = DownloadStatus.LoadingMetadata
+        currentMetadata = null
+
+        val settingsTab = DataStoreDownloaderSettings(context.applicationContext)
+        val requestedUrls = OneTimeWorkRequestBuilder<DownloadWorker>()
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+            .setInputData(
+                workDataOf(
+                    URL to downloadUrl,
+                    AUDIO to audio?.name,
+                    VIDEO to video?.name
+                )
+            )
+            .setConstraints(wifiConstraint)
+            .build()
+
+        activeProcess = requestedUrls.id
+
+        Log.d("DownloadAdmission", "Prepared download id=${requestedUrls.id}")
+
+        downloaderJob = viewModelScope.launch {
+            try {
+                val ytdlpDetails = settingsTab.ytdlpDetails.first()
+                showYtdlpDetails = ytdlpDetails
+
+                val workManager = WorkManager.getInstance(context)
+                val existingWork = workManager
+                    .getWorkInfosForUniqueWorkFlow(DOWNLOAD_WORK_NAME)
+                    .first()
+                    .firstOrNull { !it.state.isFinished }
+                val observedId = if (existingWork != null) {
+                    activeProcess = existingWork.id
+
+                    Log.d(
+                        "DownloadAdmission",
+                        "Keeping existing download id=${existingWork.id} state=${existingWork.state}"
                     )
-               )
-               .setConstraints(wifiConstraint)
-               .build()
 
-          activeProcess = requestedUrls.id
+                    existingWork.id
+                } else {
 
-          Log.d("DownloadAdmission", "Prepared download id=${requestedUrls.id}")
-
-          downloaderJob = viewModelScope.launch {
-               try {
-                    val ytdlpDetails = settingsTab.ytdlpDetails.first()
-                    showYtdlpDetails = ytdlpDetails
-
-                    val workManager = WorkManager.getInstance(context)
-                    val existingWork = workManager
-                         .getWorkInfosForUniqueWorkFlow(DOWNLOAD_WORK_NAME)
-                         .first()
-                         .firstOrNull { !it.state.isFinished }
-                    val observedId = if (existingWork != null) {
-                         activeProcess = existingWork.id
-
-                         Log.d(
-                              "DownloadAdmission",
-                              "Keeping existing download id=${existingWork.id} state=${existingWork.state}"
-                         )
-
-                         existingWork.id
-                    } else {
-
-                         Log.d(
-                              "DownloadAdmission",
-                              "Enqueue unique download id=${requestedUrls.id}"
-                         )
-
-                         workManager.enqueueUniqueWork(
-                              DOWNLOAD_WORK_NAME,
-                              ExistingWorkPolicy.KEEP,
-                              requestedUrls
-                         )
-                         requestedUrls.id
-                    }
-                    workManager.getWorkInfoByIdFlow(observedId)
-                         .onEach { workInfo ->
-                              workInfo ?: return@onEach
-                              when (workInfo.state) {
-                                   WorkInfo.State.RUNNING -> {
-                                        if (ytdlpDetails) {
-                                             val logs = workInfo.progress.getString("text")
-                                             if (!logs.isNullOrBlank()) {
-                                                  downloaderLogs = (downloaderLogs + logs)
-                                             }
-                                        }
-
-                                        if (currentMetadata == null) {
-                                             workInfo.progress.getString("metadataJson")?.let { json ->
-                                                  currentMetadata = parseYtdlpMetadataJson(json)
-                                             }
-                                        }
-
-                                        val progress = workInfo.progress.getFloat("progress", 0f)
-
-                                        state = DownloadStatus.Downloading(
-                                             downloadProgress = progress,
-                                             metadata = currentMetadata
-                                        )
-                                   }
-
-                                   WorkInfo.State.SUCCEEDED -> {
-                                        val metadata = currentMetadata
-                                             ?: workInfo.outputData
-                                                  .getString("metadataJson")
-                                                  ?.let { parseYtdlpMetadataJson(it) }
-
-                                        state = DownloadStatus.Completed(
-                                             metadata ?: DownloadMetadata(
-                                                  url = "",
-                                                  mediaId = "",
-                                                  extractor = "",
-                                                  title = "",
-                                                  thumbnail = null,
-                                                  duration = 0,
-                                                  uploader = null,
-                                                  audioQuality = null,
-                                                  size = null,
-                                                  format = "",
-                                                  resolution = ""
-                                             )
-                                        )
-                                        activeProcess = null
-                                        downloaderLogs = ""
-                                   }
-
-                                   WorkInfo.State.FAILED -> {
-                                        val error = workInfo.outputData.getString("error")
-                                        error?.let { state = DownloadStatus.Error(flavorError.random(), rawError = it) }
-                                        activeProcess = null
-                                        currentMetadata = null
-                                   }
-
-                                   WorkInfo.State.CANCELLED -> {
-                                        state = DownloadStatus.Idle
-                                        activeProcess = null
-                                        downloaderLogs = ""
-                                        currentMetadata = null
-                                   }
-
-                                   else -> {}
-                              }
-                         }
-                         .launchIn(viewModelScope)
-
-               } catch (e: CancellationException) {
-                    throw e
-               } catch (e: Exception) {
-                    Log.e(
-                         "DownloadAdmission",
-                         "Failed to enqueue id=${requestedUrls.id}",
-                         e
+                    Log.d(
+                        "DownloadAdmission",
+                        "Enqueue unique download id=${requestedUrls.id}"
                     )
-                    if (activeProcess == requestedUrls.id) {
-                         activeProcess = null
-                         downloadErrorHandler(e)
+
+                    workManager.enqueueUniqueWork(
+                        DOWNLOAD_WORK_NAME,
+                        ExistingWorkPolicy.KEEP,
+                        requestedUrls
+                    )
+                    requestedUrls.id
+                }
+                workManager.getWorkInfoByIdFlow(observedId)
+                    .onEach { workInfo ->
+                        workInfo ?: return@onEach
+                        when (workInfo.state) {
+                            WorkInfo.State.RUNNING -> {
+                                if (ytdlpDetails) {
+                                    val logs = workInfo.progress.getString("text")
+                                    if (!logs.isNullOrBlank()) {
+                                        downloaderLogs = (downloaderLogs + logs)
+                                    }
+                                }
+
+                                if (currentMetadata == null) {
+                                    workInfo.progress.getString("metadataJson")?.let { json ->
+                                        currentMetadata = parseYtdlpMetadataJson(json)
+                                    }
+                                }
+
+                                val progress = workInfo.progress.getFloat("progress", 0f)
+
+                                state = DownloadStatus.Downloading(
+                                    downloadProgress = progress,
+                                    metadata = currentMetadata
+                                )
+                            }
+
+                            WorkInfo.State.SUCCEEDED -> {
+                                val metadata = currentMetadata
+                                    ?: workInfo.outputData
+                                        .getString("metadataJson")
+                                        ?.let { parseYtdlpMetadataJson(it) }
+
+                                state = DownloadStatus.Completed(
+                                    metadata ?: DownloadMetadata(
+                                        url = "",
+                                        mediaId = "",
+                                        extractor = "",
+                                        title = "",
+                                        thumbnail = null,
+                                        duration = 0,
+                                        uploader = null,
+                                        audioQuality = null,
+                                        size = null,
+                                        format = "",
+                                        resolution = ""
+                                    )
+                                )
+                                activeProcess = null
+                                downloaderLogs = ""
+                            }
+
+                            WorkInfo.State.FAILED -> {
+                                val error = workInfo.outputData.getString("error")
+                                error?.let { state = DownloadStatus.Error(flavorError.random(), rawError = it) }
+                                activeProcess = null
+                                currentMetadata = null
+                            }
+
+                            WorkInfo.State.CANCELLED -> {
+                                state = DownloadStatus.Idle
+                                activeProcess = null
+                                downloaderLogs = ""
+                                currentMetadata = null
+                            }
+
+                            else -> {}
+                        }
                     }
-               }
-          }
-     }
+                    .launchIn(viewModelScope)
 
-     private fun downloadErrorHandler(e: Exception) {
-          Log.e("MetadataFetch", "Fetch failed: ${e.javaClass.simpleName}", e)
-          val raw = when (e) {
-               is TimeoutCancellationException -> "Timed out waiting for a response, check network connection"
-               else -> e.message ?: e.toString()
-          }
-          state = DownloadStatus.Error(flavorError.random(), raw)
-     }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Log.e(
+                    "DownloadAdmission",
+                    "Failed to enqueue id=${requestedUrls.id}",
+                    e
+                )
+                if (activeProcess == requestedUrls.id) {
+                    activeProcess = null
+                    downloadErrorHandler(e)
+                }
+            }
+        }
+    }
 
-     /**
-      * Downloader cancel button to clear a process such as:
-      * * Handle Mid-download task that's unwanted
-      * * Handle the reset process after an error
-      * * Clear a successful process.
-      * * Kills all processes that were triggered by the user, such as ffmpeg, yt-dlp, aria2, and quickJs.
-      */
-     fun cancelButton(context: Context) {
-          activeProcess?.let { id ->
-               YoutubeDL.destroyProcessById(id)
-               WorkManager.getInstance(context).cancelWorkById(id)
-          }
-          downloaderJob?.cancel()
-          downloaderJob = null
-          state = DownloadStatus.Idle
-          downloadUrl = ""
-          downloaderLogs = ""
-          activeProcess = null
-          currentMetadata = null
-     }
+    private fun downloadErrorHandler(e: Exception) {
+        Log.e("MetadataFetch", "Fetch failed: ${e.javaClass.simpleName}", e)
+        val raw = when (e) {
+            is TimeoutCancellationException -> "Timed out waiting for a response, check network connection"
+            else -> e.message ?: e.toString()
+        }
+        state = DownloadStatus.Error(flavorError.random(), raw)
+    }
+
+    /**
+     * Downloader cancel button to clear a process such as:
+     * * Handle Mid-download task that's unwanted
+     * * Handle the reset process after an error
+     * * Clear a successful process.
+     * * Kills all processes that were triggered by the user, such as ffmpeg, yt-dlp, aria2, and quickJs.
+     */
+    fun cancelButton(context: Context) {
+        activeProcess?.let { id ->
+            YoutubeDL.destroyProcessById(id)
+            WorkManager.getInstance(context).cancelWorkById(id)
+        }
+        downloaderJob?.cancel()
+        downloaderJob = null
+        state = DownloadStatus.Idle
+        downloadUrl = ""
+        downloaderLogs = ""
+        activeProcess = null
+        currentMetadata = null
+    }
 }

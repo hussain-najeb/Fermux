@@ -26,53 +26,52 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun HelperButton(
-     modifier: Modifier,
-     color: FermuxColor = FermuxColors,
-     border: BorderStroke? = BorderStroke(1.dp, Color.Transparent),
-     contentPadding: PaddingValues = PaddingValues(4.dp),
-     onClick: () -> Unit,
-     image: Int
+    modifier: Modifier,
+    color: FermuxColor = FermuxColors,
+    border: BorderStroke? = BorderStroke(1.dp, Color.Transparent),
+    contentPadding: PaddingValues = PaddingValues(4.dp),
+    onClick: () -> Unit,
+    image: Int
 ) {
-     val interactionSource = remember { MutableInteractionSource() }
-     val isPressed by interactionSource.collectIsPressedAsState()
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
 
-     val iconColor by animateColorAsState(
-          targetValue = if (isPressed) color.downriver else color.white,
-          animationSpec = tween(durationMillis = 150),
-          label = "Fermux Icon Colors"
-     )
+    val iconColor by animateColorAsState(
+        targetValue = if (isPressed) color.downriver else color.white,
+        animationSpec = tween(durationMillis = 150),
+        label = "Fermux Icon Colors"
+    )
 
-     val buttonAnimation by animateFloatAsState(
-          targetValue = if (isPressed) 0.90f else 1.0f,
-          animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-          label = "Fermux Button Animation"
-     )
+    val buttonAnimation by animateFloatAsState(
+        targetValue = if (isPressed) 0.90f else 1.0f,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        label = "Fermux Button Animation"
+    )
 
-     OutlinedButton(
-          modifier = modifier.graphicsLayer {
-               scaleX = buttonAnimation
-               scaleY = buttonAnimation
-          }
-               .size(35.dp),
-          shape = RoundedCornerShape(8.dp),
-          border = border,
-          colors = ButtonDefaults.textButtonColors(
-               containerColor = Color.Transparent,
-               contentColor = Color.Transparent
-          ),
-          contentPadding = contentPadding,
-          interactionSource = interactionSource,
-          onClick = onClick::invoke
+    OutlinedButton(
+        modifier = modifier.graphicsLayer {
+            scaleX = buttonAnimation
+            scaleY = buttonAnimation
+        }
+            .size(35.dp),
+        shape = RoundedCornerShape(8.dp),
+        border = border,
+        colors = ButtonDefaults.textButtonColors(
+            containerColor = Color.Transparent,
+            contentColor = Color.Transparent
+        ),
+        contentPadding = contentPadding,
+        interactionSource = interactionSource,
+        onClick = onClick::invoke
 
-     ) {
-          Icon(
-               painter = painterResource(id = image),
-               tint = iconColor,
-               modifier = Modifier.size(27.dp),
-               contentDescription = "Back Button"
-          )
-     }
-
+    ) {
+        Icon(
+            painter = painterResource(id = image),
+            tint = iconColor,
+            modifier = Modifier.size(27.dp),
+            contentDescription = "Back Button"
+        )
+    }
 
 
 }

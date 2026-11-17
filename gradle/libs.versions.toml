@@ -26,7 +26,7 @@ youtubedlNext = "v0.1.4"
 
 
 [libraries]
-youtubedl-android-next-x86 = { group ="com.github.hussain-najeb.youtubedl-android-next", name ="youtubedl-android-next-natives-x86_64", version.ref = "youtubedlNext" }
+youtubedl-android-next-x86 = { group = "com.github.hussain-najeb.youtubedl-android-next", name = "youtubedl-android-next-natives-x86_64", version.ref = "youtubedlNext" }
 youtubedl-android-next = { group = "com.github.hussain-najeb", name = "youtubedl-android-next", version.ref = "youtubedlNext" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }

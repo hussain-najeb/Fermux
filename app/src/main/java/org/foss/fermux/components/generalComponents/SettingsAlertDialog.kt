@@ -27,115 +27,115 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun SettingAlertDialog(
-     onDismissRequest: () -> Unit,
-     title: String? = null,
-     description: String? = null,
-     specialDescription: AnnotatedString? = null,
-     settingImage: Int? = null,
-     dialogContent: @Composable (() -> Unit)? = null
+    onDismissRequest: () -> Unit,
+    title: String? = null,
+    description: String? = null,
+    specialDescription: AnnotatedString? = null,
+    settingImage: Int? = null,
+    dialogContent: @Composable (() -> Unit)? = null
 ) {
-     Dialog(
-          onDismissRequest = onDismissRequest,
-          properties = DialogProperties(
-               usePlatformDefaultWidth = false
-          )
-     ) {
-          val view = (LocalView.current.parent as? DialogWindowProvider)?.window
-          SideEffect {
-               view?.apply {
-                    addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-                    setDimAmount(0.6f)
-               }
-          }
+    Dialog(
+        onDismissRequest = onDismissRequest,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false
+        )
+    ) {
+        val view = (LocalView.current.parent as? DialogWindowProvider)?.window
+        SideEffect {
+            view?.apply {
+                addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+                setDimAmount(0.6f)
+            }
+        }
 
-          Surface(
-               modifier = Modifier
-                    .wrapContentHeight()
-                    .fillMaxWidth()
-                    .padding(10.dp),
-               shape = RoundedCornerShape(12.dp),
-               color = FermuxColors.mutedBlue,
-               border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),
-          ) {
-               Column(modifier = Modifier.padding(4.dp)) {
-                    Box(
-                         modifier = Modifier
-                              .fillMaxWidth()
-                              .padding(8.dp),
-                         contentAlignment = Alignment.TopCenter
-                    ) {
-                         Row(horizontalArrangement = Arrangement.Center) {
-                              if (settingImage != null)
-                                   Icon(
-                                        painter = painterResource(id = settingImage),
-                                        contentDescription = null,
-                                        tint = FermuxColors.white,
-                                        modifier = Modifier
-                                             .padding(4.dp)
-                                             .size(28.dp)
-                                   )
-                              if (title != null)
-                                   Text(
-                                        text = title,
-                                        fontSize = 22.sp,
-                                        fontStyle = FontStyle.Normal,
-                                        fontWeight = FontWeight.SemiBold,
-                                        color = FermuxColors.white,
-                                        modifier = Modifier.padding(5.dp)
-                                   )
-                         }
+        Surface(
+            modifier = Modifier
+                .wrapContentHeight()
+                .fillMaxWidth()
+                .padding(10.dp),
+            shape = RoundedCornerShape(12.dp),
+            color = FermuxColors.mutedBlue,
+            border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),
+        ) {
+            Column(modifier = Modifier.padding(4.dp)) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    Row(horizontalArrangement = Arrangement.Center) {
+                        if (settingImage != null)
+                            Icon(
+                                painter = painterResource(id = settingImage),
+                                contentDescription = null,
+                                tint = FermuxColors.white,
+                                modifier = Modifier
+                                    .padding(4.dp)
+                                    .size(28.dp)
+                            )
+                        if (title != null)
+                            Text(
+                                text = title,
+                                fontSize = 22.sp,
+                                fontStyle = FontStyle.Normal,
+                                fontWeight = FontWeight.SemiBold,
+                                color = FermuxColors.white,
+                                modifier = Modifier.padding(5.dp)
+                            )
                     }
-                    Box(
-                         modifier = Modifier
-                              .fillMaxWidth()
-                              .padding(7.dp),
-                         contentAlignment = Alignment.CenterStart
-                    ) {
-                         if (specialDescription != null) {
-                              Text(
-                                   text = specialDescription,
-                                   fontSize = 18.sp,
-                                   fontStyle = FontStyle.Normal,
-                                   fontWeight = FontWeight.SemiBold,
-                                   color = FermuxColors.white,
-                                   modifier = Modifier.padding(5.dp)
-                              )
-                         } else if (description != null) {
-                              Text(
-                                   text = description,
-                                   fontSize = 18.sp,
-                                   fontStyle = FontStyle.Normal,
-                                   fontWeight = FontWeight.SemiBold,
-                                   color = FermuxColors.white,
-                                   modifier = Modifier.padding(5.dp)
-                              )
-                         }
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(7.dp),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    if (specialDescription != null) {
+                        Text(
+                            text = specialDescription,
+                            fontSize = 18.sp,
+                            fontStyle = FontStyle.Normal,
+                            fontWeight = FontWeight.SemiBold,
+                            color = FermuxColors.white,
+                            modifier = Modifier.padding(5.dp)
+                        )
+                    } else if (description != null) {
+                        Text(
+                            text = description,
+                            fontSize = 18.sp,
+                            fontStyle = FontStyle.Normal,
+                            fontWeight = FontWeight.SemiBold,
+                            color = FermuxColors.white,
+                            modifier = Modifier.padding(5.dp)
+                        )
                     }
-                    if (dialogContent != null)
+                }
+                if (dialogContent != null)
                     Box(
-                         modifier = Modifier
-                              .fillMaxWidth()
-                              .padding(8.dp),
-                         contentAlignment = Alignment.BottomCenter
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        contentAlignment = Alignment.BottomCenter
                     ) {
-                         dialogContent.invoke()
+                        dialogContent.invoke()
                     }
-               }
-          }
-     }
+            }
+        }
+    }
 }
 
 @Preview
 @Composable
 fun test12() {
-     Column(
-          modifier = Modifier.fillMaxSize()
-     ) {
-          SettingAlertDialog(
-               onDismissRequest = {},
-               settingImage = R.drawable.eraser,
-               title = "Setting name",
-               description = "Soemthing Soemthing Soemthing Soemthing Soemthing Soemthing Soemthing Soemthing Soemthing Skmfo Soemthing w-kfw0e Soemthing mr0i Soemthing Soemthing Soemthing Soemthing "
-          )
-     }
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        SettingAlertDialog(
+            onDismissRequest = {},
+            settingImage = R.drawable.eraser,
+            title = "Setting name",
+            description = "Soemthing Soemthing Soemthing Soemthing Soemthing Soemthing Soemthing Soemthing Soemthing Skmfo Soemthing w-kfw0e Soemthing mr0i Soemthing Soemthing Soemthing Soemthing "
+        )
+    }
 }

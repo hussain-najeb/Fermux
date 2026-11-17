@@ -25,55 +25,55 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun SmallActionButton(
-     modifier: Modifier = Modifier,
-     image: Int,
-     onClick: () -> Unit,
-     border: Boolean? =  false
+    modifier: Modifier = Modifier,
+    image: Int,
+    onClick: () -> Unit,
+    border: Boolean? = false
 ) {
 
-     val interactionSource = remember { MutableInteractionSource() }
-     val isPressed by interactionSource.collectIsPressedAsState()
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
 
-     val iconColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.skyBlue,
-          animationSpec = tween(durationMillis = 150),
-          label = "Fermux Icon Colors"
-     )
+    val iconColor by animateColorAsState(
+        targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.skyBlue,
+        animationSpec = tween(durationMillis = 150),
+        label = "Fermux Icon Colors"
+    )
 
-     val containerColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.fermuxActiveButton else FermuxColors.transparent,
-          animationSpec = tween(150)
-     )
+    val containerColor by animateColorAsState(
+        targetValue = if (isPressed) FermuxColors.fermuxActiveButton else FermuxColors.transparent,
+        animationSpec = tween(150)
+    )
 
-     val buttonAnimation by animateFloatAsState(
-          targetValue = if (isPressed) 0.90f else 1f,
-          animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-          label = "Fermux Button Animation"
-     )
+    val buttonAnimation by animateFloatAsState(
+        targetValue = if (isPressed) 0.90f else 1f,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        label = "Fermux Button Animation"
+    )
 
-     OutlinedButton(
-          modifier = modifier.graphicsLayer {
-               scaleX = buttonAnimation
-               scaleY = buttonAnimation
-          }
-               .size(40.dp),
-          shape = RoundedCornerShape(8.dp),
-          contentPadding = PaddingValues(0.dp),
-          border = if (border == true) BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
-               else BorderStroke(1.dp, Color.Transparent),
-          colors = ButtonDefaults.textButtonColors(
-               containerColor = containerColor,
-               contentColor = FermuxColors.white
-          ),
-          interactionSource = interactionSource,
-          onClick = onClick
-     ) {
-          Icon(
-               painter = painterResource(id = image),
-               tint = iconColor,
-               contentDescription = "Undo",
-          )
-     }
+    OutlinedButton(
+        modifier = modifier.graphicsLayer {
+            scaleX = buttonAnimation
+            scaleY = buttonAnimation
+        }
+            .size(40.dp),
+        shape = RoundedCornerShape(8.dp),
+        contentPadding = PaddingValues(0.dp),
+        border = if (border == true) BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
+        else BorderStroke(1.dp, Color.Transparent),
+        colors = ButtonDefaults.textButtonColors(
+            containerColor = containerColor,
+            contentColor = FermuxColors.white
+        ),
+        interactionSource = interactionSource,
+        onClick = onClick
+    ) {
+        Icon(
+            painter = painterResource(id = image),
+            tint = iconColor,
+            contentDescription = "Undo",
+        )
+    }
 
 
 }

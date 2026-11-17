@@ -13,43 +13,43 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun <T> ModularSegmentedButtons(
-     enabled: Boolean = true,
-     optionsList: List<Pair<T, String>>,
-     selectedOption: T,
-     onSelected: (T) -> Unit
+    enabled: Boolean = true,
+    optionsList: List<Pair<T, String>>,
+    selectedOption: T,
+    onSelected: (T) -> Unit
 ) {
-     SingleChoiceSegmentedButtonRow(
-          modifier = Modifier
-               .fillMaxWidth()
-     ) {
-          optionsList.forEachIndexed { index, (value, name) ->
-               SegmentedButton(
-                    selected = selectedOption == value,
-                    onClick = { onSelected(value) },
-                    shape = SegmentedButtonDefaults.itemShape(
-                         index = index,
-                         count = optionsList.size,
-                         baseShape = RoundedCornerShape(6.dp)
-                    ),
-                    icon = {},
-                    enabled = enabled,
-                    colors = SegmentedButtonDefaults.colors(
-                         activeContainerColor = FermuxColors.skyBlue,
-                         activeContentColor = FermuxColors.downriver,
-                         inactiveContainerColor = FermuxColors.darkPurple,
-                         inactiveContentColor = FermuxColors.white,
-                         activeBorderColor = FermuxColors.fermuxSecondaryBorder,
-                         inactiveBorderColor = FermuxColors.fermuxHelperBorder,
-                         disabledActiveContainerColor = FermuxColors.skyBlue.copy(alpha = 0.4f),
-                         disabledActiveContentColor = FermuxColors.downriver.copy(alpha = 0.4f),
-                         disabledActiveBorderColor = FermuxColors.fermuxSecondaryBorder.copy(alpha = 0.4f),
-                         disabledInactiveContainerColor = FermuxColors.inActiveContainer.copy(alpha = 0.4f),
-                         disabledInactiveContentColor = FermuxColors.white.copy(alpha = 0.4f),
-                         disabledInactiveBorderColor = FermuxColors.fermuxGenericBorder.copy(alpha = 0.4f)
-                    )
-               ) {
-                    Text(name)
-               }
-          }
-     }
+    SingleChoiceSegmentedButtonRow(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        optionsList.forEachIndexed { index, (value, name) ->
+            SegmentedButton(
+                selected = selectedOption == value,
+                onClick = { onSelected(value) },
+                shape = SegmentedButtonDefaults.itemShape(
+                    index = index,
+                    count = optionsList.size,
+                    baseShape = RoundedCornerShape(6.dp)
+                ),
+                icon = {},
+                enabled = enabled,
+                colors = SegmentedButtonDefaults.colors(
+                    activeContainerColor = FermuxColors.skyBlue,
+                    activeContentColor = FermuxColors.downriver,
+                    inactiveContainerColor = FermuxColors.darkPurple,
+                    inactiveContentColor = FermuxColors.white,
+                    activeBorderColor = FermuxColors.fermuxSecondaryBorder,
+                    inactiveBorderColor = FermuxColors.fermuxHelperBorder,
+                    disabledActiveContainerColor = FermuxColors.skyBlue.copy(alpha = 0.4f),
+                    disabledActiveContentColor = FermuxColors.downriver.copy(alpha = 0.4f),
+                    disabledActiveBorderColor = FermuxColors.fermuxSecondaryBorder.copy(alpha = 0.4f),
+                    disabledInactiveContainerColor = FermuxColors.inActiveContainer.copy(alpha = 0.4f),
+                    disabledInactiveContentColor = FermuxColors.white.copy(alpha = 0.4f),
+                    disabledInactiveBorderColor = FermuxColors.fermuxGenericBorder.copy(alpha = 0.4f)
+                )
+            ) {
+                Text(name)
+            }
+        }
+    }
 }

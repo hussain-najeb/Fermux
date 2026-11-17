@@ -26,64 +26,64 @@ import org.foss.fermux.utils.SettingsScreens
 
 @Composable
 fun SettingsScreen(
-     navController: NavHostController
+    navController: NavHostController
 ) {
-     val generalSettings = remember {
-          listOf(
-               InfoListClass(
-                    title = "Downloader Settings",
-                    description = "Changing the settings for Ytdlp",
-                    image = R.drawable.yt_dlp,
-                    route = SettingsScreens.SimpleDownloader.route,
-                    position = TilePosition.TOP
-               ),
-               InfoListClass(
-                    title = "Converter Settings",
-                    description = "Changing the settings for FFmpeg",
-                    image = R.drawable.ffmpeg,
-                    route = SettingsScreens.SimpleFFmpeg.route,
-                    position = TilePosition.MIDDLE
-               ),
-               InfoListClass(
-                    title = "About",
-                    description = "About page of the app",
-                    icon = Icons.Default.Info,
-                    route = SettingsScreens.AboutAppPage.route,
-                    position = TilePosition.BOTTOM
-               )
-          )
-     }
+    val generalSettings = remember {
+        listOf(
+            InfoListClass(
+                title = "Downloader Settings",
+                description = "Changing the settings for Ytdlp",
+                image = R.drawable.yt_dlp,
+                route = SettingsScreens.SimpleDownloader.route,
+                position = TilePosition.TOP
+            ),
+            InfoListClass(
+                title = "Converter Settings",
+                description = "Changing the settings for FFmpeg",
+                image = R.drawable.ffmpeg,
+                route = SettingsScreens.SimpleFFmpeg.route,
+                position = TilePosition.MIDDLE
+            ),
+            InfoListClass(
+                title = "About",
+                description = "About page of the app",
+                icon = Icons.Default.Info,
+                route = SettingsScreens.AboutAppPage.route,
+                position = TilePosition.BOTTOM
+            )
+        )
+    }
 
-     LargeTopBarScaffold(
-          title = "Settings",
-          onBack = { navController.popBackStack() },
-          modifier = Modifier.padding(bottom = 15.dp)
-     ) { paddingValues ->
-          LazyColumn(
-               modifier = Modifier
-                    .fillMaxSize()
-                    .background(FermuxColors.background),
-               contentPadding = paddingValues
-          ) {
-               item { Spacer(modifier = Modifier.height(10.dp)) }
+    LargeTopBarScaffold(
+        title = "Settings",
+        onBack = { navController.popBackStack() },
+        modifier = Modifier.padding(bottom = 15.dp)
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(FermuxColors.background),
+            contentPadding = paddingValues
+        ) {
+            item { Spacer(modifier = Modifier.height(10.dp)) }
 
-               items(
-                    items = generalSettings,
-                    key = InfoListClass::title
-               ) { settingsList ->
-                    TileOptions(
-                         title = settingsList.title,
-                         description = settingsList.description,
-                         shape = settingsList.position.TileShaper(),
-                         image = settingsList.image,
-                         icon = settingsList.icon,
-                         onClick = {
-                              settingsList.onClick?.invoke()
-                              settingsList.route?.let { navController.navigate(it) }
-                         },
-                         content = settingsList.content
-                    )
-               }
-          }
-     }
+            items(
+                items = generalSettings,
+                key = InfoListClass::title
+            ) { settingsList ->
+                TileOptions(
+                    title = settingsList.title,
+                    description = settingsList.description,
+                    shape = settingsList.position.TileShaper(),
+                    image = settingsList.image,
+                    icon = settingsList.icon,
+                    onClick = {
+                        settingsList.onClick?.invoke()
+                        settingsList.route?.let { navController.navigate(it) }
+                    },
+                    content = settingsList.content
+                )
+            }
+        }
+    }
 }

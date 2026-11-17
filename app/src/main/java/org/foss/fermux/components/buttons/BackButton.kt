@@ -25,53 +25,53 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun BackButton(
-     modifier: Modifier = Modifier,
-     border: BorderStroke? = BorderStroke(1.dp, Color.Transparent),
-     contentPadding: PaddingValues = PaddingValues(4.dp),
-     onClick: () -> Unit
+    modifier: Modifier = Modifier,
+    border: BorderStroke? = BorderStroke(1.dp, Color.Transparent),
+    contentPadding: PaddingValues = PaddingValues(4.dp),
+    onClick: () -> Unit
 ) {
 
-     val interactionSource = remember { MutableInteractionSource() }
-     val isPressed by interactionSource.collectIsPressedAsState()
-     var isClickable by remember { mutableStateOf(true) }
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    var isClickable by remember { mutableStateOf(true) }
 
-     val iconColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.white,
-          animationSpec = tween(durationMillis = 150),
-          label = "Fermux Icon Colors"
-     )
+    val iconColor by animateColorAsState(
+        targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.white,
+        animationSpec = tween(durationMillis = 150),
+        label = "Fermux Icon Colors"
+    )
 
-     val buttonAnimation by animateFloatAsState(
-          targetValue = if (isPressed) 0.95f else 1.0f,
-          animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-          label = "Fermux Button Animation"
-     )
+    val buttonAnimation by animateFloatAsState(
+        targetValue = if (isPressed) 0.95f else 1.0f,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        label = "Fermux Button Animation"
+    )
 
-     OutlinedButton(
-          modifier = modifier.graphicsLayer {
-               scaleX = buttonAnimation
-               scaleY = buttonAnimation
-          }
-               .size(25.dp),
-          shape = RoundedCornerShape(8.dp),
-          border = border,
-          colors = ButtonDefaults.textButtonColors(
-               containerColor = Color.Transparent,
-               contentColor = Color.Transparent
-          ),
-          contentPadding = contentPadding,
-          interactionSource = interactionSource,
-          onClick = {
-               if (isClickable) {
-                    isClickable = false
-                    onClick()
-               }
-          }
-     ) {
-          Icon(
-               painter = painterResource(id = R.drawable.back_arrow),
-               tint = iconColor,
-               contentDescription = "Back Button",
-          )
-     }
+    OutlinedButton(
+        modifier = modifier.graphicsLayer {
+            scaleX = buttonAnimation
+            scaleY = buttonAnimation
+        }
+            .size(25.dp),
+        shape = RoundedCornerShape(8.dp),
+        border = border,
+        colors = ButtonDefaults.textButtonColors(
+            containerColor = Color.Transparent,
+            contentColor = Color.Transparent
+        ),
+        contentPadding = contentPadding,
+        interactionSource = interactionSource,
+        onClick = {
+            if (isClickable) {
+                isClickable = false
+                onClick()
+            }
+        }
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.back_arrow),
+            tint = iconColor,
+            contentDescription = "Back Button",
+        )
+    }
 }

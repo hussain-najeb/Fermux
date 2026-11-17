@@ -9,77 +9,77 @@ import java.util.*
 const val FERMUX_METADATA_MARKER = "FERMUX_METADATA_JSON:"
 
 data class DownloadMetadata(
-     val mediaId: String,
-     val extractor: String,
-     val title: String,
-     val thumbnail: String?,
-     val duration: Int?,
-     val uploader: String?,
-     val size: Long?,
-     val audioQuality: Double?,
-     val format: String,
-     val resolution: String,
-     val url: String
+    val mediaId: String,
+    val extractor: String,
+    val title: String,
+    val thumbnail: String?,
+    val duration: Int?,
+    val uploader: String?,
+    val size: Long?,
+    val audioQuality: Double?,
+    val format: String,
+    val resolution: String,
+    val url: String
 )
 
 sealed class DownloadStatus {
-     data object Idle : DownloadStatus()
-     data object UserArgs : DownloadStatus()
-     data object QuickDownload: DownloadStatus()
-     data object LoadingMetadata : DownloadStatus()
-     data class Downloading(val downloadProgress: Float, val metadata: DownloadMetadata?) : DownloadStatus()
-     data class Completed(val metadata: DownloadMetadata) : DownloadStatus()
-     data class Error(val errorMessage: String, val rawError: String) : DownloadStatus()
+    data object Idle : DownloadStatus()
+    data object UserArgs : DownloadStatus()
+    data object QuickDownload : DownloadStatus()
+    data object LoadingMetadata : DownloadStatus()
+    data class Downloading(val downloadProgress: Float, val metadata: DownloadMetadata?) : DownloadStatus()
+    data class Completed(val metadata: DownloadMetadata) : DownloadStatus()
+    data class Error(val errorMessage: String, val rawError: String) : DownloadStatus()
 }
 
 data class SequentialDownloadQueueState(
-     val phase: SequentialStatus = SequentialStatus.SeqIdle,
-     val items: List<SequentialItem> = emptyList()
+    val phase: SequentialStatus = SequentialStatus.SeqIdle,
+    val items: List<SequentialItem> = emptyList()
 ) {
-     val currentItem: SequentialItem?
-          get() = items.firstOrNull { it.status.isActive }
+    val currentItem: SequentialItem?
+        get() = items.firstOrNull { it.status.isActive }
 }
 
 enum class SequentialStatus {
-     SeqIdle,
-     SeqDownload,
-     SeqDone,
+    SeqIdle,
+    SeqDownload,
+    SeqDone,
 }
 
 data class SequentialItem(
-     val id: UUID = UUID.randomUUID(),
-     val url: String = "",
-     val status: SequentialItemStatus = SequentialItemStatus.Waiting,
-     val progress: Float = 0f,
-     val metadata: DownloadMetadata? = null,
-     val error: String? = null,
-     val logs: String = ""
+    val id: UUID = UUID.randomUUID(),
+    val url: String = "",
+    val status: SequentialItemStatus = SequentialItemStatus.Waiting,
+    val progress: Float = 0f,
+    val metadata: DownloadMetadata? = null,
+    val error: String? = null,
+    val logs: String = ""
 )
 
 enum class SequentialItemStatus {
-     Waiting,
-     FetchingMetadata,
-     Downloading,
-     Completed,
-     Failed,
-     Cancelled
+    Waiting,
+    FetchingMetadata,
+    Downloading,
+    Completed,
+    Failed,
+    Cancelled
 }
 
 private val SequentialItemStatus.isActive: Boolean
-     get() = this == SequentialItemStatus.FetchingMetadata ||
-          this == SequentialItemStatus.Downloading
+    get() = this == SequentialItemStatus.FetchingMetadata ||
+         this == SequentialItemStatus.Downloading
 
 data class ScreenInfo(
-     val screen: MainScreens,
-     val iconModifier: Modifier? = null,
-     val title: String,
-     val description: String,
-     val image: Int? = null,
-     val icon: ImageVector? = null,
-     val buttonIcon: Int? = null,
-     val onClick: (() -> Unit)? = null,
-     val trailingContent: @Composable (() -> Unit)? = null,
-     val enabled: Boolean
+    val screen: MainScreens,
+    val iconModifier: Modifier? = null,
+    val title: String,
+    val description: String,
+    val image: Int? = null,
+    val icon: ImageVector? = null,
+    val buttonIcon: Int? = null,
+    val onClick: (() -> Unit)? = null,
+    val trailingContent: @Composable (() -> Unit)? = null,
+    val enabled: Boolean
 )
 
 enum class FormatKind { Video, Audio, Idle }
@@ -87,110 +87,110 @@ enum class FormatKind { Video, Audio, Idle }
 
 // audio quality class to pass for ytdlp.
 enum class AudioQuality(val audioQuality: String) {
-     BEST("0"),   // ~220-260 kbps (V0)
-     HIGH("2"),   // ~170-210 kbps (V2)
-     MEDIUM("5"), // ~100-140 kbps (V5 - yt-dlp default)
-     LOW("9") // ~65 kbps (V9)
+    BEST("0"),   // ~220-260 kbps (V0)
+    HIGH("2"),   // ~170-210 kbps (V2)
+    MEDIUM("5"), // ~100-140 kbps (V5 - yt-dlp default)
+    LOW("9") // ~65 kbps (V9)
 }
 
 enum class VideoQuality(val videoQuality: String) {
-     HD1080("bv*[height<=1080]+ba/b[height<=1080]"),
-     HD720("bv*[height<=720]+ba/b[height<=720]"),
-     SD480("bv*[height<=480]+ba/b[height<=480]"),
-     Q360("bv*[height<=360]+ba/b[height<=360]"),
-     Q240("bv*[height<=240]+ba/b[height<=240]"),
-     Q144("bv*[height<=144]+ba/b[height<=144]")
+    HD1080("bv*[height<=1080]+ba/b[height<=1080]"),
+    HD720("bv*[height<=720]+ba/b[height<=720]"),
+    SD480("bv*[height<=480]+ba/b[height<=480]"),
+    Q360("bv*[height<=360]+ba/b[height<=360]"),
+    Q240("bv*[height<=240]+ba/b[height<=240]"),
+    Q144("bv*[height<=144]+ba/b[height<=144]")
 }
 
 enum class AudioFormat(val audioFormats: String) {
-     OpusFormat("opus"),
-     Mp3Format("mp3"),
-     FlacFormat("flac"),
-     M4aFormat("m4a")
+    OpusFormat("opus"),
+    Mp3Format("mp3"),
+    FlacFormat("flac"),
+    M4aFormat("m4a")
 }
 
 enum class ThumbnailFormat(val thumbnailFormat: String) {
-     Png("png"),
-     Jpeg("jpg"),
-     WebP("webp"),
-     Off("")
+    Png("png"),
+    Jpeg("jpg"),
+    WebP("webp"),
+    Off("")
 }
 
 enum class VideoFormat(val videoFormat: String) {
-     Mp4Format("mp4"),
-     AviFormat("avi"),
-     WebMFormat("webm"),
-     Mkv("mkv")
+    Mp4Format("mp4"),
+    AviFormat("avi"),
+    WebMFormat("webm"),
+    Mkv("mkv")
 }
 
 enum class Aria2cMode {
-     Disabled,
-     EdgeCaseOnly,
-     Always
+    Disabled,
+    EdgeCaseOnly,
+    Always
 }
 
 enum class YtdlpChannel {
-     Stable,
-     Nightly,
-     Master
+    Stable,
+    Nightly,
+    Master
 }
 
 enum class Connectivity {
-     Wifi,
-     Cellular,
-     Any
+    Wifi,
+    Cellular,
+    Any
 }
 
 enum class IpvConnection {
-     Ipv6,
-     Ipv4,
-     Disabled
+    Ipv6,
+    Ipv4,
+    Disabled
 }
 
 enum class ExternalDownloaders {
-     Disabled,
-     FFmpegAsExternal,
-     YtdlpNativeDownloader
+    Disabled,
+    FFmpegAsExternal,
+    YtdlpNativeDownloader
 }
 
 enum class QuickDownloadFormats(val quickDownloadFormats: String) {
-     QuickVideo("mp4"),
-     QuickAudio("mp3")
+    QuickVideo("mp4"),
+    QuickAudio("mp3")
 }
 
 enum class QuickVideoQuality(val quickDownloadVideoQuality: String) {
-     HD1080("bv*[height<=1080]+ba/b[height<=1080]"),
-     HD720("bv*[height<=720]+ba/b[height<=720]"),
-     SD480("bv*[height<=480]+ba/b[height<=480]"),
-     Q360("bv*[height<=360]+ba/b[height<=360]"),
-     Q240("bv*[height<=240]+ba/b[height<=240]"),
-     Q144("bv*[height<=144]+ba/b[height<=144]")
+    HD1080("bv*[height<=1080]+ba/b[height<=1080]"),
+    HD720("bv*[height<=720]+ba/b[height<=720]"),
+    SD480("bv*[height<=480]+ba/b[height<=480]"),
+    Q360("bv*[height<=360]+ba/b[height<=360]"),
+    Q240("bv*[height<=240]+ba/b[height<=240]"),
+    Q144("bv*[height<=144]+ba/b[height<=144]")
 }
 
 enum class QuickAudioQuality(val quickDownloadAudioQuality: String) {
-     Best("0"),   // ~220-260 kbps (V0)
-     High("2"),   // ~170-210 kbps (V2)
-     Medium("5"), // ~100-140 kbps (V5 - yt-dlp default)
-     Low("9") // ~65 kbps (V9)
+    Best("0"),   // ~220-260 kbps (V0)
+    High("2"),   // ~170-210 kbps (V2)
+    Medium("5"), // ~100-140 kbps (V5 - yt-dlp default)
+    Low("9") // ~65 kbps (V9)
 }
 
 enum class SeqFormat(val seqFormat: String) {
-     SeqAudio("mp3"),
-     SeqVideo("mp4")
+    SeqAudio("mp3"),
+    SeqVideo("mp4")
 }
 
 enum class SeqVideoQuality(val seqVideoQuality: String) {
-     HD1080("bv*[height<=1080]+ba/b[height<=1080]"),
-     HD720("bv*[height<=720]+ba/b[height<=720]"),
-     SD480("bv*[height<=480]+ba/b[height<=480]"),
-     Q360("bv*[height<=360]+ba/b[height<=360]"),
-     Q240("bv*[height<=240]+ba/b[height<=240]"),
-     Q144("bv*[height<=144]+ba/b[height<=144]")
+    HD1080("bv*[height<=1080]+ba/b[height<=1080]"),
+    HD720("bv*[height<=720]+ba/b[height<=720]"),
+    SD480("bv*[height<=480]+ba/b[height<=480]"),
+    Q360("bv*[height<=360]+ba/b[height<=360]"),
+    Q240("bv*[height<=240]+ba/b[height<=240]"),
+    Q144("bv*[height<=144]+ba/b[height<=144]")
 }
 
 enum class SeqAudioQuality(val seqAudioQuality: String) {
-     Best("0"),   // ~220-260 kbps (V0)
-     High("2"),   // ~170-210 kbps (V2)
-     Medium("5"), // ~100-140 kbps (V5 - yt-dlp default)
-     Low("9") // ~65 kbps (V9)
+    Best("0"),   // ~220-260 kbps (V0)
+    High("2"),   // ~170-210 kbps (V2)
+    Medium("5"), // ~100-140 kbps (V5 - yt-dlp default)
+    Low("9") // ~65 kbps (V9)
 }

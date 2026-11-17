@@ -20,138 +20,138 @@ import org.foss.fermux.settings.logic.TilePosition
 @Composable
 fun VideoConversionState(ffmpegViewModel: FFmpegViewModel, onBack: () -> Unit) {
 
-     val context = LocalContext.current
-     val scrollState = rememberScrollState()
+    val context = LocalContext.current
+    val scrollState = rememberScrollState()
 
 
-     LaunchedEffect(ffmpegViewModel.inputUri) {
-          ffmpegViewModel.updateInputKind(context)
-     }
+    LaunchedEffect(ffmpegViewModel.inputUri) {
+        ffmpegViewModel.updateInputKind(context)
+    }
 
-     val videoOption = buildList {
-          add(
-               InfoListClass(
-                    title = "Back",
-                    description = "Choose a different media kind",
-                    image = R.drawable.back_arrow,
-                    onClick = onBack,
-                    position = TilePosition.TOP
-               )
-          )
-          if (ffmpegViewModel.isVideoTargetSupported(FFmpegTargetFormat.MP4)) {
-               add(
-                    InfoListClass(
-                         title = "MP4",
-                         description = "Best over all format for video and size",
-                         image = R.drawable.mp4,
-                         onClick = {
-                              ffmpegViewModel.selectedFormat = FFmpegTargetFormat.MP4
-                              ffmpegViewModel.inputUri?.let { uri ->
-                                   ffmpegViewModel.startingConversion(
-                                        context,
-                                        inputUri = uri,
-                                        targetFormat = FFmpegTargetFormat.MP4
-                                   )
-                              }
-                         },
-                         position = TilePosition.MIDDLE
-                    )
-               )
-          }
-          add(
-               InfoListClass(
-                    title = "MKV",
-                    description = "MKV is a video container that holds movies, tv shows, and all their audio tracks together",
-                    image = R.drawable.mkv,
+    val videoOption = buildList {
+        add(
+            InfoListClass(
+                title = "Back",
+                description = "Choose a different media kind",
+                image = R.drawable.back_arrow,
+                onClick = onBack,
+                position = TilePosition.TOP
+            )
+        )
+        if (ffmpegViewModel.isVideoTargetSupported(FFmpegTargetFormat.MP4)) {
+            add(
+                InfoListClass(
+                    title = "MP4",
+                    description = "Best over all format for video and size",
+                    image = R.drawable.mp4,
                     onClick = {
-                         ffmpegViewModel.selectedFormat = FFmpegTargetFormat.MKV
-                         ffmpegViewModel.inputUri?.let { uri ->
-                              ffmpegViewModel.startingConversion(
-                                   context,
-                                   inputUri = uri,
-                                   targetFormat = FFmpegTargetFormat.MKV
-                              )
-                         }
+                        ffmpegViewModel.selectedFormat = FFmpegTargetFormat.MP4
+                        ffmpegViewModel.inputUri?.let { uri ->
+                            ffmpegViewModel.startingConversion(
+                                context,
+                                inputUri = uri,
+                                targetFormat = FFmpegTargetFormat.MP4
+                            )
+                        }
                     },
                     position = TilePosition.MIDDLE
-               )
-          )
-          if (ffmpegViewModel.isVideoTargetSupported(FFmpegTargetFormat.MOV)) {
-               add(
-                    InfoListClass(
-                         title = "MOV",
-                         description = "MOV is Apple’s equivalent to MKV, it is a video container",
-                         image = R.drawable.mov,
-                         onClick = {
-                              ffmpegViewModel.selectedFormat = FFmpegTargetFormat.MOV
-                              ffmpegViewModel.inputUri?.let { uri ->
-                                   ffmpegViewModel.startingConversion(
-                                        context,
-                                        inputUri = uri,
-                                        targetFormat = FFmpegTargetFormat.MOV
-                                   )
-                              }
-                         },
-                         position = TilePosition.MIDDLE
-                    )
-               )
-          }
-          if (ffmpegViewModel.isVideoTargetSupported(FFmpegTargetFormat.AVI)) {
-               add(
-                    InfoListClass(
-                         title = "AVI",
-                         description = "AVI is Microsoft's old-school equivalent to MKV and MOV, it is a video container from 1992",
-                         image = R.drawable.avi,
-                         onClick = {
-                              ffmpegViewModel.selectedFormat = FFmpegTargetFormat.AVI
-                              ffmpegViewModel.inputUri?.let { uri ->
-                                   ffmpegViewModel.startingConversion(
-                                        context,
-                                        inputUri = uri,
-                                        targetFormat = FFmpegTargetFormat.AVI
-                                   )
-                              }
-                         },
-                         position = TilePosition.MIDDLE
-                    )
-               )
-          }
-          if (ffmpegViewModel.isVideoTargetSupported(FFmpegTargetFormat.WEBM)) {
-               add(
-                    InfoListClass(
-                         title = "WEBM",
-                         description = "WEBM is a modern, royalty-free video container created by Google specifically for the web",
-                         image = R.drawable.webm,
-                         onClick = {
-                              ffmpegViewModel.selectedFormat = FFmpegTargetFormat.WEBM
-                              ffmpegViewModel.inputUri?.let { uri ->
-                                   ffmpegViewModel.startingConversion(
-                                        context,
-                                        inputUri = uri,
-                                        targetFormat = FFmpegTargetFormat.WEBM
-                                   )
-                              }
-                         },
-                         position = TilePosition.BOTTOM
-                    )
-               )
-          }
-     }
+                )
+            )
+        }
+        add(
+            InfoListClass(
+                title = "MKV",
+                description = "MKV is a video container that holds movies, tv shows, and all their audio tracks together",
+                image = R.drawable.mkv,
+                onClick = {
+                    ffmpegViewModel.selectedFormat = FFmpegTargetFormat.MKV
+                    ffmpegViewModel.inputUri?.let { uri ->
+                        ffmpegViewModel.startingConversion(
+                            context,
+                            inputUri = uri,
+                            targetFormat = FFmpegTargetFormat.MKV
+                        )
+                    }
+                },
+                position = TilePosition.MIDDLE
+            )
+        )
+        if (ffmpegViewModel.isVideoTargetSupported(FFmpegTargetFormat.MOV)) {
+            add(
+                InfoListClass(
+                    title = "MOV",
+                    description = "MOV is Apple’s equivalent to MKV, it is a video container",
+                    image = R.drawable.mov,
+                    onClick = {
+                        ffmpegViewModel.selectedFormat = FFmpegTargetFormat.MOV
+                        ffmpegViewModel.inputUri?.let { uri ->
+                            ffmpegViewModel.startingConversion(
+                                context,
+                                inputUri = uri,
+                                targetFormat = FFmpegTargetFormat.MOV
+                            )
+                        }
+                    },
+                    position = TilePosition.MIDDLE
+                )
+            )
+        }
+        if (ffmpegViewModel.isVideoTargetSupported(FFmpegTargetFormat.AVI)) {
+            add(
+                InfoListClass(
+                    title = "AVI",
+                    description = "AVI is Microsoft's old-school equivalent to MKV and MOV, it is a video container from 1992",
+                    image = R.drawable.avi,
+                    onClick = {
+                        ffmpegViewModel.selectedFormat = FFmpegTargetFormat.AVI
+                        ffmpegViewModel.inputUri?.let { uri ->
+                            ffmpegViewModel.startingConversion(
+                                context,
+                                inputUri = uri,
+                                targetFormat = FFmpegTargetFormat.AVI
+                            )
+                        }
+                    },
+                    position = TilePosition.MIDDLE
+                )
+            )
+        }
+        if (ffmpegViewModel.isVideoTargetSupported(FFmpegTargetFormat.WEBM)) {
+            add(
+                InfoListClass(
+                    title = "WEBM",
+                    description = "WEBM is a modern, royalty-free video container created by Google specifically for the web",
+                    image = R.drawable.webm,
+                    onClick = {
+                        ffmpegViewModel.selectedFormat = FFmpegTargetFormat.WEBM
+                        ffmpegViewModel.inputUri?.let { uri ->
+                            ffmpegViewModel.startingConversion(
+                                context,
+                                inputUri = uri,
+                                targetFormat = FFmpegTargetFormat.WEBM
+                            )
+                        }
+                    },
+                    position = TilePosition.BOTTOM
+                )
+            )
+        }
+    }
 
-     Column(
-          modifier = Modifier
-               .fillMaxWidth()
-               .padding(bottom = 15.dp)
-               .verticalScroll(scrollState)
-     ) {
-          videoOption.forEach { option ->
-               FFmpegTiles(
-                    title = option.title,
-                    description = option.description,
-                    image = option.image,
-                    onClick = option.onClick,
-                    shape = option.position.TileShaper()
-               )
-          }
-     }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 15.dp)
+            .verticalScroll(scrollState)
+    ) {
+        videoOption.forEach { option ->
+            FFmpegTiles(
+                title = option.title,
+                description = option.description,
+                image = option.image,
+                onClick = option.onClick,
+                shape = option.position.TileShaper()
+            )
+        }
+    }
 }

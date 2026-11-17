@@ -46,10 +46,10 @@ fun FilterButton(
         targetValue = if (isPressed) activeIconColor else inActiveIconColor,
         animationSpec = tween(durationMillis = 200)
     )
-     val containerColor by animateColorAsState(
-          targetValue = if (isPressed) activeColor else inActiveColor,
-          animationSpec = tween(durationMillis = 250)
-     )
+    val containerColor by animateColorAsState(
+        targetValue = if (isPressed) activeColor else inActiveColor,
+        animationSpec = tween(durationMillis = 250)
+    )
 
 
     val buttonAnimation by animateFloatAsState(

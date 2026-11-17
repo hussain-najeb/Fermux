@@ -26,73 +26,73 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun AppIconButton(
-     modifier: Modifier = Modifier,
-     color: FermuxColor = FermuxColors,
-     icon: ImageVector,
-     contentDescription: String? = null,
-     border: BorderStroke? = BorderStroke(1.5.dp, color.fermuxGenericBorder),
-     iconRotation: Float = 0f,
-     enabled: Boolean = true,
-     contentPadding: PaddingValues = PaddingValues(4.dp),
-     onClick: () -> Unit
+    modifier: Modifier = Modifier,
+    color: FermuxColor = FermuxColors,
+    icon: ImageVector,
+    contentDescription: String? = null,
+    border: BorderStroke? = BorderStroke(1.5.dp, color.fermuxGenericBorder),
+    iconRotation: Float = 0f,
+    enabled: Boolean = true,
+    contentPadding: PaddingValues = PaddingValues(4.dp),
+    onClick: () -> Unit
 ) {
 
-     val interactionSource = remember { MutableInteractionSource() }
-     val isPressed by interactionSource.collectIsPressedAsState()
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
 
-     val containerColor by animateColorAsState(
-          targetValue = if (isPressed) color.fermuxActiveButton else color.fermuxInActiveButton,
-          animationSpec = tween(200),
-          label = "Fermux Button Colors",
-     )
+    val containerColor by animateColorAsState(
+        targetValue = if (isPressed) color.fermuxActiveButton else color.fermuxInActiveButton,
+        animationSpec = tween(200),
+        label = "Fermux Button Colors",
+    )
 
-     val contentColor by animateColorAsState(
-          targetValue = if (isPressed) color.downriver else color.white,
-          animationSpec = tween(200),
-          label = "Fermux Text Colors",
-     )
+    val contentColor by animateColorAsState(
+        targetValue = if (isPressed) color.downriver else color.white,
+        animationSpec = tween(200),
+        label = "Fermux Text Colors",
+    )
 
-     val iconColor by animateColorAsState(
-          targetValue = if (isPressed) color.downriver else color.white,
-          animationSpec = tween(durationMillis = 200),
-          label = "Fermux Icon Colors"
-     )
+    val iconColor by animateColorAsState(
+        targetValue = if (isPressed) color.downriver else color.white,
+        animationSpec = tween(durationMillis = 200),
+        label = "Fermux Icon Colors"
+    )
 
-     val buttonAnimation by animateFloatAsState(
-          targetValue = if (isPressed) 0.90f else 1.0f,
-          animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-          label = "Fermux Button Animation"
-     )
+    val buttonAnimation by animateFloatAsState(
+        targetValue = if (isPressed) 0.90f else 1.0f,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        label = "Fermux Button Animation"
+    )
 
-     val iconRotate by animateFloatAsState(
-          targetValue = iconRotation,
-          animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-          label = "Fermux Icon Rotation"
-     )
+    val iconRotate by animateFloatAsState(
+        targetValue = iconRotation,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        label = "Fermux Icon Rotation"
+    )
 
-     ElevatedButton(
-          modifier = modifier.graphicsLayer {
-               scaleX = buttonAnimation
-               scaleY = buttonAnimation
-          }
-               .size(25.dp),
-          shape = RoundedCornerShape(8.dp),
-          border = border,
-          colors = ButtonDefaults.textButtonColors(
-               containerColor = containerColor,
-               contentColor = contentColor,
-               disabledContainerColor = FermuxColors.darkPurple
-          ),
-          enabled = enabled,
-          contentPadding = contentPadding,
-          interactionSource = interactionSource,
-          onClick = onClick
-     ) {
-          Icon(
-               imageVector = icon,
-               tint = iconColor,
-               contentDescription = contentDescription,
-               modifier = Modifier.rotate(iconRotate)
-          )
-     }
+    ElevatedButton(
+        modifier = modifier.graphicsLayer {
+            scaleX = buttonAnimation
+            scaleY = buttonAnimation
+        }
+            .size(25.dp),
+        shape = RoundedCornerShape(8.dp),
+        border = border,
+        colors = ButtonDefaults.textButtonColors(
+            containerColor = containerColor,
+            contentColor = contentColor,
+            disabledContainerColor = FermuxColors.darkPurple
+        ),
+        enabled = enabled,
+        contentPadding = contentPadding,
+        interactionSource = interactionSource,
+        onClick = onClick
+    ) {
+        Icon(
+            imageVector = icon,
+            tint = iconColor,
+            contentDescription = contentDescription,
+            modifier = Modifier.rotate(iconRotate)
+        )
+    }
 }

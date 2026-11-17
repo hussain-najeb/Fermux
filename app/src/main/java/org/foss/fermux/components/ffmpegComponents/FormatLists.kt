@@ -26,91 +26,91 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun FFmpegTiles(
-     modifier: Modifier = Modifier,
-     title: String,
-     description: String,
-     shape: Shape = RoundedCornerShape(8.dp),
-     icon: ImageVector? = null,
-     image: Int? = null,
-     onClick: (() -> Unit)?,
-     content: (() -> Unit)? = null,
-     leadingContent: (() -> Unit)? = null,
-     trailingContent: (() -> Unit)? = null
+    modifier: Modifier = Modifier,
+    title: String,
+    description: String,
+    shape: Shape = RoundedCornerShape(8.dp),
+    icon: ImageVector? = null,
+    image: Int? = null,
+    onClick: (() -> Unit)?,
+    content: (() -> Unit)? = null,
+    leadingContent: (() -> Unit)? = null,
+    trailingContent: (() -> Unit)? = null
 ) {
 
-     val interactionSource = remember { MutableInteractionSource() }
-     val isPressed by interactionSource.collectIsPressedAsState()
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
 
-     val surfaceColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.fermuxActiveButton else FermuxColors.fermuxInActiveButton
-     )
-     val contentColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.white,
-          animationSpec = tween(400),
-          label = "Fermux Container Colors",
-     )
+    val surfaceColor by animateColorAsState(
+        targetValue = if (isPressed) FermuxColors.fermuxActiveButton else FermuxColors.fermuxInActiveButton
+    )
+    val contentColor by animateColorAsState(
+        targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.white,
+        animationSpec = tween(400),
+        label = "Fermux Container Colors",
+    )
 
-     Column(
-          modifier = Modifier
-               .fillMaxWidth()
-     ) {
-          Surface(
-               modifier = modifier.padding(1.dp),
-               shape = shape,
-               contentColor = contentColor,
-               interactionSource = interactionSource,
-               onClick = { onClick?.invoke() },
-               color = surfaceColor
-          ) {
-               Row(
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        Surface(
+            modifier = modifier.padding(1.dp),
+            shape = shape,
+            contentColor = contentColor,
+            interactionSource = interactionSource,
+            onClick = { onClick?.invoke() },
+            color = surfaceColor
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 5.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                icon?.let {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(end = 16.dp)
+                            .size(28.dp)
+                    )
+                }
+
+                if (image != null) {
+                    Icon(
+                        painter = painterResource(id = image),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(start = 8.dp, end = 16.dp)
+                            .size(28.dp)
+                    )
+                }
+                leadingContent?.invoke()
+                Column(
                     modifier = Modifier
-                         .fillMaxWidth()
-                         .padding(horizontal = 5.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-               ) {
-                    icon?.let {
-                         Icon(
-                              imageVector = icon,
-                              contentDescription = null,
-                              modifier = Modifier
-                                   .padding(end = 16.dp)
-                                   .size(28.dp)
-                         )
-                    }
-
-                    if (image != null) {
-                         Icon(
-                              painter = painterResource(id = image),
-                              contentDescription = null,
-                              modifier = Modifier
-                                   .padding(start = 8.dp,end = 16.dp)
-                                   .size(28.dp)
-                         )
-                    }
-                    leadingContent?.invoke()
-                    Column(
-                         modifier = Modifier
-                              .weight(1f)
-                              .padding(start = if (icon == null && image == null && leadingContent == null) 12.dp else 5.dp)
-                    ) {
-                         Text(
-                              text = title,
-                              maxLines = 1,
-                              fontSize = 17.sp,
-                              overflow = TextOverflow.Ellipsis,
-                              style = MaterialTheme.typography.titleLarge
-                         )
-                         Text(
-                              text = description,
-                              maxLines = 4,
-                              fontSize = 14.sp,
-                              overflow = TextOverflow.Ellipsis,
-                              style = MaterialTheme.typography.bodyMedium
-                         )
-                    }
-                    content?.invoke()
-               }
-          }
-          trailingContent?.invoke()
-     }
+                        .weight(1f)
+                        .padding(start = if (icon == null && image == null && leadingContent == null) 12.dp else 5.dp)
+                ) {
+                    Text(
+                        text = title,
+                        maxLines = 1,
+                        fontSize = 17.sp,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    Text(
+                        text = description,
+                        maxLines = 4,
+                        fontSize = 14.sp,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+                content?.invoke()
+            }
+        }
+        trailingContent?.invoke()
+    }
 }

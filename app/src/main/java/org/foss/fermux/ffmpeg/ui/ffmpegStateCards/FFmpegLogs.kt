@@ -10,13 +10,13 @@ import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 
 @Composable
 fun FFmpegLogs(
-     navController: NavHostController
+    navController: NavHostController
 ) {
-     val ffmpegViewModel: FFmpegViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity)
+    val ffmpegViewModel: FFmpegViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity)
 
-     LoggingScreen(
-          loggingTitle = "FFmpeg Logs",
-          logs = ffmpegViewModel.FFmpegLogs,
-          navController = navController
-     )
+    LoggingScreen(
+        loggingTitle = "FFmpeg Logs",
+        logs = ffmpegViewModel.FFmpegLogs,
+        navController = navController
+    )
 }

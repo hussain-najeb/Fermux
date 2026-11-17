@@ -9,38 +9,38 @@ import kotlinx.coroutines.flow.map
 
 interface FFmpegSettingsRepo {
 
-     val audioBitrate: Flow<String>
-     val ffmpegBellState: Flow<Boolean>
-     val normalizeAudio: Flow<Boolean>
-     val monoDownmix: Flow<Boolean>
-     val enableVideoCompression: Flow<Boolean>
-     val videoResolution: Flow<String>
-     val videoCrf: Flow<Int>
-     val useHardwareEncoder: Flow<Boolean>
-     val threadLimit: Flow<Int>
+    val audioBitrate: Flow<String>
+    val ffmpegBellState: Flow<Boolean>
+    val normalizeAudio: Flow<Boolean>
+    val monoDownmix: Flow<Boolean>
+    val enableVideoCompression: Flow<Boolean>
+    val videoResolution: Flow<String>
+    val videoCrf: Flow<Int>
+    val useHardwareEncoder: Flow<Boolean>
+    val threadLimit: Flow<Int>
 
-     suspend fun setAudioBitrate(value: String)
-     suspend fun setFFmpegBellState(value: Boolean)
-     suspend fun setNormalizeAudio(value: Boolean)
-     suspend fun setMonoDownmix(value: Boolean)
-     suspend fun setEnableVideoCompression(value: Boolean)
-     suspend fun setVideoResolution(value: String)
-     suspend fun setVideoCrf(value: Int)
-     suspend fun setUseHardwareEncoder(value: Boolean)
-     suspend fun setThreadLimit(value: Int)
-     suspend fun resetFFmpeg(): FFmpegSettingsSnapshot
-     suspend fun restoreFFmpeg(snapshot: FFmpegSettingsSnapshot)
+    suspend fun setAudioBitrate(value: String)
+    suspend fun setFFmpegBellState(value: Boolean)
+    suspend fun setNormalizeAudio(value: Boolean)
+    suspend fun setMonoDownmix(value: Boolean)
+    suspend fun setEnableVideoCompression(value: Boolean)
+    suspend fun setVideoResolution(value: String)
+    suspend fun setVideoCrf(value: Int)
+    suspend fun setUseHardwareEncoder(value: Boolean)
+    suspend fun setThreadLimit(value: Int)
+    suspend fun resetFFmpeg(): FFmpegSettingsSnapshot
+    suspend fun restoreFFmpeg(snapshot: FFmpegSettingsSnapshot)
 }
 
 data class FFmpegSettingsSnapshot(
-     val audioBitrate: String?,
-     val normalizeAudio: Boolean?,
-     val monoDownmix: Boolean?,
-     val enableVideoCompression: Boolean?,
-     val videoResolution: String?,
-     val videoCrf: Int?,
-     val useHardwareEncoder: Boolean?,
-     val threadLimit: Int?
+    val audioBitrate: String?,
+    val normalizeAudio: Boolean?,
+    val monoDownmix: Boolean?,
+    val enableVideoCompression: Boolean?,
+    val videoResolution: String?,
+    val videoCrf: Int?,
+    val useHardwareEncoder: Boolean?,
+    val threadLimit: Int?
 )
 
 val AUDIO_BITRATE_KEY = stringPreferencesKey("ffmpeg_audio_bitrate")
@@ -56,104 +56,104 @@ val THREAD_LIMIT_KEY = intPreferencesKey("ffmpeg_thread_limit")
 
 class DataStoreFFmpegSettings(private val settingStore: DataStore<Preferences>) : FFmpegSettingsRepo {
 
-     constructor(context: Context) : this(context.dataStore)
+    constructor(context: Context) : this(context.dataStore)
 
-     override val audioBitrate: Flow<String> =
-          settingStore.data.map { preferences -> preferences[AUDIO_BITRATE_KEY] ?: "" }
-     override val ffmpegBellState: Flow<Boolean> =
-               settingStore.data.map { preferences -> preferences[FFMPEG_BELL_STATE] ?: false }
-     override val normalizeAudio: Flow<Boolean> =
-          settingStore.data.map { preferences -> preferences[NORMALIZE_AUDIO_KEY] ?: false }
-     override val monoDownmix: Flow<Boolean> = settingStore.data.map { it[MONO_DOWNMIX_KEY] ?: false }
-     override val enableVideoCompression: Flow<Boolean> =
-          settingStore.data.map { it[ENABLE_VIDEO_COMPRESSION_KEY] ?: false }
-     override val videoResolution: Flow<String> = settingStore.data.map { it[VIDEO_RESOLUTION_KEY] ?: "" }
-     override val videoCrf: Flow<Int> = settingStore.data.map { it[VIDEO_CRF_KEY] ?: 23 }
-     override val useHardwareEncoder: Flow<Boolean> = settingStore.data.map { it[USE_HARDWARE_ENCODER_KEY] ?: false }
-     override val threadLimit: Flow<Int> = settingStore.data.map { it[THREAD_LIMIT_KEY] ?: 0 }
+    override val audioBitrate: Flow<String> =
+        settingStore.data.map { preferences -> preferences[AUDIO_BITRATE_KEY] ?: "" }
+    override val ffmpegBellState: Flow<Boolean> =
+        settingStore.data.map { preferences -> preferences[FFMPEG_BELL_STATE] ?: false }
+    override val normalizeAudio: Flow<Boolean> =
+        settingStore.data.map { preferences -> preferences[NORMALIZE_AUDIO_KEY] ?: false }
+    override val monoDownmix: Flow<Boolean> = settingStore.data.map { it[MONO_DOWNMIX_KEY] ?: false }
+    override val enableVideoCompression: Flow<Boolean> =
+        settingStore.data.map { it[ENABLE_VIDEO_COMPRESSION_KEY] ?: false }
+    override val videoResolution: Flow<String> = settingStore.data.map { it[VIDEO_RESOLUTION_KEY] ?: "" }
+    override val videoCrf: Flow<Int> = settingStore.data.map { it[VIDEO_CRF_KEY] ?: 23 }
+    override val useHardwareEncoder: Flow<Boolean> = settingStore.data.map { it[USE_HARDWARE_ENCODER_KEY] ?: false }
+    override val threadLimit: Flow<Int> = settingStore.data.map { it[THREAD_LIMIT_KEY] ?: 0 }
 
-     override suspend fun setAudioBitrate(value: String) {
-          settingStore.edit { preferences -> preferences[AUDIO_BITRATE_KEY] = value }
-     }
+    override suspend fun setAudioBitrate(value: String) {
+        settingStore.edit { preferences -> preferences[AUDIO_BITRATE_KEY] = value }
+    }
 
-     override suspend fun setFFmpegBellState(value: Boolean) {
-          settingStore.edit { preferences -> preferences[FFMPEG_BELL_STATE] = value }
-     }
+    override suspend fun setFFmpegBellState(value: Boolean) {
+        settingStore.edit { preferences -> preferences[FFMPEG_BELL_STATE] = value }
+    }
 
-     override suspend fun setNormalizeAudio(value: Boolean) {
-          settingStore.edit { preferences -> preferences[NORMALIZE_AUDIO_KEY] = value }
-     }
-
-
-     override suspend fun setMonoDownmix(value: Boolean) {
-          settingStore.edit { preferences -> preferences[MONO_DOWNMIX_KEY] = value }
-     }
+    override suspend fun setNormalizeAudio(value: Boolean) {
+        settingStore.edit { preferences -> preferences[NORMALIZE_AUDIO_KEY] = value }
+    }
 
 
-     override suspend fun setEnableVideoCompression(value: Boolean) {
-          settingStore.edit { preferences -> preferences[ENABLE_VIDEO_COMPRESSION_KEY] = value }
-     }
+    override suspend fun setMonoDownmix(value: Boolean) {
+        settingStore.edit { preferences -> preferences[MONO_DOWNMIX_KEY] = value }
+    }
 
 
-     override suspend fun setVideoResolution(value: String) {
-          settingStore.edit { preferences -> preferences[VIDEO_RESOLUTION_KEY] = value }
-     }
+    override suspend fun setEnableVideoCompression(value: Boolean) {
+        settingStore.edit { preferences -> preferences[ENABLE_VIDEO_COMPRESSION_KEY] = value }
+    }
 
 
-     override suspend fun setVideoCrf(value: Int) {
-          settingStore.edit { preferences -> preferences[VIDEO_CRF_KEY] = value }
-     }
+    override suspend fun setVideoResolution(value: String) {
+        settingStore.edit { preferences -> preferences[VIDEO_RESOLUTION_KEY] = value }
+    }
 
 
-     override suspend fun setUseHardwareEncoder(value: Boolean) {
-          settingStore.edit { preferences -> preferences[USE_HARDWARE_ENCODER_KEY] = value }
-     }
+    override suspend fun setVideoCrf(value: Int) {
+        settingStore.edit { preferences -> preferences[VIDEO_CRF_KEY] = value }
+    }
 
 
-     override suspend fun setThreadLimit(value: Int) {
-          settingStore.edit { preferences -> preferences[THREAD_LIMIT_KEY] = value }
-     }
+    override suspend fun setUseHardwareEncoder(value: Boolean) {
+        settingStore.edit { preferences -> preferences[USE_HARDWARE_ENCODER_KEY] = value }
+    }
 
 
-     override suspend fun resetFFmpeg(): FFmpegSettingsSnapshot {
-          lateinit var snapshot: FFmpegSettingsSnapshot
-          settingStore.edit { preferences ->
-               snapshot = FFmpegSettingsSnapshot(
-                    audioBitrate = preferences[AUDIO_BITRATE_KEY],
-                    normalizeAudio = preferences[NORMALIZE_AUDIO_KEY],
-                    monoDownmix = preferences[MONO_DOWNMIX_KEY],
-                    enableVideoCompression = preferences[ENABLE_VIDEO_COMPRESSION_KEY],
-                    videoResolution = preferences[VIDEO_RESOLUTION_KEY],
-                    videoCrf = preferences[VIDEO_CRF_KEY],
-                    useHardwareEncoder = preferences[USE_HARDWARE_ENCODER_KEY],
-                    threadLimit = preferences[THREAD_LIMIT_KEY]
-               )
-               preferences.remove(AUDIO_BITRATE_KEY)
-               preferences.remove(NORMALIZE_AUDIO_KEY)
-               preferences.remove(MONO_DOWNMIX_KEY)
-               preferences.remove(ENABLE_VIDEO_COMPRESSION_KEY)
-               preferences.remove(VIDEO_RESOLUTION_KEY)
-               preferences.remove(VIDEO_CRF_KEY)
-               preferences.remove(USE_HARDWARE_ENCODER_KEY)
-               preferences.remove(THREAD_LIMIT_KEY)
-          }
-          return snapshot
-     }
+    override suspend fun setThreadLimit(value: Int) {
+        settingStore.edit { preferences -> preferences[THREAD_LIMIT_KEY] = value }
+    }
 
-     override suspend fun restoreFFmpeg(snapshot: FFmpegSettingsSnapshot) {
-          settingStore.edit { preferences ->
-               preferences.restore(AUDIO_BITRATE_KEY, snapshot.audioBitrate)
-               preferences.restore(NORMALIZE_AUDIO_KEY, snapshot.normalizeAudio)
-               preferences.restore(MONO_DOWNMIX_KEY, snapshot.monoDownmix)
-               preferences.restore(ENABLE_VIDEO_COMPRESSION_KEY, snapshot.enableVideoCompression)
-               preferences.restore(VIDEO_RESOLUTION_KEY, snapshot.videoResolution)
-               preferences.restore(VIDEO_CRF_KEY, snapshot.videoCrf)
-               preferences.restore(USE_HARDWARE_ENCODER_KEY, snapshot.useHardwareEncoder)
-               preferences.restore(THREAD_LIMIT_KEY, snapshot.threadLimit)
-          }
-     }
+
+    override suspend fun resetFFmpeg(): FFmpegSettingsSnapshot {
+        lateinit var snapshot: FFmpegSettingsSnapshot
+        settingStore.edit { preferences ->
+            snapshot = FFmpegSettingsSnapshot(
+                audioBitrate = preferences[AUDIO_BITRATE_KEY],
+                normalizeAudio = preferences[NORMALIZE_AUDIO_KEY],
+                monoDownmix = preferences[MONO_DOWNMIX_KEY],
+                enableVideoCompression = preferences[ENABLE_VIDEO_COMPRESSION_KEY],
+                videoResolution = preferences[VIDEO_RESOLUTION_KEY],
+                videoCrf = preferences[VIDEO_CRF_KEY],
+                useHardwareEncoder = preferences[USE_HARDWARE_ENCODER_KEY],
+                threadLimit = preferences[THREAD_LIMIT_KEY]
+            )
+            preferences.remove(AUDIO_BITRATE_KEY)
+            preferences.remove(NORMALIZE_AUDIO_KEY)
+            preferences.remove(MONO_DOWNMIX_KEY)
+            preferences.remove(ENABLE_VIDEO_COMPRESSION_KEY)
+            preferences.remove(VIDEO_RESOLUTION_KEY)
+            preferences.remove(VIDEO_CRF_KEY)
+            preferences.remove(USE_HARDWARE_ENCODER_KEY)
+            preferences.remove(THREAD_LIMIT_KEY)
+        }
+        return snapshot
+    }
+
+    override suspend fun restoreFFmpeg(snapshot: FFmpegSettingsSnapshot) {
+        settingStore.edit { preferences ->
+            preferences.restore(AUDIO_BITRATE_KEY, snapshot.audioBitrate)
+            preferences.restore(NORMALIZE_AUDIO_KEY, snapshot.normalizeAudio)
+            preferences.restore(MONO_DOWNMIX_KEY, snapshot.monoDownmix)
+            preferences.restore(ENABLE_VIDEO_COMPRESSION_KEY, snapshot.enableVideoCompression)
+            preferences.restore(VIDEO_RESOLUTION_KEY, snapshot.videoResolution)
+            preferences.restore(VIDEO_CRF_KEY, snapshot.videoCrf)
+            preferences.restore(USE_HARDWARE_ENCODER_KEY, snapshot.useHardwareEncoder)
+            preferences.restore(THREAD_LIMIT_KEY, snapshot.threadLimit)
+        }
+    }
 }
 
 private fun <T> MutablePreferences.restore(key: Preferences.Key<T>, value: T?) {
-     if (value == null) remove(key) else this[key] = value
+    if (value == null) remove(key) else this[key] = value
 }

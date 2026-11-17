@@ -46,180 +46,181 @@ import org.foss.fermux.ytdlp.logic.oneTimeDownloader.YtdlpChannel
 
 @Composable
 fun SimpleDownloaderPage(
-     navController: NavHostController,
-     downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity)
+    navController: NavHostController,
+    downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity)
 ) {
-     // DataStore vals
-     val ytdlpDetails by downloaderSettingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
-     val history by downloaderSettingsViewModel.history.collectAsStateWithLifecycle()
-     val currentVersionName by downloaderSettingsViewModel.currentVersionName.collectAsStateWithLifecycle()
-     val bellState by downloaderSettingsViewModel.downloaderBellState.collectAsStateWithLifecycle()
-     val isCheckingForUpdate by downloaderSettingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
-     val ytdlpUpdateStatus by downloaderSettingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
+    // DataStore vals
+    val ytdlpDetails by downloaderSettingsViewModel.ytdlpDetails.collectAsStateWithLifecycle()
+    val history by downloaderSettingsViewModel.history.collectAsStateWithLifecycle()
+    val currentVersionName by downloaderSettingsViewModel.currentVersionName.collectAsStateWithLifecycle()
+    val bellState by downloaderSettingsViewModel.downloaderBellState.collectAsStateWithLifecycle()
+    val isCheckingForUpdate by downloaderSettingsViewModel.isCheckingForUpdate.collectAsStateWithLifecycle()
+    val ytdlpUpdateStatus by downloaderSettingsViewModel.ytdlpUpdateStatus.collectAsStateWithLifecycle()
 
-     // ModularSegmentedButtons vals
-     val updateChannel by downloaderSettingsViewModel.ytdlpChannel.collectAsStateWithLifecycle()
+    // ModularSegmentedButtons vals
+    val updateChannel by downloaderSettingsViewModel.ytdlpChannel.collectAsStateWithLifecycle()
 
-     // Miscellaneous vals/funs
-     val snackbarHostState = remember { SnackbarHostState() }
-     val scope = rememberCoroutineScope()
-
-
-     val requestNotificationPermission = rememberNotificationPermissionRequest(
-          onGranted = {
-               scope.launch {
-                    snackbarHostState.showSnackbar(
-                         message = "Notifications enabled",
-                         duration = SnackbarDuration.Short
-                    )
-               }
-          },
-          onPermissionDenied = {
-               downloaderSettingsViewModel.setDownloaderBellState(false)
-               scope.launch {
-                    snackbarHostState.showSnackbar(
-                         message = "Permission denied",
-                         duration = SnackbarDuration.Short
-                    )
-               }
-          }
-     )
-
-     val simpleDownloaderSettings = listOf(
-          InfoListClass(
-               title = "Update Yt-dlp",
-               description = if (isCheckingForUpdate) ytdlpUpdateStatus ?: "Checking for update..." else "Current version is $currentVersionName",
-               icon = Icons.Default.Update,
-               dialogAppearance = true,
-               dialogTitle = "Updating Yt-dlp",
-               dialogImage = R.drawable.update_icon,
-               specialDescription = buildAnnotatedString {
-                    withStyle(SpanStyle(FermuxColors.white)) { append("Updating") }
-                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" yt-dlp") }
-                    withStyle(SpanStyle(FermuxColors.white)) { append(" is always favourable,") }
-                    withStyle(SpanStyle(FermuxColors.white)) { append(" so you get less bugs, better support, and more features. It's recommended to get the ") }
-                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Nightly") }
-                    withStyle(SpanStyle(FermuxColors.white)) { append(" version.") }
-               },
-               dialogContent = {
-                    ModularSegmentedButtons(
-                         enabled = !isCheckingForUpdate,
-                         optionsList = listOf(
-                              YtdlpChannel.Stable to "Stable",
-                              YtdlpChannel.Nightly to "Nightly",
-                              YtdlpChannel.Master to "Master"
-                         ),
-                         selectedOption = updateChannel,
-                         onSelected = downloaderSettingsViewModel::checkYtdlpUpdate
-                    )
-               },
-               position = TilePosition.TOP
-          ),
-          InfoListClass(
-               title = "Notifications",
-               description = "Press to enable notifications",
-               image = if (bellState) R.drawable.bell_on else R.drawable.bell_off,
-               onClick = requestNotificationPermission
-          ),
-          InfoListClass(
-               title = "History",
-               description = "Enable/Disable history",
-               liner = true,
-               image = if (history) R.drawable.history else R.drawable.history, // TODO. add in the appropriate icon for this
-               content = {
-                    SettingsSwitch(
-                         checked = history,
-                         onCheckedChange = downloaderSettingsViewModel::setHistory
-                    )
-               },
-               position = TilePosition.MIDDLE
-          ),
-          InfoListClass(
-               title = if (ytdlpDetails) "Shown Logs" else "Hidden Logs",
-               liner = true,
-               description = if (ytdlpDetails) "Shown the downloader Logs" else "Hidden the downloader Logs",
-               image = if (ytdlpDetails) R.drawable.eye_open else R.drawable.eye_closed,
-               dialogAppearance = true,
-               dialogTitle = "Logging",
-               dialogImage = R.drawable.log,
-               specialDescription = buildAnnotatedString {
-                    withStyle(SpanStyle(FermuxColors.white)) { append("This is the flag for enabling the ") }
-                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("yt-dlp") }
-                    withStyle(SpanStyle(FermuxColors.white)) { append(" logs, for better inspection of what happens under-the-hood.") }
-               },
-               content = {
-                    SettingsSwitch(
-                         checked = ytdlpDetails,
-                         onCheckedChange = downloaderSettingsViewModel::setYtdlpDetails
-                    )
-               },
-               position = TilePosition.BOTTOM
-          ),
-     )
+    // Miscellaneous vals/funs
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
 
-     MediumTopBarScaffold(
-          title = "Downloader Settings",
-          onBack = { navController.popBackStack() },
-          snackbarHost = { AppSnackBar(snackbarHostState) }
-     ) { paddingValues ->
-          Column(
-               modifier = Modifier
-                    .fillMaxSize()
-                    .background(FermuxColors.background)
-                    .verticalScroll(rememberScrollState())
-                    .padding(paddingValues),
-          ) {
-               Text(
-                    text = "General",
-                    modifier = Modifier.padding(
-                         start = 16.dp, top = 20.dp, bottom = 8.dp
+    val requestNotificationPermission = rememberNotificationPermissionRequest(
+        onGranted = {
+            scope.launch {
+                snackbarHostState.showSnackbar(
+                    message = "Notifications enabled",
+                    duration = SnackbarDuration.Short
+                )
+            }
+        },
+        onPermissionDenied = {
+            downloaderSettingsViewModel.setDownloaderBellState(false)
+            scope.launch {
+                snackbarHostState.showSnackbar(
+                    message = "Permission denied",
+                    duration = SnackbarDuration.Short
+                )
+            }
+        }
+    )
+
+    val simpleDownloaderSettings = listOf(
+        InfoListClass(
+            title = "Update Yt-dlp",
+            description = if (isCheckingForUpdate) ytdlpUpdateStatus
+                ?: "Checking for update..." else "Current version is $currentVersionName",
+            icon = Icons.Default.Update,
+            dialogAppearance = true,
+            dialogTitle = "Updating Yt-dlp",
+            dialogImage = R.drawable.update_icon,
+            specialDescription = buildAnnotatedString {
+                withStyle(SpanStyle(FermuxColors.white)) { append("Updating") }
+                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" yt-dlp") }
+                withStyle(SpanStyle(FermuxColors.white)) { append(" is always favourable,") }
+                withStyle(SpanStyle(FermuxColors.white)) { append(" so you get less bugs, better support, and more features. It's recommended to get the ") }
+                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Nightly") }
+                withStyle(SpanStyle(FermuxColors.white)) { append(" version.") }
+            },
+            dialogContent = {
+                ModularSegmentedButtons(
+                    enabled = !isCheckingForUpdate,
+                    optionsList = listOf(
+                        YtdlpChannel.Stable to "Stable",
+                        YtdlpChannel.Nightly to "Nightly",
+                        YtdlpChannel.Master to "Master"
                     ),
-                    fontSize = 18.sp,
-                    color = FermuxColors.fermuxActiveButton,
-                    style = MaterialTheme.typography.labelLarge,
-               )
+                    selectedOption = updateChannel,
+                    onSelected = downloaderSettingsViewModel::checkYtdlpUpdate
+                )
+            },
+            position = TilePosition.TOP
+        ),
+        InfoListClass(
+            title = "Notifications",
+            description = "Press to enable notifications",
+            image = if (bellState) R.drawable.bell_on else R.drawable.bell_off,
+            onClick = requestNotificationPermission
+        ),
+        InfoListClass(
+            title = "History",
+            description = "Enable/Disable history",
+            liner = true,
+            image = if (history) R.drawable.history else R.drawable.history, // TODO. add in the appropriate icon for this
+            content = {
+                SettingsSwitch(
+                    checked = history,
+                    onCheckedChange = downloaderSettingsViewModel::setHistory
+                )
+            },
+            position = TilePosition.MIDDLE
+        ),
+        InfoListClass(
+            title = if (ytdlpDetails) "Shown Logs" else "Hidden Logs",
+            liner = true,
+            description = if (ytdlpDetails) "Shown the downloader Logs" else "Hidden the downloader Logs",
+            image = if (ytdlpDetails) R.drawable.eye_open else R.drawable.eye_closed,
+            dialogAppearance = true,
+            dialogTitle = "Logging",
+            dialogImage = R.drawable.log,
+            specialDescription = buildAnnotatedString {
+                withStyle(SpanStyle(FermuxColors.white)) { append("This is the flag for enabling the ") }
+                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("yt-dlp") }
+                withStyle(SpanStyle(FermuxColors.white)) { append(" logs, for better inspection of what happens under-the-hood.") }
+            },
+            content = {
+                SettingsSwitch(
+                    checked = ytdlpDetails,
+                    onCheckedChange = downloaderSettingsViewModel::setYtdlpDetails
+                )
+            },
+            position = TilePosition.BOTTOM
+        ),
+    )
 
-               simpleDownloaderSettings.forEach { setting ->
-                    TileOptions(
-                         title = setting.title,
-                         description = setting.description,
-                         shape = setting.position.TileShaper(),
-                         icon = setting.icon,
-                         image = setting.image,
-                         content = setting.content,
-                         trailingContent = setting.trailingContent,
-                         onClick = {
-                              setting.onClick?.invoke()
-                              setting.route?.let { navController.navigate(it) }
-                         },
-                         dialogShow = setting.dialogAppearance,
-                         dialogTitle = setting.dialogTitle,
-                         dialogDescription = setting.dialogDescription,
-                         dialogImage = setting.dialogImage,
-                         dialogContent = setting.dialogContent,
-                         specialDescription = setting.specialDescription,
-                         liner = setting.liner
-                    )
-               }
 
-               Text(
-                    text = "Advanced",
-                    modifier = Modifier.padding(
-                         start = 16.dp, top = 20.dp, bottom = 8.dp
-                    ),
-                    fontSize = 18.sp,
-                    color = FermuxColors.fermuxActiveButton,
-                    style = MaterialTheme.typography.labelLarge,
-               )
+    MediumTopBarScaffold(
+        title = "Downloader Settings",
+        onBack = { navController.popBackStack() },
+        snackbarHost = { AppSnackBar(snackbarHostState) }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(FermuxColors.background)
+                .verticalScroll(rememberScrollState())
+                .padding(paddingValues),
+        ) {
+            Text(
+                text = "General",
+                modifier = Modifier.padding(
+                    start = 16.dp, top = 20.dp, bottom = 8.dp
+                ),
+                fontSize = 18.sp,
+                color = FermuxColors.fermuxActiveButton,
+                style = MaterialTheme.typography.labelLarge,
+            )
 
-               AdvancedDownloaderSettings(
-                    downloaderSettingsViewModel = downloaderSettingsViewModel,
-                    navController = navController,
-                    snackbarHostState = snackbarHostState
-               )
+            simpleDownloaderSettings.forEach { setting ->
+                TileOptions(
+                    title = setting.title,
+                    description = setting.description,
+                    shape = setting.position.TileShaper(),
+                    icon = setting.icon,
+                    image = setting.image,
+                    content = setting.content,
+                    trailingContent = setting.trailingContent,
+                    onClick = {
+                        setting.onClick?.invoke()
+                        setting.route?.let { navController.navigate(it) }
+                    },
+                    dialogShow = setting.dialogAppearance,
+                    dialogTitle = setting.dialogTitle,
+                    dialogDescription = setting.dialogDescription,
+                    dialogImage = setting.dialogImage,
+                    dialogContent = setting.dialogContent,
+                    specialDescription = setting.specialDescription,
+                    liner = setting.liner
+                )
+            }
 
-               Spacer(modifier = Modifier.padding(top = 10.dp))
-          }
-     }
+            Text(
+                text = "Advanced",
+                modifier = Modifier.padding(
+                    start = 16.dp, top = 20.dp, bottom = 8.dp
+                ),
+                fontSize = 18.sp,
+                color = FermuxColors.fermuxActiveButton,
+                style = MaterialTheme.typography.labelLarge,
+            )
+
+            AdvancedDownloaderSettings(
+                downloaderSettingsViewModel = downloaderSettingsViewModel,
+                navController = navController,
+                snackbarHostState = snackbarHostState
+            )
+
+            Spacer(modifier = Modifier.padding(top = 10.dp))
+        }
+    }
 }

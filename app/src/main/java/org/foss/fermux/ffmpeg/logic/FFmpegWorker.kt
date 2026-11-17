@@ -26,263 +26,267 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.roundToInt
 
 class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
-     private val ffmpegWorkNotif: NotificationManager
-          get() = applicationContext.getSystemService(
-               Context.NOTIFICATION_SERVICE
-          ) as NotificationManager
-private fun createFFmpegForegroundInfo(): ForegroundInfo {
+    private val ffmpegWorkNotif: NotificationManager
+        get() = applicationContext.getSystemService(
+            Context.NOTIFICATION_SERVICE
+        ) as NotificationManager
 
-     return ForegroundInfo(
-          FFMPEG_NOTIFICATION_ID,
-          createFFmpegNotif(
-               progress = null,
-               text = "Conversion started..."
-          ),
-          ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
-     )
-}
-private fun createFFmpegNotif(
-     progress: Int?,
-     text: String
-): Notification {
-     createFFmpegNotifChannel()
-     val canceller = WorkManager
-          .getInstance(applicationContext)
-          .createCancelPendingIntent(id)
+    private fun createFFmpegForegroundInfo(): ForegroundInfo {
 
-     return NotificationCompat.Builder(
-          applicationContext,
-          FFMPEG_CHANNEL_ID
-     ).setSmallIcon(R.drawable.ffmpeg)
-          .setContentTitle("Converting...")
-          .setContentText(text.take(120))
-          .setProgress(
-               100,
-               progress ?: 0,
-               progress == null
-          )
-          .setOnlyAlertOnce(true)
-          .setOngoing(true)
-          .addAction(
-               R.drawable.cancel_buttons,
-               "Cancel Conversion",
-               canceller
-          ).build()
-}
-     private fun createFFmpegNotifChannel() {
-          val channel = NotificationChannel(
-               FFMPEG_CHANNEL_ID,
-               "Converter",
-               NotificationManager.IMPORTANCE_DEFAULT
-          ).apply {
-               description = "Shows the current conversion"
-          }
-          ffmpegWorkNotif.createNotificationChannel(channel)
-     }
-     companion object {
-          private const val FFMPEG_NOTIFICATION_ID = 1002
-          private const val FFMPEG_CHANNEL_ID = "Converter_Notif"
-     }
+        return ForegroundInfo(
+            FFMPEG_NOTIFICATION_ID,
+            createFFmpegNotif(
+                progress = null,
+                text = "Conversion started..."
+            ),
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+        )
+    }
 
-     @RequiresApi(Build.VERSION_CODES.S)
-     override suspend fun doWork(): Result {
+    private fun createFFmpegNotif(
+        progress: Int?,
+        text: String
+    ): Notification {
+        createFFmpegNotifChannel()
+        val canceller = WorkManager
+            .getInstance(applicationContext)
+            .createCancelPendingIntent(id)
 
-          setForeground(
-               createFFmpegForegroundInfo()
-          )
+        return NotificationCompat.Builder(
+            applicationContext,
+            FFMPEG_CHANNEL_ID
+        ).setSmallIcon(R.drawable.ffmpeg)
+            .setContentTitle("Converting...")
+            .setContentText(text.take(120))
+            .setProgress(
+                100,
+                progress ?: 0,
+                progress == null
+            )
+            .setOnlyAlertOnce(true)
+            .setOngoing(true)
+            .addAction(
+                R.drawable.cancel_buttons,
+                "Cancel Conversion",
+                canceller
+            ).build()
+    }
 
-          return try {
+    private fun createFFmpegNotifChannel() {
+        val channel = NotificationChannel(
+            FFMPEG_CHANNEL_ID,
+            "Converter",
+            NotificationManager.IMPORTANCE_DEFAULT
+        ).apply {
+            description = "Shows the current conversion"
+        }
+        ffmpegWorkNotif.createNotificationChannel(channel)
+    }
 
-               val ffmpegSettings: FFmpegSettingsRepo = DataStoreFFmpegSettings(applicationContext)
-               val prefs = FFmpegUserPrefs(
-                    audioBitrate = ffmpegSettings.audioBitrate.first().takeIf { it.isNotBlank() },
-                    normalizeAudio = ffmpegSettings.normalizeAudio.first(),
-                    monoDownmix = ffmpegSettings.monoDownmix.first(),
-                    enableVideoCompression = ffmpegSettings.enableVideoCompression.first(),
-                    videoResolution = ffmpegSettings.videoResolution.first().takeIf { it.isNotBlank() },
-                    videoCrf = ffmpegSettings.videoCrf.first(),
-                    useHardwareEncoder = ffmpegSettings.useHardwareEncoder.first(),
-                    threadLimit = ffmpegSettings.threadLimit.first().takeIf { it > 0 }
-               )
+    companion object {
+        private const val FFMPEG_NOTIFICATION_ID = 1002
+        private const val FFMPEG_CHANNEL_ID = "Converter_Notif"
+    }
 
-               val targetFormatName = inputData.getString("TARGET_FORMAT")
-                    ?: return failure(workDataOf("error" to "Missing TARGET_FORMAT in input data"))
-               val targetFormat = FFmpegTargetFormat.valueOf(targetFormatName)
+    @RequiresApi(Build.VERSION_CODES.S)
+    override suspend fun doWork(): Result {
 
-               val tempFile = File(applicationContext.cacheDir, "input_${id}.tmp")
-               val outputFile = File(applicationContext.cacheDir, "output_${id}.${targetFormat.workerFile}")
+        setForeground(
+            createFFmpegForegroundInfo()
+        )
 
+        return try {
 
-               try {
+            val ffmpegSettings: FFmpegSettingsRepo = DataStoreFFmpegSettings(applicationContext)
+            val prefs = FFmpegUserPrefs(
+                audioBitrate = ffmpegSettings.audioBitrate.first().takeIf { it.isNotBlank() },
+                normalizeAudio = ffmpegSettings.normalizeAudio.first(),
+                monoDownmix = ffmpegSettings.monoDownmix.first(),
+                enableVideoCompression = ffmpegSettings.enableVideoCompression.first(),
+                videoResolution = ffmpegSettings.videoResolution.first().takeIf { it.isNotBlank() },
+                videoCrf = ffmpegSettings.videoCrf.first(),
+                useHardwareEncoder = ffmpegSettings.useHardwareEncoder.first(),
+                threadLimit = ffmpegSettings.threadLimit.first().takeIf { it > 0 }
+            )
 
-                    val fileUriInput = inputData.getString("FFMPEG_URI_FILE")
-                         ?: return failure(workDataOf("error" to "Missing FFMPEG_URI_FILE in input data"))
+            val targetFormatName = inputData.getString("TARGET_FORMAT")
+                ?: return failure(workDataOf("error" to "Missing TARGET_FORMAT in input data"))
+            val targetFormat = FFmpegTargetFormat.valueOf(targetFormatName)
+
+            val tempFile = File(applicationContext.cacheDir, "input_${id}.tmp")
+            val outputFile = File(applicationContext.cacheDir, "output_${id}.${targetFormat.workerFile}")
 
 
-                    val originalName = inputData.getString("ORIGINAL_FILE_NAME") ?: "Converted_to_$id"
-                    val baseName = originalName.substringBeforeLast(".")
-                    val displayName = "$baseName.${targetFormat.workerFile}"
+            try {
 
-                    val args = buildDynamicFFmpegArgs(targetFormat, prefs)
+                val fileUriInput = inputData.getString("FFMPEG_URI_FILE")
+                    ?: return failure(workDataOf("error" to "Missing FFMPEG_URI_FILE in input data"))
 
-                    val uriFile = fileUriInput.toUri()
 
-                    applicationContext.contentResolver.openInputStream(uriFile)?.use { inputStream ->
-                         tempFile.outputStream().use { outputStream ->
-                              inputStream.copyTo(outputStream)
-                         }
+                val originalName = inputData.getString("ORIGINAL_FILE_NAME") ?: "Converted_to_$id"
+                val baseName = originalName.substringBeforeLast(".")
+                val displayName = "$baseName.${targetFormat.workerFile}"
+
+                val args = buildDynamicFFmpegArgs(targetFormat, prefs)
+
+                val uriFile = fileUriInput.toUri()
+
+                applicationContext.contentResolver.openInputStream(uriFile)?.use { inputStream ->
+                    tempFile.outputStream().use { outputStream ->
+                        inputStream.copyTo(outputStream)
                     }
-                         ?: return failure(workDataOf("error" to "Could not open input stream for $uriFile, permission may have been lost"))
+                }
+                    ?: return failure(workDataOf("error" to "Could not open input stream for $uriFile, permission may have been lost"))
 
-                    val nativeLibDir = applicationContext.applicationInfo.nativeLibraryDir
-                    val ffmpegBinary = File(nativeLibDir, "libfermux_ffmpeg.so")
-                    val ffprobeBinary = File(nativeLibDir, "libfermux_ffprobe.so")
+                val nativeLibDir = applicationContext.applicationInfo.nativeLibraryDir
+                val ffmpegBinary = File(nativeLibDir, "libfermux_ffmpeg.so")
+                val ffprobeBinary = File(nativeLibDir, "libfermux_ffprobe.so")
 
-                    if (!ffmpegBinary.exists() || !ffprobeBinary.exists()) {
-                         Log.d("ffmpegBinary", "FFmpeg lib binaries not found at: $ffmpegBinary, $ffprobeBinary")
-                         return failure(
-                              workDataOf("error" to "ffmpeg lib binary not found")
-                         )
-                    }
-
-                    @OptIn(InternalCoroutinesApi::class)
-                    suspend fun registerProcessCancellation(process: Process): DisposableHandle {
-                         return currentCoroutineContext()[Job]!!
-                              .invokeOnCompletion(
-                                   onCancelling = true,
-                                   invokeImmediately = true
-                              ) { cause ->
-                                   if (cause is CancellationException) {
-                                        process.destroy()
-                                   }
-                              }
-                    }
-
-                    val ffprobeInfo = ffprobeProgress(
-                         ffprobeBinary,
-                         tempFile,
-                         nativeLibDir
+                if (!ffmpegBinary.exists() || !ffprobeBinary.exists()) {
+                    Log.d("ffmpegBinary", "FFmpeg lib binaries not found at: $ffmpegBinary, $ffprobeBinary")
+                    return failure(
+                        workDataOf("error" to "ffmpeg lib binary not found")
                     )
+                }
 
-                    val process = withContext(Dispatchers.IO) {
-                         ProcessBuilder(
-                              buildList {
-                                   add(ffmpegBinary.absolutePath)
-                                   add("-progress")
-                                   add("pipe:1")
-                                   add("-nostats")
-                                   add("-hwaccel")
-                                   add("none")
-                                   add("-i")
-                                   add(tempFile.absolutePath)
-                                   addAll(args)
-                                   add("-y")
-                                   add(outputFile.absolutePath)
-                              }
-                         ).apply {
-                              environment()["LD_LIBRARY_PATH"] = nativeLibDir
-                              redirectErrorStream(true)
-                         }.start()
+                @OptIn(InternalCoroutinesApi::class)
+                suspend fun registerProcessCancellation(process: Process): DisposableHandle {
+                    return currentCoroutineContext()[Job]!!
+                        .invokeOnCompletion(
+                            onCancelling = true,
+                            invokeImmediately = true
+                        ) { cause ->
+                            if (cause is CancellationException) {
+                                process.destroy()
+                            }
+                        }
+                }
 
-                    }
-                    val cancellationHandle = registerProcessCancellation(process)
+                val ffprobeInfo = ffprobeProgress(
+                    ffprobeBinary,
+                    tempFile,
+                    nativeLibDir
+                )
 
-                    try {
-                         val output = StringBuilder()
-                         withContext(Dispatchers.IO) {
-                              BufferedReader(InputStreamReader(process.inputStream)).use { reader ->
-                                   var line: String?
-                                   var lastUpdateAt = 0L
-                                   var currentProgress = 0f
+                val process = withContext(Dispatchers.IO) {
+                    ProcessBuilder(
+                        buildList {
+                            add(ffmpegBinary.absolutePath)
+                            add("-progress")
+                            add("pipe:1")
+                            add("-nostats")
+                            add("-hwaccel")
+                            add("none")
+                            add("-i")
+                            add(tempFile.absolutePath)
+                            addAll(args)
+                            add("-y")
+                            add(outputFile.absolutePath)
+                        }
+                    ).apply {
+                        environment()["LD_LIBRARY_PATH"] = nativeLibDir
+                        redirectErrorStream(true)
+                    }.start()
 
-                                   while (reader.readLine().also { line = it } != null) {
-                                        val logOutput = line!!
-                                        output.appendLine(logOutput)
-                                        Log.d("Fermux FFmpeg Output", logOutput)
-                                        val now = System.currentTimeMillis()
-                                        var progressDoneSign = false
+                }
+                val cancellationHandle = registerProcessCancellation(process)
 
-                                        val separator = logOutput.indexOf("=")
-                                        if (separator > 0) {
-                                             val progressKey = logOutput.substring(0, separator)
-                                             val progressValue = logOutput.substring(separator + 1)
+                try {
+                    val output = StringBuilder()
+                    withContext(Dispatchers.IO) {
+                        BufferedReader(InputStreamReader(process.inputStream)).use { reader ->
+                            var line: String?
+                            var lastUpdateAt = 0L
+                            var currentProgress = 0f
 
-                                             when (progressKey) {
-                                                  "out_time_us", "out_time_ms" -> {
-                                                       val processedTime = progressValue.toLongOrNull()
-                                                       if (processedTime != null && ffprobeInfo != null && ffprobeInfo > 0L) {
-                                                            currentProgress = (
-                                                                    processedTime.toDouble() / ffprobeInfo.toDouble() * 100.0
-                                                                    ).toFloat().coerceIn(0f, 99.9f)
-                                                       }
-                                                  }
+                            while (reader.readLine().also { line = it } != null) {
+                                val logOutput = line!!
+                                output.appendLine(logOutput)
+                                Log.d("Fermux FFmpeg Output", logOutput)
+                                val now = System.currentTimeMillis()
+                                var progressDoneSign = false
 
-                                                  "progress" -> {
-                                                       if (progressValue == "end") {
-                                                            currentProgress = 100f
-                                                            progressDoneSign = true
-                                                       }
-                                                  }
-                                             }
+                                val separator = logOutput.indexOf("=")
+                                if (separator > 0) {
+                                    val progressKey = logOutput.substring(0, separator)
+                                    val progressValue = logOutput.substring(separator + 1)
+
+                                    when (progressKey) {
+                                        "out_time_us", "out_time_ms" -> {
+                                            val processedTime = progressValue.toLongOrNull()
+                                            if (processedTime != null && ffprobeInfo != null && ffprobeInfo > 0L) {
+                                                currentProgress = (
+                                                     processedTime.toDouble() / ffprobeInfo.toDouble() * 100.0
+                                                     ).toFloat().coerceIn(0f, 99.9f)
+                                            }
                                         }
 
-                                        if (now - lastUpdateAt >= 500L || progressDoneSign) {
-                                             lastUpdateAt = now
-                                             setProgress(
-                                                  workDataOf(
-                                                       "progress" to currentProgress,
-                                                       "line" to logOutput,
-                                                  )
-                                             )
-                                             ffmpegWorkNotif.notify(
-                                                  FFMPEG_NOTIFICATION_ID,
-                                                  createFFmpegNotif(
-                                                       progress = currentProgress.roundToInt(),
-                                                       text = logOutput
-                                                  )
-                                             )
+                                        "progress" -> {
+                                            if (progressValue == "end") {
+                                                currentProgress = 100f
+                                                progressDoneSign = true
+                                            }
                                         }
-                                   }
-                              }
-                         }
+                                    }
+                                }
 
-                         val exitCode = withContext(Dispatchers.IO) {
-                              process.waitFor()
-                         }
-                         if (exitCode == 0) {
-                              withContext(Dispatchers.IO) {
-                                   copyFileToDownloads(
-                                        applicationContext,
-                                        outputFile,
-                                        displayName,
-                                        subFolder = "fermux/converter"
-                                   )
-                                   Result.success()
-                              }
-                         } else {
-                              val logs = output.toString().take(8_000)
-                              Log.d("fermuxFFmpeg", "FFmpeg failed with rc: $exitCode\n$logs")
-                              failure(workDataOf("error" to logs))
-                         }
-                    } finally {
-                         cancellationHandle.dispose()
-                         if (process.isAlive) {
-                              process.destroyForcibly()
-                         }
+                                if (now - lastUpdateAt >= 500L || progressDoneSign) {
+                                    lastUpdateAt = now
+                                    setProgress(
+                                        workDataOf(
+                                            "progress" to currentProgress,
+                                            "line" to logOutput,
+                                        )
+                                    )
+                                    ffmpegWorkNotif.notify(
+                                        FFMPEG_NOTIFICATION_ID,
+                                        createFFmpegNotif(
+                                            progress = currentProgress.roundToInt(),
+                                            text = logOutput
+                                        )
+                                    )
+                                }
+                            }
+                        }
                     }
-               } catch (e: CancellationException) {
-                    Log.e("fermuxFFmpeg", "FFmpeg conversion cancelled id=$id stopReason=$stopReason", e)
-                    throw e
-               } finally {
-                    if (tempFile.exists()) tempFile.delete()
-                    if (outputFile.exists()) outputFile.delete()
-               }
-          } catch (e: Exception) {
-               Log.e("fermuxFFmpeg", "FFmpeg worker crashed", e)
-               val error = e.message
-                    ?.take(4_000)
-                    ?: "FFmpeg logging failed"
-               failure(workDataOf("error" to error))
-          }
-     }
+
+                    val exitCode = withContext(Dispatchers.IO) {
+                        process.waitFor()
+                    }
+                    if (exitCode == 0) {
+                        withContext(Dispatchers.IO) {
+                            copyFileToDownloads(
+                                applicationContext,
+                                outputFile,
+                                displayName,
+                                subFolder = "fermux/converter"
+                            )
+                            Result.success()
+                        }
+                    } else {
+                        val logs = output.toString().take(8_000)
+                        Log.d("fermuxFFmpeg", "FFmpeg failed with rc: $exitCode\n$logs")
+                        failure(workDataOf("error" to logs))
+                    }
+                } finally {
+                    cancellationHandle.dispose()
+                    if (process.isAlive) {
+                        process.destroyForcibly()
+                    }
+                }
+            } catch (e: CancellationException) {
+                Log.e("fermuxFFmpeg", "FFmpeg conversion cancelled id=$id stopReason=$stopReason", e)
+                throw e
+            } finally {
+                if (tempFile.exists()) tempFile.delete()
+                if (outputFile.exists()) outputFile.delete()
+            }
+        } catch (e: Exception) {
+            Log.e("fermuxFFmpeg", "FFmpeg worker crashed", e)
+            val error = e.message
+                ?.take(4_000)
+                ?: "FFmpeg logging failed"
+            failure(workDataOf("error" to error))
+        }
+    }
 }

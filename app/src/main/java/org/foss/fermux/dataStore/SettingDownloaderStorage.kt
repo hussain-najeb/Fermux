@@ -11,110 +11,109 @@ import org.foss.fermux.ytdlp.logic.oneTimeDownloader.*
 
 interface DownloaderSettingsRepo {
 
-     val downloadPath: Flow<String>
-     val downloaderBellState: Flow<Boolean>
-     val sleepRequest: Flow<Int>
-     val embedThumbnail: Flow<Boolean>
-     val quickJS: Flow<Boolean>
-     val fingerprinting: Flow<Boolean>
-     val aria2cMode: Flow<Aria2cMode>
-     val thumbnailFormat: Flow<ThumbnailFormat>
-     val audioFormat: Flow<AudioFormat>
-     val videoFormat: Flow<VideoFormat>
-     val videoComp: Flow<Boolean>
-     val externalDownloaders: Flow<ExternalDownloaders>
-     val ytdlpDetails: Flow<Boolean>
-     val sponsorBlock: Flow<Boolean>
-     val sponsorBlockCategories: Flow<Set<String>>
-     val playlistStatus: Flow<Boolean>
-     val history: Flow<Boolean>
-     val upToDate: Flow<Boolean>
-     val ytdlpChannel: Flow<YtdlpChannel>
-     val wifi: Flow<Connectivity>
-     val fragRetries: Flow<Int>
-     val retries: Flow<Int>
-     val quickDownloads: Flow<Boolean>
-     val ipvConnection: Flow<IpvConnection>
-     val quickFormat: Flow<QuickDownloadFormats>
-     val quickVideo: Flow<QuickVideoQuality>
-     val quickAudio: Flow<QuickAudioQuality>
-     val seqFormat: Flow<SeqFormat>
-     val seqAudio: Flow<SeqAudioQuality>
-     val seqVideo: Flow<SeqVideoQuality>
+    val downloadPath: Flow<String>
+    val downloaderBellState: Flow<Boolean>
+    val sleepRequest: Flow<Int>
+    val embedThumbnail: Flow<Boolean>
+    val quickJS: Flow<Boolean>
+    val fingerprinting: Flow<Boolean>
+    val aria2cMode: Flow<Aria2cMode>
+    val thumbnailFormat: Flow<ThumbnailFormat>
+    val audioFormat: Flow<AudioFormat>
+    val videoFormat: Flow<VideoFormat>
+    val videoComp: Flow<Boolean>
+    val externalDownloaders: Flow<ExternalDownloaders>
+    val ytdlpDetails: Flow<Boolean>
+    val sponsorBlock: Flow<Boolean>
+    val sponsorBlockCategories: Flow<Set<String>>
+    val playlistStatus: Flow<Boolean>
+    val history: Flow<Boolean>
+    val upToDate: Flow<Boolean>
+    val ytdlpChannel: Flow<YtdlpChannel>
+    val wifi: Flow<Connectivity>
+    val fragRetries: Flow<Int>
+    val retries: Flow<Int>
+    val quickDownloads: Flow<Boolean>
+    val ipvConnection: Flow<IpvConnection>
+    val quickFormat: Flow<QuickDownloadFormats>
+    val quickVideo: Flow<QuickVideoQuality>
+    val quickAudio: Flow<QuickAudioQuality>
+    val seqFormat: Flow<SeqFormat>
+    val seqAudio: Flow<SeqAudioQuality>
+    val seqVideo: Flow<SeqVideoQuality>
 
-     suspend fun setDownloadPath(value: String)
-     suspend fun setDownloaderBellState(value: Boolean)
-     suspend fun setSleepRequest(value: Int)
-     suspend fun setAria2cMode(value: Aria2cMode)
-     suspend fun setThumbnail(value: ThumbnailFormat)
-     suspend fun setAudioFormat(value: AudioFormat)
-     suspend fun setVideoFormat(value: VideoFormat)
-     suspend fun setVideoComp(value: Boolean)
-     suspend fun setExternalDownloader(value: ExternalDownloaders)
-     suspend fun setQuickJS(value: Boolean)
-     suspend fun setFingerprinting(value: Boolean)
-     suspend fun setEmbedThumbnail(value: Boolean)
-     suspend fun setHistory(value: Boolean)
-     suspend fun setPlaylistStatus(value: Boolean)
-     suspend fun setYtdlpDetails(value: Boolean)
-     suspend fun setSponsorBlock(value: Boolean)
-     suspend fun setSponsorBlockCategories(value: Set<String>)
-     suspend fun setUpToDate(value: Boolean)
-     suspend fun setWifi(value: Connectivity)
-     suspend fun setFragRetries(value: Int)
-     suspend fun setRetries(value: Int)
-     suspend fun setQuickDownloads(value: Boolean)
-     suspend fun setIpvConnection(value: IpvConnection)
-     suspend fun setYtdlpChannel(value: YtdlpChannel)
-     suspend fun resetArgs(): DownloaderArgumentsSnapshot
-     suspend fun restoreArgs(snapshot: DownloaderArgumentsSnapshot)
-     suspend fun resetYtdlp(): DownloaderSettingsSnapshot
-     suspend fun restoreYtdlp(snapshot: DownloaderSettingsSnapshot)
-     suspend fun setQuickFormat(value: QuickDownloadFormats)
-     suspend fun setQuickVideo(value: QuickVideoQuality)
-     suspend fun setQuickAudio(value: QuickAudioQuality)
-     suspend fun setSeqFormat(value: SeqFormat)
-     suspend fun setSeqVideo(value: SeqVideoQuality)
-     suspend fun setSeqAudio(value: SeqAudioQuality)
+    suspend fun setDownloadPath(value: String)
+    suspend fun setDownloaderBellState(value: Boolean)
+    suspend fun setSleepRequest(value: Int)
+    suspend fun setAria2cMode(value: Aria2cMode)
+    suspend fun setThumbnail(value: ThumbnailFormat)
+    suspend fun setAudioFormat(value: AudioFormat)
+    suspend fun setVideoFormat(value: VideoFormat)
+    suspend fun setVideoComp(value: Boolean)
+    suspend fun setExternalDownloader(value: ExternalDownloaders)
+    suspend fun setQuickJS(value: Boolean)
+    suspend fun setFingerprinting(value: Boolean)
+    suspend fun setEmbedThumbnail(value: Boolean)
+    suspend fun setHistory(value: Boolean)
+    suspend fun setPlaylistStatus(value: Boolean)
+    suspend fun setYtdlpDetails(value: Boolean)
+    suspend fun setSponsorBlock(value: Boolean)
+    suspend fun setSponsorBlockCategories(value: Set<String>)
+    suspend fun setUpToDate(value: Boolean)
+    suspend fun setWifi(value: Connectivity)
+    suspend fun setFragRetries(value: Int)
+    suspend fun setRetries(value: Int)
+    suspend fun setQuickDownloads(value: Boolean)
+    suspend fun setIpvConnection(value: IpvConnection)
+    suspend fun setYtdlpChannel(value: YtdlpChannel)
+    suspend fun resetArgs(): DownloaderArgumentsSnapshot
+    suspend fun restoreArgs(snapshot: DownloaderArgumentsSnapshot)
+    suspend fun resetYtdlp(): DownloaderSettingsSnapshot
+    suspend fun restoreYtdlp(snapshot: DownloaderSettingsSnapshot)
+    suspend fun setQuickFormat(value: QuickDownloadFormats)
+    suspend fun setQuickVideo(value: QuickVideoQuality)
+    suspend fun setQuickAudio(value: QuickAudioQuality)
+    suspend fun setSeqFormat(value: SeqFormat)
+    suspend fun setSeqVideo(value: SeqVideoQuality)
+    suspend fun setSeqAudio(value: SeqAudioQuality)
 }
 
 data class DownloaderSettingsSnapshot(
-     val downloadPath: String?,
-     val sleepRequest: Int?,
-     val aria2cMode: String?,
-     val ytdlpDetails: Boolean?,
-     val history: Boolean?,
-     val embedThumbnail: Boolean?,
-     val playlistStatus: Boolean?,
-     val sponsorBlock: Boolean?,
-     val sponsorBlockCategories: Set<String>?,
-     val quickJS: Boolean?,
-     val fingerprinting: Boolean?,
-     val externalDownloader: String?,
-     val wifi: String?,
-     val quickDownloads: Boolean?,
-     val quickDownloadFormats: String?,
-     val quickAudioQuality: String?,
-     val quickVideoQuality: String?,
-     val seqFormat: String?,
-     val seqVideo: String?,
-     val seqAudio: String?
+    val downloadPath: String?,
+    val sleepRequest: Int?,
+    val aria2cMode: String?,
+    val ytdlpDetails: Boolean?,
+    val history: Boolean?,
+    val embedThumbnail: Boolean?,
+    val playlistStatus: Boolean?,
+    val sponsorBlock: Boolean?,
+    val sponsorBlockCategories: Set<String>?,
+    val quickJS: Boolean?,
+    val fingerprinting: Boolean?,
+    val externalDownloader: String?,
+    val wifi: String?,
+    val quickDownloads: Boolean?,
+    val quickDownloadFormats: String?,
+    val quickAudioQuality: String?,
+    val quickVideoQuality: String?,
+    val seqFormat: String?,
+    val seqVideo: String?,
+    val seqAudio: String?
 )
 
 data class DownloaderArgumentsSnapshot(
-     val playlist: Boolean?,
-     val sleepRequest: Int?,
-     val fragRetries: Int?,
-     val retries: Int?,
-     val thumbnailFormat: String?,
-     val videoFormat: String?,
-     val audioFormat: String?,
-     val thumbnail: Boolean?,
-     val videoComp: Boolean?
+    val playlist: Boolean?,
+    val sleepRequest: Int?,
+    val fragRetries: Int?,
+    val retries: Int?,
+    val thumbnailFormat: String?,
+    val videoFormat: String?,
+    val audioFormat: String?,
+    val thumbnail: Boolean?,
+    val videoComp: Boolean?
 )
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings_tab")
-
 
 
 val DOWNLOAD_PATH = stringPreferencesKey("download_path")
@@ -152,379 +151,382 @@ val SEQ_VIDEO = stringPreferencesKey("seq_video")
 
 class DataStoreDownloaderSettings(private val settingStore: DataStore<Preferences>) : DownloaderSettingsRepo {
 
-     constructor(context: Context) : this(context.dataStore)
+    constructor(context: Context) : this(context.dataStore)
 
-     override val downloadPath: Flow<String> = settingStore.data.map { preferences -> preferences[DOWNLOAD_PATH] ?: "" }
-     override val downloaderBellState: Flow<Boolean> = settingStore.data.map { preferences -> preferences[DOWNLOADER_BELL_STATE] ?: false }
-     override val sleepRequest: Flow<Int> = settingStore.data.map { preferences -> preferences[SLEEP_REQUEST_KEY] ?: 0 }
-     override val fragRetries: Flow<Int> = settingStore.data.map { preferences -> preferences[FRAG_RETRIES] ?: 10 }
-     override val retries: Flow<Int> = settingStore.data.map { preferences -> preferences[RETRIES] ?: 10 }
-     override val embedThumbnail: Flow<Boolean> =
-          settingStore.data.map { preferences -> preferences[EMBED_THUMBNAIL] ?: true }
-     override val quickJS: Flow<Boolean> = settingStore.data.map { preferences -> preferences[QUICK_JS] ?: true }
-     override val fingerprinting: Flow<Boolean> = settingStore.data.map { preferences -> preferences[FINGERPRINT] ?: true }
-     override val aria2cMode: Flow<Aria2cMode> = settingStore.data.map { preferences ->
-          preferences[ARIA2C_MODE_KEY]
-               ?.let { runCatching { Aria2cMode.valueOf(it) }.getOrNull() }
-               ?: Aria2cMode.Disabled
-     }
-     override val thumbnailFormat: Flow<ThumbnailFormat> = settingStore.data.map { preferences ->
-          preferences[THUMBNAIL_FORMATS]
-               ?.let { runCatching { ThumbnailFormat.valueOf(it) }.getOrNull() }
-               ?: ThumbnailFormat.Png
-     }
+    override val downloadPath: Flow<String> = settingStore.data.map { preferences -> preferences[DOWNLOAD_PATH] ?: "" }
+    override val downloaderBellState: Flow<Boolean> =
+        settingStore.data.map { preferences -> preferences[DOWNLOADER_BELL_STATE] ?: false }
+    override val sleepRequest: Flow<Int> = settingStore.data.map { preferences -> preferences[SLEEP_REQUEST_KEY] ?: 0 }
+    override val fragRetries: Flow<Int> = settingStore.data.map { preferences -> preferences[FRAG_RETRIES] ?: 10 }
+    override val retries: Flow<Int> = settingStore.data.map { preferences -> preferences[RETRIES] ?: 10 }
+    override val embedThumbnail: Flow<Boolean> =
+        settingStore.data.map { preferences -> preferences[EMBED_THUMBNAIL] ?: true }
+    override val quickJS: Flow<Boolean> = settingStore.data.map { preferences -> preferences[QUICK_JS] ?: true }
+    override val fingerprinting: Flow<Boolean> =
+        settingStore.data.map { preferences -> preferences[FINGERPRINT] ?: true }
+    override val aria2cMode: Flow<Aria2cMode> = settingStore.data.map { preferences ->
+        preferences[ARIA2C_MODE_KEY]
+            ?.let { runCatching { Aria2cMode.valueOf(it) }.getOrNull() }
+            ?: Aria2cMode.Disabled
+    }
+    override val thumbnailFormat: Flow<ThumbnailFormat> = settingStore.data.map { preferences ->
+        preferences[THUMBNAIL_FORMATS]
+            ?.let { runCatching { ThumbnailFormat.valueOf(it) }.getOrNull() }
+            ?: ThumbnailFormat.Png
+    }
 
-     override val audioFormat: Flow<AudioFormat> = settingStore.data.map { preferences ->
-          preferences[AUDIO_FORMATS]
-               ?.let { runCatching { AudioFormat.valueOf(it) }.getOrNull() }
-               ?: AudioFormat.Mp3Format
-     }
+    override val audioFormat: Flow<AudioFormat> = settingStore.data.map { preferences ->
+        preferences[AUDIO_FORMATS]
+            ?.let { runCatching { AudioFormat.valueOf(it) }.getOrNull() }
+            ?: AudioFormat.Mp3Format
+    }
 
-     override val videoFormat: Flow<VideoFormat> = settingStore.data.map { preferences ->
-          preferences[VIDEO_FORMATS]
-               ?.let { runCatching { VideoFormat.valueOf(it) }.getOrNull() }
-               ?: VideoFormat.Mp4Format
-     }
+    override val videoFormat: Flow<VideoFormat> = settingStore.data.map { preferences ->
+        preferences[VIDEO_FORMATS]
+            ?.let { runCatching { VideoFormat.valueOf(it) }.getOrNull() }
+            ?: VideoFormat.Mp4Format
+    }
 
-     override val videoComp: Flow<Boolean> = settingStore.data.map { preferences ->
-          preferences[VIDEO_COMP] ?: false
-     }
+    override val videoComp: Flow<Boolean> = settingStore.data.map { preferences ->
+        preferences[VIDEO_COMP] ?: false
+    }
 
-     override val externalDownloaders: Flow<ExternalDownloaders> = settingStore.data.map { preferences ->
-          preferences[EXTERNAL_DOWNLOADER]
-               ?.let { runCatching { ExternalDownloaders.valueOf(it) }.getOrNull() } 
-               ?: ExternalDownloaders.YtdlpNativeDownloader
-     }
-     override val history: Flow<Boolean> =
-          settingStore.data.map { preferences -> preferences[HISTORY] ?: true }
-     override val ytdlpDetails: Flow<Boolean> =
-          settingStore.data.map { preferences -> preferences[DOWNLOADING_DETAILS] ?: true }
-     override val sponsorBlock: Flow<Boolean> =
-          settingStore.data.map { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] ?: true }
-     override val playlistStatus: Flow<Boolean> =
-          settingStore.data.map { preferences -> preferences[PLAYLIST_STATUS] ?: false }
-     override val sponsorBlockCategories: Flow<Set<String>> = settingStore.data.map { preferences ->
-          preferences[SPONSOR_BLOCK_CATEGORIES] ?: DEFAULT_SPONSOR_BLOCK_CATEGORIES
-     }
+    override val externalDownloaders: Flow<ExternalDownloaders> = settingStore.data.map { preferences ->
+        preferences[EXTERNAL_DOWNLOADER]
+            ?.let { runCatching { ExternalDownloaders.valueOf(it) }.getOrNull() }
+            ?: ExternalDownloaders.YtdlpNativeDownloader
+    }
+    override val history: Flow<Boolean> =
+        settingStore.data.map { preferences -> preferences[HISTORY] ?: true }
+    override val ytdlpDetails: Flow<Boolean> =
+        settingStore.data.map { preferences -> preferences[DOWNLOADING_DETAILS] ?: true }
+    override val sponsorBlock: Flow<Boolean> =
+        settingStore.data.map { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] ?: true }
+    override val playlistStatus: Flow<Boolean> =
+        settingStore.data.map { preferences -> preferences[PLAYLIST_STATUS] ?: false }
+    override val sponsorBlockCategories: Flow<Set<String>> = settingStore.data.map { preferences ->
+        preferences[SPONSOR_BLOCK_CATEGORIES] ?: DEFAULT_SPONSOR_BLOCK_CATEGORIES
+    }
 
-     override val upToDate: Flow<Boolean> = settingStore.data.map { preferences ->
-          preferences[UP_TO_DATE] ?: false
-     }
+    override val upToDate: Flow<Boolean> = settingStore.data.map { preferences ->
+        preferences[UP_TO_DATE] ?: false
+    }
 
-     override val ytdlpChannel: Flow<YtdlpChannel> = settingStore.data.map { preferences ->
-          preferences[YTDLP_CHANNEL]
-               ?.let { runCatching { YtdlpChannel.valueOf(it) }.getOrNull() }
-               ?: YtdlpChannel.Nightly
-     }
+    override val ytdlpChannel: Flow<YtdlpChannel> = settingStore.data.map { preferences ->
+        preferences[YTDLP_CHANNEL]
+            ?.let { runCatching { YtdlpChannel.valueOf(it) }.getOrNull() }
+            ?: YtdlpChannel.Nightly
+    }
 
-     override val wifi: Flow<Connectivity> = settingStore.data.map { preferences ->
-          preferences[WIFI]
-               ?.let { runCatching { Connectivity.valueOf(it) }.getOrNull() }
-               ?: Connectivity.Any
-     }
+    override val wifi: Flow<Connectivity> = settingStore.data.map { preferences ->
+        preferences[WIFI]
+            ?.let { runCatching { Connectivity.valueOf(it) }.getOrNull() }
+            ?: Connectivity.Any
+    }
 
-     override val ipvConnection: Flow<IpvConnection> = settingStore.data.map { preferences ->
-          preferences[IPV]
-               ?.let { runCatching { IpvConnection.valueOf(it) }.getOrNull() }
-               ?: IpvConnection.Disabled
-     }
+    override val ipvConnection: Flow<IpvConnection> = settingStore.data.map { preferences ->
+        preferences[IPV]
+            ?.let { runCatching { IpvConnection.valueOf(it) }.getOrNull() }
+            ?: IpvConnection.Disabled
+    }
 
-     override val quickDownloads: Flow<Boolean> = settingStore.data.map { preferences -> preferences[QUICK_DOWNLOADS] ?: true }
+    override val quickDownloads: Flow<Boolean> =
+        settingStore.data.map { preferences -> preferences[QUICK_DOWNLOADS] ?: true }
 
-     override val quickFormat: Flow<QuickDownloadFormats> = settingStore.data.map { preferences ->
-          preferences[QUICK_DOWNLOADS_FORMAT]
-               ?.let { runCatching { QuickDownloadFormats.valueOf(it) }.getOrNull() }
-               ?: QuickDownloadFormats.QuickVideo
-     }
+    override val quickFormat: Flow<QuickDownloadFormats> = settingStore.data.map { preferences ->
+        preferences[QUICK_DOWNLOADS_FORMAT]
+            ?.let { runCatching { QuickDownloadFormats.valueOf(it) }.getOrNull() }
+            ?: QuickDownloadFormats.QuickVideo
+    }
 
-     override val quickVideo: Flow<QuickVideoQuality> = settingStore.data.map { preferences ->
-          preferences[QUICK_DOWNLOADS_VIDEO]
-               ?.let { runCatching { QuickVideoQuality.valueOf(it) }.getOrNull() }
-               ?: QuickVideoQuality.HD1080
-     }
+    override val quickVideo: Flow<QuickVideoQuality> = settingStore.data.map { preferences ->
+        preferences[QUICK_DOWNLOADS_VIDEO]
+            ?.let { runCatching { QuickVideoQuality.valueOf(it) }.getOrNull() }
+            ?: QuickVideoQuality.HD1080
+    }
 
-     override val quickAudio: Flow<QuickAudioQuality> = settingStore.data.map { preferences ->
-          preferences[QUICK_DOWNLOADS_AUDIO]
-               ?.let { runCatching { QuickAudioQuality.valueOf(it) }.getOrNull() }
-               ?: QuickAudioQuality.Best
-     }
+    override val quickAudio: Flow<QuickAudioQuality> = settingStore.data.map { preferences ->
+        preferences[QUICK_DOWNLOADS_AUDIO]
+            ?.let { runCatching { QuickAudioQuality.valueOf(it) }.getOrNull() }
+            ?: QuickAudioQuality.Best
+    }
 
-     override val seqFormat: Flow<SeqFormat> = settingStore.data.map { preferences ->
-          preferences[SEQ_FORMAT]
-               ?.let { runCatching { SeqFormat.valueOf(it) }.getOrNull() }
-               ?: SeqFormat.SeqVideo
-     }
+    override val seqFormat: Flow<SeqFormat> = settingStore.data.map { preferences ->
+        preferences[SEQ_FORMAT]
+            ?.let { runCatching { SeqFormat.valueOf(it) }.getOrNull() }
+            ?: SeqFormat.SeqVideo
+    }
 
-     override val seqAudio: Flow<SeqAudioQuality> = settingStore.data.map { preferences ->
-          preferences[SEQ_AUDIO]
-               ?.let { runCatching { SeqAudioQuality.valueOf(it) }.getOrNull() }
-               ?: SeqAudioQuality.Best
-     }
+    override val seqAudio: Flow<SeqAudioQuality> = settingStore.data.map { preferences ->
+        preferences[SEQ_AUDIO]
+            ?.let { runCatching { SeqAudioQuality.valueOf(it) }.getOrNull() }
+            ?: SeqAudioQuality.Best
+    }
 
-     override val seqVideo: Flow<SeqVideoQuality> = settingStore.data.map { preferences ->
-          preferences[SEQ_VIDEO]
-               ?.let { runCatching { SeqVideoQuality.valueOf(it) }.getOrNull() }
-               ?: SeqVideoQuality.HD720
-     }
+    override val seqVideo: Flow<SeqVideoQuality> = settingStore.data.map { preferences ->
+        preferences[SEQ_VIDEO]
+            ?.let { runCatching { SeqVideoQuality.valueOf(it) }.getOrNull() }
+            ?: SeqVideoQuality.HD720
+    }
 
-     override suspend fun setDownloadPath(value: String) {
-          settingStore.edit { preferences -> preferences[DOWNLOAD_PATH] = value }
-     }
+    override suspend fun setDownloadPath(value: String) {
+        settingStore.edit { preferences -> preferences[DOWNLOAD_PATH] = value }
+    }
 
-     override suspend fun setDownloaderBellState(value: Boolean) {
-          settingStore.edit { preferences -> preferences[DOWNLOADER_BELL_STATE] = value }
-     }
+    override suspend fun setDownloaderBellState(value: Boolean) {
+        settingStore.edit { preferences -> preferences[DOWNLOADER_BELL_STATE] = value }
+    }
 
-     override suspend fun setSleepRequest(value: Int) {
-          settingStore.edit { preferences -> preferences[SLEEP_REQUEST_KEY] = value }
-     }
+    override suspend fun setSleepRequest(value: Int) {
+        settingStore.edit { preferences -> preferences[SLEEP_REQUEST_KEY] = value }
+    }
 
-     override suspend fun setFragRetries(value: Int) {
-          settingStore.edit { preferences -> preferences[FRAG_RETRIES] = value }
-     }
+    override suspend fun setFragRetries(value: Int) {
+        settingStore.edit { preferences -> preferences[FRAG_RETRIES] = value }
+    }
 
-     override suspend fun setRetries(value: Int) {
-          settingStore.edit { preferences -> preferences[RETRIES] = value }
-     }
+    override suspend fun setRetries(value: Int) {
+        settingStore.edit { preferences -> preferences[RETRIES] = value }
+    }
 
-     override suspend fun setAria2cMode(value: Aria2cMode) {
-          settingStore.edit { preferences ->
-               preferences[ARIA2C_MODE_KEY] = value.name
-               if (value != Aria2cMode.Disabled) {
-                    preferences[EXTERNAL_DOWNLOADER] = ExternalDownloaders.Disabled.name
-               }
-          }
-     }
+    override suspend fun setAria2cMode(value: Aria2cMode) {
+        settingStore.edit { preferences ->
+            preferences[ARIA2C_MODE_KEY] = value.name
+            if (value != Aria2cMode.Disabled) {
+                preferences[EXTERNAL_DOWNLOADER] = ExternalDownloaders.Disabled.name
+            }
+        }
+    }
 
-     override suspend fun setThumbnail(value: ThumbnailFormat) {
-          settingStore.edit { preferences ->
-               preferences[THUMBNAIL_FORMATS] = value.name
-          }
-     }
+    override suspend fun setThumbnail(value: ThumbnailFormat) {
+        settingStore.edit { preferences ->
+            preferences[THUMBNAIL_FORMATS] = value.name
+        }
+    }
 
-     override suspend fun setAudioFormat(value: AudioFormat) {
-          settingStore.edit { preferences ->
-               preferences[AUDIO_FORMATS] = value.name
-          }
-     }
+    override suspend fun setAudioFormat(value: AudioFormat) {
+        settingStore.edit { preferences ->
+            preferences[AUDIO_FORMATS] = value.name
+        }
+    }
 
-     override suspend fun setVideoFormat(value: VideoFormat) {
-          settingStore.edit { preferences ->
-               preferences[VIDEO_FORMATS] = value.name
-          }
-     }
+    override suspend fun setVideoFormat(value: VideoFormat) {
+        settingStore.edit { preferences ->
+            preferences[VIDEO_FORMATS] = value.name
+        }
+    }
 
-     override suspend fun setVideoComp(value: Boolean) {
-          settingStore.edit { preferences ->
-               preferences[VIDEO_COMP] = value
-          }
-     }
+    override suspend fun setVideoComp(value: Boolean) {
+        settingStore.edit { preferences ->
+            preferences[VIDEO_COMP] = value
+        }
+    }
 
-     override suspend fun setExternalDownloader(value: ExternalDownloaders) {
-          settingStore.edit { preferences ->
-               preferences[EXTERNAL_DOWNLOADER] = value.name
-               if (value != ExternalDownloaders.Disabled) {
-                    preferences[ARIA2C_MODE_KEY] = Aria2cMode.Disabled.name
-               }
-          }
-     }
+    override suspend fun setExternalDownloader(value: ExternalDownloaders) {
+        settingStore.edit { preferences ->
+            preferences[EXTERNAL_DOWNLOADER] = value.name
+            if (value != ExternalDownloaders.Disabled) {
+                preferences[ARIA2C_MODE_KEY] = Aria2cMode.Disabled.name
+            }
+        }
+    }
 
-     override suspend fun setQuickJS(value: Boolean) {
-          settingStore.edit { preferences -> preferences[QUICK_JS] = value }
-     }
+    override suspend fun setQuickJS(value: Boolean) {
+        settingStore.edit { preferences -> preferences[QUICK_JS] = value }
+    }
 
-     override suspend fun setFingerprinting(value: Boolean) {
-          settingStore.edit { preferences -> preferences[FINGERPRINT] = value }
-     }
+    override suspend fun setFingerprinting(value: Boolean) {
+        settingStore.edit { preferences -> preferences[FINGERPRINT] = value }
+    }
 
-     override suspend fun setEmbedThumbnail(value: Boolean) {
-          settingStore.edit { preferences -> preferences[EMBED_THUMBNAIL] = value }
-     }
+    override suspend fun setEmbedThumbnail(value: Boolean) {
+        settingStore.edit { preferences -> preferences[EMBED_THUMBNAIL] = value }
+    }
 
-     override suspend fun setHistory(value: Boolean) {
-          settingStore.edit { preferences -> preferences[HISTORY] = value }
-     }
+    override suspend fun setHistory(value: Boolean) {
+        settingStore.edit { preferences -> preferences[HISTORY] = value }
+    }
 
-     override suspend fun setPlaylistStatus(value: Boolean) {
-          settingStore.edit { preferences -> preferences[PLAYLIST_STATUS] = value }
-     }
+    override suspend fun setPlaylistStatus(value: Boolean) {
+        settingStore.edit { preferences -> preferences[PLAYLIST_STATUS] = value }
+    }
 
-     override suspend fun setYtdlpDetails(value: Boolean) {
-          settingStore.edit { preferences -> preferences[DOWNLOADING_DETAILS] = value }
-     }
+    override suspend fun setYtdlpDetails(value: Boolean) {
+        settingStore.edit { preferences -> preferences[DOWNLOADING_DETAILS] = value }
+    }
 
-     override suspend fun setSponsorBlock(value: Boolean) {
-          settingStore.edit { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] = value }
-     }
+    override suspend fun setSponsorBlock(value: Boolean) {
+        settingStore.edit { preferences -> preferences[SPONSOR_BLOCK_IMPLEMENTATION] = value }
+    }
 
-     override suspend fun setSponsorBlockCategories(value: Set<String>) {
-          settingStore.edit { preferences -> preferences[SPONSOR_BLOCK_CATEGORIES] = value }
-     }
+    override suspend fun setSponsorBlockCategories(value: Set<String>) {
+        settingStore.edit { preferences -> preferences[SPONSOR_BLOCK_CATEGORIES] = value }
+    }
 
-     override suspend fun setUpToDate(value: Boolean) {
-          settingStore.edit { preferences -> preferences[UP_TO_DATE] = value }
-     }
+    override suspend fun setUpToDate(value: Boolean) {
+        settingStore.edit { preferences -> preferences[UP_TO_DATE] = value }
+    }
 
-     override suspend fun setYtdlpChannel(value: YtdlpChannel) {
-          settingStore.edit { preferences -> preferences[YTDLP_CHANNEL] = value.name }
-     }
+    override suspend fun setYtdlpChannel(value: YtdlpChannel) {
+        settingStore.edit { preferences -> preferences[YTDLP_CHANNEL] = value.name }
+    }
 
-     override suspend fun setWifi(value: Connectivity) {
-          settingStore.edit { preferences -> preferences[WIFI] = value.name }
-     }
+    override suspend fun setWifi(value: Connectivity) {
+        settingStore.edit { preferences -> preferences[WIFI] = value.name }
+    }
 
-     override suspend fun setIpvConnection(value: IpvConnection) {
-          settingStore.edit { preferences -> preferences[IPV] = value.name }
-     }
+    override suspend fun setIpvConnection(value: IpvConnection) {
+        settingStore.edit { preferences -> preferences[IPV] = value.name }
+    }
 
-     override suspend fun setQuickDownloads(value: Boolean) {
-          settingStore.edit { preferences -> preferences[QUICK_DOWNLOADS] = value }
-     }
+    override suspend fun setQuickDownloads(value: Boolean) {
+        settingStore.edit { preferences -> preferences[QUICK_DOWNLOADS] = value }
+    }
 
-     override suspend fun setQuickAudio(value: QuickAudioQuality) {
-          settingStore.edit { preferences -> preferences[QUICK_DOWNLOADS_AUDIO] = value.name }
-     }
+    override suspend fun setQuickAudio(value: QuickAudioQuality) {
+        settingStore.edit { preferences -> preferences[QUICK_DOWNLOADS_AUDIO] = value.name }
+    }
 
-     override suspend fun setSeqFormat(value: SeqFormat) {
-          settingStore.edit { preferences -> preferences[SEQ_FORMAT] = value.name }
-     }
+    override suspend fun setSeqFormat(value: SeqFormat) {
+        settingStore.edit { preferences -> preferences[SEQ_FORMAT] = value.name }
+    }
 
-     override suspend fun setSeqVideo(value: SeqVideoQuality) {
-          settingStore.edit { preferences -> preferences[SEQ_VIDEO] = value.name }
-     }
+    override suspend fun setSeqVideo(value: SeqVideoQuality) {
+        settingStore.edit { preferences -> preferences[SEQ_VIDEO] = value.name }
+    }
 
-     override suspend fun setSeqAudio(value: SeqAudioQuality) {
-          settingStore.edit { preferences -> preferences[SEQ_AUDIO] = value.name }
-     }
+    override suspend fun setSeqAudio(value: SeqAudioQuality) {
+        settingStore.edit { preferences -> preferences[SEQ_AUDIO] = value.name }
+    }
 
-     override suspend fun setQuickVideo(value: QuickVideoQuality) {
-          settingStore.edit { preferences -> preferences[QUICK_DOWNLOADS_VIDEO] = value.name }
-     }
+    override suspend fun setQuickVideo(value: QuickVideoQuality) {
+        settingStore.edit { preferences -> preferences[QUICK_DOWNLOADS_VIDEO] = value.name }
+    }
 
-     override suspend fun setQuickFormat(value: QuickDownloadFormats) {
-          settingStore.edit { preferences -> preferences[QUICK_DOWNLOADS_FORMAT] = value.name }
-     }
+    override suspend fun setQuickFormat(value: QuickDownloadFormats) {
+        settingStore.edit { preferences -> preferences[QUICK_DOWNLOADS_FORMAT] = value.name }
+    }
 
-     override suspend fun resetArgs(): DownloaderArgumentsSnapshot {
-          lateinit var snapshot: DownloaderArgumentsSnapshot
-          settingStore.edit { preferences ->
-               snapshot = DownloaderArgumentsSnapshot(
-                    playlist = preferences[PLAYLIST_STATUS],
-                    sleepRequest = preferences[SLEEP_REQUEST_KEY],
-                    thumbnail = preferences[EMBED_THUMBNAIL],
-                    thumbnailFormat = preferences[THUMBNAIL_FORMATS],
-                    videoFormat = preferences[VIDEO_FORMATS],
-                    audioFormat = preferences[AUDIO_FORMATS],
-                    videoComp = preferences[VIDEO_COMP],
-                    fragRetries = preferences[FRAG_RETRIES],
-                    retries = preferences[RETRIES],
-               )
-               preferences.remove(key = PLAYLIST_STATUS)
-               preferences.remove(key = SLEEP_REQUEST_KEY)
-               preferences.remove(key = EMBED_THUMBNAIL)
-               preferences.remove(key = THUMBNAIL_FORMATS)
-               preferences.remove(key = VIDEO_COMP)
-               preferences.remove(key = VIDEO_FORMATS)
-               preferences.remove(key = AUDIO_FORMATS)
-               preferences.remove(key = RETRIES)
-               preferences.remove(key = FRAG_RETRIES)
-          }
-          return snapshot
-     }
+    override suspend fun resetArgs(): DownloaderArgumentsSnapshot {
+        lateinit var snapshot: DownloaderArgumentsSnapshot
+        settingStore.edit { preferences ->
+            snapshot = DownloaderArgumentsSnapshot(
+                playlist = preferences[PLAYLIST_STATUS],
+                sleepRequest = preferences[SLEEP_REQUEST_KEY],
+                thumbnail = preferences[EMBED_THUMBNAIL],
+                thumbnailFormat = preferences[THUMBNAIL_FORMATS],
+                videoFormat = preferences[VIDEO_FORMATS],
+                audioFormat = preferences[AUDIO_FORMATS],
+                videoComp = preferences[VIDEO_COMP],
+                fragRetries = preferences[FRAG_RETRIES],
+                retries = preferences[RETRIES],
+            )
+            preferences.remove(key = PLAYLIST_STATUS)
+            preferences.remove(key = SLEEP_REQUEST_KEY)
+            preferences.remove(key = EMBED_THUMBNAIL)
+            preferences.remove(key = THUMBNAIL_FORMATS)
+            preferences.remove(key = VIDEO_COMP)
+            preferences.remove(key = VIDEO_FORMATS)
+            preferences.remove(key = AUDIO_FORMATS)
+            preferences.remove(key = RETRIES)
+            preferences.remove(key = FRAG_RETRIES)
+        }
+        return snapshot
+    }
 
-     override suspend fun restoreArgs(snapshot: DownloaderArgumentsSnapshot) {
-               settingStore.edit { preferences ->
-                    preferences.restore(key = PLAYLIST_STATUS, snapshot.playlist)
-                    preferences.restore(key = SLEEP_REQUEST_KEY, snapshot.sleepRequest)
-                    preferences.restore(key = EMBED_THUMBNAIL, snapshot.thumbnail)
-                    preferences.restore(key = THUMBNAIL_FORMATS, snapshot.thumbnailFormat)
-                    preferences.restore(key = VIDEO_COMP, snapshot.videoComp)
-                    preferences.restore(key = VIDEO_FORMATS, snapshot.videoFormat)
-                    preferences.restore(key = AUDIO_FORMATS, snapshot.audioFormat)
-                    preferences.restore(key = FRAG_RETRIES, snapshot.fragRetries)
-                    preferences.restore(key = RETRIES, snapshot.retries)
-               }
-     }
+    override suspend fun restoreArgs(snapshot: DownloaderArgumentsSnapshot) {
+        settingStore.edit { preferences ->
+            preferences.restore(key = PLAYLIST_STATUS, snapshot.playlist)
+            preferences.restore(key = SLEEP_REQUEST_KEY, snapshot.sleepRequest)
+            preferences.restore(key = EMBED_THUMBNAIL, snapshot.thumbnail)
+            preferences.restore(key = THUMBNAIL_FORMATS, snapshot.thumbnailFormat)
+            preferences.restore(key = VIDEO_COMP, snapshot.videoComp)
+            preferences.restore(key = VIDEO_FORMATS, snapshot.videoFormat)
+            preferences.restore(key = AUDIO_FORMATS, snapshot.audioFormat)
+            preferences.restore(key = FRAG_RETRIES, snapshot.fragRetries)
+            preferences.restore(key = RETRIES, snapshot.retries)
+        }
+    }
 
 
-     override suspend fun resetYtdlp(): DownloaderSettingsSnapshot {
-          lateinit var snapshot: DownloaderSettingsSnapshot
-          settingStore.edit { preferences ->
-               snapshot = DownloaderSettingsSnapshot(
-                    downloadPath = preferences[DOWNLOAD_PATH],
-                    sleepRequest = preferences[SLEEP_REQUEST_KEY],
-                    aria2cMode = preferences[ARIA2C_MODE_KEY],
-                    ytdlpDetails = preferences[DOWNLOADING_DETAILS],
-                    history = preferences[HISTORY],
-                    embedThumbnail = preferences[EMBED_THUMBNAIL],
-                    playlistStatus = preferences[PLAYLIST_STATUS],
-                    sponsorBlock = preferences[SPONSOR_BLOCK_IMPLEMENTATION],
-                    sponsorBlockCategories = preferences[SPONSOR_BLOCK_CATEGORIES],
-                    quickJS = preferences[QUICK_JS],
-                    fingerprinting = preferences[FINGERPRINT],
-                    externalDownloader = preferences[EXTERNAL_DOWNLOADER],
-                    wifi = preferences[WIFI],
-                    quickDownloads = preferences[QUICK_DOWNLOADS],
-                    quickDownloadFormats = preferences[QUICK_DOWNLOADS_FORMAT],
-                    quickAudioQuality = preferences[QUICK_DOWNLOADS_AUDIO],
-                    quickVideoQuality = preferences[QUICK_DOWNLOADS_VIDEO],
-                    seqFormat = preferences[SEQ_FORMAT],
-                    seqVideo = preferences[SEQ_VIDEO],
-                    seqAudio = preferences[SEQ_AUDIO]
-               )
-               preferences.remove(key = DOWNLOAD_PATH)
-               preferences.remove(key = SLEEP_REQUEST_KEY)
-               preferences.remove(key = ARIA2C_MODE_KEY)
-               preferences.remove(key = DOWNLOADING_DETAILS)
-               preferences.remove(key = HISTORY)
-               preferences.remove(key = EMBED_THUMBNAIL)
-               preferences.remove(key = PLAYLIST_STATUS)
-               preferences.remove(key = SPONSOR_BLOCK_IMPLEMENTATION)
-               preferences.remove(key = SPONSOR_BLOCK_CATEGORIES)
-               preferences.remove(key = QUICK_JS)
-               preferences.remove(key = FINGERPRINT)
-               preferences.remove(key = EXTERNAL_DOWNLOADER)
-               preferences.remove(key = WIFI)
-               preferences.remove(key = QUICK_DOWNLOADS)
-               preferences.remove(key = QUICK_DOWNLOADS_VIDEO)
-               preferences.remove(key = QUICK_DOWNLOADS_AUDIO)
-               preferences.remove(key = QUICK_DOWNLOADS_FORMAT)
-               preferences.remove(key = SEQ_FORMAT)
-               preferences.remove(key = SEQ_VIDEO)
-               preferences.remove(key = SEQ_AUDIO)
-          }
-          return snapshot
-     }
+    override suspend fun resetYtdlp(): DownloaderSettingsSnapshot {
+        lateinit var snapshot: DownloaderSettingsSnapshot
+        settingStore.edit { preferences ->
+            snapshot = DownloaderSettingsSnapshot(
+                downloadPath = preferences[DOWNLOAD_PATH],
+                sleepRequest = preferences[SLEEP_REQUEST_KEY],
+                aria2cMode = preferences[ARIA2C_MODE_KEY],
+                ytdlpDetails = preferences[DOWNLOADING_DETAILS],
+                history = preferences[HISTORY],
+                embedThumbnail = preferences[EMBED_THUMBNAIL],
+                playlistStatus = preferences[PLAYLIST_STATUS],
+                sponsorBlock = preferences[SPONSOR_BLOCK_IMPLEMENTATION],
+                sponsorBlockCategories = preferences[SPONSOR_BLOCK_CATEGORIES],
+                quickJS = preferences[QUICK_JS],
+                fingerprinting = preferences[FINGERPRINT],
+                externalDownloader = preferences[EXTERNAL_DOWNLOADER],
+                wifi = preferences[WIFI],
+                quickDownloads = preferences[QUICK_DOWNLOADS],
+                quickDownloadFormats = preferences[QUICK_DOWNLOADS_FORMAT],
+                quickAudioQuality = preferences[QUICK_DOWNLOADS_AUDIO],
+                quickVideoQuality = preferences[QUICK_DOWNLOADS_VIDEO],
+                seqFormat = preferences[SEQ_FORMAT],
+                seqVideo = preferences[SEQ_VIDEO],
+                seqAudio = preferences[SEQ_AUDIO]
+            )
+            preferences.remove(key = DOWNLOAD_PATH)
+            preferences.remove(key = SLEEP_REQUEST_KEY)
+            preferences.remove(key = ARIA2C_MODE_KEY)
+            preferences.remove(key = DOWNLOADING_DETAILS)
+            preferences.remove(key = HISTORY)
+            preferences.remove(key = EMBED_THUMBNAIL)
+            preferences.remove(key = PLAYLIST_STATUS)
+            preferences.remove(key = SPONSOR_BLOCK_IMPLEMENTATION)
+            preferences.remove(key = SPONSOR_BLOCK_CATEGORIES)
+            preferences.remove(key = QUICK_JS)
+            preferences.remove(key = FINGERPRINT)
+            preferences.remove(key = EXTERNAL_DOWNLOADER)
+            preferences.remove(key = WIFI)
+            preferences.remove(key = QUICK_DOWNLOADS)
+            preferences.remove(key = QUICK_DOWNLOADS_VIDEO)
+            preferences.remove(key = QUICK_DOWNLOADS_AUDIO)
+            preferences.remove(key = QUICK_DOWNLOADS_FORMAT)
+            preferences.remove(key = SEQ_FORMAT)
+            preferences.remove(key = SEQ_VIDEO)
+            preferences.remove(key = SEQ_AUDIO)
+        }
+        return snapshot
+    }
 
-     override suspend fun restoreYtdlp(snapshot: DownloaderSettingsSnapshot) {
-          settingStore.edit { preferences ->
-               preferences.restore(DOWNLOAD_PATH, snapshot.downloadPath)
-               preferences.restore(SLEEP_REQUEST_KEY, snapshot.sleepRequest)
-               preferences.restore(ARIA2C_MODE_KEY, snapshot.aria2cMode)
-               preferences.restore(DOWNLOADING_DETAILS, snapshot.ytdlpDetails)
-               preferences.restore(HISTORY, snapshot.history)
-               preferences.restore(EMBED_THUMBNAIL, snapshot.embedThumbnail)
-               preferences.restore(PLAYLIST_STATUS, snapshot.playlistStatus)
-               preferences.restore(SPONSOR_BLOCK_IMPLEMENTATION, snapshot.sponsorBlock)
-               preferences.restore(SPONSOR_BLOCK_CATEGORIES, snapshot.sponsorBlockCategories)
-               preferences.restore(QUICK_JS, snapshot.quickJS)
-               preferences.restore(FINGERPRINT, snapshot.fingerprinting)
-               preferences.restore(EXTERNAL_DOWNLOADER, snapshot.externalDownloader)
-               preferences.restore(WIFI, snapshot.wifi)
-               preferences.restore(QUICK_DOWNLOADS, snapshot.quickDownloads)
-               preferences.restore(QUICK_DOWNLOADS_FORMAT, snapshot.quickDownloadFormats)
-               preferences.restore(QUICK_DOWNLOADS_AUDIO, snapshot.quickAudioQuality)
-               preferences.restore(QUICK_DOWNLOADS_VIDEO, snapshot.quickVideoQuality)
-               preferences.restore(SEQ_FORMAT, snapshot.seqFormat)
-               preferences.restore(SEQ_AUDIO, snapshot.seqAudio)
-               preferences.restore(SEQ_VIDEO, snapshot.seqVideo)
-          }
-     }
+    override suspend fun restoreYtdlp(snapshot: DownloaderSettingsSnapshot) {
+        settingStore.edit { preferences ->
+            preferences.restore(DOWNLOAD_PATH, snapshot.downloadPath)
+            preferences.restore(SLEEP_REQUEST_KEY, snapshot.sleepRequest)
+            preferences.restore(ARIA2C_MODE_KEY, snapshot.aria2cMode)
+            preferences.restore(DOWNLOADING_DETAILS, snapshot.ytdlpDetails)
+            preferences.restore(HISTORY, snapshot.history)
+            preferences.restore(EMBED_THUMBNAIL, snapshot.embedThumbnail)
+            preferences.restore(PLAYLIST_STATUS, snapshot.playlistStatus)
+            preferences.restore(SPONSOR_BLOCK_IMPLEMENTATION, snapshot.sponsorBlock)
+            preferences.restore(SPONSOR_BLOCK_CATEGORIES, snapshot.sponsorBlockCategories)
+            preferences.restore(QUICK_JS, snapshot.quickJS)
+            preferences.restore(FINGERPRINT, snapshot.fingerprinting)
+            preferences.restore(EXTERNAL_DOWNLOADER, snapshot.externalDownloader)
+            preferences.restore(WIFI, snapshot.wifi)
+            preferences.restore(QUICK_DOWNLOADS, snapshot.quickDownloads)
+            preferences.restore(QUICK_DOWNLOADS_FORMAT, snapshot.quickDownloadFormats)
+            preferences.restore(QUICK_DOWNLOADS_AUDIO, snapshot.quickAudioQuality)
+            preferences.restore(QUICK_DOWNLOADS_VIDEO, snapshot.quickVideoQuality)
+            preferences.restore(SEQ_FORMAT, snapshot.seqFormat)
+            preferences.restore(SEQ_AUDIO, snapshot.seqAudio)
+            preferences.restore(SEQ_VIDEO, snapshot.seqVideo)
+        }
+    }
 }
 
 private fun <T> MutablePreferences.restore(
-     key: Preferences.Key<T>,
-     value: T?
+    key: Preferences.Key<T>,
+    value: T?
 ) {
-     if (value == null) remove(key) else this[key] = value
+    if (value == null) remove(key) else this[key] = value
 }

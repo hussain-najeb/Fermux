@@ -10,75 +10,76 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class DownloadsDatabaseViewModel(
-     private val dao: DownloadsDao
-): ViewModel() {
+    private val dao: DownloadsDao
+) : ViewModel() {
 
-     companion object {
-          fun factory(context: Context) = viewModelFactory {
-               initializer {
-                    DownloadsDatabaseViewModel(
-                         DownloaderDb.getDatabase(context).downloadsDao
-                    )
-               }
-          }
-     }
+    companion object {
+        fun factory(context: Context) = viewModelFactory {
+            initializer {
+                DownloadsDatabaseViewModel(
+                    DownloaderDb.getDatabase(context).downloadsDao
+                )
+            }
+        }
+    }
 
-     private val _sorting = MutableStateFlow(DownloadsSorter.TitleASC)
-     private val _state = MutableStateFlow(DownloadsStateManager())
-     @OptIn(ExperimentalCoroutinesApi::class)
-     private val _downloadSorter = _sorting.flatMapLatest { sorter ->
-          when(sorter) {
-               DownloadsSorter.SizeASC -> dao.getDownloadsOrderedBySizeASC()
-               DownloadsSorter.TitleASC -> dao.getDownloadsOrderedByTitleASC()
-               DownloadsSorter.TitleDESC -> dao.getDownloadsOrderByTitleDESC()
-               DownloadsSorter.SizeDESC -> dao.getDownloadsOrderBySizeDESC()
-          }
-     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+    private val _sorting = MutableStateFlow(DownloadsSorter.TitleASC)
+    private val _state = MutableStateFlow(DownloadsStateManager())
 
-     val state = combine(_state, _sorting, _downloadSorter) { state, sortType, downloadSorter ->
-           state.copy(
-                sorting = sortType,
-                downloads = downloadSorter
-           )
-     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(2500), DownloadsStateManager())
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val _downloadSorter = _sorting.flatMapLatest { sorter ->
+        when (sorter) {
+            DownloadsSorter.SizeASC -> dao.getDownloadsOrderedBySizeASC()
+            DownloadsSorter.TitleASC -> dao.getDownloadsOrderedByTitleASC()
+            DownloadsSorter.TitleDESC -> dao.getDownloadsOrderByTitleDESC()
+            DownloadsSorter.SizeDESC -> dao.getDownloadsOrderBySizeDESC()
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
-     fun showDeleteDialog(item: DownloadsDatabaseField) {
-          _state.update { it.copy(isDeleting = true, selectedDelete = item) }
-     }
+    val state = combine(_state, _sorting, _downloadSorter) { state, sortType, downloadSorter ->
+        state.copy(
+            sorting = sortType,
+            downloads = downloadSorter
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(2500), DownloadsStateManager())
 
-     fun hideDeleteDialog() {
-          _state.update { it.copy(isDeleting = false, selectedDelete = null) }
-     }
+    fun showDeleteDialog(item: DownloadsDatabaseField) {
+        _state.update { it.copy(isDeleting = true, selectedDelete = item) }
+    }
 
-     fun showBottomSheet(item: DownloadsDatabaseField) {
-          _state.update { it.copy(isViewingInfo = true, selectedEntry = item) }
-     }
+    fun hideDeleteDialog() {
+        _state.update { it.copy(isDeleting = false, selectedDelete = null) }
+    }
 
-     fun hideBottomSheet() {
-          _state.update { it.copy(isViewingInfo = false, selectedEntry = null) }
-     }
+    fun showBottomSheet(item: DownloadsDatabaseField) {
+        _state.update { it.copy(isViewingInfo = true, selectedEntry = item) }
+    }
 
-     fun deleteDownload(item: DownloadsDatabaseField) {
-          viewModelScope.launch {
-               dao.deleteDownload(item)
-               _state.update { it.copy(isDeleting = false, selectedDelete = null) }
-          }
-     }
+    fun hideBottomSheet() {
+        _state.update { it.copy(isViewingInfo = false, selectedEntry = null) }
+    }
 
-     fun titleSorter() {
-          _sorting.value = when(_sorting.value) {
-               DownloadsSorter.TitleASC -> DownloadsSorter.TitleDESC
-               DownloadsSorter.TitleDESC -> DownloadsSorter.TitleASC
-               else -> DownloadsSorter.TitleASC
-          }
-     }
+    fun deleteDownload(item: DownloadsDatabaseField) {
+        viewModelScope.launch {
+            dao.deleteDownload(item)
+            _state.update { it.copy(isDeleting = false, selectedDelete = null) }
+        }
+    }
 
-     fun sizeSorter() {
-          _sorting.value = when(_sorting.value) {
-               DownloadsSorter.SizeASC -> DownloadsSorter.SizeDESC
-               DownloadsSorter.SizeDESC -> DownloadsSorter.SizeASC
-               else -> DownloadsSorter.SizeASC
-          }
-     }
+    fun titleSorter() {
+        _sorting.value = when (_sorting.value) {
+            DownloadsSorter.TitleASC -> DownloadsSorter.TitleDESC
+            DownloadsSorter.TitleDESC -> DownloadsSorter.TitleASC
+            else -> DownloadsSorter.TitleASC
+        }
+    }
+
+    fun sizeSorter() {
+        _sorting.value = when (_sorting.value) {
+            DownloadsSorter.SizeASC -> DownloadsSorter.SizeDESC
+            DownloadsSorter.SizeDESC -> DownloadsSorter.SizeASC
+            else -> DownloadsSorter.SizeASC
+        }
+    }
 
 }

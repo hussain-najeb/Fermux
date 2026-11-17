@@ -85,10 +85,10 @@ class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWork
 
     private fun showFailure(message: String) {
         val granted = Build.VERSION.SDK_INT < 33 ||
-            ContextCompat.checkSelfPermission(
-                applicationContext,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
+             ContextCompat.checkSelfPermission(
+                 applicationContext,
+                 Manifest.permission.POST_NOTIFICATIONS
+             ) == PackageManager.PERMISSION_GRANTED
 
         if (granted) {
             NotificationManagerCompat.from(applicationContext)

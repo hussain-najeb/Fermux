@@ -10,52 +10,52 @@ import org.foss.fermux.ffmpeg.logic.MediaKind
 
 @Composable
 fun FormatList(
-     ffmpegViewModel: FFmpegViewModel
+    ffmpegViewModel: FFmpegViewModel
 ) {
 
-     var pickedKind by remember { mutableStateOf(MediaKind.Idle) }
-     val spatialSpec = MaterialTheme.motionScheme
-     val context = LocalContext.current
+    var pickedKind by remember { mutableStateOf(MediaKind.Idle) }
+    val spatialSpec = MaterialTheme.motionScheme
+    val context = LocalContext.current
 
-     AnimatedContent(
-          targetState = pickedKind,
-          transitionSpec = {
-               (slideInVertically(
-                    animationSpec = spatialSpec.slowSpatialSpec(),
-                    initialOffsetY = { -it }
-               ) + fadeIn(initialAlpha = 0.1f))
-                    .togetherWith(
-                         exit = slideOutVertically(
-                              animationSpec = spatialSpec.slowSpatialSpec(),
-                              targetOffsetY = { -it }
-                         ) + fadeOut(targetAlpha = 0.1f)
-                    )
-          },
-          label = "DownloaderCardTransition",
-     ) { targetState ->
-          when (targetState) {
-               MediaKind.Idle -> IdleConversionState(
-                    onPick = { pickedKind = it }
-               )
+    AnimatedContent(
+        targetState = pickedKind,
+        transitionSpec = {
+            (slideInVertically(
+                animationSpec = spatialSpec.slowSpatialSpec(),
+                initialOffsetY = { -it }
+            ) + fadeIn(initialAlpha = 0.1f))
+                .togetherWith(
+                    exit = slideOutVertically(
+                        animationSpec = spatialSpec.slowSpatialSpec(),
+                        targetOffsetY = { -it }
+                    ) + fadeOut(targetAlpha = 0.1f)
+                )
+        },
+        label = "DownloaderCardTransition",
+    ) { targetState ->
+        when (targetState) {
+            MediaKind.Idle -> IdleConversionState(
+                onPick = { pickedKind = it }
+            )
 
-               MediaKind.Audio -> AudioConversionState(
-                    ffmpegViewModel,
-                    onBack = { pickedKind = MediaKind.Idle }
-               )
+            MediaKind.Audio -> AudioConversionState(
+                ffmpegViewModel,
+                onBack = { pickedKind = MediaKind.Idle }
+            )
 
-               MediaKind.Video -> VideoConversionState(
-                    ffmpegViewModel,
-                    onBack = { pickedKind = MediaKind.Idle }
-               )
+            MediaKind.Video -> VideoConversionState(
+                ffmpegViewModel,
+                onBack = { pickedKind = MediaKind.Idle }
+            )
 
-               MediaKind.Image -> ImageConversionState(
-                    ffmpegViewModel,
-                    onBack = { pickedKind = MediaKind.Idle }
-               )
+            MediaKind.Image -> ImageConversionState(
+                ffmpegViewModel,
+                onBack = { pickedKind = MediaKind.Idle }
+            )
 
-               MediaKind.Cancel -> {
-                    ffmpegViewModel.cancelButton(context)
-               }
-          }
-     }
+            MediaKind.Cancel -> {
+                ffmpegViewModel.cancelButton(context)
+            }
+        }
+    }
 }

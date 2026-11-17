@@ -28,71 +28,71 @@ import org.foss.fermux.utils.openUrl
 
 @Composable
 fun AboutPage(navController: NavController) {
-     val context = LocalContext.current
-     val versionName = remember { context.getAppVersionName() }
+    val context = LocalContext.current
+    val versionName = remember { context.getAppVersionName() }
 
-     val aboutSettingLists = listOf(
-          InfoListClass(
-               title = "README Page",
-               description = "Check Github Repo for more info",
-               icon = Icons.Default.Description,
-               liner = true,
-               content = {
-                    FilterButton(
-                         modifier = Modifier.padding(3.dp),
-                         border = true,
-                         image = R.drawable.open_link,
-                         onClick = {
-                              context.openUrl("https://github.com/hussain-najeb/Fermux")
-                         }
-                    )
-               },
-               position = TilePosition.SOLO
-          ),
-          InfoListClass(
-               title = "App Version",
-               description = "The current version of the app is $versionName",
-               icon = Icons.Outlined.Info,
-               position = TilePosition.SOLO
-          ),
-          InfoListClass(
-               title = "Dependency And Library Versions",
-               description = "Press to see all the versions of dependencies and libraries the app uses",
-               image = R.drawable.library,
-               onClick = { navController.navigate(SettingsScreens.LibraryPage.route) },
-               position = TilePosition.SOLO // TODO. Add link buttons for each dependency, also fix it by adding the same dialog based stuff in ffmpeg and downloader to it.
-          )
-     )
+    val aboutSettingLists = listOf(
+        InfoListClass(
+            title = "README Page",
+            description = "Check Github Repo for more info",
+            icon = Icons.Default.Description,
+            liner = true,
+            content = {
+                FilterButton(
+                    modifier = Modifier.padding(3.dp),
+                    border = true,
+                    image = R.drawable.open_link,
+                    onClick = {
+                        context.openUrl("https://github.com/hussain-najeb/Fermux")
+                    }
+                )
+            },
+            position = TilePosition.SOLO
+        ),
+        InfoListClass(
+            title = "App Version",
+            description = "The current version of the app is $versionName",
+            icon = Icons.Outlined.Info,
+            position = TilePosition.SOLO
+        ),
+        InfoListClass(
+            title = "Dependency And Library Versions",
+            description = "Press to see all the versions of dependencies and libraries the app uses",
+            image = R.drawable.library,
+            onClick = { navController.navigate(SettingsScreens.LibraryPage.route) },
+            position = TilePosition.SOLO // TODO. Add link buttons for each dependency, also fix it by adding the same dialog based stuff in ffmpeg and downloader to it.
+        )
+    )
 
 
-     LargeTopBarScaffold(
-          title = "About Page",
-          onBack = navController::popBackStack
-     ) { paddingValues ->
-          Column(
-               modifier = Modifier
-                    .fillMaxSize()
-                    .background(FermuxColors.background)
-                    .verticalScroll(rememberScrollState())
-                    .padding(paddingValues)
-          ) {
+    LargeTopBarScaffold(
+        title = "About Page",
+        onBack = navController::popBackStack
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(FermuxColors.background)
+                .verticalScroll(rememberScrollState())
+                .padding(paddingValues)
+        ) {
 
-               aboutSettingLists.forEach { aboutList ->
-                    TileOptions(
-                         title = aboutList.title,
-                         description = aboutList.description,
-                         shape = aboutList.position.TileShaper(),
-                         icon = aboutList.icon,
-                         image = aboutList.image,
-                         onClick = {
-                              aboutList.onClick?.invoke()
-                              aboutList.route?.let { navController.navigate(it) }
-                         },
-                         content = aboutList.content,
-                         liner = aboutList.liner,
-                         trailingContent = aboutList.trailingContent
-                    )
-               }
-          }
-     }
+            aboutSettingLists.forEach { aboutList ->
+                TileOptions(
+                    title = aboutList.title,
+                    description = aboutList.description,
+                    shape = aboutList.position.TileShaper(),
+                    icon = aboutList.icon,
+                    image = aboutList.image,
+                    onClick = {
+                        aboutList.onClick?.invoke()
+                        aboutList.route?.let { navController.navigate(it) }
+                    },
+                    content = aboutList.content,
+                    liner = aboutList.liner,
+                    trailingContent = aboutList.trailingContent
+                )
+            }
+        }
+    }
 }

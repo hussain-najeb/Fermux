@@ -15,55 +15,55 @@ import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.MidConversionProcess
 
 @Composable
 fun FFmepgState(
-     state: FFmpegStatus,
-     ffmpegViewModel: FFmpegViewModel,
-     navController: NavController
+    state: FFmpegStatus,
+    ffmpegViewModel: FFmpegViewModel,
+    navController: NavController
 ) {
 
-     val spatialSpec = MaterialTheme.motionScheme
-     val context = LocalContext.current
+    val spatialSpec = MaterialTheme.motionScheme
+    val context = LocalContext.current
 
-     AnimatedContent(
-          targetState = state,
-          transitionSpec = {
-               (slideInVertically(
-                    animationSpec = spatialSpec.slowSpatialSpec(),
-                    initialOffsetY = { -it }
-               ) + fadeIn(initialAlpha = 0.1f))
-                    .togetherWith(
-                         exit = slideOutVertically(
-                              animationSpec = spatialSpec.slowSpatialSpec(),
-                              targetOffsetY = { -it }
-                         ) + fadeOut(targetAlpha = 0.1f)
-                    )
-          },
-          label = "ffmpegCardTransition",
-          contentKey = { it::class }
-     ) { targetState ->
-          when (targetState) {
-               is FFmpegStatus.Idle -> {
-                    IdleCard()
-               }
+    AnimatedContent(
+        targetState = state,
+        transitionSpec = {
+            (slideInVertically(
+                animationSpec = spatialSpec.slowSpatialSpec(),
+                initialOffsetY = { -it }
+            ) + fadeIn(initialAlpha = 0.1f))
+                .togetherWith(
+                    exit = slideOutVertically(
+                        animationSpec = spatialSpec.slowSpatialSpec(),
+                        targetOffsetY = { -it }
+                    ) + fadeOut(targetAlpha = 0.1f)
+                )
+        },
+        label = "ffmpegCardTransition",
+        contentKey = { it::class }
+    ) { targetState ->
+        when (targetState) {
+            is FFmpegStatus.Idle -> {
+                IdleCard()
+            }
 
-               is FFmpegStatus.MidConversion -> {
-                    MidConversionProcess()
-               }
+            is FFmpegStatus.MidConversion -> {
+                MidConversionProcess()
+            }
 
-               is FFmpegStatus.Converting -> {
-                    ConversionCard(targetState.progress, targetState.inputUri, navController = navController)
-               }
+            is FFmpegStatus.Converting -> {
+                ConversionCard(targetState.progress, targetState.inputUri, navController = navController)
+            }
 
-               is FFmpegStatus.Loaded -> {
-                    ConversionCard(progress = 100f, targetState.inputUri, navController = navController)
-               }
+            is FFmpegStatus.Loaded -> {
+                ConversionCard(progress = 100f, targetState.inputUri, navController = navController)
+            }
 
-               is FFmpegStatus.Error -> {
-                    FFmpegErrorMassage(
-                         errorMessage = targetState.flavourMessage,
-                         rawError = targetState.rawError,
-                         onCancel = { ffmpegViewModel.cancelButton(context) }
-                    )
-               }
-          }
-     }
+            is FFmpegStatus.Error -> {
+                FFmpegErrorMassage(
+                    errorMessage = targetState.flavourMessage,
+                    rawError = targetState.rawError,
+                    onCancel = { ffmpegViewModel.cancelButton(context) }
+                )
+            }
+        }
+    }
 }

@@ -25,64 +25,64 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun IdleCard(
-     ffmpegViewModel: FFmpegViewModel = viewModel(
-          viewModelStoreOwner = LocalActivity.current as ComponentActivity
-     )
+    ffmpegViewModel: FFmpegViewModel = viewModel(
+        viewModelStoreOwner = LocalActivity.current as ComponentActivity
+    )
 ) {
-     val context = LocalContext.current
+    val context = LocalContext.current
 
-     val fileLauncher = rememberLauncherForActivityResult(
-          contract = ActivityResultContracts.OpenDocument()
-     ) { uri ->
-          ffmpegViewModel.inputUri = uri
-          if (uri != null) {
-               context.contentResolver.takePersistableUriPermission(
-                    uri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION
-               )
-               ffmpegViewModel.updateInputKind(context)
-               if (ffmpegViewModel.inputKind == null) {
-                    ffmpegViewModel.typeErrorClarification(context)
-               } else {
-                    ffmpegViewModel.state = FFmpegStatus.MidConversion(inputUri = uri)
-               }
-          }
-     }
+    val fileLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        ffmpegViewModel.inputUri = uri
+        if (uri != null) {
+            context.contentResolver.takePersistableUriPermission(
+                uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+            ffmpegViewModel.updateInputKind(context)
+            if (ffmpegViewModel.inputKind == null) {
+                ffmpegViewModel.typeErrorClarification(context)
+            } else {
+                ffmpegViewModel.state = FFmpegStatus.MidConversion(inputUri = uri)
+            }
+        }
+    }
 
 
-     Column(
-          modifier = Modifier
-               .fillMaxSize()
-     ) {
-          FFmpegCard(
-               modifier = Modifier.padding(15.dp)
-          ) {
-               if (ffmpegViewModel.inputUri == null) {
-                    Column(
-                         modifier = Modifier
-                              .aspectRatio(16f / 9f),
-                         verticalArrangement = Arrangement.Center,
-                         horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                         Text(
-                              text = "Upload A File",
-                              fontSize = 20.sp,
-                              fontWeight = W500,
-                              color = FermuxColors.white,
-                         )
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        FFmpegCard(
+            modifier = Modifier.padding(15.dp)
+        ) {
+            if (ffmpegViewModel.inputUri == null) {
+                Column(
+                    modifier = Modifier
+                        .aspectRatio(16f / 9f),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Upload A File",
+                        fontSize = 20.sp,
+                        fontWeight = W500,
+                        color = FermuxColors.white,
+                    )
 
-                         Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
-                         FilterButton(
-                              image = R.drawable.upload,
-                              activeColor = FermuxColors.fermuxFFmpegGreen,
-                              activeIconColor = FermuxColors.white,
-                              onClick = {
-                                   fileLauncher.launch(arrayOf("*/*"))
-                              }
-                         )
-                    }
-               } // TODO. Add the crop and edit stuff in the same thing like the downloader, a sidebar type of thing.
-          }
-     }
+                    FilterButton(
+                        image = R.drawable.upload,
+                        activeColor = FermuxColors.fermuxFFmpegGreen,
+                        activeIconColor = FermuxColors.white,
+                        onClick = {
+                            fileLauncher.launch(arrayOf("*/*"))
+                        }
+                    )
+                }
+            } // TODO. Add the crop and edit stuff in the same thing like the downloader, a sidebar type of thing.
+        }
+    }
 }

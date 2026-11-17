@@ -69,9 +69,9 @@ fun LoadingCard(
             "Any Second Now...",
             "Well, This Is Awkward...",
         )
-     var loadingMessage by remember { mutableStateOf(message.random()) }
-     val shuffledMessages = (message.shuffled())
-     var index by remember { mutableIntStateOf(0) }
+    var loadingMessage by remember { mutableStateOf(message.random()) }
+    val shuffledMessages = (message.shuffled())
+    var index by remember { mutableIntStateOf(0) }
 
     Column(modifier = Modifier.fillMaxWidth()) {
 

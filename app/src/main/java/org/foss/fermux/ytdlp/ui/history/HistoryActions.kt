@@ -17,60 +17,60 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun HistoryActions(
-     expanded: Boolean,
-     onDelete: () -> Unit,
-     onMoreInfo: () -> Unit,
-     onCopyUrl: () -> Unit
+    expanded: Boolean,
+    onDelete: () -> Unit,
+    onMoreInfo: () -> Unit,
+    onCopyUrl: () -> Unit
 ) {
-     AnimatedVisibility(
-          visible = expanded,
-          enter = expandVertically(
-               expandFrom = Alignment.Top,
-               animationSpec = tween(150)
-          ) + fadeIn(),
-          exit = shrinkVertically(
-               shrinkTowards = Alignment.Top,
-               animationSpec = tween(100)
-          ) + fadeOut()
-     ) {
-          Surface(
-               modifier = Modifier
-                    .padding(6.dp)
+    AnimatedVisibility(
+        visible = expanded,
+        enter = expandVertically(
+            expandFrom = Alignment.Top,
+            animationSpec = tween(150)
+        ) + fadeIn(),
+        exit = shrinkVertically(
+            shrinkTowards = Alignment.Top,
+            animationSpec = tween(100)
+        ) + fadeOut()
+    ) {
+        Surface(
+            modifier = Modifier
+                .padding(6.dp)
+                .fillMaxWidth(),
+            color = FermuxColors.darkPurple,
+            shape = RoundedCornerShape(8.dp),
+            border = BorderStroke(1.dp, FermuxColors.mutedBlue)
+        ) {
+            Row(
+                modifier = Modifier
                     .fillMaxWidth(),
-               color = FermuxColors.darkPurple,
-               shape = RoundedCornerShape(8.dp),
-               border = BorderStroke(1.dp, FermuxColors.mutedBlue)
-          ) {
-               Row(
-                    modifier = Modifier
-                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-               ) {
-                    Box {
-                         SmallActionButton(
-                              modifier = Modifier
-                                   .padding(3.dp),
-                              onClick = onDelete,
-                              image = R.drawable.trash
-                         )
-                    }
-                    Box{
-                         SmallActionButton(
-                              modifier = Modifier
-                                   .padding(3.dp),
-                              onClick = onMoreInfo,
-                              image = R.drawable.more_info
-                         )
-                    }
-                    Box {
-                         SmallActionButton(
-                              modifier = Modifier
-                                   .padding(3.dp),
-                              onClick = onCopyUrl,
-                              image = R.drawable.copy
-                         )
-                    }
-               }
-          }
-     }
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Box {
+                    SmallActionButton(
+                        modifier = Modifier
+                            .padding(3.dp),
+                        onClick = onDelete,
+                        image = R.drawable.trash
+                    )
+                }
+                Box {
+                    SmallActionButton(
+                        modifier = Modifier
+                            .padding(3.dp),
+                        onClick = onMoreInfo,
+                        image = R.drawable.more_info
+                    )
+                }
+                Box {
+                    SmallActionButton(
+                        modifier = Modifier
+                            .padding(3.dp),
+                        onClick = onCopyUrl,
+                        image = R.drawable.copy
+                    )
+                }
+            }
+        }
+    }
 }

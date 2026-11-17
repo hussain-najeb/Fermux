@@ -6,63 +6,63 @@ import org.foss.fermux.ffmpeg.logic.MediaKind
 
 
 fun buildDynamicFFmpegArgs(
-     targetFormat: FFmpegTargetFormat,
-     prefs: FFmpegUserPrefs
+    targetFormat: FFmpegTargetFormat,
+    prefs: FFmpegUserPrefs
 ): List<String> {
-     val args = targetFormat.ffmpegExtraArgs.toMutableList()
+    val args = targetFormat.ffmpegExtraArgs.toMutableList()
 
-     when (targetFormat.category) {
+    when (targetFormat.category) {
 
-          MediaKind.Video -> {
-               val profile = requireNotNull(targetFormat.videoEncodingProfile) {
-                    "Missing video encoding profile for $targetFormat"
-               }
-               val wantsVideoReencode = prefs.enableVideoCompression
-               val wantsAudioReencode = prefs.audioBitrate != null || prefs.normalizeAudio || prefs.monoDownmix
+        MediaKind.Video -> {
+            val profile = requireNotNull(targetFormat.videoEncodingProfile) {
+                "Missing video encoding profile for $targetFormat"
+            }
+            val wantsVideoReencode = prefs.enableVideoCompression
+            val wantsAudioReencode = prefs.audioBitrate != null || prefs.normalizeAudio || prefs.monoDownmix
 
-               if (wantsVideoReencode) {
-                    if (prefs.useHardwareEncoder) {
-                         args += profile.hardwareVideoArgs
-                    } else {
-                         args += profile.softwareVideoArgs
-                         profile.softwareQualityOption?.let {
-                              args += listOf(it, (prefs.videoCrf ?: 23).coerceIn(0, 51).toString())
-                         }
+            if (wantsVideoReencode) {
+                if (prefs.useHardwareEncoder) {
+                    args += profile.hardwareVideoArgs
+                } else {
+                    args += profile.softwareVideoArgs
+                    profile.softwareQualityOption?.let {
+                        args += listOf(it, (prefs.videoCrf ?: 23).coerceIn(0, 51).toString())
                     }
-                    prefs.videoResolution?.let {
-                         args += listOf("-vf", "scale=-2:$it")
-                    }
-               } else {
-                    args += listOf("-c:v", "copy")
-               }
+                }
+                prefs.videoResolution?.let {
+                    args += listOf("-vf", "scale=-2:$it")
+                }
+            } else {
+                args += listOf("-c:v", "copy")
+            }
 
-               if (wantsAudioReencode) {
-                    args += profile.audioArgs
-                    prefs.audioBitrate?.let { args += listOf("-b:a", it) }
-                    if (prefs.monoDownmix) args += listOf("-ac", "1")
-                    if (prefs.normalizeAudio) args += listOf("-af", "loudnorm")
-               } else {
-                    args += listOf("-c:a", "copy")
-               }
-          }
+            if (wantsAudioReencode) {
+                args += profile.audioArgs
+                prefs.audioBitrate?.let { args += listOf("-b:a", it) }
+                if (prefs.monoDownmix) args += listOf("-ac", "1")
+                if (prefs.normalizeAudio) args += listOf("-af", "loudnorm")
+            } else {
+                args += listOf("-c:a", "copy")
+            }
+        }
 
-          MediaKind.Audio -> {
-               prefs.audioBitrate?.let { args += listOf("-b:a", it) }
-               if (prefs.monoDownmix) args += listOf("-ac", "1")
-               if (prefs.normalizeAudio) args += listOf("-af", "loudnorm")
-          }
+        MediaKind.Audio -> {
+            prefs.audioBitrate?.let { args += listOf("-b:a", it) }
+            if (prefs.monoDownmix) args += listOf("-ac", "1")
+            if (prefs.normalizeAudio) args += listOf("-af", "loudnorm")
+        }
 
-          MediaKind.Image -> {
-               // Format-specific base arguments were added above.
-          }
+        MediaKind.Image -> {
+            // Format-specific base arguments were added above.
+        }
 
-          MediaKind.Idle -> null
-          MediaKind.Cancel -> null
-     }
+        MediaKind.Idle -> null
+        MediaKind.Cancel -> null
+    }
 
-     prefs.threadLimit?.let {
-          args += listOf("-threads", it.toString())
-     }
+    prefs.threadLimit?.let {
+        args += listOf("-threads", it.toString())
+    }
 
-     return args
+    return args
 }

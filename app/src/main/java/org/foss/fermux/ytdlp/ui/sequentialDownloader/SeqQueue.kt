@@ -44,6 +44,7 @@ fun SequentialQueue(
                             },
                         )
                     }
+
                     SequentialItemStatus.Waiting -> {
                         SeqWaitCard(
                             modifier = Modifier.padding(6.dp),
@@ -78,12 +79,14 @@ fun SequentialQueue(
                             modifier = Modifier.padding(6.dp)
                         )
                     }
+
                     SequentialItemStatus.Failed -> {
                         SeqFailedCard(
                             modifier = Modifier.padding(6.dp),
                             navController = navController
                         )
                     }
+
                     SequentialItemStatus.Cancelled -> {
                         SeqCancelledCard(
                             modifier = Modifier.padding(6.dp)

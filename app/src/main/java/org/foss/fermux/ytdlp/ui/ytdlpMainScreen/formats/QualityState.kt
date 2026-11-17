@@ -11,46 +11,46 @@ import org.foss.fermux.ytdlp.logic.oneTimeDownloader.FormatKind
 @Composable
 fun QualityState(downloaderViewModel: DownloaderViewModel) {
 
-     var pickedFormat by remember { mutableStateOf(FormatKind.Idle) }
-     val spatialSpec = MaterialTheme.motionScheme
-     val context = LocalContext.current
+    var pickedFormat by remember { mutableStateOf(FormatKind.Idle) }
+    val spatialSpec = MaterialTheme.motionScheme
+    val context = LocalContext.current
 
-     AnimatedContent(
-          targetState = pickedFormat,
-          transitionSpec = {
-               (slideInVertically(
-                    animationSpec = spatialSpec.slowSpatialSpec(),
-                    initialOffsetY = { -it }) + fadeIn(
-                    initialAlpha = 0.1f
-               )
-                       ).togetherWith(
-                         exit = slideOutVertically(
-                              animationSpec = spatialSpec.slowSpatialSpec(),
-                              targetOffsetY = { -it }) + fadeOut(targetAlpha = 0.1f)
-                    )
-          },
-          label = "DownloaderQualityCardTransition",
-          contentKey = { it }
-     ) { targetState ->
-          when (targetState) {
-               FormatKind.Idle -> IdleQualityChoices(
-                    onPick = { pickedFormat = it },
-                    onCancel = { downloaderViewModel.cancelButton(context) }
-               )
+    AnimatedContent(
+        targetState = pickedFormat,
+        transitionSpec = {
+            (slideInVertically(
+                animationSpec = spatialSpec.slowSpatialSpec(),
+                initialOffsetY = { -it }) + fadeIn(
+                initialAlpha = 0.1f
+            )
+                 ).togetherWith(
+                    exit = slideOutVertically(
+                        animationSpec = spatialSpec.slowSpatialSpec(),
+                        targetOffsetY = { -it }) + fadeOut(targetAlpha = 0.1f)
+                )
+        },
+        label = "DownloaderQualityCardTransition",
+        contentKey = { it }
+    ) { targetState ->
+        when (targetState) {
+            FormatKind.Idle -> IdleQualityChoices(
+                onPick = { pickedFormat = it },
+                onCancel = { downloaderViewModel.cancelButton(context) }
+            )
 
-               FormatKind.Audio -> AudioQualityChoices(
-                    onBack = { pickedFormat = FormatKind.Idle },
-                    onQualitySelected = { quality ->
-                         downloaderViewModel.startingDownload(context, audio = quality, video = null)
-                    }
-               )
+            FormatKind.Audio -> AudioQualityChoices(
+                onBack = { pickedFormat = FormatKind.Idle },
+                onQualitySelected = { quality ->
+                    downloaderViewModel.startingDownload(context, audio = quality, video = null)
+                }
+            )
 
-               FormatKind.Video -> VideoQualityChoices(
-                    onBack = { pickedFormat = FormatKind.Idle },
-                    onQualitySelected = { quality ->
-                         downloaderViewModel.startingDownload(context, video = quality, audio = null)
-                    }
-               )
-          }
-     }
+            FormatKind.Video -> VideoQualityChoices(
+                onBack = { pickedFormat = FormatKind.Idle },
+                onQualitySelected = { quality ->
+                    downloaderViewModel.startingDownload(context, video = quality, audio = null)
+                }
+            )
+        }
+    }
 }

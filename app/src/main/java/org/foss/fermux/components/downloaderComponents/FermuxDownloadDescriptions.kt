@@ -11,15 +11,15 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun FermuxDownloadDescription(
-     modifier: Modifier = Modifier,
-     shape: Shape = RoundedCornerShape(bottomEnd = 10.dp, bottomStart = 10.dp),
-     content: @Composable () -> Unit
+    modifier: Modifier = Modifier,
+    shape: Shape = RoundedCornerShape(bottomEnd = 10.dp, bottomStart = 10.dp),
+    content: @Composable () -> Unit
 ) {
-          Surface(
-               modifier = modifier,
-               color = FermuxColors.fermuxSurface,
-               shape = shape,
-          ) {
-               content()
-          }
+    Surface(
+        modifier = modifier,
+        color = FermuxColors.fermuxSurface,
+        shape = shape,
+    ) {
+        content()
+    }
 }

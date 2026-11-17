@@ -42,6 +42,7 @@ sealed class SettingsScreens(val route: String) {
 sealed class Miscellaneous(val route: String) {
     // FFmpeg Screens
     object FFmpegLog : Miscellaneous(route = "FFmpeg Logs")
+
     // Downloader Screens
     object DownloaderLogs : Miscellaneous(route = "YtdlpLog")
     object DownloaderHistory : Miscellaneous(route = "History")
@@ -63,7 +64,10 @@ fun FermuxAppMainScreen() {
         // Main Screens
         composable(MainScreens.Home.route) { HomeScreen(navController) }
         composable(MainScreens.Settings.route) { SettingsScreen(navController) }
-        composable(route = MainScreens.Downloader.route, deepLinks = listOf(navDeepLink { uriPattern = "fermux://downloader" })) { DownloadContent(navController) }
+        composable(
+            route = MainScreens.Downloader.route,
+            deepLinks = listOf(navDeepLink { uriPattern = "fermux://downloader" })
+        ) { DownloadContent(navController) }
         composable(route = MainScreens.Converter.route) { ConverterScreen(navController) }
 
         // Settings Screens
@@ -79,7 +83,17 @@ fun FermuxAppMainScreen() {
         composable(route = Miscellaneous.DownloaderLogs.route) { DownloaderLogs(navController) }
         composable(route = Miscellaneous.DownloaderArgs.route) { DownloaderArgs(navController) }
         composable(route = Miscellaneous.DownloaderHistory.route) { History(navController) }
-        composable(route = Miscellaneous.SequentialDownloader.route) { SequentialContent(navController, sequentialViewModel = seqView) }
-        composable(route = Miscellaneous.DownloaderSeqLogs.route) { SeqLogs(navController, sequentialViewModel = seqView) }
+        composable(route = Miscellaneous.SequentialDownloader.route) {
+            SequentialContent(
+                navController,
+                sequentialViewModel = seqView
+            )
+        }
+        composable(route = Miscellaneous.DownloaderSeqLogs.route) {
+            SeqLogs(
+                navController,
+                sequentialViewModel = seqView
+            )
+        }
     }
 }

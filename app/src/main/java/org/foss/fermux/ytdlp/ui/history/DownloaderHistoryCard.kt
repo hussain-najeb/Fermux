@@ -36,170 +36,173 @@ import org.foss.fermux.ytdlp.logic.oneTimeDownloader.videoTime
 
 @Composable
 fun HistoryCard(
-     thumbnail: String?,
-     imageDescription: String?,
-     title: String?,
-     uploader: String?,
-     resolution: String?,
-     duration: Int?,
-     onMenuClick: () -> Unit
+    thumbnail: String?,
+    imageDescription: String?,
+    title: String?,
+    uploader: String?,
+    resolution: String?,
+    duration: Int?,
+    onMenuClick: () -> Unit
 ) {
-     val interactionSource = remember { MutableInteractionSource() }
-     val isPressed by interactionSource.collectIsPressedAsState()
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
 
-     val titleColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.offWhiteTextColor else FermuxColors.white,
-          label = "color of main title of main page"
-     )
+    val titleColor by animateColorAsState(
+        targetValue = if (isPressed) FermuxColors.offWhiteTextColor else FermuxColors.white,
+        label = "color of main title of main page"
+    )
 
-     val descriptionBackground by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.fermuxSurface else FermuxColors.darkPurple,
-          label = "color of main background of the description surface"
-     )
+    val descriptionBackground by animateColorAsState(
+        targetValue = if (isPressed) FermuxColors.fermuxSurface else FermuxColors.darkPurple,
+        label = "color of main background of the description surface"
+    )
 
-     val size by animateFloatAsState(
-          targetValue = if (isPressed) 0.98f else 1f,
-          animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
-          label = ""
-     )
+    val size by animateFloatAsState(
+        targetValue = if (isPressed) 0.98f else 1f,
+        animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
+        label = ""
+    )
 
-     val borderColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.warmBlue else FermuxColors.skyBlue,
-     )
+    val borderColor by animateColorAsState(
+        targetValue = if (isPressed) FermuxColors.warmBlue else FermuxColors.skyBlue,
+    )
 
 
-     Surface(
-          modifier = Modifier
-          .fillMaxWidth()
-               .graphicsLayer {
-                    scaleY = size
-                    scaleX = size
-               }
-               .wrapContentSize()
-          .clickable(
-               interactionSource = interactionSource,
-               indication = null
-          ) {}
-          .height(100.dp),
-          color = descriptionBackground,
-          shape = RoundedCornerShape(8.dp),
-          border = BorderStroke(1.dp, borderColor)
-     ) {
-          Row(
-               modifier = Modifier.fillMaxWidth()
-          ) {
-               Surface(
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .graphicsLayer {
+                scaleY = size
+                scaleX = size
+            }
+            .wrapContentSize()
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null
+            ) {}
+            .height(100.dp),
+        color = descriptionBackground,
+        shape = RoundedCornerShape(8.dp),
+        border = BorderStroke(1.dp, borderColor)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Surface(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .align(Alignment.CenterVertically),
+                shape = RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)
+            ) {
+                Box(
                     modifier = Modifier
-                         .wrapContentSize()
-                         .align(Alignment.CenterVertically),
-                    shape = RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)
-               ) {
-                    Box(modifier = Modifier
-                         .wrapContentSize()
+                        .wrapContentSize()
+                ) {
+                    AsyncImage(
+                        model = thumbnail,
+                        contentDescription = imageDescription,
+                        contentScale = ContentScale.Crop,
+                        fallback = painterResource(id = R.drawable.file_unknown),
+                        error = painterResource(id = R.drawable.file_error),
+                        modifier = Modifier
+                            .aspectRatio(16f / 9f)
+                            .clip(shape = RoundedCornerShape(8.dp))
+                    )
+                    Box(
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .wrapContentSize()
+                            .background(
+                                color = FermuxColors.warmPurple.copy(alpha = 0.75f),
+                                shape = RoundedCornerShape(5.dp)
+                            )
+                            .wrapContentSize()
+                            .align(Alignment.BottomEnd)
                     ) {
-                         AsyncImage(
-                              model = thumbnail,
-                              contentDescription = imageDescription,
-                              contentScale = ContentScale.Crop,
-                              fallback = painterResource(id = R.drawable.file_unknown),
-                              error = painterResource(id = R.drawable.file_error),
-                              modifier = Modifier
-                                   .aspectRatio(16f / 9f)
-                                   .clip(shape = RoundedCornerShape(8.dp))
-                         )
-                         Box(modifier = Modifier
-                              .padding(5.dp)
-                              .wrapContentSize()
-                              .background(
-                                   color = FermuxColors.warmPurple.copy(alpha = 0.75f),
-                                   shape = RoundedCornerShape(5.dp)
-                              )
-                              .wrapContentSize()
-                              .align(Alignment.BottomEnd)
-                         ) {
-                              if (resolution != null) {
-                                   Text(
-                                        text = if (resolution.equals("audio only", ignoreCase = true))
-                                              resolution else "${resolutionFormatting(resolution)}p",
-                                        color = FermuxColors.white,
-                                        fontStyle = FontStyle.Normal,
-                                        fontFamily = FontFamily.Default,
-                                        fontSize = 12.sp,
-                                        modifier = Modifier.padding(3.dp)
-                                   )
-                              }
-                         }
-                         Box(modifier = Modifier
-                              .padding(5.dp)
-                              .wrapContentSize()
-                              .background(
-                                   color = FermuxColors.warmPurple.copy(alpha = 0.75f),
-                                   shape = RoundedCornerShape(5.dp)
-                              )
-                              .wrapContentSize()
-                              .align(Alignment.BottomStart)
-                         ) {
-                              if (duration != null) {
-                                   Text(
-                                        text = videoTime(duration),
-                                        color = FermuxColors.white,
-                                        fontStyle = FontStyle.Normal,
-                                        fontFamily = FontFamily.Default,
-                                        fontSize = 12.sp,
-                                        modifier = Modifier.padding(3.dp)
-                                   )
-                              }
-                         }
+                        if (resolution != null) {
+                            Text(
+                                text = if (resolution.equals("audio only", ignoreCase = true))
+                                    resolution else "${resolutionFormatting(resolution)}p",
+                                color = FermuxColors.white,
+                                fontStyle = FontStyle.Normal,
+                                fontFamily = FontFamily.Default,
+                                fontSize = 12.sp,
+                                modifier = Modifier.padding(3.dp)
+                            )
+                        }
                     }
-               }
-               Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = descriptionBackground,
-               ) {
-                    Row(modifier = Modifier.padding(2.dp).fillMaxSize()) {
-                         Column(
-                              modifier = Modifier
-                                   .weight(1f)
-                                   .padding(5.dp)
-                         ) {
-                              if (title != null) {
-                                   Text(
-                                        text = title,
-                                        fontSize = 14.sp,
-                                        fontStyle = FontStyle.Normal,
-                                        fontFamily = FontFamily.Default,
-                                        fontWeight = FontWeight.SemiBold,
-                                        minLines = 1,
-                                        maxLines = 2,
-                                        overflow = TextOverflow.Ellipsis,
-                                        color = titleColor,
-                                        modifier = Modifier.padding(2.dp)
-                                   )
-                              }
-                              Row(modifier = Modifier.padding(5.dp)) {
-                                   if (uploader != null) {
-                                        Text(
-                                             text = uploader,
-                                             fontSize = 13.sp,
-                                             fontStyle = FontStyle.Normal,
-                                             fontFamily = FontFamily.Default,
-                                             fontWeight = FontWeight.Normal,
-                                             minLines = 1,
-                                             maxLines = 1,
-                                             overflow = TextOverflow.Ellipsis,
-                                             color = titleColor,
-                                             modifier = Modifier.padding(2.dp)
-                                        )
-                                   }
-                              }
-                         }
-                         InfoHistoryButton(
-                              modifier = Modifier
-                                   .align(Alignment.Bottom),
-                              onClick = onMenuClick
-                         )
+                    Box(
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .wrapContentSize()
+                            .background(
+                                color = FermuxColors.warmPurple.copy(alpha = 0.75f),
+                                shape = RoundedCornerShape(5.dp)
+                            )
+                            .wrapContentSize()
+                            .align(Alignment.BottomStart)
+                    ) {
+                        if (duration != null) {
+                            Text(
+                                text = videoTime(duration),
+                                color = FermuxColors.white,
+                                fontStyle = FontStyle.Normal,
+                                fontFamily = FontFamily.Default,
+                                fontSize = 12.sp,
+                                modifier = Modifier.padding(3.dp)
+                            )
+                        }
                     }
-               }
-          }
-     }
+                }
+            }
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = descriptionBackground,
+            ) {
+                Row(modifier = Modifier.padding(2.dp).fillMaxSize()) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(5.dp)
+                    ) {
+                        if (title != null) {
+                            Text(
+                                text = title,
+                                fontSize = 14.sp,
+                                fontStyle = FontStyle.Normal,
+                                fontFamily = FontFamily.Default,
+                                fontWeight = FontWeight.SemiBold,
+                                minLines = 1,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                color = titleColor,
+                                modifier = Modifier.padding(2.dp)
+                            )
+                        }
+                        Row(modifier = Modifier.padding(5.dp)) {
+                            if (uploader != null) {
+                                Text(
+                                    text = uploader,
+                                    fontSize = 13.sp,
+                                    fontStyle = FontStyle.Normal,
+                                    fontFamily = FontFamily.Default,
+                                    fontWeight = FontWeight.Normal,
+                                    minLines = 1,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    color = titleColor,
+                                    modifier = Modifier.padding(2.dp)
+                                )
+                            }
+                        }
+                    }
+                    InfoHistoryButton(
+                        modifier = Modifier
+                            .align(Alignment.Bottom),
+                        onClick = onMenuClick
+                    )
+                }
+            }
+        }
+    }
 }

@@ -10,13 +10,14 @@ import org.foss.fermux.ytdlp.logic.oneTimeDownloader.DownloaderViewModel
 
 @Composable
 fun DownloaderLogs(
-     navController: NavHostController
+    navController: NavHostController
 ) {
-     val downloaderViewModel: DownloaderViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity)
+    val downloaderViewModel: DownloaderViewModel =
+        viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity)
 
-     LoggingScreen(
-          loggingTitle = "Downloader Logs",
-          logs = downloaderViewModel.downloaderLogs,
-          navController = navController
-     )
+    LoggingScreen(
+        loggingTitle = "Downloader Logs",
+        logs = downloaderViewModel.downloaderLogs,
+        navController = navController
+    )
 }

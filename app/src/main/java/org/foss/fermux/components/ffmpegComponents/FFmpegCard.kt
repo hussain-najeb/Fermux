@@ -16,38 +16,38 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun FFmpegCard(
-     modifier: Modifier = Modifier,
-     color: FermuxColor = FermuxColors,
-     shape: Shape = RoundedCornerShape(8.dp),
-     content: @Composable (ColumnScope.() -> Unit)? = null
+    modifier: Modifier = Modifier,
+    color: FermuxColor = FermuxColors,
+    shape: Shape = RoundedCornerShape(8.dp),
+    content: @Composable (ColumnScope.() -> Unit)? = null
 ) {
-     Card(
-          modifier = modifier.fillMaxWidth(),
-          shape = shape,
-          elevation = CardDefaults.cardElevation(
-               defaultElevation = 15.dp,
-               pressedElevation = 4.dp
-          ),
-          colors = CardDefaults.cardColors(
-               containerColor = color.darkPurple
-          ),
-          border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
-     ) {
-          if (content != null) {
-               content()
-          }
-     }
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = shape,
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 15.dp,
+            pressedElevation = 4.dp
+        ),
+        colors = CardDefaults.cardColors(
+            containerColor = color.darkPurple
+        ),
+        border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
+    ) {
+        if (content != null) {
+            content()
+        }
+    }
 }
 
 @Preview(backgroundColor = 0xFF15152e, showBackground = true)
 @Composable
 fun test17() {
-     Column(modifier = Modifier.fillMaxSize()) {
-          FFmpegCard(
-               modifier = Modifier
-                    .aspectRatio(16f/9f)
-                    .padding(15.dp),
-               shape = RoundedCornerShape(6.dp)
-          )
-     }
+    Column(modifier = Modifier.fillMaxSize()) {
+        FFmpegCard(
+            modifier = Modifier
+                .aspectRatio(16f / 9f)
+                .padding(15.dp),
+            shape = RoundedCornerShape(6.dp)
+        )
+    }
 }

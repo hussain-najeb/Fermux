@@ -62,7 +62,7 @@ fun DownloadContent(
         downloaderViewModel.state is DownloadStatus.LoadingMetadata ||
              downloaderViewModel.state is DownloadStatus.Downloading ||
              downloaderViewModel.state is DownloadStatus.UserArgs ||
-               downloaderViewModel.state is DownloadStatus.Completed ||
+             downloaderViewModel.state is DownloadStatus.Completed ||
              downloaderViewModel.state is DownloadStatus.Error
 
 
@@ -214,7 +214,7 @@ fun DownloadContent(
                     )
 
                     // Download Button
-                     if (!doingTask) FilterButton(
+                    if (!doingTask) FilterButton(
                         modifier = Modifier.padding(15.dp),
                         image = R.drawable.download_side_bar,
                         activeColor = FermuxColors.fermuxErrorCardColor,

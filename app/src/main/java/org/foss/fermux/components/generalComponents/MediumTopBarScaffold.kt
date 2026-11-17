@@ -21,53 +21,53 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun MediumTopBarScaffold(
-     modifier: Modifier = Modifier,
-     title: String,
-     onBack: () -> Unit,
-     snackbarHost: (@Composable () -> Unit)? = null,
-     content: @Composable (PaddingValues) -> Unit
+    modifier: Modifier = Modifier,
+    title: String,
+    onBack: () -> Unit,
+    snackbarHost: (@Composable () -> Unit)? = null,
+    content: @Composable (PaddingValues) -> Unit
 ) {
-     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-          rememberTopAppBarState(),
-          canScroll = { true }
-     )
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
+        rememberTopAppBarState(),
+        canScroll = { true }
+    )
 
-     Scaffold(
-          modifier = modifier
-               .fillMaxSize()
-               .nestedScroll(scrollBehavior.nestedScrollConnection),
-          containerColor = FermuxColors.background,
-          snackbarHost = snackbarHost ?: {},
-          topBar = {
-               MediumTopAppBar(
-                    modifier = Modifier
-                         .clip(RoundedCornerShape(bottomEnd = 8.dp, bottomStart = 8.dp)),
-                    colors = TopAppBarDefaults.topAppBarColors(
-                         containerColor = FermuxColors.background,
-                         scrolledContainerColor = FermuxColors.darkPurple,
-                         navigationIconContentColor = Color.Unspecified,
-                         titleContentColor = Color.Unspecified,
-                         actionIconContentColor = Color.Unspecified
-                    ),
-                    scrollBehavior = scrollBehavior,
-                    title = {
-                         Text(
-                              title,
-                              fontFamily = FontFamily.Default,
-                              fontWeight = FontWeight.W400,
-                              fontSize = 21.sp,
-                              color = Color.White,
-                              modifier = Modifier.padding(10.dp)
-                         )
-                    },
-                    navigationIcon = {
-                         BackButton(
-                              modifier = Modifier.padding(10.dp).size(44.dp),
-                              onClick = onBack
-                         )
-                    },
-               )
-          },
-          content = content
-     )
+    Scaffold(
+        modifier = modifier
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        containerColor = FermuxColors.background,
+        snackbarHost = snackbarHost ?: {},
+        topBar = {
+            MediumTopAppBar(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(bottomEnd = 8.dp, bottomStart = 8.dp)),
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = FermuxColors.background,
+                    scrolledContainerColor = FermuxColors.darkPurple,
+                    navigationIconContentColor = Color.Unspecified,
+                    titleContentColor = Color.Unspecified,
+                    actionIconContentColor = Color.Unspecified
+                ),
+                scrollBehavior = scrollBehavior,
+                title = {
+                    Text(
+                        title,
+                        fontFamily = FontFamily.Default,
+                        fontWeight = FontWeight.W400,
+                        fontSize = 21.sp,
+                        color = Color.White,
+                        modifier = Modifier.padding(10.dp)
+                    )
+                },
+                navigationIcon = {
+                    BackButton(
+                        modifier = Modifier.padding(10.dp).size(44.dp),
+                        onClick = onBack
+                    )
+                },
+            )
+        },
+        content = content
+    )
 }

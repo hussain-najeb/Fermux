@@ -62,7 +62,7 @@ fun SeqMetadataCard(
             ) {
                 Surface(
                     modifier = Modifier
-                        .aspectRatio(4f/3f)
+                        .aspectRatio(4f / 3f)
                         .align(Alignment.CenterVertically),
                     shape = RoundedCornerShape(topEnd = 6.dp, bottomEnd = 6.dp),
                     color = FermuxColors.fermuxSurface

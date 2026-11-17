@@ -17,31 +17,31 @@ import org.foss.fermux.utils.FermuxAppMainScreen
 import org.foss.youtube.next.YoutubeDL
 
 class MainActivity : ComponentActivity() {
-     @RequiresApi(Build.VERSION_CODES.S)
-     override fun onCreate(savedInstanceState: Bundle?) {
-          super.onCreate(savedInstanceState)
+    @RequiresApi(Build.VERSION_CODES.S)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-          enableEdgeToEdge()
+        enableEdgeToEdge()
 
-          lifecycleScope.launch {
-               try {
-                    YoutubeDL.initializeLib(applicationContext)
-               } catch (e: Exception) {
-                    Log.e(TAG, "failed to initialize youtubedl-android-next", e)
-               }
-          }
+        lifecycleScope.launch {
+            try {
+                YoutubeDL.initializeLib(applicationContext)
+            } catch (e: Exception) {
+                Log.e(TAG, "failed to initialize youtubedl-android-next", e)
+            }
+        }
 
-          setContent {
+        setContent {
 
-                    setSingletonImageLoaderFactory { context ->
-                         ImageLoader.Builder(context)
-                              .components {
-                                   add(VideoFrameDecoder.Factory())
-                              }
-                              .build()
+            setSingletonImageLoaderFactory { context ->
+                ImageLoader.Builder(context)
+                    .components {
+                        add(VideoFrameDecoder.Factory())
                     }
-                    FermuxAppMainScreen()
+                    .build()
+            }
+            FermuxAppMainScreen()
 
-          }
-     }
+        }
+    }
 }

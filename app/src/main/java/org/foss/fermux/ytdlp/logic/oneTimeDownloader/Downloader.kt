@@ -30,35 +30,35 @@ THEMOSTCOMPLETEYTDLPCLIENTINTHEWORLD
  */
 
 suspend fun downloaderLogic(
-  context: Context,
-  showDetails: Boolean,
-  aria2cMode: Aria2cMode = Aria2cMode.Always,
-  thumbnail: ThumbnailFormat = ThumbnailFormat.Png,
-  audioFormats: AudioFormat = AudioFormat.Mp3Format,
-  videoFormats: VideoFormat = VideoFormat.Mp4Format,
-  videoComp: Boolean,
-  externalDownloaders: ExternalDownloaders = ExternalDownloaders.Disabled,
-  url: String,
-  taskId: UUID,
-  sleepRequest: Int = 0,
-  playlistStatus: Boolean = false,
-  quickJs: Boolean = true,
-  fingerprinting: Boolean = true,
-  audioQuality: AudioQuality? = null,
-  videoQuality: VideoQuality? = null,
-  ipv: IpvConnection,
-  sponsorBlock: Boolean = true,
-  embedThumbnail: Boolean = true,
-  sponsorBlockCategories: Set<String> = emptySet(),
-  fragRetry: Int,
-  retries: Int,
-  quickDownloadFormats: QuickDownloadFormats = QuickDownloadFormats.QuickAudio,
-  quickAudioQuality: QuickAudioQuality? = null,
-  quickVideoQuality: QuickVideoQuality? = null,
-  seqVideo: SeqVideoQuality? = null,
-  seqAudio: SeqAudioQuality? = null,
-  seqFormat: SeqFormat = SeqFormat.SeqVideo,
-  onUpdate: (Float, String) -> Unit
+    context: Context,
+    showDetails: Boolean,
+    aria2cMode: Aria2cMode = Aria2cMode.Always,
+    thumbnail: ThumbnailFormat = ThumbnailFormat.Png,
+    audioFormats: AudioFormat = AudioFormat.Mp3Format,
+    videoFormats: VideoFormat = VideoFormat.Mp4Format,
+    videoComp: Boolean,
+    externalDownloaders: ExternalDownloaders = ExternalDownloaders.Disabled,
+    url: String,
+    taskId: UUID,
+    sleepRequest: Int = 0,
+    playlistStatus: Boolean = false,
+    quickJs: Boolean = true,
+    fingerprinting: Boolean = true,
+    audioQuality: AudioQuality? = null,
+    videoQuality: VideoQuality? = null,
+    ipv: IpvConnection,
+    sponsorBlock: Boolean = true,
+    embedThumbnail: Boolean = true,
+    sponsorBlockCategories: Set<String> = emptySet(),
+    fragRetry: Int,
+    retries: Int,
+    quickDownloadFormats: QuickDownloadFormats = QuickDownloadFormats.QuickAudio,
+    quickAudioQuality: QuickAudioQuality? = null,
+    quickVideoQuality: QuickVideoQuality? = null,
+    seqVideo: SeqVideoQuality? = null,
+    seqAudio: SeqAudioQuality? = null,
+    seqFormat: SeqFormat = SeqFormat.SeqVideo,
+    onUpdate: (Float, String) -> Unit
 ): List<CopiedFile> {
 
     val baseDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) ?: context.filesDir
@@ -171,8 +171,8 @@ suspend fun downloaderLogic(
 
     seqAudio?.let {
         request.addOption("-x")
-        request.addOption("--audio-format",seqFormat.seqFormat )
-        request.addOption("--audio-quality",it.seqAudioQuality)
+        request.addOption("--audio-format", seqFormat.seqFormat)
+        request.addOption("--audio-quality", it.seqAudioQuality)
     }
 
     seqVideo?.let {

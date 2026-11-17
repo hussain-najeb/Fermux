@@ -27,68 +27,68 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun ImageButton(
-     modifier: Modifier = Modifier,
-     imageModifier: Modifier = Modifier,
-     image: Int,
-     contentDescription: String? = null,
-     enabled: Boolean = true,
-     componentSize: Dp = 50.dp,
-     shape: Shape = RoundedCornerShape(8.dp),
-     color: FermuxColor = FermuxColors,
-     border: BorderStroke? = BorderStroke(1.dp, color.fermuxGenericBorder),
-     contentPadding: PaddingValues = PaddingValues(4.dp),
-     onClick: () -> Unit
+    modifier: Modifier = Modifier,
+    imageModifier: Modifier = Modifier,
+    image: Int,
+    contentDescription: String? = null,
+    enabled: Boolean = true,
+    componentSize: Dp = 50.dp,
+    shape: Shape = RoundedCornerShape(8.dp),
+    color: FermuxColor = FermuxColors,
+    border: BorderStroke? = BorderStroke(1.dp, color.fermuxGenericBorder),
+    contentPadding: PaddingValues = PaddingValues(4.dp),
+    onClick: () -> Unit
 ) {
 
-     val interactionSource = remember { MutableInteractionSource() }
-     val isPressed by interactionSource.collectIsPressedAsState()
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
 
-     val containerColor by animateColorAsState(
-          targetValue = if (isPressed) color.fermuxActiveButton else color.fermuxInActiveButton,
-          animationSpec = tween(200),
-          label = "Fermux Button Colors",
-     )
+    val containerColor by animateColorAsState(
+        targetValue = if (isPressed) color.fermuxActiveButton else color.fermuxInActiveButton,
+        animationSpec = tween(200),
+        label = "Fermux Button Colors",
+    )
 
-     val contentColor by animateColorAsState(
-          targetValue = if (isPressed)  color.downriver else color.white,
-          animationSpec = tween(200),
-          label = "Fermux Text Colors",
-     )
+    val contentColor by animateColorAsState(
+        targetValue = if (isPressed) color.downriver else color.white,
+        animationSpec = tween(200),
+        label = "Fermux Text Colors",
+    )
 
-     val iconColor by animateColorAsState(
-          targetValue = if (isPressed) color.downriver else  color.white,
-          animationSpec = tween(durationMillis = 150),
-          label = "Fermux Icon Colors"
-     )
+    val iconColor by animateColorAsState(
+        targetValue = if (isPressed) color.downriver else color.white,
+        animationSpec = tween(durationMillis = 150),
+        label = "Fermux Icon Colors"
+    )
 
-     val buttonAnimation by animateFloatAsState(
-          targetValue = if (isPressed) 0.90f else 1.0f,
-          animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-          label = "Fermux Button Animation"
-     )
+    val buttonAnimation by animateFloatAsState(
+        targetValue = if (isPressed) 0.90f else 1.0f,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        label = "Fermux Button Animation"
+    )
 
-     ElevatedButton(
-          modifier = modifier.graphicsLayer {
-               scaleX = buttonAnimation
-               scaleY = buttonAnimation
-          }
-               .size(componentSize),
-          shape = shape,
-          border = border,
-          colors = ButtonDefaults.textButtonColors(
-               containerColor = containerColor,
-               contentColor = contentColor
-          ),
-          enabled = enabled,
-          contentPadding = contentPadding,
-          interactionSource = interactionSource,
-          onClick = onClick
-     ) {
-          Icon(
-               painter = painterResource(id = image),
-               tint = iconColor,
-               contentDescription = contentDescription,
-               modifier = imageModifier
-          )
-     }
+    ElevatedButton(
+        modifier = modifier.graphicsLayer {
+            scaleX = buttonAnimation
+            scaleY = buttonAnimation
+        }
+            .size(componentSize),
+        shape = shape,
+        border = border,
+        colors = ButtonDefaults.textButtonColors(
+            containerColor = containerColor,
+            contentColor = contentColor
+        ),
+        enabled = enabled,
+        contentPadding = contentPadding,
+        interactionSource = interactionSource,
+        onClick = onClick
+    ) {
+        Icon(
+            painter = painterResource(id = image),
+            tint = iconColor,
+            contentDescription = contentDescription,
+            modifier = imageModifier
+        )
+    }
 }

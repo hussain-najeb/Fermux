@@ -23,104 +23,104 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun IconTextButton(
-     modifier: Modifier = Modifier,
-     image: Int,
-     text: String,
-     enabled: Boolean? = true,
-     border: BorderStroke? = BorderStroke(1.5.dp, FermuxColors.transparent),
-     activeColor: Color = FermuxColors.skyBlue,
-     inActiveColor: Color = FermuxColors.mutedBlue,
-     activeIconColor: Color = FermuxColors.downriver,
-     inActiveIconColor: Color = FermuxColors.white,
-     rotation1: Float = 0f,
-     rotation2: Float = 0f,
-     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    image: Int,
+    text: String,
+    enabled: Boolean? = true,
+    border: BorderStroke? = BorderStroke(1.5.dp, FermuxColors.transparent),
+    activeColor: Color = FermuxColors.skyBlue,
+    inActiveColor: Color = FermuxColors.mutedBlue,
+    activeIconColor: Color = FermuxColors.downriver,
+    inActiveIconColor: Color = FermuxColors.white,
+    rotation1: Float = 0f,
+    rotation2: Float = 0f,
+    onClick: () -> Unit,
 ) {
 
-     val interactionSource = remember { MutableInteractionSource() }
-     val isPressed by interactionSource.collectIsPressedAsState()
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
 
-     val containerColor by animateColorAsState(
-          targetValue = if (isPressed) activeColor else inActiveColor,
-          animationSpec = tween(200),
-          label = "Fermux Button Colors",
-     )
+    val containerColor by animateColorAsState(
+        targetValue = if (isPressed) activeColor else inActiveColor,
+        animationSpec = tween(200),
+        label = "Fermux Button Colors",
+    )
 
-     val contentColor by animateColorAsState(
-          targetValue = if (isPressed) activeColor else inActiveColor,
-          animationSpec = tween(200),
-          label = "Fermux Text Colors",
-     )
+    val contentColor by animateColorAsState(
+        targetValue = if (isPressed) activeColor else inActiveColor,
+        animationSpec = tween(200),
+        label = "Fermux Text Colors",
+    )
 
-     val iconColor by animateColorAsState(
-          targetValue = if (isPressed) activeIconColor else inActiveIconColor,
-          animationSpec = tween(durationMillis = 200),
-          label = "Fermux Icon Colors"
-     )
+    val iconColor by animateColorAsState(
+        targetValue = if (isPressed) activeIconColor else inActiveIconColor,
+        animationSpec = tween(durationMillis = 200),
+        label = "Fermux Icon Colors"
+    )
 
-     val iconRotate by animateFloatAsState(
-          targetValue = if (isPressed) rotation1 else rotation2,
-          animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-          label = "Fermux Icon Rotation"
-     )
+    val iconRotate by animateFloatAsState(
+        targetValue = if (isPressed) rotation1 else rotation2,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        label = "Fermux Icon Rotation"
+    )
 
-     val textColor by animateColorAsState(
-          targetValue = if (isPressed) activeIconColor else inActiveIconColor,
-          animationSpec = tween(200),
+    val textColor by animateColorAsState(
+        targetValue = if (isPressed) activeIconColor else inActiveIconColor,
+        animationSpec = tween(200),
 
-     )
+        )
 
-     val buttonAnimation by animateFloatAsState(
-          targetValue = if (isPressed) 0.90f else 1.0f,
-          animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-          label = "Fermux Button Animation"
-     )
+    val buttonAnimation by animateFloatAsState(
+        targetValue = if (isPressed) 0.90f else 1.0f,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        label = "Fermux Button Animation"
+    )
 
-     OutlinedButton(
-          modifier = modifier
-               .graphicsLayer {
-                    scaleX = buttonAnimation
-                    scaleY = buttonAnimation
-               }
-               .height(40.dp)
-               .widthIn(min = 40.dp),
-          enabled = enabled == true,
-          shape = RoundedCornerShape(8.dp),
-          colors = ButtonDefaults.outlinedButtonColors(
-               containerColor = containerColor,
-               contentColor = contentColor,
-               disabledContainerColor = FermuxColors.skyBlue,
-               disabledContentColor = FermuxColors.downriver
-          ),
-          border = border,
-          contentPadding = PaddingValues(
-               horizontal = 12.dp,
-               vertical = 8.dp
-          ),
-          interactionSource = interactionSource,
-          elevation = ButtonDefaults.buttonElevation(
-               defaultElevation = 10.dp,
-               pressedElevation = 0.dp,
-               focusedElevation = 3.dp,
-               hoveredElevation = 5.dp,
-               disabledElevation = 0.dp
-          ),
-          onClick = onClick
-     ) {
-          Icon(
-               painter = painterResource(id = image),
-               contentDescription = null,
-               tint = iconColor,
-               modifier = Modifier.rotate(iconRotate)
-          )
+    OutlinedButton(
+        modifier = modifier
+            .graphicsLayer {
+                scaleX = buttonAnimation
+                scaleY = buttonAnimation
+            }
+            .height(40.dp)
+            .widthIn(min = 40.dp),
+        enabled = enabled == true,
+        shape = RoundedCornerShape(8.dp),
+        colors = ButtonDefaults.outlinedButtonColors(
+            containerColor = containerColor,
+            contentColor = contentColor,
+            disabledContainerColor = FermuxColors.skyBlue,
+            disabledContentColor = FermuxColors.downriver
+        ),
+        border = border,
+        contentPadding = PaddingValues(
+            horizontal = 12.dp,
+            vertical = 8.dp
+        ),
+        interactionSource = interactionSource,
+        elevation = ButtonDefaults.buttonElevation(
+            defaultElevation = 10.dp,
+            pressedElevation = 0.dp,
+            focusedElevation = 3.dp,
+            hoveredElevation = 5.dp,
+            disabledElevation = 0.dp
+        ),
+        onClick = onClick
+    ) {
+        Icon(
+            painter = painterResource(id = image),
+            contentDescription = null,
+            tint = iconColor,
+            modifier = Modifier.rotate(iconRotate)
+        )
 
-          Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(8.dp))
 
-          Text(
-               text = text,
-               fontSize = 15.sp,
-               color = textColor,
-               maxLines = 1
-          )
-     }
+        Text(
+            text = text,
+            fontSize = 15.sp,
+            color = textColor,
+            maxLines = 1
+        )
+    }
 }

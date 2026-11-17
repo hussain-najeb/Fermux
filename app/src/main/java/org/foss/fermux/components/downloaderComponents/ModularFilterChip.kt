@@ -17,55 +17,55 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun <T> ModularFilterChip(
-     enabled: Boolean = true,
-     optionList: List<Pair<T, String>>,
-     selectedOptions: Set<T>,
-     onSelected: (Set<T>) -> Unit
+    enabled: Boolean = true,
+    optionList: List<Pair<T, String>>,
+    selectedOptions: Set<T>,
+    onSelected: (Set<T>) -> Unit
 ) {
 
-     FlowRow(
-          modifier = Modifier.fillMaxWidth(),
-          horizontalArrangement = Arrangement.spacedBy(6.dp),
-          verticalArrangement = Arrangement.spacedBy(2.dp)
-     ) {
-          optionList.forEach { (value, name) ->
-               val selected = value in selectedOptions
-               FilterChip(
+    FlowRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        optionList.forEach { (value, name) ->
+            val selected = value in selectedOptions
+            FilterChip(
+                selected = selected,
+                enabled = enabled,
+                onClick = {
+                    onSelected(
+                        if (selected) selectedOptions - value
+                        else selectedOptions + value
+                    )
+                },
+                label = { Text(name) },
+                colors = FilterChipDefaults.filterChipColors(
+                    containerColor = FermuxColors.darkPurple,
+                    labelColor = FermuxColors.white,
+                    iconColor = FermuxColors.white,
+                    selectedContainerColor = FermuxColors.skyBlue,
+                    selectedLabelColor = FermuxColors.downriver,
+                    selectedLeadingIconColor = FermuxColors.downriver
+                ),
+                border = FilterChipDefaults.filterChipBorder(
+                    enabled = true,
                     selected = selected,
-                    enabled = enabled,
-                    onClick = {
-                         onSelected(
-                              if (selected) selectedOptions - value
-                              else selectedOptions + value
-                         )
-                    },
-                    label = { Text(name) },
-                    colors = FilterChipDefaults.filterChipColors(
-                         containerColor = FermuxColors.darkPurple,
-                         labelColor = FermuxColors.white,
-                         iconColor = FermuxColors.white,
-                         selectedContainerColor = FermuxColors.skyBlue,
-                         selectedLabelColor = FermuxColors.downriver,
-                         selectedLeadingIconColor = FermuxColors.downriver
-                    ),
-                    border = FilterChipDefaults.filterChipBorder(
-                         enabled = true,
-                         selected = selected,
-                         borderColor = FermuxColors.fermuxHelperBorder,
-                         selectedBorderColor = FermuxColors.fermuxSecondaryBorder
-                    ),
-                    leadingIcon = if (selected) {
-                         {
-                              Icon(
-                                   imageVector = Icons.Filled.Done,
-                                   contentDescription = "Selected",
-                                   modifier = Modifier.size(FilterChipDefaults.IconSize)
-                              )
-                         }
-                    } else {
-                         null
+                    borderColor = FermuxColors.fermuxHelperBorder,
+                    selectedBorderColor = FermuxColors.fermuxSecondaryBorder
+                ),
+                leadingIcon = if (selected) {
+                    {
+                        Icon(
+                            imageVector = Icons.Filled.Done,
+                            contentDescription = "Selected",
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
                     }
-               )
-          }
-     }
+                } else {
+                    null
+                }
+            )
+        }
+    }
 }

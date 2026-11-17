@@ -33,7 +33,8 @@ suspend fun execution(
         throw e
     } catch (e: Exception) {
         val message = e.message.orEmpty()
-        val thumbnailEmbeddingFailed = "EmbedThumbnailPPError" in message || "Unable to embed using ffprobe & ffmpeg" in message
+        val thumbnailEmbeddingFailed =
+            "EmbedThumbnailPPError" in message || "Unable to embed using ffprobe & ffmpeg" in message
         if (!thumbnailEmbeddingFailed) throw e
         Log.d("downloadWorker", "Thumbnail embedding failed; keeping media without artwork")
         onUpdate(100f, "[EmbedThumbnail] Failed; kept download without the thumbnail")

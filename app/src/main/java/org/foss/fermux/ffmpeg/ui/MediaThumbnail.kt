@@ -34,14 +34,16 @@ fun MediaThumbnailImage(
                 try {
                     when {
                         uri.scheme == "content" -> retriever.setDataSource(context, uri)
-                        uri.scheme == "file"    -> uri.path?.let { retriever.setDataSource(it) }
-                        else                    -> retriever.setDataSource(uri.toString())
+                        uri.scheme == "file" -> uri.path?.let { retriever.setDataSource(it) }
+                        else -> retriever.setDataSource(uri.toString())
                     }
                     retriever.embeddedPicture
                 } catch (_: Exception) {
                     null
                 } finally {
-                    try { retriever.release() } catch (e: Exception) {
+                    try {
+                        retriever.release()
+                    } catch (e: Exception) {
                         Log.e("coil ffmpeg error", "error with loading the thumbnail to ffmpeg from coil", e)
                     }
                 }

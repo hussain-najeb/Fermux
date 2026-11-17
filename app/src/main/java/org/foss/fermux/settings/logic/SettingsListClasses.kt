@@ -25,6 +25,7 @@ enum class TilePosition {
             bottomStart = 4.dp,
             bottomEnd = 4.dp
         )
+
         MIDDLE -> RoundedCornerShape(innerRadius)
         BOTTOM -> RoundedCornerShape(
             topStart = 4.dp,
@@ -32,6 +33,7 @@ enum class TilePosition {
             bottomStart = outerRadius,
             bottomEnd = outerRadius
         )
+
         SOLO -> RoundedCornerShape(outerRadius)
     }
 }

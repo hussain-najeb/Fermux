@@ -32,145 +32,150 @@ import kotlin.math.roundToInt
 
 @Composable
 fun AdvancedFFmpegSettings(
-     navController: NavController,
-     ffmpegSettingsViewModel: FFmpegSettingsViewModel = viewModel(),
-     snackbarHostState: SnackbarHostState
+    navController: NavController,
+    ffmpegSettingsViewModel: FFmpegSettingsViewModel = viewModel(),
+    snackbarHostState: SnackbarHostState
 ) {
 
-     val crf by ffmpegSettingsViewModel.videoCrf.collectAsStateWithLifecycle()
-     val enableVideoCompression by ffmpegSettingsViewModel.enableVideoCompression.collectAsStateWithLifecycle()
-     val threadLimit by ffmpegSettingsViewModel.threadLimit.collectAsStateWithLifecycle()
-     val useHardwareEncoder by ffmpegSettingsViewModel.useHardwareEncoder.collectAsStateWithLifecycle()
-     val availableCores = Runtime.getRuntime().availableProcessors()
-     LaunchedEffect(useHardwareEncoder) {
-          if (useHardwareEncoder && threadLimit != 0) ffmpegSettingsViewModel.setThreadLimit(0)
-     }
+    val crf by ffmpegSettingsViewModel.videoCrf.collectAsStateWithLifecycle()
+    val enableVideoCompression by ffmpegSettingsViewModel.enableVideoCompression.collectAsStateWithLifecycle()
+    val threadLimit by ffmpegSettingsViewModel.threadLimit.collectAsStateWithLifecycle()
+    val useHardwareEncoder by ffmpegSettingsViewModel.useHardwareEncoder.collectAsStateWithLifecycle()
+    val availableCores = Runtime.getRuntime().availableProcessors()
+    LaunchedEffect(useHardwareEncoder) {
+        if (useHardwareEncoder && threadLimit != 0) ffmpegSettingsViewModel.setThreadLimit(0)
+    }
 
-     val scope = rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
 
-     val advanced = listOf(
-          InfoListClass(
-               title = "Reset Converter Settings",
-               description = "Reset converter settings",
-               image = R.drawable.restore,
-               liner = true,
-               content = {
-                    FilterButton(
-                         modifier = Modifier.padding(3.dp),
-                         border = true,
-                         image = R.drawable.restore,
-                         onClick = {
-                              scope.launch {
-                                   val oldSettings = ffmpegSettingsViewModel.resetFFmpegSettings()
-                                   val result = snackbarHostState.showSnackbar(
-                                        message = "Settings Reset",
-                                        actionLabel = "Undo",
-                                        duration = SnackbarDuration.Long
-                                   )
+    val advanced = listOf(
+        InfoListClass(
+            title = "Reset Converter Settings",
+            description = "Reset converter settings",
+            image = R.drawable.restore,
+            liner = true,
+            content = {
+                FilterButton(
+                    modifier = Modifier.padding(3.dp),
+                    border = true,
+                    image = R.drawable.restore,
+                    onClick = {
+                        scope.launch {
+                            val oldSettings = ffmpegSettingsViewModel.resetFFmpegSettings()
+                            val result = snackbarHostState.showSnackbar(
+                                message = "Settings Reset",
+                                actionLabel = "Undo",
+                                duration = SnackbarDuration.Long
+                            )
 
-                                   if (result == SnackbarResult.ActionPerformed) {
-                                        ffmpegSettingsViewModel.restoreFFmpegSettings(oldSettings)
-                                   }
-                              }
-                         }
-                    )
-               },
-               position = TilePosition.TOP
-          ),
-          InfoListClass(
-               title = "Video CRF",
-               description = "Set a value for video CRF, default is recommended",
-               image = R.drawable.tune,
-               dialogAppearance = true,
-               dialogTitle = "Set CRF Value",
-               specialDescription = buildAnnotatedString {
-                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("CRF ") }
-                    withStyle(SpanStyle(FermuxColors.white)) { append("is the quality target used when compressing videos. Lower is better.") }
-               },
-               dialogImage = R.drawable.tune,
-               dialogContent = {
-                    ModularSlider(
-                         sliderKey = crf,
-                         trackSteps = 9,
-                         trackRange = 18f..28f,
-                         onOptionSelected = ffmpegSettingsViewModel::setVideoCrf
-                    )
-               },
-               position = TilePosition.MIDDLE
-          ),
-          InfoListClass(
-               title = "CPU Thread Limit",
-               description = "Limits how many CPU cores ffmpeg can use during conversion",
-               image = if(threadLimit > 0) R.drawable.thread_limit_on else R.drawable.thread_limit_off,
-               dialogAppearance = true,
-               dialogTitle = "Set Thread Limit",
-               specialDescription = buildAnnotatedString {
-                    withStyle(SpanStyle(FermuxColors.white)) { append("This setting has no effect when") }
-                    withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" Hardware Encoding") }
-                    withStyle(SpanStyle(FermuxColors.white)) { append(" is on.") }
-               },
-               dialogImage = R.drawable.thread_limit_on,
-               dialogContent = {
-                    ModularSegmentedButtons(
-                         optionsList = listOf(
-                              0 to "Default",
-                              (availableCores * 0.25f).roundToInt().coerceAtLeast(1) to "25%",
-                              (availableCores * 0.5f).roundToInt().coerceAtLeast(1) to "50%",
-                              (availableCores * 0.75f).roundToInt().coerceAtLeast(1) to "75%",
-                         ),
-                         selectedOption = threadLimit,
-                         enabled = !useHardwareEncoder,
-                         onSelected = ffmpegSettingsViewModel::setThreadLimit
-                    )
-               },
-               position = TilePosition.MIDDLE
-          ),
-          InfoListClass(
-               title = "Hardware Acceleration",
-               description = "Enable/Disable hardware acceleration",
-               image = R.drawable.hardware_encoding,
-               dialogAppearance = true,
-               dialogTitle = "Hardware Acceleration",
-               specialDescription = buildAnnotatedString {
-                    withStyle(SpanStyle(FermuxColors.white)) {
-                         append("Uses the hardware chip for encoding instead of the CPU.\n\n")
-                         append("This is slower in most cases, especially on")
+                            if (result == SnackbarResult.ActionPerformed) {
+                                ffmpegSettingsViewModel.restoreFFmpegSettings(oldSettings)
+                            }
+                        }
                     }
-                    withStyle(SpanStyle(FermuxColors.fermuxTextError)) { append(" old android devices.") }
-               },
-               dialogImage = R.drawable.hardware_encoding,
-               liner = true,
-               content = {
-                    SettingsSwitch(
-                         enabled = enableVideoCompression,
-                         checked = useHardwareEncoder,
-                         onCheckedChange = ffmpegSettingsViewModel::setUseHardwareEncoder
+                )
+            },
+            position = TilePosition.TOP
+        ),
+        InfoListClass(
+            title = "Video CRF",
+            description = "Set a value for video CRF, default is recommended",
+            image = R.drawable.tune,
+            dialogAppearance = true,
+            dialogTitle = "Set CRF Value",
+            specialDescription = buildAnnotatedString {
+                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("CRF ") }
+                withStyle(SpanStyle(FermuxColors.white)) { append("is the quality target used when compressing videos. Lower is better.") }
+            },
+            dialogImage = R.drawable.tune,
+            dialogContent = {
+                ModularSlider(
+                    sliderKey = crf,
+                    trackSteps = 9,
+                    trackRange = 18f..28f,
+                    onOptionSelected = ffmpegSettingsViewModel::setVideoCrf
+                )
+            },
+            position = TilePosition.MIDDLE
+        ),
+        InfoListClass(
+            title = "CPU Thread Limit",
+            description = "Limits how many CPU cores ffmpeg can use during conversion",
+            image = if (threadLimit > 0) R.drawable.thread_limit_on else R.drawable.thread_limit_off,
+            dialogAppearance = true,
+            dialogTitle = "Set Thread Limit",
+            specialDescription = buildAnnotatedString {
+                withStyle(SpanStyle(FermuxColors.white)) { append("This setting has no effect when") }
+                withStyle(
+                    SpanStyle(
+                        FermuxColors.warmBlue,
+                        fontStyle = FontStyle.Italic
                     )
-               },
-               position = TilePosition.BOTTOM
-          ),
-     )
+                ) { append(" Hardware Encoding") }
+                withStyle(SpanStyle(FermuxColors.white)) { append(" is on.") }
+            },
+            dialogImage = R.drawable.thread_limit_on,
+            dialogContent = {
+                ModularSegmentedButtons(
+                    optionsList = listOf(
+                        0 to "Default",
+                        (availableCores * 0.25f).roundToInt().coerceAtLeast(1) to "25%",
+                        (availableCores * 0.5f).roundToInt().coerceAtLeast(1) to "50%",
+                        (availableCores * 0.75f).roundToInt().coerceAtLeast(1) to "75%",
+                    ),
+                    selectedOption = threadLimit,
+                    enabled = !useHardwareEncoder,
+                    onSelected = ffmpegSettingsViewModel::setThreadLimit
+                )
+            },
+            position = TilePosition.MIDDLE
+        ),
+        InfoListClass(
+            title = "Hardware Acceleration",
+            description = "Enable/Disable hardware acceleration",
+            image = R.drawable.hardware_encoding,
+            dialogAppearance = true,
+            dialogTitle = "Hardware Acceleration",
+            specialDescription = buildAnnotatedString {
+                withStyle(SpanStyle(FermuxColors.white)) {
+                    append("Uses the hardware chip for encoding instead of the CPU.\n\n")
+                    append("This is slower in most cases, especially on")
+                }
+                withStyle(SpanStyle(FermuxColors.fermuxTextError)) { append(" old android devices.") }
+            },
+            dialogImage = R.drawable.hardware_encoding,
+            liner = true,
+            content = {
+                SettingsSwitch(
+                    enabled = enableVideoCompression,
+                    checked = useHardwareEncoder,
+                    onCheckedChange = ffmpegSettingsViewModel::setUseHardwareEncoder
+                )
+            },
+            position = TilePosition.BOTTOM
+        ),
+    )
 
-     advanced.forEach { setting ->
-          TileOptions(
-               title = setting.title,
-               description = setting.description,
-               shape = setting.position.TileShaper(),
-               image = setting.image,
-               icon = setting.icon,
-               onClick = {
-                    setting.onClick?.invoke()
-                    setting.route?.let { navController.navigate(it) }
-               },
-               content = setting.content,
-               trailingContent = setting.trailingContent,
-               dialogShow = setting.dialogAppearance,
-               dialogTitle = setting.dialogTitle,
-               dialogDescription = setting.dialogDescription,
-               dialogImage = setting.dialogImage,
-               dialogContent = setting.dialogContent,
-               specialDescription = setting.specialDescription,
-               liner = setting.liner
-          )
-     }
+    advanced.forEach { setting ->
+        TileOptions(
+            title = setting.title,
+            description = setting.description,
+            shape = setting.position.TileShaper(),
+            image = setting.image,
+            icon = setting.icon,
+            onClick = {
+                setting.onClick?.invoke()
+                setting.route?.let { navController.navigate(it) }
+            },
+            content = setting.content,
+            trailingContent = setting.trailingContent,
+            dialogShow = setting.dialogAppearance,
+            dialogTitle = setting.dialogTitle,
+            dialogDescription = setting.dialogDescription,
+            dialogImage = setting.dialogImage,
+            dialogContent = setting.dialogContent,
+            specialDescription = setting.specialDescription,
+            liner = setting.liner
+        )
+    }
 }

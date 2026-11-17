@@ -21,87 +21,87 @@ import org.foss.fermux.ytdlp.logic.oneTimeDownloader.QuickVideoQuality
 
 @Composable
 fun QuickDownloadSettingQuality(
-     downloaderSettingsViewModel: DownloaderSettingsViewModel
+    downloaderSettingsViewModel: DownloaderSettingsViewModel
 ) {
-     val formatPick by downloaderSettingsViewModel.quickFormat.collectAsStateWithLifecycle()
-     val spatialSpec = MaterialTheme.motionScheme
+    val formatPick by downloaderSettingsViewModel.quickFormat.collectAsStateWithLifecycle()
+    val spatialSpec = MaterialTheme.motionScheme
 
-     Column(
-          horizontalAlignment = Alignment.CenterHorizontally,
-          verticalArrangement = Arrangement.Center
-     ) {
-          ModularSegmentedButtons(
-               optionsList = listOf(
-                    QuickDownloadFormats.QuickVideo to "Video",
-                    QuickDownloadFormats.QuickAudio to "Audio"
-               ),
-               selectedOption = formatPick,
-               onSelected = downloaderSettingsViewModel::setQuickFormat
-          )
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        ModularSegmentedButtons(
+            optionsList = listOf(
+                QuickDownloadFormats.QuickVideo to "Video",
+                QuickDownloadFormats.QuickAudio to "Audio"
+            ),
+            selectedOption = formatPick,
+            onSelected = downloaderSettingsViewModel::setQuickFormat
+        )
 
-          Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
-          AnimatedContent(
-               targetState = formatPick,
-               transitionSpec = {
-                    (slideInVertically(
-                         animationSpec = spatialSpec.slowSpatialSpec(),
-                         initialOffsetY = { -it }
-                    ) + fadeIn(initialAlpha = 0.1f))
-                         .togetherWith(
-                              exit = slideOutVertically(
-                                   animationSpec = spatialSpec.slowSpatialSpec(),
-                                   targetOffsetY = { -it }
-                              ) + fadeOut(targetAlpha = 0.1f)
-                         )
-               },
-               contentKey = { it::class }
-          ) { targetState ->
-               when (targetState) {
-                    QuickDownloadFormats.QuickVideo -> {
-                         QuickVideo(downloaderSettingsViewModel)
-                    }
+        AnimatedContent(
+            targetState = formatPick,
+            transitionSpec = {
+                (slideInVertically(
+                    animationSpec = spatialSpec.slowSpatialSpec(),
+                    initialOffsetY = { -it }
+                ) + fadeIn(initialAlpha = 0.1f))
+                    .togetherWith(
+                        exit = slideOutVertically(
+                            animationSpec = spatialSpec.slowSpatialSpec(),
+                            targetOffsetY = { -it }
+                        ) + fadeOut(targetAlpha = 0.1f)
+                    )
+            },
+            contentKey = { it::class }
+        ) { targetState ->
+            when (targetState) {
+                QuickDownloadFormats.QuickVideo -> {
+                    QuickVideo(downloaderSettingsViewModel)
+                }
 
-                    QuickDownloadFormats.QuickAudio -> {
-                         QuickAudio(downloaderSettingsViewModel)
-                    }
-               }
-          }
-     }
+                QuickDownloadFormats.QuickAudio -> {
+                    QuickAudio(downloaderSettingsViewModel)
+                }
+            }
+        }
+    }
 }
 
 @Composable
 fun QuickVideo(
-     downloaderSettingsViewModel: DownloaderSettingsViewModel
+    downloaderSettingsViewModel: DownloaderSettingsViewModel
 ) {
-     val video by downloaderSettingsViewModel.quickVideo.collectAsStateWithLifecycle()
-     ModularSegmentedButtons(
-          optionsList = listOf(
-               QuickVideoQuality.HD1080 to "1080p",
-               QuickVideoQuality.HD720 to "720p",
-               QuickVideoQuality.SD480 to "480p",
-               QuickVideoQuality.Q360 to "360p",
-               QuickVideoQuality.Q240 to "240p",
-               QuickVideoQuality.Q144 to "144p"
-          ),
-          selectedOption = video,
-          onSelected = downloaderSettingsViewModel::setQuickVideo
-     )
+    val video by downloaderSettingsViewModel.quickVideo.collectAsStateWithLifecycle()
+    ModularSegmentedButtons(
+        optionsList = listOf(
+            QuickVideoQuality.HD1080 to "1080p",
+            QuickVideoQuality.HD720 to "720p",
+            QuickVideoQuality.SD480 to "480p",
+            QuickVideoQuality.Q360 to "360p",
+            QuickVideoQuality.Q240 to "240p",
+            QuickVideoQuality.Q144 to "144p"
+        ),
+        selectedOption = video,
+        onSelected = downloaderSettingsViewModel::setQuickVideo
+    )
 }
 
 @Composable
 fun QuickAudio(
-     downloaderSettingsViewModel: DownloaderSettingsViewModel
+    downloaderSettingsViewModel: DownloaderSettingsViewModel
 ) {
-     val audio by downloaderSettingsViewModel.quickAudio.collectAsStateWithLifecycle()
-     ModularSegmentedButtons(
-          optionsList = listOf(
-               QuickAudioQuality.Best to "Best",
-               QuickAudioQuality.High to "High",
-               QuickAudioQuality.Medium to "Medium",
-               QuickAudioQuality.Low to "Low"
-          ),
-          selectedOption = audio,
-          onSelected = downloaderSettingsViewModel::setQuickAudio
-     )
+    val audio by downloaderSettingsViewModel.quickAudio.collectAsStateWithLifecycle()
+    ModularSegmentedButtons(
+        optionsList = listOf(
+            QuickAudioQuality.Best to "Best",
+            QuickAudioQuality.High to "High",
+            QuickAudioQuality.Medium to "Medium",
+            QuickAudioQuality.Low to "Low"
+        ),
+        selectedOption = audio,
+        onSelected = downloaderSettingsViewModel::setQuickAudio
+    )
 }

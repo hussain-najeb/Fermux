@@ -81,7 +81,7 @@ fun ErrorCard(
             }
         }
         Box(
-             modifier = Modifier.padding(start = 15.dp, end = 15.dp),
+            modifier = Modifier.padding(start = 15.dp, end = 15.dp),
             contentAlignment = Alignment.TopCenter
         ) {
             Box(

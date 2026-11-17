@@ -28,79 +28,79 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun AppTextButton(
-     modifier: Modifier = Modifier,
-     text: String,
-     activeColor: Color = FermuxColors.downriver,
-     inActiveColor: Color = FermuxColors.white,
-     onClick: () -> Unit
+    modifier: Modifier = Modifier,
+    text: String,
+    activeColor: Color = FermuxColors.downriver,
+    inActiveColor: Color = FermuxColors.white,
+    onClick: () -> Unit
 ) {
 
-     val interactionSource = remember { MutableInteractionSource() }
-     val isPressed by interactionSource.collectIsPressedAsState()
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
 
-     val textColor by animateColorAsState(
-          targetValue = if (isPressed) activeColor else inActiveColor,
-          animationSpec = tween(150)
-     )
+    val textColor by animateColorAsState(
+        targetValue = if (isPressed) activeColor else inActiveColor,
+        animationSpec = tween(150)
+    )
 
-     val containerColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.skyBlue else FermuxColors.mutedBlue,
-          animationSpec = tween(150)
-     )
+    val containerColor by animateColorAsState(
+        targetValue = if (isPressed) FermuxColors.skyBlue else FermuxColors.mutedBlue,
+        animationSpec = tween(150)
+    )
 
-     val buttonAnimation by animateFloatAsState(
-          targetValue = if (isPressed) 0.90f else 1.0f,
-          animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-          label = "Fermux Button Animation"
-     )
+    val buttonAnimation by animateFloatAsState(
+        targetValue = if (isPressed) 0.90f else 1.0f,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        label = "Fermux Button Animation"
+    )
 
-     OutlinedButton(
-          modifier = modifier.graphicsLayer {
-               scaleX = buttonAnimation
-               scaleY = buttonAnimation
-          }
-               .wrapContentSize(),
-          elevation = ButtonDefaults.buttonElevation(
-               defaultElevation = 12.dp,
-               pressedElevation = 0.dp,
-               focusedElevation = 3.dp,
-               hoveredElevation = 5.dp,
-               disabledElevation = 0.dp
-          ),
-          shape = RoundedCornerShape(8.dp),
-          contentPadding = PaddingValues(0.dp),
-          border = BorderStroke(1.dp, FermuxColors.transparent),
-          colors = ButtonDefaults.textButtonColors(
-               containerColor = containerColor,
-               contentColor = FermuxColors.white
-          ),
-          interactionSource = interactionSource,
-          onClick = onClick
-     ) {
-          Text(
-               text = text,
-               textAlign = TextAlign.Center,
-               fontSize = 15.sp,
-               modifier = Modifier.padding(start = 15.dp, end = 15.dp),
-               fontWeight = FontWeight.SemiBold,
-               color = textColor
-          )
-     }
+    OutlinedButton(
+        modifier = modifier.graphicsLayer {
+            scaleX = buttonAnimation
+            scaleY = buttonAnimation
+        }
+            .wrapContentSize(),
+        elevation = ButtonDefaults.buttonElevation(
+            defaultElevation = 12.dp,
+            pressedElevation = 0.dp,
+            focusedElevation = 3.dp,
+            hoveredElevation = 5.dp,
+            disabledElevation = 0.dp
+        ),
+        shape = RoundedCornerShape(8.dp),
+        contentPadding = PaddingValues(0.dp),
+        border = BorderStroke(1.dp, FermuxColors.transparent),
+        colors = ButtonDefaults.textButtonColors(
+            containerColor = containerColor,
+            contentColor = FermuxColors.white
+        ),
+        interactionSource = interactionSource,
+        onClick = onClick
+    ) {
+        Text(
+            text = text,
+            textAlign = TextAlign.Center,
+            fontSize = 15.sp,
+            modifier = Modifier.padding(start = 15.dp, end = 15.dp),
+            fontWeight = FontWeight.SemiBold,
+            color = textColor
+        )
+    }
 }
 
-@Preview (backgroundColor = 0xFF15152e, showBackground = true)
+@Preview(backgroundColor = 0xFF15152e, showBackground = true)
 @Composable
-fun test13 () {
+fun test13() {
 
-     Column(
-          modifier = Modifier.fillMaxSize(),
-          horizontalAlignment = Alignment.CenterHorizontally,
-          verticalArrangement = Arrangement.Center
-     ) {
-          AppTextButton(
-               modifier = Modifier,
-               onClick = {},
-               text = "Delete"
-          )
-     }
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        AppTextButton(
+            modifier = Modifier,
+            onClick = {},
+            text = "Delete"
+        )
+    }
 }

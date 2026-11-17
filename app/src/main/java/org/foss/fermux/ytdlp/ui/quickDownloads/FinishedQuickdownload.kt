@@ -20,56 +20,56 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun FinalQuickDownload(
-     onCancel: () -> Unit
+    onCancel: () -> Unit
 ) {
 
-     Surface(
-          modifier = Modifier
-               .padding(8.dp)
-               .height(60.dp)
-               .fillMaxWidth(),
-          shape = RoundedCornerShape(8.dp),
-          color = FermuxColors.inActiveContainer,
-          border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
-     ) {
-          Box(
-               modifier = Modifier
-                    .padding(6.dp),
-               contentAlignment = Alignment.CenterStart
-          ) {
-               Text(
-                    text = "Download Completed",
-                    fontSize = 18.sp,
-                    fontStyle = FontStyle.Normal,
-                    fontFamily = FontFamily.Default,
-                    textAlign = TextAlign.Start,
-                    color = FermuxColors.skyBlue,
+    Surface(
+        modifier = Modifier
+            .padding(8.dp)
+            .height(60.dp)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        color = FermuxColors.inActiveContainer,
+        border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
+    ) {
+        Box(
+            modifier = Modifier
+                .padding(6.dp),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Text(
+                text = "Download Completed",
+                fontSize = 18.sp,
+                fontStyle = FontStyle.Normal,
+                fontFamily = FontFamily.Default,
+                textAlign = TextAlign.Start,
+                color = FermuxColors.skyBlue,
 
-                    )
-          }
+                )
+        }
 
-          Row(
-               verticalAlignment = Alignment.CenterVertically,
-          ) {
-               Box(
-                    modifier = Modifier
-                         .fillMaxWidth()
-                         .padding(top = 5.dp, bottom = 5.dp, end = 8.dp),
-                    contentAlignment = Alignment.CenterEnd
-               ) {
-                    CancelButton(
-                         shape = RoundedCornerShape(8.dp),
-                         onClick = { onCancel() },
-                    )
-               }
-          }
-     }
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 5.dp, bottom = 5.dp, end = 8.dp),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                CancelButton(
+                    shape = RoundedCornerShape(8.dp),
+                    onClick = { onCancel() },
+                )
+            }
+        }
+    }
 }
 
 @Preview
 @Composable
 fun test14() {
-     FinalQuickDownload(
-          onCancel = {}
-     )
+    FinalQuickDownload(
+        onCancel = {}
+    )
 }

@@ -15,69 +15,69 @@ import org.foss.fermux.ytdlp.logic.oneTimeDownloader.VideoQuality
 
 @Composable
 fun VideoQualityChoices(
-     onQualitySelected: (VideoQuality) -> Unit,
-     onBack: () -> Unit
+    onQualitySelected: (VideoQuality) -> Unit,
+    onBack: () -> Unit
 ) {
 
-     val videoListOptions = listOf(
-          InfoListClass(
-               title = "Back",
-               description = "Back to the previous page",
-               image = R.drawable.back_arrow,
-               onClick = onBack,
-               position = TilePosition.TOP
-          ),
-          InfoListClass(
-               title = "1080p",
-               description = "A 1920 * 1080 video",
-               onClick = { onQualitySelected(VideoQuality.HD1080) },
-               position = TilePosition.MIDDLE
-          ),
-          InfoListClass(
-               title = "720p",
-               description = "A 1280 × 720 video",
-               onClick = { onQualitySelected(VideoQuality.HD720) },
-               position = TilePosition.MIDDLE
-          ),
-          InfoListClass(
-               title = "480p",
-               description = "A 854 × 480 video",
-               onClick = { onQualitySelected(VideoQuality.SD480) },
-               position = TilePosition.MIDDLE
-          ),
-          InfoListClass(
-               title = "360p",
-               description = "A 640 × 360 video",
-               onClick = { onQualitySelected(VideoQuality.Q360) },
-               position = TilePosition.MIDDLE
-          ),
-          InfoListClass(
-               title = "240p",
-               description = "A 426 × 240 video",
-               onClick = { onQualitySelected(VideoQuality.Q240) },
-               position = TilePosition.MIDDLE
-          ),
-          InfoListClass(
-               title = "144p",
-               description = "A 256 × 144 video",
-               onClick = { onQualitySelected(VideoQuality.Q144) },
-               position = TilePosition.BOTTOM
-          )
-     )
-     Column(
-          modifier = Modifier
-               .fillMaxWidth()
-               .padding(start = 4.dp, end = 4.dp)
+    val videoListOptions = listOf(
+        InfoListClass(
+            title = "Back",
+            description = "Back to the previous page",
+            image = R.drawable.back_arrow,
+            onClick = onBack,
+            position = TilePosition.TOP
+        ),
+        InfoListClass(
+            title = "1080p",
+            description = "A 1920 * 1080 video",
+            onClick = { onQualitySelected(VideoQuality.HD1080) },
+            position = TilePosition.MIDDLE
+        ),
+        InfoListClass(
+            title = "720p",
+            description = "A 1280 × 720 video",
+            onClick = { onQualitySelected(VideoQuality.HD720) },
+            position = TilePosition.MIDDLE
+        ),
+        InfoListClass(
+            title = "480p",
+            description = "A 854 × 480 video",
+            onClick = { onQualitySelected(VideoQuality.SD480) },
+            position = TilePosition.MIDDLE
+        ),
+        InfoListClass(
+            title = "360p",
+            description = "A 640 × 360 video",
+            onClick = { onQualitySelected(VideoQuality.Q360) },
+            position = TilePosition.MIDDLE
+        ),
+        InfoListClass(
+            title = "240p",
+            description = "A 426 × 240 video",
+            onClick = { onQualitySelected(VideoQuality.Q240) },
+            position = TilePosition.MIDDLE
+        ),
+        InfoListClass(
+            title = "144p",
+            description = "A 256 × 144 video",
+            onClick = { onQualitySelected(VideoQuality.Q144) },
+            position = TilePosition.BOTTOM
+        )
+    )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 4.dp, end = 4.dp)
 
-     ) {
-          videoListOptions.forEach { option ->
-               FormatTiles(
-                    title = option.title,
-                    description = option.description,
-                    shape = option.position.TileShaper(),
-                    image = option.image,
-                    onClick = { option.onClick?.invoke() }
-               )
-          }
-     }
+    ) {
+        videoListOptions.forEach { option ->
+            FormatTiles(
+                title = option.title,
+                description = option.description,
+                shape = option.position.TileShaper(),
+                image = option.image,
+                onClick = { option.onClick?.invoke() }
+            )
+        }
+    }
 }

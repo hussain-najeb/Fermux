@@ -17,40 +17,40 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun MidConversionProcess(
-     ffmpegViewModel: FFmpegViewModel = viewModel(
-          viewModelStoreOwner = LocalActivity.current as ComponentActivity
-     )
+    ffmpegViewModel: FFmpegViewModel = viewModel(
+        viewModelStoreOwner = LocalActivity.current as ComponentActivity
+    )
 ) {
-     Column(
-          modifier = Modifier
-               .fillMaxWidth()
-     ) {
-          FFmpegCard(
-               modifier = Modifier
-                    .padding(15.dp)
-          ) {
-               if (ffmpegViewModel.inputUri != null) {
-                    Box(
-                         modifier = Modifier
-                              .fillMaxWidth()
-                    ) {
-                         MediaThumbnailImage(
-                              uri = ffmpegViewModel.inputUri,
-                              contentScale = ContentScale.Crop,
-                              modifier = Modifier
-                                   .fillMaxWidth()
-                                   .background(FermuxColors.fermuxSurface)
-                                   .aspectRatio(16f/9f)
-                         )
-                    }
-               }
-          }
-          Column(
-               modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(15.dp)
-          ) {
-               FormatList(ffmpegViewModel)
-          }
-     }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        FFmpegCard(
+            modifier = Modifier
+                .padding(15.dp)
+        ) {
+            if (ffmpegViewModel.inputUri != null) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    MediaThumbnailImage(
+                        uri = ffmpegViewModel.inputUri,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(FermuxColors.fermuxSurface)
+                            .aspectRatio(16f / 9f)
+                    )
+                }
+            }
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(15.dp)
+        ) {
+            FormatList(ffmpegViewModel)
+        }
+    }
 }

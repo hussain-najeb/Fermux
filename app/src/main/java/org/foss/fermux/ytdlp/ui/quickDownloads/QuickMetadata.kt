@@ -19,49 +19,50 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun QuickDownloadsMetadata(
-     progress: Float? = null
+    progress: Float? = null
 ) {
-     Surface(modifier = Modifier
-          .padding(8.dp)
-          .height(60.dp)
-          .fillMaxWidth(),
-          shape = RoundedCornerShape(8.dp),
-          color = FermuxColors.inActiveContainer,
-          border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
-     ) {
-          Box(
-               modifier = Modifier.padding(12.dp),
-               contentAlignment = Alignment.CenterStart
-          ) {
-               Text(
-                    text = "Fetching video info...",
-                    fontSize = 18.sp,
-                    fontStyle = FontStyle.Normal,
-                    fontFamily = FontFamily.Default,
-                    textAlign = TextAlign.Start,
-                    color = FermuxColors.skyBlue
-               )
-          }
+    Surface(
+        modifier = Modifier
+            .padding(8.dp)
+            .height(60.dp)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        color = FermuxColors.inActiveContainer,
+        border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
+    ) {
+        Box(
+            modifier = Modifier.padding(12.dp),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Text(
+                text = "Fetching video info...",
+                fontSize = 18.sp,
+                fontStyle = FontStyle.Normal,
+                fontFamily = FontFamily.Default,
+                textAlign = TextAlign.Start,
+                color = FermuxColors.skyBlue
+            )
+        }
 
-          Box(
-               modifier = Modifier
-                    .padding(end = 15.dp)
-                    .fillMaxSize(),
-               contentAlignment = Alignment.CenterEnd
-          ) {
-               if (progress != null) {
-                    if (progress > -1f)
-                         LoadingIndicator(
-                              modifier = Modifier.size(45.dp),
-                              color = FermuxColors.skyBlue
-                         )
-               }
-          }
-     }
+        Box(
+            modifier = Modifier
+                .padding(end = 15.dp)
+                .fillMaxSize(),
+            contentAlignment = Alignment.CenterEnd
+        ) {
+            if (progress != null) {
+                if (progress > -1f)
+                    LoadingIndicator(
+                        modifier = Modifier.size(45.dp),
+                        color = FermuxColors.skyBlue
+                    )
+            }
+        }
+    }
 }
 
 @Preview
 @Composable
 fun test7() {
-     QuickDownloadsMetadata(progress = 4f)
+    QuickDownloadsMetadata(progress = 4f)
 }

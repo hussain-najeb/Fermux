@@ -3,173 +3,173 @@ package org.foss.fermux.ffmpeg.logic
 import android.net.Uri
 
 sealed class FFmpegStatus {
-     data object Idle : FFmpegStatus()
-     data class MidConversion(val inputUri: Uri) : FFmpegStatus()
-     data class Loaded(val filePicked: FFmpegTargetFormat, val inputUri: Uri, val ffmpegLogs: String) : FFmpegStatus()
-     data class Error(val flavourMessage: String, val rawError: String) : FFmpegStatus()
-     data class Converting(
-          val progress: Float,
-          val filePicked: FFmpegTargetFormat,
-          val inputUri: Uri,
-          val ffmpegLogs: String
-     ) : FFmpegStatus()
+    data object Idle : FFmpegStatus()
+    data class MidConversion(val inputUri: Uri) : FFmpegStatus()
+    data class Loaded(val filePicked: FFmpegTargetFormat, val inputUri: Uri, val ffmpegLogs: String) : FFmpegStatus()
+    data class Error(val flavourMessage: String, val rawError: String) : FFmpegStatus()
+    data class Converting(
+        val progress: Float,
+        val filePicked: FFmpegTargetFormat,
+        val inputUri: Uri,
+        val ffmpegLogs: String
+    ) : FFmpegStatus()
 }
 
 enum class MediaKind {
-     Idle,
-     Video,
-     Audio,
-     Image,
-     Cancel
+    Idle,
+    Video,
+    Audio,
+    Image,
+    Cancel
 }
 
 data class VideoEncodingProfile(
-     val softwareVideoArgs: List<String>,
-     val hardwareVideoArgs: List<String>,
-     val audioArgs: List<String>,
-     val softwareQualityOption: String? = null,
+    val softwareVideoArgs: List<String>,
+    val hardwareVideoArgs: List<String>,
+    val audioArgs: List<String>,
+    val softwareQualityOption: String? = null,
 )
 
 enum class FFmpegTargetFormat(
-     val workerFile: String,
-     val category: MediaKind,
-     val mimeType: String,
-     val ffmpegExtraArgs: List<String>,
-     val descriptor: String,
-     val videoEncodingProfile: VideoEncodingProfile? = null,
+    val workerFile: String,
+    val category: MediaKind,
+    val mimeType: String,
+    val ffmpegExtraArgs: List<String>,
+    val descriptor: String,
+    val videoEncodingProfile: VideoEncodingProfile? = null,
 ) {
 
-     MP4(
-          "mp4",
-          category = MediaKind.Video,
-          mimeType = "video/mp4",
-          ffmpegExtraArgs = emptyList(),
-          descriptor = "video(mp4)",
-          videoEncodingProfile = VideoEncodingProfile(
-               softwareVideoArgs = listOf("-c:v", "libx264"),
-               hardwareVideoArgs = listOf("-c:v", "h264_mediacodec", "-b:v", "4M"),
-               audioArgs = listOf("-c:a", "aac"),
-               softwareQualityOption = "-crf",
-          ),
-     ),
-     MKV(
-          "mkv",
-          category = MediaKind.Video,
-          mimeType = "video/x-matroska",
-          ffmpegExtraArgs = emptyList(),
-          descriptor = "video(mkv)",
-          videoEncodingProfile = VideoEncodingProfile(
-               softwareVideoArgs = listOf("-c:v", "libx264"),
-               hardwareVideoArgs = listOf("-c:v", "h264_mediacodec", "-b:v", "4M"),
-               audioArgs = listOf("-c:a", "aac"),
-               softwareQualityOption = "-crf",
-          ),
-     ),
-     MOV(
-          "mov",
-          category = MediaKind.Video,
-          mimeType = "video/quicktime",
-          ffmpegExtraArgs = emptyList(),
-          descriptor = "video(mov)",
-          videoEncodingProfile = VideoEncodingProfile(
-               softwareVideoArgs = listOf("-c:v", "libx264"),
-               hardwareVideoArgs = listOf("-c:v", "h264_mediacodec", "-b:v", "4M"),
-               audioArgs = listOf("-c:a", "aac"),
-               softwareQualityOption = "-crf",
-          ),
-     ),
-     AVI(
-          "avi",
-          category = MediaKind.Video,
-          mimeType = "video/x-msvideo",
-          ffmpegExtraArgs = emptyList(),
-          descriptor = "video(avi)",
-          videoEncodingProfile = VideoEncodingProfile(
-               softwareVideoArgs = listOf("-c:v", "libx264"),
-               hardwareVideoArgs = listOf("-c:v", "mpeg4_mediacodec", "-b:v", "4M"),
-               audioArgs = listOf("-c:a", "libmp3lame"),
-               softwareQualityOption = "-crf",
-          ),
-     ),
-     WEBM(
-          "webm",
-          category = MediaKind.Video,
-          mimeType = "video/webm",
-          ffmpegExtraArgs = emptyList(),
-          descriptor = "video(webm)",
-          videoEncodingProfile = VideoEncodingProfile(
-               softwareVideoArgs = listOf("-c:v", "libvpx", "-b:v", "0"),
-               hardwareVideoArgs = listOf("-c:v", "vp8_mediacodec", "-b:v", "4M"),
-               audioArgs = listOf("-c:a", "opus", "-strict", "experimental"),
-               softwareQualityOption = "-crf",
-          ),
-     ),
+    MP4(
+        "mp4",
+        category = MediaKind.Video,
+        mimeType = "video/mp4",
+        ffmpegExtraArgs = emptyList(),
+        descriptor = "video(mp4)",
+        videoEncodingProfile = VideoEncodingProfile(
+            softwareVideoArgs = listOf("-c:v", "libx264"),
+            hardwareVideoArgs = listOf("-c:v", "h264_mediacodec", "-b:v", "4M"),
+            audioArgs = listOf("-c:a", "aac"),
+            softwareQualityOption = "-crf",
+        ),
+    ),
+    MKV(
+        "mkv",
+        category = MediaKind.Video,
+        mimeType = "video/x-matroska",
+        ffmpegExtraArgs = emptyList(),
+        descriptor = "video(mkv)",
+        videoEncodingProfile = VideoEncodingProfile(
+            softwareVideoArgs = listOf("-c:v", "libx264"),
+            hardwareVideoArgs = listOf("-c:v", "h264_mediacodec", "-b:v", "4M"),
+            audioArgs = listOf("-c:a", "aac"),
+            softwareQualityOption = "-crf",
+        ),
+    ),
+    MOV(
+        "mov",
+        category = MediaKind.Video,
+        mimeType = "video/quicktime",
+        ffmpegExtraArgs = emptyList(),
+        descriptor = "video(mov)",
+        videoEncodingProfile = VideoEncodingProfile(
+            softwareVideoArgs = listOf("-c:v", "libx264"),
+            hardwareVideoArgs = listOf("-c:v", "h264_mediacodec", "-b:v", "4M"),
+            audioArgs = listOf("-c:a", "aac"),
+            softwareQualityOption = "-crf",
+        ),
+    ),
+    AVI(
+        "avi",
+        category = MediaKind.Video,
+        mimeType = "video/x-msvideo",
+        ffmpegExtraArgs = emptyList(),
+        descriptor = "video(avi)",
+        videoEncodingProfile = VideoEncodingProfile(
+            softwareVideoArgs = listOf("-c:v", "libx264"),
+            hardwareVideoArgs = listOf("-c:v", "mpeg4_mediacodec", "-b:v", "4M"),
+            audioArgs = listOf("-c:a", "libmp3lame"),
+            softwareQualityOption = "-crf",
+        ),
+    ),
+    WEBM(
+        "webm",
+        category = MediaKind.Video,
+        mimeType = "video/webm",
+        ffmpegExtraArgs = emptyList(),
+        descriptor = "video(webm)",
+        videoEncodingProfile = VideoEncodingProfile(
+            softwareVideoArgs = listOf("-c:v", "libvpx", "-b:v", "0"),
+            hardwareVideoArgs = listOf("-c:v", "vp8_mediacodec", "-b:v", "4M"),
+            audioArgs = listOf("-c:a", "opus", "-strict", "experimental"),
+            softwareQualityOption = "-crf",
+        ),
+    ),
 
-     WAV(
-          "wav",
-          category = MediaKind.Audio,
-          mimeType = "audio/wav",
-          ffmpegExtraArgs = listOf("-vn", "-c:a", "pcm_s16le"),
-          descriptor = "audio(wav)"
-     ),
-     MP3(
-          "mp3",
-          category = MediaKind.Audio,
-          mimeType = "audio/mp3",
-          ffmpegExtraArgs = listOf("-vn", "-c:a", "libmp3lame"),
-          descriptor = "audio(mp3)"
-     ),
-     M4A(
-          "m4a",
-          category = MediaKind.Audio,
-          mimeType = "audio/mp4",
-          ffmpegExtraArgs = listOf("-vn", "-c:a", "aac"),
-          descriptor = "audio(m4a)"
-     ),
-     FLAC(
-          "flac",
-          category = MediaKind.Audio,
-          mimeType = "audio/flac",
-          ffmpegExtraArgs = listOf("-vn", "-c:a", "flac"),
-          descriptor = "audio(flac)"
-     ),
-     OGG(
-          "ogg",
-          category = MediaKind.Audio,
-          mimeType = "audio/ogg",
-          ffmpegExtraArgs = listOf("-vn", "-c:a", "vorbis","-strict", "-2"),
-          descriptor = "audio(ogg)"
-     ),
-     GIF(
-          "gif",
-          category = MediaKind.Image,
-          mimeType = "image/gif",
-          ffmpegExtraArgs = emptyList(),
-          descriptor = "image(gif)"
-     ),
-     JPG(
-          "jpg",
-          category = MediaKind.Image,
-          mimeType = "image/jpeg",
-          ffmpegExtraArgs = listOf("-frames:v", "1"),
-          descriptor = "image(jpeg)"
-     ),
-     PNG(
-          "png",
-          category = MediaKind.Image,
-          mimeType = "image/png",
-          ffmpegExtraArgs = listOf("-frames:v", "1"),
-          descriptor = "image(png)"
-     )
+    WAV(
+        "wav",
+        category = MediaKind.Audio,
+        mimeType = "audio/wav",
+        ffmpegExtraArgs = listOf("-vn", "-c:a", "pcm_s16le"),
+        descriptor = "audio(wav)"
+    ),
+    MP3(
+        "mp3",
+        category = MediaKind.Audio,
+        mimeType = "audio/mp3",
+        ffmpegExtraArgs = listOf("-vn", "-c:a", "libmp3lame"),
+        descriptor = "audio(mp3)"
+    ),
+    M4A(
+        "m4a",
+        category = MediaKind.Audio,
+        mimeType = "audio/mp4",
+        ffmpegExtraArgs = listOf("-vn", "-c:a", "aac"),
+        descriptor = "audio(m4a)"
+    ),
+    FLAC(
+        "flac",
+        category = MediaKind.Audio,
+        mimeType = "audio/flac",
+        ffmpegExtraArgs = listOf("-vn", "-c:a", "flac"),
+        descriptor = "audio(flac)"
+    ),
+    OGG(
+        "ogg",
+        category = MediaKind.Audio,
+        mimeType = "audio/ogg",
+        ffmpegExtraArgs = listOf("-vn", "-c:a", "vorbis", "-strict", "-2"),
+        descriptor = "audio(ogg)"
+    ),
+    GIF(
+        "gif",
+        category = MediaKind.Image,
+        mimeType = "image/gif",
+        ffmpegExtraArgs = emptyList(),
+        descriptor = "image(gif)"
+    ),
+    JPG(
+        "jpg",
+        category = MediaKind.Image,
+        mimeType = "image/jpeg",
+        ffmpegExtraArgs = listOf("-frames:v", "1"),
+        descriptor = "image(jpeg)"
+    ),
+    PNG(
+        "png",
+        category = MediaKind.Image,
+        mimeType = "image/png",
+        ffmpegExtraArgs = listOf("-frames:v", "1"),
+        descriptor = "image(png)"
+    )
 }
 
 data class FFmpegUserPrefs(
-     val audioBitrate: String? = null,
-     val normalizeAudio: Boolean = false,
-     val monoDownmix: Boolean = false,
-     val enableVideoCompression: Boolean = false,
-     val videoResolution: String? = null,
-     val videoCrf: Int? = null,
-     val useHardwareEncoder: Boolean = false,
-     val threadLimit: Int? = null,
+    val audioBitrate: String? = null,
+    val normalizeAudio: Boolean = false,
+    val monoDownmix: Boolean = false,
+    val enableVideoCompression: Boolean = false,
+    val videoResolution: String? = null,
+    val videoCrf: Int? = null,
+    val useHardwareEncoder: Boolean = false,
+    val threadLimit: Int? = null,
 )

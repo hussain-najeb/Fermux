@@ -26,48 +26,48 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun ErrorCopyButton(
-     modifier: Modifier = Modifier,
-     componentSize: Dp = 50.dp,
-     onClick: () -> Unit
+    modifier: Modifier = Modifier,
+    componentSize: Dp = 50.dp,
+    onClick: () -> Unit
 ) {
 
-     val interactionSource = remember { MutableInteractionSource() }
-     val isPressed by interactionSource.collectIsPressedAsState()
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
 
-     val containerColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.fermuxActiveButton else FermuxColors.fermuxInActiveButton,
-          animationSpec = tween(200),
-          label = "Fermux Button Colors",
-     )
-     val iconColor by animateColorAsState(
-          targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.white,
-          animationSpec = tween(200),
-          label = "Fermux Icon Colors"
-     )
-     val buttonAnimation by animateFloatAsState(
-          targetValue = if (isPressed) 0.90f else 1.0f,
-          animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-          label = "Fermux Button Animation"
-     )
-     ElevatedButton(
-          modifier = modifier.graphicsLayer {
-               scaleX = buttonAnimation
-               scaleY = buttonAnimation
-          }
-               .size(componentSize),
-          shape = RoundedCornerShape(16.dp),
-          border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),
-          colors = ButtonDefaults.textButtonColors(
-               containerColor = containerColor,
-          ),
-          contentPadding = PaddingValues(10.dp),
-          interactionSource = interactionSource,
-          onClick = onClick
-     ) {
-          Icon(
-               imageVector = Icons.Default.ContentCopy,
-               tint = iconColor,
-               contentDescription = "Copy Error",
-          )
-     }
+    val containerColor by animateColorAsState(
+        targetValue = if (isPressed) FermuxColors.fermuxActiveButton else FermuxColors.fermuxInActiveButton,
+        animationSpec = tween(200),
+        label = "Fermux Button Colors",
+    )
+    val iconColor by animateColorAsState(
+        targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.white,
+        animationSpec = tween(200),
+        label = "Fermux Icon Colors"
+    )
+    val buttonAnimation by animateFloatAsState(
+        targetValue = if (isPressed) 0.90f else 1.0f,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        label = "Fermux Button Animation"
+    )
+    ElevatedButton(
+        modifier = modifier.graphicsLayer {
+            scaleX = buttonAnimation
+            scaleY = buttonAnimation
+        }
+            .size(componentSize),
+        shape = RoundedCornerShape(16.dp),
+        border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),
+        colors = ButtonDefaults.textButtonColors(
+            containerColor = containerColor,
+        ),
+        contentPadding = PaddingValues(10.dp),
+        interactionSource = interactionSource,
+        onClick = onClick
+    ) {
+        Icon(
+            imageVector = Icons.Default.ContentCopy,
+            tint = iconColor,
+            contentDescription = "Copy Error",
+        )
+    }
 }

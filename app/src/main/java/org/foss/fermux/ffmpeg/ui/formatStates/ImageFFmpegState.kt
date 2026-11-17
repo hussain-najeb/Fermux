@@ -19,88 +19,88 @@ import org.foss.fermux.settings.logic.TilePosition
 
 @Composable
 fun ImageConversionState(
-     ffmpegViewModel: FFmpegViewModel,
-     onBack: () -> Unit
+    ffmpegViewModel: FFmpegViewModel,
+    onBack: () -> Unit
 ) {
 
-     val context = LocalContext.current
-     val scrollState = rememberScrollState()
+    val context = LocalContext.current
+    val scrollState = rememberScrollState()
 
-     LaunchedEffect(ffmpegViewModel.inputUri) {
-          ffmpegViewModel.updateInputKind(context)
-     }
+    LaunchedEffect(ffmpegViewModel.inputUri) {
+        ffmpegViewModel.updateInputKind(context)
+    }
 
-     val imageOptions = listOf(
-          InfoListClass(
-               title = "Back",
-               description = "Choose a different media kind",
-               image = R.drawable.back_arrow,
-               onClick = onBack,
-               position = TilePosition.TOP
-          ),
-          InfoListClass(
-               title = "GIF",
-               description = "it is a short, animated image file that plays on an endless loop without any sound",
-               image = R.drawable.gif,
-               onClick = {
-                    ffmpegViewModel.selectedFormat = FFmpegTargetFormat.GIF
-                    ffmpegViewModel.inputUri?.let { uri ->
-                         ffmpegViewModel.startingConversion(
-                              context,
-                              inputUri = uri,
-                              targetFormat = FFmpegTargetFormat.GIF
-                         )
-                    }
-               },
-               position = TilePosition.MIDDLE
-          ),
-          InfoListClass(
-               title = "JPEG",
-               description = "JPEG is a compressed digital image format designed to balance small file sizes with high photo quality",
-               image = R.drawable.jpg,
-               onClick = {
-                    ffmpegViewModel.selectedFormat = FFmpegTargetFormat.JPG
-                    ffmpegViewModel.inputUri?.let { uri ->
-                         ffmpegViewModel.startingConversion(
-                              context,
-                              inputUri = uri,
-                              targetFormat = FFmpegTargetFormat.JPG
-                         )
-                    }
-               },
-               position = TilePosition.MIDDLE
-          ),
-          InfoListClass(
-               title = "PNG",
-               description = "PNG is an uncompressed image format that supports sharp detail, crisp text, and transparent backgrounds",
-               image = R.drawable.png,
-               onClick = {
-                    ffmpegViewModel.selectedFormat = FFmpegTargetFormat.PNG
-                    ffmpegViewModel.inputUri?.let { uri ->
-                         ffmpegViewModel.startingConversion(
-                              context,
-                              inputUri = uri,
-                              targetFormat = FFmpegTargetFormat.PNG
-                         )
-                    }
-               },
-               position = TilePosition.BOTTOM
-          )
-     )
-     Column(
-          modifier = Modifier
-               .fillMaxWidth()
-               .padding(bottom = 15.dp)
-               .verticalScroll(scrollState)
-     ) {
-          imageOptions.forEach { option ->
-               FFmpegTiles(
-                    title = option.title,
-                    description = option.description,
-                    image = option.image,
-                    onClick = option.onClick,
-                    shape = option.position.TileShaper()
-               )
-          }
-     }
+    val imageOptions = listOf(
+        InfoListClass(
+            title = "Back",
+            description = "Choose a different media kind",
+            image = R.drawable.back_arrow,
+            onClick = onBack,
+            position = TilePosition.TOP
+        ),
+        InfoListClass(
+            title = "GIF",
+            description = "it is a short, animated image file that plays on an endless loop without any sound",
+            image = R.drawable.gif,
+            onClick = {
+                ffmpegViewModel.selectedFormat = FFmpegTargetFormat.GIF
+                ffmpegViewModel.inputUri?.let { uri ->
+                    ffmpegViewModel.startingConversion(
+                        context,
+                        inputUri = uri,
+                        targetFormat = FFmpegTargetFormat.GIF
+                    )
+                }
+            },
+            position = TilePosition.MIDDLE
+        ),
+        InfoListClass(
+            title = "JPEG",
+            description = "JPEG is a compressed digital image format designed to balance small file sizes with high photo quality",
+            image = R.drawable.jpg,
+            onClick = {
+                ffmpegViewModel.selectedFormat = FFmpegTargetFormat.JPG
+                ffmpegViewModel.inputUri?.let { uri ->
+                    ffmpegViewModel.startingConversion(
+                        context,
+                        inputUri = uri,
+                        targetFormat = FFmpegTargetFormat.JPG
+                    )
+                }
+            },
+            position = TilePosition.MIDDLE
+        ),
+        InfoListClass(
+            title = "PNG",
+            description = "PNG is an uncompressed image format that supports sharp detail, crisp text, and transparent backgrounds",
+            image = R.drawable.png,
+            onClick = {
+                ffmpegViewModel.selectedFormat = FFmpegTargetFormat.PNG
+                ffmpegViewModel.inputUri?.let { uri ->
+                    ffmpegViewModel.startingConversion(
+                        context,
+                        inputUri = uri,
+                        targetFormat = FFmpegTargetFormat.PNG
+                    )
+                }
+            },
+            position = TilePosition.BOTTOM
+        )
+    )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 15.dp)
+            .verticalScroll(scrollState)
+    ) {
+        imageOptions.forEach { option ->
+            FFmpegTiles(
+                title = option.title,
+                description = option.description,
+                image = option.image,
+                onClick = option.onClick,
+                shape = option.position.TileShaper()
+            )
+        }
+    }
 }

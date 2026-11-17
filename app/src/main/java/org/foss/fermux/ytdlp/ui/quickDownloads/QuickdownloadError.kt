@@ -22,49 +22,52 @@ import org.foss.fermux.utils.Miscellaneous
 
 @Composable
 fun QuickdownloadError(
-     onCancel: () -> Unit,
-     navController: NavController
+    onCancel: () -> Unit,
+    navController: NavController
 ) {
 
-     Surface(modifier = Modifier
-          .padding(8.dp)
-          .height(60.dp)
-          .fillMaxWidth(),
-          shape = RoundedCornerShape(8.dp),
-          color = FermuxColors.fermuxErrorCardColor,
-          border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
-     ) {
-          Box(modifier = Modifier
-               .padding(6.dp)
-               .fillMaxWidth(),
-               contentAlignment = Alignment.CenterStart
-          ) {
-               Text(
-                    text = "Error while downloading",
-                    fontSize = 18.sp,
-                    fontStyle = FontStyle.Normal,
-                    fontFamily = FontFamily.Default,
-                    textAlign = TextAlign.Start,
-                    color = FermuxColors.white,
-                    modifier = Modifier.padding(start = 2.dp)
-               )
-          }
-          Box(modifier = Modifier
-               .padding(3.dp)
-               .fillMaxWidth(),
-               contentAlignment = Alignment.CenterEnd
-          ) {
-               Row(modifier = Modifier.padding(end = 5.dp)) {
-                    FilterButton(
-                         onClick = { navController.navigate(Miscellaneous.DownloaderLogs.route) },
-                         modifier = Modifier.padding(end = 4.dp),
-                         image = R.drawable.log
-                    )
-                    CancelButton(
-                         shape = RoundedCornerShape(8.dp),
-                         onClick = { onCancel() }
-                    )
-               }
-          }
-     }
+    Surface(
+        modifier = Modifier
+            .padding(8.dp)
+            .height(60.dp)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        color = FermuxColors.fermuxErrorCardColor,
+        border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
+    ) {
+        Box(
+            modifier = Modifier
+                .padding(6.dp)
+                .fillMaxWidth(),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Text(
+                text = "Error while downloading",
+                fontSize = 18.sp,
+                fontStyle = FontStyle.Normal,
+                fontFamily = FontFamily.Default,
+                textAlign = TextAlign.Start,
+                color = FermuxColors.white,
+                modifier = Modifier.padding(start = 2.dp)
+            )
+        }
+        Box(
+            modifier = Modifier
+                .padding(3.dp)
+                .fillMaxWidth(),
+            contentAlignment = Alignment.CenterEnd
+        ) {
+            Row(modifier = Modifier.padding(end = 5.dp)) {
+                FilterButton(
+                    onClick = { navController.navigate(Miscellaneous.DownloaderLogs.route) },
+                    modifier = Modifier.padding(end = 4.dp),
+                    image = R.drawable.log
+                )
+                CancelButton(
+                    shape = RoundedCornerShape(8.dp),
+                    onClick = { onCancel() }
+                )
+            }
+        }
+    }
 }

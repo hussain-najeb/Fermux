@@ -73,7 +73,6 @@ fun History(
         )
     }
 
-
     MediumTopBarScaffold(
         title = "History",
         onBack = { navController.popBackStack() },
@@ -102,9 +101,9 @@ fun History(
                             modifier = Modifier.wrapContentSize(),
                         ) {
                             IconTextButton(
-                                 text = "Filter",
-                                 image = if (filter) R.drawable.filter_full else R.drawable.filter,
-                                 onClick = { expanded = !expanded.also { filter = !filter } }
+                                text = "Filter",
+                                image = if (filter) R.drawable.filter_full else R.drawable.filter,
+                                onClick = { expanded = !expanded.also { filter = !filter } }
                             )
                             AnimatedVisibility(
                                 visible = expanded,
@@ -114,7 +113,7 @@ fun History(
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                     IconTextButton(
+                                    IconTextButton(
                                         modifier = Modifier.padding(start = 4.dp),
                                         text = if (state.sorting == DownloadsSorter.TitleASC) "Sort Z-A" else "Sort A-Z",
                                         image = if (state.sorting == DownloadsSorter.TitleASC) R.drawable.sort_descending else R.drawable.sort_ascending,

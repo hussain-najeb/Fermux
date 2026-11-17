@@ -13,39 +13,39 @@ import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
 fun SettingsSwitch(
-     checked: Boolean,
-     onCheckedChange: (Boolean) -> Unit,
-     modifier: Modifier = Modifier,
-     enabled: Boolean = true,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
-     Row(
-          modifier = Modifier
-               .height(IntrinsicSize.Min)
-               .wrapContentSize()
-     ) {
-          Switch(
-               thumbContent = if (checked) {
-                    {
-                         Icon(
-                              imageVector = Icons.Default.Check,
-                              contentDescription = null,
-                              tint = FermuxColors.downriver,
-                              modifier = Modifier.size(SwitchDefaults.IconSize),
-                         )
-                    }
-               } else {
-                    null
-               },
-               checked = checked,
-               onCheckedChange = onCheckedChange,
-               modifier = modifier,
-               enabled = enabled,
-               colors = SwitchDefaults.colors(
-                    checkedThumbColor = FermuxColors.white,
-                    uncheckedThumbColor = FermuxColors.offWhiteTextColor,
-                    checkedTrackColor = FermuxColors.fermuxTrackOn,
-                    uncheckedTrackColor = FermuxColors.gray,
-               ),
-          )
-     }
+    Row(
+        modifier = Modifier
+            .height(IntrinsicSize.Min)
+            .wrapContentSize()
+    ) {
+        Switch(
+            thumbContent = if (checked) {
+                {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = null,
+                        tint = FermuxColors.downriver,
+                        modifier = Modifier.size(SwitchDefaults.IconSize),
+                    )
+                }
+            } else {
+                null
+            },
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            modifier = modifier,
+            enabled = enabled,
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = FermuxColors.white,
+                uncheckedThumbColor = FermuxColors.offWhiteTextColor,
+                checkedTrackColor = FermuxColors.fermuxTrackOn,
+                uncheckedTrackColor = FermuxColors.gray,
+            ),
+        )
+    }
 }

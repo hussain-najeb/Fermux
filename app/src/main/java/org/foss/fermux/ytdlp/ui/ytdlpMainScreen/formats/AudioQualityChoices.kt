@@ -16,71 +16,72 @@ import org.foss.fermux.ytdlp.logic.oneTimeDownloader.AudioQuality
 
 @Composable
 fun AudioQualityChoices(
-     onBack: () -> Unit,
-     onQualitySelected: (AudioQuality) -> Unit
+    onBack: () -> Unit,
+    onQualitySelected: (AudioQuality) -> Unit
 ) {
-     val audioListOptions = listOf(
-          InfoListClass(
-               title = "Back",
-               description = "Back to the previous page",
-               image = R.drawable.back_arrow,
-               onClick = onBack,
-               position = TilePosition.TOP
-          ),
-          InfoListClass(
-               title = "Best Audio Quality",
-               description = "Highest audio quality",
-               onClick = { onQualitySelected(AudioQuality.BEST) },
-               position = TilePosition.MIDDLE
-          ),
-          InfoListClass(
-               title = "High",
-               description = "Best middle ground for size and quality",
-               onClick = { onQualitySelected(AudioQuality.HIGH) },
-               position = TilePosition.MIDDLE
-          ),
-          InfoListClass(
-               title = "Medium",
-               description = "Yt-dlp default audio quality",
-               onClick = { onQualitySelected(AudioQuality.MEDIUM) },
-               position = TilePosition.MIDDLE
-          ),
-          InfoListClass(
-               title = "Low",
-               description = "Smallest file size with the lowest audio quality",
-               onClick = { onQualitySelected(AudioQuality.LOW) },
-               position = TilePosition.BOTTOM
-          ),
-     )
-     Column(
-          modifier = Modifier
-               .fillMaxWidth()
-               .padding(start = 4.dp, end = 4.dp)
-     ) {
-          audioListOptions.forEach { option ->
-               FormatTiles(
-                    title = option.title,
-                    description = option.description,
-                    shape = option.position.TileShaper(),
-                    image = option.image,
-                    onClick = { option.onClick?.invoke() }
-               )
-          }
-     }
+    val audioListOptions = listOf(
+        InfoListClass(
+            title = "Back",
+            description = "Back to the previous page",
+            image = R.drawable.back_arrow,
+            onClick = onBack,
+            position = TilePosition.TOP
+        ),
+        InfoListClass(
+            title = "Best Audio Quality",
+            description = "Highest audio quality",
+            onClick = { onQualitySelected(AudioQuality.BEST) },
+            position = TilePosition.MIDDLE
+        ),
+        InfoListClass(
+            title = "High",
+            description = "Best middle ground for size and quality",
+            onClick = { onQualitySelected(AudioQuality.HIGH) },
+            position = TilePosition.MIDDLE
+        ),
+        InfoListClass(
+            title = "Medium",
+            description = "Yt-dlp default audio quality",
+            onClick = { onQualitySelected(AudioQuality.MEDIUM) },
+            position = TilePosition.MIDDLE
+        ),
+        InfoListClass(
+            title = "Low",
+            description = "Smallest file size with the lowest audio quality",
+            onClick = { onQualitySelected(AudioQuality.LOW) },
+            position = TilePosition.BOTTOM
+        ),
+    )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 4.dp, end = 4.dp)
+    ) {
+        audioListOptions.forEach { option ->
+            FormatTiles(
+                title = option.title,
+                description = option.description,
+                shape = option.position.TileShaper(),
+                image = option.image,
+                onClick = { option.onClick?.invoke() }
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFF181825)
 @Composable
 fun Test4() {
-     Column(modifier = Modifier
-          .padding(10.dp)
-          .fillMaxSize()
-     ) {
-          AudioQualityChoices(
-               onBack = {},
-               onQualitySelected = { quality ->
-                    println("Quality is $quality")
-               }
-          )
-     }
+    Column(
+        modifier = Modifier
+            .padding(10.dp)
+            .fillMaxSize()
+    ) {
+        AudioQualityChoices(
+            onBack = {},
+            onQualitySelected = { quality ->
+                println("Quality is $quality")
+            }
+        )
+    }
 }
