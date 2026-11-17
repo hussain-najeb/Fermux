@@ -47,8 +47,8 @@ enum class SequentialStatus {
 }
 
 data class SequentialItem(
-     val id: UUID,
-     val url: String,
+     val id: UUID = UUID.randomUUID(),
+     val url: String = "",
      val status: SequentialItemStatus = SequentialItemStatus.Waiting,
      val progress: Float = 0f,
      val metadata: DownloadMetadata? = null,

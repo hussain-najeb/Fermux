@@ -5,6 +5,7 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
@@ -26,6 +27,7 @@ import org.foss.fermux.R
 import org.foss.fermux.components.buttons.CancelButton
 import org.foss.fermux.components.buttons.FilterButton
 import org.foss.fermux.ui.theme.FermuxColors
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialItem
 import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
 
 @Composable
@@ -35,7 +37,7 @@ fun SequentialIdle(
     val context = LocalContext.current
 
     val submittedUrls = sequentialViewModel.downloadUrl
-        .map(String::trim)
+        .map { it.url.trim() }
         .filter(String::isNotBlank)
 
     Column(
@@ -51,10 +53,9 @@ fun SequentialIdle(
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
             items(
-                count = sequentialViewModel.downloadUrl.size,
-                key = { index -> index }
-
-            ) { index ->
+                items = sequentialViewModel.downloadUrl,
+                key = { item -> item.id }
+            ) { item ->
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -73,7 +74,7 @@ fun SequentialIdle(
                             !visibilityState.currentState &&
                             !visibilityState.targetState
                         ) {
-                            sequentialViewModel.downloadUrl.removeAt(index)
+                            sequentialViewModel.downloadUrl.removeAll { it.id == item.id }
                         }
                     }
                     androidx.compose.animation.AnimatedVisibility(
@@ -85,9 +86,12 @@ fun SequentialIdle(
                             modifier = Modifier
                                 .padding(5.dp)
                                 .fillMaxWidth(),
-                            value = sequentialViewModel.downloadUrl[index],
+                            value = item.url,
                             onValueChange = { value ->
-                                sequentialViewModel.downloadUrl[index] = value
+                                val index = sequentialViewModel.downloadUrl.indexOfFirst { it.id == item.id }
+                                if (index != -1) {
+                                    sequentialViewModel.downloadUrl[index] = item.copy(url = value)
+                                }
                             },
                             placeholder = {
                                 Text(
@@ -179,7 +183,7 @@ fun SequentialIdle(
                         modifier = Modifier.padding(5.dp),
                         image = R.drawable.add,
                         onClick = {
-                            sequentialViewModel.downloadUrl.add("")
+                            sequentialViewModel.downloadUrl.add(SequentialItem())
                         }
                     )
                 }

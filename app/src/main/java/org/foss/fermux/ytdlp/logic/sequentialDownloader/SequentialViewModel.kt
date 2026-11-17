@@ -31,7 +31,7 @@ class SequentialViewModel(
     var state by mutableStateOf(SequentialDownloadQueueState(phase = SequentialStatus.SeqIdle))
     var showModalSheet by mutableStateOf(false)
         private set
-    var downloadUrl = mutableStateListOf("")
+    var downloadUrl = mutableStateListOf(SequentialItem())
     private var downloaderJob: Job? = null
     private var allIDs: List<UUID> = emptyList()
     private val skippedID = mutableSetOf<UUID>()
@@ -61,6 +61,7 @@ class SequentialViewModel(
 
         val requestedUrlBuilder = urls.map { url ->
             OneTimeWorkRequestBuilder<DownloadWorker>().addTag("destroy-all-workers")
+                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 .setInputData(
                     workDataOf(
                         SEQUENTIAL_URL to url
@@ -177,7 +178,7 @@ class SequentialViewModel(
     fun allDestroyer(context: Context) {
         WorkManager.getInstance(context).cancelAllWorkByTag("destroy-all-workers")
         downloaderJob?.cancel()
-        downloadUrl = mutableStateListOf("")
+        downloadUrl = mutableStateListOf(SequentialItem())
         state = SequentialDownloadQueueState(phase = SequentialStatus.SeqIdle)
     }
 

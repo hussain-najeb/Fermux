@@ -29,7 +29,7 @@ import org.foss.fermux.ytdlp.logic.sequentialDownloader.SEQUENTIAL_URL
 import org.foss.youtube.next.YoutubeDL
 import kotlin.math.roundToInt
 
-class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorker(context, params) {
+class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
     private val downloaderWorkNotif: NotificationManager
         get() = applicationContext.getSystemService(
@@ -125,6 +125,11 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
         private const val DOWNLOAD_CHANNEL_ID = "Downloader_Notifs"
         private const val DOWNLOAD_NOTIFICATION_ID = 1001
     }
+
+    override suspend fun getForegroundInfo(): ForegroundInfo {
+        return createDownloaderForegroundInfo()
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.S)
     override suspend fun doWork(): Result {
@@ -235,17 +240,19 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
                         return@downloaderLogic
                     }
 
+                    var justCapturedMetadata = false
                     if (capturedMetadataJson == null) {
                         val markerIndex = line.indexOf(FERMUX_METADATA_MARKER)
                         if (markerIndex != -1) {
                             capturedMetadataJson = line.substring(markerIndex + FERMUX_METADATA_MARKER.length).trim()
+                            justCapturedMetadata = true
                         }
                     }
 
                     val now = System.currentTimeMillis()
                     val currentProgress = progress.coerceIn(0f, 100f)
 
-                    if (now - lastProgressUpdateAt >= 200L) {
+                    if (justCapturedMetadata || now - lastProgressUpdateAt >= 200L) {
                         lastProgressUpdateAt = now
                         runBlocking {
                             setProgress(
@@ -277,7 +284,11 @@ class DownloadWorker(context: Context, params: WorkerParameters): CoroutineWorke
 
         } catch (e: CancellationException) {
             val destroyed = YoutubeDL.destroyProcessById(taskId)
-            DebugLogDownloader.errorDownloader("DownloadWorker", "Cancelled id=$taskId stopReason=$stopReason destroyed=$destroyed", e)
+            DebugLogDownloader.errorDownloader(
+                "DownloadWorker",
+                "Cancelled id=$taskId stopReason=$stopReason destroyed=$destroyed",
+                e
+            )
             Log.e("DownloadWorker", "Cancelled id=$taskId stopReason=$stopReason destroyed=$destroyed", e)
             throw e
         } catch (e: Exception) {

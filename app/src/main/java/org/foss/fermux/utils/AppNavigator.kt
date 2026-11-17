@@ -1,7 +1,5 @@
 package org.foss.fermux.utils
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -55,7 +53,6 @@ sealed class Miscellaneous(val route: String) {
     object DownloaderSeqLogs : Miscellaneous(route = "Seq Logs")
 }
 
-@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun FermuxAppMainScreen() {
 
@@ -87,7 +84,7 @@ fun FermuxAppMainScreen() {
         composable(route = Miscellaneous.DownloaderLogs.route) { DownloaderLogs(navController) }
         composable(route = Miscellaneous.DownloaderArgs.route) { DownloaderArgs(navController) }
         composable(route = Miscellaneous.DownloaderHistory.route) { History(navController) }
-        composable(route = Miscellaneous.SequentialDownloader.route) { SequentialContent(navController, seqView) }
+        composable(route = Miscellaneous.SequentialDownloader.route) { SequentialContent(navController, sequentialViewModel = seqView) }
         composable(route = Miscellaneous.DownloaderSeqLogs.route) { SeqLogs(navController, sequentialViewModel = seqView) }
     }
 }

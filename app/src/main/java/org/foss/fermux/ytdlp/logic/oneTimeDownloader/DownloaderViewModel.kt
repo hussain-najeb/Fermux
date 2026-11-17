@@ -88,6 +88,7 @@ class DownloaderViewModel : ViewModel() {
 
           val settingsTab = DataStoreDownloaderSettings(context.applicationContext)
           val requestedUrls = OneTimeWorkRequestBuilder<DownloadWorker>()
+               .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                .setInputData(
                     workDataOf(
                          URL to downloadUrl,
