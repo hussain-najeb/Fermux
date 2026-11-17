@@ -45,13 +45,6 @@ fun SettingsScreen(
                     position = TilePosition.MIDDLE
                ),
                InfoListClass(
-                    title = "Terminal Settings",
-                    description = "Changing the settings for the Terminal",
-                    image = R.drawable.terminal,
-                    route = SettingsScreens.SimpleTerminal.route,
-                    position = TilePosition.MIDDLE
-               ),
-               InfoListClass(
                     title = "About",
                     description = "About page of the app",
                     icon = Icons.Default.Info,

@@ -48,126 +48,114 @@ import org.foss.fermux.ytdlp.ui.quickDownloads.QuickDownloadsStateMachine
 @Composable
 fun HomeScreen(navController: NavHostController) { // TODO. Add in animation between each transition so its smooth. App wide transition between each tab, not component animations
 
-     val downloaderViewModel: DownloaderViewModel = viewModel()
-     val downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel()
+    val downloaderViewModel: DownloaderViewModel = viewModel()
+    val downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel()
+
+    val context = LocalContext.current
+    val clipboard = LocalClipboard.current
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    val scroll = rememberScrollState()
+    val disabled = downloaderViewModel.state is DownloadStatus.Idle || downloaderViewModel.state is DownloadStatus.Error
+
+    val quickDownloads by downloaderSettingsViewModel.quickDownloads.collectAsStateWithLifecycle()
 
 
-     val context = LocalContext.current
-     val clipboard = LocalClipboard.current
-     val snackbarHostState = remember { SnackbarHostState() }
-     val scope = rememberCoroutineScope()
-     val scroll = rememberScrollState()
-     val disabled = downloaderViewModel.state is DownloadStatus.Idle || downloaderViewModel.state is DownloadStatus.Error
+    val speed = (downloaderViewModel.state as? DownloadStatus.Downloading)?.downloadProgress ?: 0f
+    val iconRotate by animateFloatAsState(
+        targetValue = speed,
+        animationSpec = tween(),
+        label = "Fermux Icon Rotation"
+    )
 
-     val quickDownloads by downloaderSettingsViewModel.quickDownloads.collectAsStateWithLifecycle()
-
-
-     val speed = (downloaderViewModel.state as? DownloadStatus.Downloading)?.downloadProgress ?: 0f
-     val iconRotate by animateFloatAsState(
-          targetValue = speed,
-          animationSpec = tween(),
-          label = "Fermux Icon Rotation"
-     )
-
-     val screens = listOf(
-          ScreenInfo(
-               screen = MainScreens.Terminal,
-               title = "Terminal",
-               description = "A terminal shell with UX, UI, and a lot of convenience taken into account",
-               image = R.drawable.bash,
-               //buttonIcon = ,
-               onClick = {},
-               enabled = true
-          ),
-          ScreenInfo(
-               screen = MainScreens.Downloader,
-               title = "Downloader",
-               description = "A modern implementation of ytdlp to android with powerful additions.",
-               image = R.drawable.download,
-               buttonIcon = if (quickDownloads) R.drawable.speed else null,
-               iconModifier = Modifier.rotate(iconRotate),
-               onClick =  {
-                    if (quickDownloads) {
-                         scope.launch {
-                              clipboard.getClipEntry()?.clipData?.getItemAt(0)?.text?.toString()
-                                   .let { text ->
-                                        if (text != null) {
-                                             downloaderViewModel.downloadUrl = text
-                                             downloaderViewModel.quickDownloads()
-                                             downloaderViewModel.startingDownload(context)
-                                        }
-                                        if (text.isNullOrBlank() || text.isEmpty()) {
-                                             scope.launch {
-                                                  snackbarHostState.showSnackbar(
-                                                       message = "Your url is empty, copy a url",
-                                                       duration = SnackbarDuration.Short
-                                                  )
-                                             }
-                                        }
-                                   }
-                         }
+    val screens = listOf(
+        ScreenInfo(
+            screen = MainScreens.Downloader,
+            title = "Downloader",
+            description = "A modern implementation of ytdlp to android with powerful additions.",
+            image = R.drawable.download,
+            buttonIcon = if (quickDownloads) R.drawable.speed else null,
+            iconModifier = Modifier.rotate(iconRotate),
+            onClick = {
+                if (quickDownloads) {
+                    scope.launch {
+                        clipboard.getClipEntry()?.clipData?.getItemAt(0)?.text?.toString()
+                            .let { text ->
+                                if (text != null) {
+                                    downloaderViewModel.downloadUrl = text
+                                    downloaderViewModel.quickDownloads()
+                                    downloaderViewModel.startingDownload(context)
+                                }
+                                if (text.isNullOrBlank() || text.isEmpty()) {
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar(
+                                            message = "Your url is empty, copy a url",
+                                            duration = SnackbarDuration.Short
+                                        )
+                                    }
+                                }
+                            }
                     }
-               },
-               trailingContent = {
-                    QuickDownloadsStateMachine(
-                         downloaderViewModel.state,
-                         downloaderViewModel,
-                         navController = navController
-                    )
-               },
-               enabled = disabled
-          ),
-          ScreenInfo(
-               screen = MainScreens.Converter,
-               title = "Converter",
-               description = "A hardware accelerated, powerful conversion tab based on FFmpeg",
-               image = R.drawable.ffmpeg,
-               //buttonIcon = 4,
-               onClick = {},
-               enabled = true
-          ),
-          ScreenInfo(
-               screen = MainScreens.Settings,
-               title = "Preferences",
-               description = "An extensive Preferences tab for all your options",
-               image = R.drawable.prefs,
-               //buttonIcon = 4,
-               onClick = {},
-               enabled = true
-          ),
-     )
+                }
+            },
+            trailingContent = {
+                QuickDownloadsStateMachine(
+                    downloaderViewModel.state,
+                    downloaderViewModel,
+                    navController = navController
+                )
+            },
+            enabled = disabled
+        ),
+        ScreenInfo(
+            screen = MainScreens.Converter,
+            title = "Converter",
+            description = "A hardware accelerated, powerful conversion tab based on FFmpeg",
+            image = R.drawable.ffmpeg,
+            onClick = {},
+            enabled = true
+        ),
+        ScreenInfo(
+            screen = MainScreens.Settings,
+            title = "Preferences",
+            description = "An extensive Preferences tab for all your options",
+            image = R.drawable.prefs,
+            onClick = {},
+            enabled = true
+        ),
+    )
 
-     LargeTopBarScaffold(
-          title = "Home Page",
-          snackbarHost = { AppSnackBar(snackbarHostState) }
-     ) { innerPadding ->
-          Column(
-               modifier = Modifier
-                    .fillMaxWidth()
-                    .background(FermuxColors.background)
-                    .verticalScroll(scroll)
-                    .padding(top = 10.dp)
-                    .padding(innerPadding),
-               verticalArrangement = Arrangement.Center,
-               horizontalAlignment = Alignment.CenterHorizontally
-          ) {
-               screens.forEach { screen ->
-                    MainAppCard(
-                         modifier = Modifier
-                              .fillMaxWidth()
-                              .padding(start = 5.dp, end = 5.dp, bottom = 3.dp, top = 3.dp),
-                         iconModifier = screen.iconModifier,
-                         title = screen.title,
-                         description = screen.description,
-                         image = screen.image,
-                         buttonImage = screen.buttonIcon,
-                         buttonOnClick = screen.onClick,
-                         route = screen.screen,
-                         enabled = screen.enabled,
-                         trailingContent = screen.trailingContent,
-                         navController = navController
-                    )
-               }
-          }
-     }
+    LargeTopBarScaffold(
+        title = "Home Page",
+        snackbarHost = { AppSnackBar(snackbarHostState) }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(FermuxColors.background)
+                .verticalScroll(scroll)
+                .padding(top = 10.dp)
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            screens.forEach { screen ->
+                MainAppCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 5.dp, end = 5.dp, bottom = 3.dp, top = 3.dp),
+                    iconModifier = screen.iconModifier,
+                    title = screen.title,
+                    description = screen.description,
+                    image = screen.image,
+                    buttonImage = screen.buttonIcon,
+                    buttonOnClick = screen.onClick,
+                    route = screen.screen,
+                    enabled = screen.enabled,
+                    trailingContent = screen.trailingContent,
+                    navController = navController
+                )
+            }
+        }
+    }
 }

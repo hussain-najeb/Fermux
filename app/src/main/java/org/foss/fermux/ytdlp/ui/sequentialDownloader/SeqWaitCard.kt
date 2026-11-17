@@ -28,42 +28,12 @@ fun SeqWaitCard(
     onCancelRequest: () -> Unit
 ) {
 
-
     val statusText = when (status) {
         SequentialItemStatus.Waiting -> "Waiting"
-        SequentialItemStatus.Cancelled -> "Cancelled" // TODO. add a card for each of these
+        SequentialItemStatus.Cancelled -> "Cancelled"
         SequentialItemStatus.Failed -> item.error ?: "Download Failed"
         else -> null
     }
-
-    val statusBall = when (status) {
-        SequentialItemStatus.FetchingMetadata -> {
-
-        }
-
-        SequentialItemStatus.Waiting -> {
-
-        }
-
-        SequentialItemStatus.Downloading -> {
-
-        }
-
-        SequentialItemStatus.Completed -> {
-
-        }
-
-        SequentialItemStatus.Cancelled -> {
-
-        }
-
-        SequentialItemStatus.Failed -> {
-
-        }
-    } // TODO. Add these, its a small ball that has light for each state, like, if the video is in waiting,
-    //    the ball is gray, if its downloading, its blue, if it's done, its green, error is red, and have it glow,
-    //    like maybe an animation circle, so it goes, bright blue glow, then goes to the same color, then goes bright,
-    //    like a breathing motion, an animation circle that is for all balls btw.
 
     Surface(
         modifier = modifier
@@ -134,18 +104,18 @@ fun SeqWaitCard(
                     }
                 }
             }
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxSize()
-                        .padding(3.dp),
-                    contentAlignment = Alignment.CenterEnd
-                ) {
-                    CancelButton(
-                        transparency = true,
-                        onClick = onCancelRequest
-                    )
-                }
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxSize()
+                    .padding(3.dp),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                CancelButton(
+                    transparency = true,
+                    onClick = onCancelRequest
+                )
+            }
         }
     }
 }
