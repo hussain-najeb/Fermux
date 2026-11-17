@@ -15,7 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
-import org.foss.fermux.components.buttons.CancelButton
+import org.foss.fermux.R
+import org.foss.fermux.components.buttons.IconTextButton
 import org.foss.fermux.components.downloaderComponents.DownloaderCard
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.DownloadStatus
@@ -110,10 +111,12 @@ fun LoadingCard(
                 }
             }
         }
-        CancelButton(
+        IconTextButton(
             modifier = Modifier
                 .align(Alignment.End)
                 .padding(end = 15.dp),
+            text = "Cancel",
+            image = R.drawable.cancel_buttons,
             onClick = { onCancel() }
         )
     }

@@ -29,7 +29,6 @@ class SequentialViewModel(
 ) : ViewModel() {
 
     var state by mutableStateOf(SequentialDownloadQueueState(phase = SequentialStatus.SeqIdle))
-        private set
     var showModalSheet by mutableStateOf(false)
         private set
     var downloadUrl = mutableStateListOf("")
