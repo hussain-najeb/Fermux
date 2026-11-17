@@ -60,7 +60,7 @@ fun AboutPage(navController: NavController) {
             description = "Press to see all the versions of dependencies and libraries the app uses",
             image = R.drawable.library,
             onClick = { navController.navigate(SettingsScreens.LibraryPage.route) },
-            position = TilePosition.SOLO // TODO. Add link buttons for each dependency, also fix it by adding the same dialog based stuff in ffmpeg and downloader to it.
+            position = TilePosition.SOLO
         )
     )
 
