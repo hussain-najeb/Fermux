@@ -65,19 +65,14 @@ fun DownloadContent(
              downloaderViewModel.state is DownloadStatus.Completed ||
              downloaderViewModel.state is DownloadStatus.Error
 
-
     val isError = downloaderViewModel.state is DownloadStatus.Error
     val clipboard = LocalClipboard.current
-
-
 
     LargeTopBarScaffold(
         title = "Downloader",
         onBack = navController::popBackStack,
-        firstButton = { navController.navigate(Miscellaneous.DownloaderArgs.route) },
-        firstImage = R.drawable.prompt,
-        secondButton = { navController.navigate(Miscellaneous.DownloaderHistory.route) },
-        secondImage = R.drawable.history,
+        firstButton = { navController.navigate(Miscellaneous.DownloaderHistory.route) },
+        firstImage = R.drawable.history,
         snackbarHost = { AppSnackBar(snackbarHostState) }
     ) { innerPadding ->
         Box(
