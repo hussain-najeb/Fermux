@@ -32,7 +32,7 @@ THEMOSTCOMPLETEYTDLPCLIENTINTHEWORLD
 suspend fun downloaderLogic(
     context: Context,
     showDetails: Boolean,
-    aria2cMode: Aria2cMode = Aria2cMode.Always,
+    aria2cMode: Aria2NextMode = Aria2NextMode.Always,
     thumbnail: ThumbnailFormat = ThumbnailFormat.Png,
     audioFormats: AudioFormat = AudioFormat.Mp3Format,
     videoFormats: VideoFormat = VideoFormat.Mp4Format,
@@ -107,9 +107,9 @@ suspend fun downloaderLogic(
     }
 
     val shouldUseAria2c = when (aria2cMode) {
-        Aria2cMode.Always -> true
-        Aria2cMode.EdgeCaseOnly -> videoQuality != VideoQuality.HD1080
-        Aria2cMode.Disabled -> false
+        Aria2NextMode.Always -> true
+        Aria2NextMode.EdgeCaseOnly -> videoQuality != VideoQuality.HD1080
+        Aria2NextMode.Disabled -> false
     }
 
     val aria2Argument = "aria2c:--summary-interval=1 -x 12 -s 12 -k 1M"

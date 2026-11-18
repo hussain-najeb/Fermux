@@ -60,6 +60,9 @@ fun DownloaderArgs(navController: NavController) {
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val highlight = SpanStyle(color = FermuxColors.warmBlue, fontStyle = FontStyle.Italic)
+    val strongText = SpanStyle(color = FermuxColors.fermuxLightErrorTextColor)
+    val normalText = SpanStyle(color = FermuxColors.white)
 
     val args = listOf(
         InfoListClass(
@@ -190,11 +193,11 @@ fun DownloaderArgs(navController: NavController) {
             dialogAppearance = true,
             dialogTitle = "Retry Attempts",
             specialDescription = buildAnnotatedString {
-                withStyle(SpanStyle(FermuxColors.white)) { append("This is a") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" yt-dlp ") }
-                withStyle(SpanStyle(FermuxColors.white)) { append("flag that sets the amount of times") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" yt-dlp ") }
-                withStyle(SpanStyle(FermuxColors.white)) { append("does when there is any networking errors.") }
+                withStyle(normalText) { append("This is a") }
+                withStyle(highlight) { append(" yt-dlp ") }
+                withStyle(normalText) { append("flag that sets the amount of times") }
+                withStyle(highlight) { append(" yt-dlp ") }
+                withStyle(normalText) { append("does when there is any networking errors.") }
             },
             dialogImage = R.drawable.audio_file,
             image = R.drawable.retry,
@@ -214,11 +217,11 @@ fun DownloaderArgs(navController: NavController) {
             dialogAppearance = true,
             dialogTitle = "Fragment Retries",
             specialDescription = buildAnnotatedString {
-                withStyle(SpanStyle(FermuxColors.white)) { append("This is also a flag for") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" yt-dlp ") }
-                withStyle(SpanStyle(FermuxColors.white)) { append("that set the retries for each fragment before") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" yt-dlp ") }
-                withStyle(SpanStyle(FermuxColors.white)) { append("gives up from trying to download the fragment and skips to the next.") }
+                withStyle(normalText) { append("This is also a flag for") }
+                withStyle(highlight) { append(" yt-dlp ") }
+                withStyle(normalText) { append("that set the retries for each fragment before") }
+                withStyle(highlight) { append(" yt-dlp ") }
+                withStyle(normalText) { append("gives up from trying to download the fragment and skips to the next.") }
             },
             dialogImage = FragImage(
                 fragments = fragRetries,
@@ -245,9 +248,9 @@ fun DownloaderArgs(navController: NavController) {
             dialogTitle = "",
             dialogImage = R.drawable.flag_full,
             specialDescription = buildAnnotatedString {
-                withStyle(SpanStyle(FermuxColors.white)) { append("You can set the amounts of seconds in the slider, each number is a second that gets added between each ") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("yt-dlp ") }
-                withStyle(SpanStyle(FermuxColors.white)) { append("request") }
+                withStyle(normalText) { append("You can set the amounts of seconds in the slider, each number is a second that gets added between each ") }
+                withStyle(highlight) { append("yt-dlp ") }
+                withStyle(normalText) { append("request") }
             },
             dialogContent = {
                 ModularSlider(

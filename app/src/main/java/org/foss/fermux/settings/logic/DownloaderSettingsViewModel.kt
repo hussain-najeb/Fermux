@@ -38,8 +38,8 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
     val playlistState: StateFlow<Boolean> = settingsTab.playlistStatus
         .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
-    val aria2cMode: StateFlow<Aria2cMode> = settingsTab.aria2cMode
-        .stateIn(viewModelScope, SharingStarted.Lazily, Aria2cMode.Disabled)
+    val aria2cMode: StateFlow<Aria2NextMode> = settingsTab.aria2NextMode
+        .stateIn(viewModelScope, SharingStarted.Lazily, Aria2NextMode.Disabled)
 
     val thumbnailFormat: StateFlow<ThumbnailFormat> = settingsTab.thumbnailFormat
         .stateIn(viewModelScope, SharingStarted.Lazily, ThumbnailFormat.Png)
@@ -114,8 +114,8 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
         viewModelScope.launch { settingsTab.setSleepRequest(value) }
     }
 
-    fun setAria2cMode(value: Aria2cMode) {
-        viewModelScope.launch { settingsTab.setAria2cMode(value) }
+    fun setAria2NextMode(value: Aria2NextMode) {
+        viewModelScope.launch { settingsTab.setAria2NextMode(value) }
     }
 
     fun setThumbnailFormat(value: ThumbnailFormat) {

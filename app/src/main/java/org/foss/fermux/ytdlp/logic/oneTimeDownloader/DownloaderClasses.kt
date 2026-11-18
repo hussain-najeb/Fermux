@@ -123,7 +123,7 @@ enum class VideoFormat(val videoFormat: String) {
     Mkv("mkv")
 }
 
-enum class Aria2cMode {
+enum class Aria2NextMode {
     Disabled,
     EdgeCaseOnly,
     Always

@@ -169,7 +169,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWork
         val sleepRequest = settings.sleepRequest.first()
         val embedThumbnail = settings.embedThumbnail.first()
         val playlistStatus = settings.playlistStatus.first()
-        val aria2cMode = settings.aria2cMode.first()
+        val aria2cMode = settings.aria2NextMode.first()
         val thumbnailFormat = settings.thumbnailFormat.first()
         val audioFormat = settings.audioFormat.first()
         val videoFormat = settings.videoFormat.first()

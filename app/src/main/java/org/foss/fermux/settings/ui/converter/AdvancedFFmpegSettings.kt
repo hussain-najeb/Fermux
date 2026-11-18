@@ -46,6 +46,9 @@ fun AdvancedFFmpegSettings(
     }
 
     val scope = rememberCoroutineScope()
+    val highlight = SpanStyle(color = FermuxColors.warmBlue, fontStyle = FontStyle.Italic)
+    val strongText = SpanStyle(color = FermuxColors.fermuxLightErrorTextColor)
+    val normalText = SpanStyle(color = FermuxColors.white)
 
     val advanced = listOf(
         InfoListClass(
@@ -83,8 +86,8 @@ fun AdvancedFFmpegSettings(
             dialogAppearance = true,
             dialogTitle = "Set CRF Value",
             specialDescription = buildAnnotatedString {
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("CRF ") }
-                withStyle(SpanStyle(FermuxColors.white)) { append("is the quality target used when compressing videos. Lower is better.") }
+                withStyle(highlight) { append("CRF ") }
+                withStyle(normalText) { append("is the quality target used when compressing videos. Lower is better.") }
             },
             dialogImage = R.drawable.tune,
             dialogContent = {
@@ -104,14 +107,9 @@ fun AdvancedFFmpegSettings(
             dialogAppearance = true,
             dialogTitle = "Set Thread Limit",
             specialDescription = buildAnnotatedString {
-                withStyle(SpanStyle(FermuxColors.white)) { append("This setting has no effect when") }
-                withStyle(
-                    SpanStyle(
-                        FermuxColors.warmBlue,
-                        fontStyle = FontStyle.Italic
-                    )
-                ) { append(" Hardware Encoding") }
-                withStyle(SpanStyle(FermuxColors.white)) { append(" is on.") }
+                withStyle(normalText) { append("This setting has no effect when") }
+                withStyle(highlight) { append(" Hardware Encoding") }
+                withStyle(normalText) { append(" is on.") }
             },
             dialogImage = R.drawable.thread_limit_on,
             dialogContent = {
@@ -136,11 +134,11 @@ fun AdvancedFFmpegSettings(
             dialogAppearance = true,
             dialogTitle = "Hardware Acceleration",
             specialDescription = buildAnnotatedString {
-                withStyle(SpanStyle(FermuxColors.white)) {
+                withStyle(normalText) {
                     append("Uses the hardware chip for encoding instead of the CPU.\n\n")
                     append("This is slower in most cases, especially on")
                 }
-                withStyle(SpanStyle(FermuxColors.fermuxTextError)) { append(" old android devices.") }
+                withStyle(strongText) { append(" old android devices.") }
             },
             dialogImage = R.drawable.hardware_encoding,
             liner = true,

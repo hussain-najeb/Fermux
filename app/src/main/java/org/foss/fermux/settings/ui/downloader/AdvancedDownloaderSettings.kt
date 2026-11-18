@@ -29,7 +29,7 @@ import org.foss.fermux.settings.logic.InfoListClass
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.clearCache
-import org.foss.fermux.ytdlp.logic.oneTimeDownloader.Aria2cMode
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.Aria2NextMode
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.Connectivity
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.ExternalDownloaders
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.IpvConnection
@@ -50,14 +50,18 @@ fun AdvancedDownloaderSettings(
     val fingerprint by downloaderSettingsViewModel.fingerprint.collectAsStateWithLifecycle()
     val quickDownloads by downloaderSettingsViewModel.quickDownloads.collectAsStateWithLifecycle()
     // ModularSegmentedButtons vals
-    val aria2cMode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
+    val aria2Mode by downloaderSettingsViewModel.aria2cMode.collectAsStateWithLifecycle()
     val externalDownloaders by downloaderSettingsViewModel.externalDownloaders.collectAsStateWithLifecycle()
     val aria2cEnabled = externalDownloaders == ExternalDownloaders.Disabled
-    val externalDownloadersEnabled = aria2cMode == Aria2cMode.Disabled
+    val externalDownloadersEnabled = aria2Mode == Aria2NextMode.Disabled
     val wifi by downloaderSettingsViewModel.wifi.collectAsStateWithLifecycle()
     val ipv by downloaderSettingsViewModel.ipv.collectAsStateWithLifecycle()
     // Miscellaneous vals/funs
     val scope = rememberCoroutineScope()
+    val highlight = SpanStyle(color = FermuxColors.warmBlue, fontStyle = FontStyle.Italic)
+    val strongText = SpanStyle(color = FermuxColors.fermuxLightErrorTextColor)
+    val normalText = SpanStyle(color = FermuxColors.white)
+
 
     val advancedSettings = listOf(
         InfoListClass(
@@ -162,33 +166,32 @@ fun AdvancedDownloaderSettings(
             position = TilePosition.MIDDLE
         ),
         InfoListClass(
-            title = "Aria2c",
+            title = "Aria2-Next",
             description = "Another option instead of the default fragment downloader",
             image = R.drawable.layers,
             dialogAppearance = true,
-            dialogTitle = "Aria2c settings",
+            dialogTitle = "Aria2-Next settings",
             specialDescription = buildAnnotatedString {
-                withStyle(SpanStyle(FermuxColors.white)) { append("You") }
-                withStyle(SpanStyle(FermuxColors.fermuxLightErrorTextColor)) { append(" MUST") }
-                withStyle(SpanStyle(FermuxColors.white)) { append(" disable your chosen ") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("HLS ") }
-                withStyle(SpanStyle(FermuxColors.white)) { append("option, so you can use these options.") }
-                withStyle(SpanStyle(FermuxColors.white)) { append(" Use") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" 'Edge Case'") }
-                withStyle(SpanStyle(FermuxColors.white)) { append(" when using ") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Aria2c ") }
-                withStyle(SpanStyle(FermuxColors.white)) { append("and downloading media at the highest setting!") }
+                withStyle(normalText) { append("You") }
+                withStyle(strongText) { append(" MUST") }
+                withStyle(normalText) { append(" disable your chosen ") }
+                withStyle(highlight) { append("HLS ") }
+                withStyle(normalText) { append("option, so you can use these options. Use") }
+                withStyle(highlight) { append(" 'Edge Case'") }
+                withStyle(normalText) { append(" when using ") }
+                withStyle(highlight) { append("Aria2-Next ") }
+                withStyle(normalText) { append("and downloading media at the highest setting!") }
             },
             dialogContent = {
                 ModularSegmentedButtons(
                     enabled = aria2cEnabled,
                     optionsList = listOf(
-                        Aria2cMode.Disabled to "Disabled",
-                        Aria2cMode.EdgeCaseOnly to "Edge Case",
-                        Aria2cMode.Always to "Enabled"
+                        Aria2NextMode.Disabled to "Disabled",
+                        Aria2NextMode.EdgeCaseOnly to "Edge Case",
+                        Aria2NextMode.Always to "Enabled"
                     ),
-                    selectedOption = aria2cMode,
-                    onSelected = downloaderSettingsViewModel::setAria2cMode
+                    selectedOption = aria2Mode,
+                    onSelected = downloaderSettingsViewModel::setAria2NextMode
                 )
             },
             position = TilePosition.MIDDLE
@@ -200,18 +203,18 @@ fun AdvancedDownloaderSettings(
             dialogAppearance = true,
             dialogTitle = "HLS options",
             specialDescription = buildAnnotatedString {
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("HLS ") }
-                withStyle(SpanStyle(FermuxColors.white)) { append("options are essential for fragment downloading, the native ") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("HLS ") }
-                withStyle(SpanStyle(FermuxColors.white)) { append("that comes with ") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("yt-dlp") }
-                withStyle(SpanStyle(FermuxColors.white)) { append("is excellent, but there are options such as ") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("FFmpeg") }
-                withStyle(SpanStyle(FermuxColors.white)) { append(" which comes with ") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" TLS/HTTP ") }
-                withStyle(SpanStyle(FermuxColors.white)) { append("support, or ") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Aria2c ") }
-                withStyle(SpanStyle(FermuxColors.white)) { append("that comes as a separate setting.") }
+                withStyle(highlight) { append("HLS ") }
+                withStyle(normalText) { append("options are essential for fragment downloading, the native ") }
+                withStyle(highlight) { append("HLS ") }
+                withStyle(normalText) { append("that comes with ") }
+                withStyle(highlight) { append("yt-dlp") }
+                withStyle(normalText) { append("is excellent, but there are options such as ") }
+                withStyle(highlight) { append("FFmpeg") }
+                withStyle(normalText) { append(" which comes with ") }
+                withStyle(highlight) { append(" TLS/HTTP ") }
+                withStyle(normalText) { append("support, or ") }
+                withStyle(highlight) { append("Aria2c ") }
+                withStyle(normalText) { append("that comes as a separate setting.") }
             },
             dialogImage = R.drawable.aria2_hls,
             dialogContent = {
@@ -243,20 +246,15 @@ fun AdvancedDownloaderSettings(
             dialogAppearance = true,
             dialogTitle = "Impersonation?",
             specialDescription = buildAnnotatedString {
-                withStyle(SpanStyle(FermuxColors.white)) { append("This setting uses ") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("curl_cffi") }
-                withStyle(SpanStyle(FermuxColors.white)) { append(" and ") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("curl-impersonate") }
-                withStyle(SpanStyle(FermuxColors.white)) { append(" to make") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" yt-dlp") }
-                withStyle(SpanStyle(FermuxColors.white)) { append(" requests seem like a normal browser and not a bot request which is increasingly important in today's internet, This setting supports") }
-                withStyle(
-                    SpanStyle(
-                        FermuxColors.warmBlue,
-                        fontStyle = FontStyle.Italic
-                    )
-                ) { append(" ALL Android ABI's") }
-                withStyle(SpanStyle(FermuxColors.white)) { append(".") }
+                withStyle(normalText) { append("This setting uses ") }
+                withStyle(highlight) { append("curl_cffi") }
+                withStyle(normalText) { append(" and ") }
+                withStyle(highlight) { append("curl-impersonate") }
+                withStyle(normalText) { append(" to make") }
+                withStyle(highlight) { append(" yt-dlp") }
+                withStyle(normalText) { append(" requests seem like a normal browser and not a bot request which is increasingly important in today's internet, This setting supports") }
+                withStyle(highlight) { append(" ALL Android ABI's") }
+                withStyle(normalText) { append(".") }
             },
             dialogImage = R.drawable.impersonation_on,
             position = TilePosition.MIDDLE
@@ -276,18 +274,16 @@ fun AdvancedDownloaderSettings(
             dialogAppearance = true,
             dialogTitle = "Quick Downloads?",
             specialDescription = buildAnnotatedString {
-                withStyle(SpanStyle(FermuxColors.white)) {
-                    append("When the ")
-                }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Quick Downloads ") }
-                withStyle(SpanStyle(FermuxColors.white)) {
+                withStyle(normalText) { append("When the ") }
+                withStyle(highlight) { append("Quick Downloads ") }
+                withStyle(normalText) {
                     append("button is pressed it takes the Url from your clipboard and downloads the media right away without additional configuration.\n\n")
                     append("You can configure the ")
                 }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Quick Downloads ") }
-                withStyle(SpanStyle(FermuxColors.white)) { append("beforehand, specify the format, resolution, or audio quality, so it's the default when pressing the ") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Quick Downloads ") }
-                withStyle(SpanStyle(FermuxColors.white)) { append("button.") }
+                withStyle(highlight) { append("Quick Downloads ") }
+                withStyle(normalText) { append("beforehand, specify the format, resolution, or audio quality, so it's the default when pressing the ") }
+                withStyle(highlight) { append("Quick Downloads ") }
+                withStyle(normalText) { append("button.") }
             },
             dialogImage = R.drawable.speed,
             dialogContent = {
@@ -325,13 +321,11 @@ fun AdvancedDownloaderSettings(
             dialogAppearance = true,
             dialogTitle = "QuickJS NG?",
             specialDescription = buildAnnotatedString {
-                withStyle(SpanStyle(FermuxColors.white)) { append("This setting uses ") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("QuickJsNG") }
-                withStyle(SpanStyle(FermuxColors.white)) { append(", NG here means Next Gen, which is an improved version of the old") }
-                withStyle(SpanStyle(FermuxColors.white)) { append(" QuickJs") }
-                withStyle(SpanStyle(FermuxColors.white)) { append(" .Due to the nature of Youtube, this JS runtime is recommended by ") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("yt-dlp") }
-                withStyle(SpanStyle(FermuxColors.white)) { append(" to solve JS challenges, this should make Youtube downloads more reliable.") }
+                withStyle(normalText) { append("This setting uses ") }
+                withStyle(highlight) { append("QuickJsNG") }
+                withStyle(normalText) { append(", NG here means Next Gen, which is an improved version of the old QuickJs .Due to the nature of Youtube, this JS runtime is recommended by ") }
+                withStyle(highlight) { append("yt-dlp") }
+                withStyle(normalText) { append(" to solve JS challenges, this should make Youtube downloads more reliable.") }
             },
             dialogImage = R.drawable.impersonation_on,
             content = {

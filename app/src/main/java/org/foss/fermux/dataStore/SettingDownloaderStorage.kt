@@ -17,7 +17,7 @@ interface DownloaderSettingsRepo {
     val embedThumbnail: Flow<Boolean>
     val quickJS: Flow<Boolean>
     val fingerprinting: Flow<Boolean>
-    val aria2cMode: Flow<Aria2cMode>
+    val aria2NextMode: Flow<Aria2NextMode>
     val thumbnailFormat: Flow<ThumbnailFormat>
     val audioFormat: Flow<AudioFormat>
     val videoFormat: Flow<VideoFormat>
@@ -45,7 +45,7 @@ interface DownloaderSettingsRepo {
     suspend fun setDownloadPath(value: String)
     suspend fun setDownloaderBellState(value: Boolean)
     suspend fun setSleepRequest(value: Int)
-    suspend fun setAria2cMode(value: Aria2cMode)
+    suspend fun setAria2NextMode(value: Aria2NextMode)
     suspend fun setThumbnail(value: ThumbnailFormat)
     suspend fun setAudioFormat(value: AudioFormat)
     suspend fun setVideoFormat(value: VideoFormat)
@@ -81,7 +81,7 @@ interface DownloaderSettingsRepo {
 data class DownloaderSettingsSnapshot(
     val downloadPath: String?,
     val sleepRequest: Int?,
-    val aria2cMode: String?,
+    val aria2NextMode: String?,
     val ytdlpDetails: Boolean?,
     val history: Boolean?,
     val embedThumbnail: Boolean?,
@@ -119,7 +119,7 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings_
 val DOWNLOAD_PATH = stringPreferencesKey("download_path")
 val DOWNLOADER_BELL_STATE = booleanPreferencesKey("bellState")
 val SLEEP_REQUEST_KEY = intPreferencesKey("sleep_request_seconds")
-val ARIA2C_MODE_KEY = stringPreferencesKey("aria2c_mode")
+val ARIA2_MODE_KEY = stringPreferencesKey("aria2c_mode")
 val THUMBNAIL_FORMATS = stringPreferencesKey("thumbnail_selection")
 val AUDIO_FORMATS = stringPreferencesKey("audio_formats")
 val VIDEO_FORMATS = stringPreferencesKey("video_formats")
@@ -164,10 +164,10 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
     override val quickJS: Flow<Boolean> = settingStore.data.map { preferences -> preferences[QUICK_JS] ?: true }
     override val fingerprinting: Flow<Boolean> =
         settingStore.data.map { preferences -> preferences[FINGERPRINT] ?: true }
-    override val aria2cMode: Flow<Aria2cMode> = settingStore.data.map { preferences ->
-        preferences[ARIA2C_MODE_KEY]
-            ?.let { runCatching { Aria2cMode.valueOf(it) }.getOrNull() }
-            ?: Aria2cMode.Disabled
+    override val aria2NextMode: Flow<Aria2NextMode> = settingStore.data.map { preferences ->
+        preferences[ARIA2_MODE_KEY]
+            ?.let { runCatching { Aria2NextMode.valueOf(it) }.getOrNull() }
+            ?: Aria2NextMode.Disabled
     }
     override val thumbnailFormat: Flow<ThumbnailFormat> = settingStore.data.map { preferences ->
         preferences[THUMBNAIL_FORMATS]
@@ -289,10 +289,10 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
         settingStore.edit { preferences -> preferences[RETRIES] = value }
     }
 
-    override suspend fun setAria2cMode(value: Aria2cMode) {
+    override suspend fun setAria2NextMode(value: Aria2NextMode) {
         settingStore.edit { preferences ->
-            preferences[ARIA2C_MODE_KEY] = value.name
-            if (value != Aria2cMode.Disabled) {
+            preferences[ARIA2_MODE_KEY] = value.name
+            if (value != Aria2NextMode.Disabled) {
                 preferences[EXTERNAL_DOWNLOADER] = ExternalDownloaders.Disabled.name
             }
         }
@@ -326,7 +326,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
         settingStore.edit { preferences ->
             preferences[EXTERNAL_DOWNLOADER] = value.name
             if (value != ExternalDownloaders.Disabled) {
-                preferences[ARIA2C_MODE_KEY] = Aria2cMode.Disabled.name
+                preferences[ARIA2_MODE_KEY] = Aria2NextMode.Disabled.name
             }
         }
     }
@@ -455,7 +455,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
             snapshot = DownloaderSettingsSnapshot(
                 downloadPath = preferences[DOWNLOAD_PATH],
                 sleepRequest = preferences[SLEEP_REQUEST_KEY],
-                aria2cMode = preferences[ARIA2C_MODE_KEY],
+                aria2NextMode = preferences[ARIA2_MODE_KEY],
                 ytdlpDetails = preferences[DOWNLOADING_DETAILS],
                 history = preferences[HISTORY],
                 embedThumbnail = preferences[EMBED_THUMBNAIL],
@@ -476,7 +476,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
             )
             preferences.remove(key = DOWNLOAD_PATH)
             preferences.remove(key = SLEEP_REQUEST_KEY)
-            preferences.remove(key = ARIA2C_MODE_KEY)
+            preferences.remove(key = ARIA2_MODE_KEY)
             preferences.remove(key = DOWNLOADING_DETAILS)
             preferences.remove(key = HISTORY)
             preferences.remove(key = EMBED_THUMBNAIL)
@@ -502,7 +502,7 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
         settingStore.edit { preferences ->
             preferences.restore(DOWNLOAD_PATH, snapshot.downloadPath)
             preferences.restore(SLEEP_REQUEST_KEY, snapshot.sleepRequest)
-            preferences.restore(ARIA2C_MODE_KEY, snapshot.aria2cMode)
+            preferences.restore(ARIA2_MODE_KEY, snapshot.aria2NextMode)
             preferences.restore(DOWNLOADING_DETAILS, snapshot.ytdlpDetails)
             preferences.restore(HISTORY, snapshot.history)
             preferences.restore(EMBED_THUMBNAIL, snapshot.embedThumbnail)

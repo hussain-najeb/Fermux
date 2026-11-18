@@ -60,6 +60,9 @@ fun SimpleDownloaderPage(
     // Miscellaneous vals/funs
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val highlight = SpanStyle(color = FermuxColors.warmBlue, fontStyle = FontStyle.Italic)
+    val strongText = SpanStyle(color = FermuxColors.fermuxLightErrorTextColor)
+    val normalText = SpanStyle(color = FermuxColors.white)
 
 
     val requestNotificationPermission = rememberNotificationPermissionRequest(
@@ -92,12 +95,11 @@ fun SimpleDownloaderPage(
             dialogTitle = "Updating Yt-dlp",
             dialogImage = R.drawable.update_icon,
             specialDescription = buildAnnotatedString {
-                withStyle(SpanStyle(FermuxColors.white)) { append("Updating") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append(" yt-dlp") }
-                withStyle(SpanStyle(FermuxColors.white)) { append(" is always favourable,") }
-                withStyle(SpanStyle(FermuxColors.white)) { append(" so you get less bugs, better support, and more features. It's recommended to get the ") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Nightly") }
-                withStyle(SpanStyle(FermuxColors.white)) { append(" version.") }
+                withStyle(normalText) { append("Updating") }
+                withStyle(highlight) { append(" yt-dlp") }
+                withStyle(normalText) { append(" is always favourable, so you get less bugs, better support, and more features. It's recommended to get the ") }
+                withStyle(highlight) { append("Nightly") }
+                withStyle(normalText) { append(" version.") }
             },
             dialogContent = {
                 ModularSegmentedButtons(
@@ -141,9 +143,9 @@ fun SimpleDownloaderPage(
             dialogTitle = "Logging",
             dialogImage = R.drawable.log,
             specialDescription = buildAnnotatedString {
-                withStyle(SpanStyle(FermuxColors.white)) { append("This is the flag for enabling the ") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("yt-dlp") }
-                withStyle(SpanStyle(FermuxColors.white)) { append(" logs, for better inspection of what happens under-the-hood.") }
+                withStyle(normalText) { append("This is the flag for enabling the ") }
+                withStyle(highlight) { append("yt-dlp") }
+                withStyle(normalText) { append(" logs, for better inspection of what happens under-the-hood.") }
             },
             content = {
                 SettingsSwitch(

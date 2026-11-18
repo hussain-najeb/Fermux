@@ -6,6 +6,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.withStyle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -26,6 +27,9 @@ fun SequentialContent(
     val state = sequentialViewModel.state
 
     var dialogDismiss by remember { mutableStateOf(false) }
+    val highlight = SpanStyle(color = FermuxColors.warmBlue, fontStyle = FontStyle.Italic)
+    val strongText = SpanStyle(color = FermuxColors.fermuxLightErrorTextColor)
+    val normalText = SpanStyle(color = FermuxColors.white)
 
     LargeTopBarScaffold(
         title = "Sequential Downloads",
@@ -49,7 +53,7 @@ fun SequentialContent(
         title = "Sequentially?",
         settingImage = R.drawable.sequence,
         specialDescription = buildAnnotatedString {
-            withStyle(SpanStyle(FermuxColors.white)) { append("Add a URL for each text field, each entry will be downloaded in the chosen sequence one at a time.\n\nConsider the arguments tab, yes, they also apply, and the general downloader settings as well.\n\nThis tab was designed to work in the background, just press the download button and forget about the tab, each video will be downloaded without intervention.") }
+            withStyle(normalText) { append("Add a URL for each text field, each entry will be downloaded in the chosen sequence one at a time.\n\nConsider the arguments tab, yes, they also apply, and the general downloader settings as well.\n\nThis tab was designed to work in the background, just press the download button and forget about the tab, each video will be downloaded without intervention.") }
         }
     )
 

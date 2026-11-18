@@ -6,7 +6,7 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.foss.fermux.dataStore.DEFAULT_SPONSOR_BLOCK_CATEGORIES
 import org.foss.fermux.dataStore.DataStoreDownloaderSettings
-import org.foss.fermux.ytdlp.logic.oneTimeDownloader.Aria2cMode
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.Aria2NextMode
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.Connectivity
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.ExternalDownloaders
 import org.junit.jupiter.api.Assertions.*
@@ -71,22 +71,22 @@ class DownloaderSettingsTest {
         setting.setExternalDownloader(externalDownloaders)
         assertEquals(externalDownloaders, setting.externalDownloaders.first())
 
-        assertEquals(Aria2cMode.Disabled, setting.aria2cMode.first())
+        assertEquals(Aria2NextMode.Disabled, setting.aria2NextMode.first())
 
     }
 
     @ParameterizedTest
-    @EnumSource(Aria2cMode::class)
-    fun `text aria2 enums with external downloaders`(aria2cMode: Aria2cMode) = runTest {
+    @EnumSource(Aria2NextMode::class)
+    fun `text aria2 enums with external downloaders`(aria2cMode: Aria2NextMode) = runTest {
         val setting = newFixture().repositoryOfTheProdCode
 
         setting.setExternalDownloader(ExternalDownloaders.FFmpegAsExternal)
-        setting.setAria2cMode(aria2cMode)
+        setting.setAria2NextMode(aria2cMode)
 
-        assertEquals(aria2cMode, setting.aria2cMode.first())
+        assertEquals(aria2cMode, setting.aria2NextMode.first())
 
         val externalDownloaderTests =
-            if (aria2cMode == Aria2cMode.Disabled) ExternalDownloaders.FFmpegAsExternal else ExternalDownloaders.Disabled
+            if (aria2cMode == Aria2NextMode.Disabled) ExternalDownloaders.FFmpegAsExternal else ExternalDownloaders.Disabled
 
         assertEquals(externalDownloaderTests, setting.externalDownloaders.first())
     }
@@ -114,7 +114,7 @@ class DownloaderSettingsTest {
         assertEquals("", setting.downloadPath.first())
         assertFalse(setting.downloaderBellState.first())
         assertEquals(0, setting.sleepRequest.first())
-        assertEquals(Aria2cMode.Disabled, setting.aria2cMode.first())
+        assertEquals(Aria2NextMode.Disabled, setting.aria2NextMode.first())
         assertEquals(ExternalDownloaders.YtdlpNativeDownloader, setting.externalDownloaders.first())
         assertTrue(setting.ytdlpDetails.first())
         assertTrue(setting.embedThumbnail.first())
@@ -132,7 +132,7 @@ class DownloaderSettingsTest {
 
         setting.setDownloadPath("/downloads")
         setting.setSleepRequest(10)
-        setting.setAria2cMode(Aria2cMode.EdgeCaseOnly)
+        setting.setAria2NextMode(Aria2NextMode.EdgeCaseOnly)
         setting.setYtdlpDetails(false)
         setting.setEmbedThumbnail(false)
         setting.setPlaylistStatus(true)
@@ -147,7 +147,7 @@ class DownloaderSettingsTest {
 
         assertEquals("/downloads", setting.downloadPath.first())
         assertEquals(10, setting.sleepRequest.first())
-        assertEquals(Aria2cMode.EdgeCaseOnly, setting.aria2cMode.first())
+        assertEquals(Aria2NextMode.EdgeCaseOnly, setting.aria2NextMode.first())
         assertEquals(ExternalDownloaders.Disabled, setting.externalDownloaders.first())
         assertFalse(setting.ytdlpDetails.first())
         assertFalse(setting.embedThumbnail.first())
@@ -166,10 +166,10 @@ class DownloaderSettingsTest {
     fun `testing the turned off state of eternal downloader`() = runTest {
         val setting = newFixture().repositoryOfTheProdCode
 
-        setting.setAria2cMode(Aria2cMode.EdgeCaseOnly)
+        setting.setAria2NextMode(Aria2NextMode.EdgeCaseOnly)
         setting.setExternalDownloader(ExternalDownloaders.Disabled)
 
-        assertEquals(Aria2cMode.EdgeCaseOnly, setting.aria2cMode.first())
+        assertEquals(Aria2NextMode.EdgeCaseOnly, setting.aria2NextMode.first())
     }
 
 

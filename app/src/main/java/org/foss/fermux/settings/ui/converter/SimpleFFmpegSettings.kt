@@ -52,6 +52,9 @@ fun SimpleFFmpegSetting(
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val highlight = SpanStyle(color = FermuxColors.warmBlue, fontStyle = FontStyle.Italic)
+    val strongText = SpanStyle(color = FermuxColors.fermuxLightErrorTextColor)
+    val normalText = SpanStyle(color = FermuxColors.white)
 
 
     val requestNotificationPermission = rememberNotificationPermissionRequest(
@@ -169,21 +172,18 @@ fun SimpleFFmpegSetting(
             dialogImage = R.drawable.video_compression,
             dialogTitle = "Video Compression",
             specialDescription = buildAnnotatedString {
-                withStyle(SpanStyle(FermuxColors.white)) { append("When off, ") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("FFmpeg ") }
-                withStyle(SpanStyle(FermuxColors.white)) { append("copies the original video without changing its codec, quality, or resolution. Conversion is faster, but the selected resolution is ignored.\n\n") }
-                withStyle(SpanStyle(FermuxColors.white)) { append("When on, ") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("FFmpeg") }
-                withStyle(SpanStyle(FermuxColors.white)) { append("re-encodes the video using the selected quality and resolution. It must be on for ") }
-                withStyle(
-                    SpanStyle(
-                        FermuxColors.warmBlue,
-                        fontStyle = FontStyle.Italic
-                    )
-                ) { append("Hardware Acceleration") }
-                withStyle(SpanStyle(FermuxColors.white)) { append(" and ") }
-                withStyle(SpanStyle(FermuxColors.warmBlue, fontStyle = FontStyle.Italic)) { append("Video Resolution") }
-                withStyle(SpanStyle(FermuxColors.white)) { append(" to work.") }
+                withStyle(normalText) { append("When off, ") }
+                withStyle(highlight) { append("FFmpeg ") }
+                withStyle(normalText) {
+                    append("copies the original video without changing its codec, quality, or resolution. Conversion is faster, but the selected resolution is ignored.\n\n")
+                    append("When on, ")
+                }
+                withStyle(highlight) { append("FFmpeg") }
+                withStyle(normalText) { append("re-encodes the video using the selected quality and resolution. It must be on for ") }
+                withStyle(highlight) { append("Hardware Acceleration") }
+                withStyle(normalText) { append(" and ") }
+                withStyle(highlight) { append("Video Resolution") }
+                withStyle(normalText) { append(" to work.") }
             },
             liner = true,
             content = {
