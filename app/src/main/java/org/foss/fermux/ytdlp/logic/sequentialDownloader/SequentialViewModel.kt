@@ -164,7 +164,6 @@ class SequentialViewModel(
     fun allDestroyer(context: Context) {
         WorkManager.getInstance(context).cancelAllWorkByTag("destroy-all-workers")
         downloaderJob?.cancel()
-        downloadUrl = mutableStateListOf(SequentialItem())
         downloadUrl.clear()
         downloadUrl.add(SequentialItem())
         skippedID.clear()

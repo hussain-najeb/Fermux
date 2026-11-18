@@ -36,7 +36,7 @@ fun <T> ModularSegmentedButtons(
                 colors = SegmentedButtonDefaults.colors(
                     activeContainerColor = FermuxColors.skyBlue,
                     activeContentColor = FermuxColors.downriver,
-                    inactiveContainerColor = FermuxColors.darkPurple,
+                    inactiveContainerColor = FermuxColors.mutedBlue,
                     inactiveContentColor = FermuxColors.white,
                     activeBorderColor = FermuxColors.fermuxSecondaryBorder,
                     inactiveBorderColor = FermuxColors.fermuxHelperBorder,

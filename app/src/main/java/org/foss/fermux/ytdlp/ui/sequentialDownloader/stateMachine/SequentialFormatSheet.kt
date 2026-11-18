@@ -13,12 +13,12 @@ fun SeqVideoButtons(downloaderSettingsViewModel: DownloaderSettingsViewModel) {
     val video by downloaderSettingsViewModel.seqVideo.collectAsStateWithLifecycle()
     ModularSegmentedButtons(
         optionsList = listOf(
-            SeqVideoQuality.HD1080 to "1080p",
-            SeqVideoQuality.HD720 to "720p",
-            SeqVideoQuality.SD480 to "480p",
-            SeqVideoQuality.Q360 to "360p",
-            SeqVideoQuality.Q240 to "240p",
-            SeqVideoQuality.Q144 to "144p"
+            SeqVideoQuality.HD1080 to "1080",
+            SeqVideoQuality.HD720 to "720",
+            SeqVideoQuality.SD480 to "480",
+            SeqVideoQuality.Q360 to "360",
+            SeqVideoQuality.Q240 to "240",
+            SeqVideoQuality.Q144 to "144"
         ),
         selectedOption = video,
         onSelected = downloaderSettingsViewModel::setSeqVideo

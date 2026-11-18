@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Fermux" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">#FF1C1F25</item>
-        <item name="android:navigationBarColor">#FF1C1F25</item>
+    <style name="Theme.Fermux" parent="android:Theme.Material.NoActionBar">
+        <item name="android:statusBarColor">#FF15152E</item>
+        <item name="android:navigationBarColor">#FF15152E</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:enforceNavigationBarContrast">false</item>
     </style>
 </resources>

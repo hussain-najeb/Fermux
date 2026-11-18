@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
+import androidx.core.view.WindowCompat
 import org.foss.fermux.R
 import org.foss.fermux.ui.theme.FermuxColors
 
@@ -37,14 +39,23 @@ fun SettingAlertDialog(
     Dialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(
-            usePlatformDefaultWidth = false
+            usePlatformDefaultWidth = false,
+            decorFitsSystemWindows = false
         )
     ) {
-        val view = (LocalView.current.parent as? DialogWindowProvider)?.window
+        val view = LocalView.current
+        val window = (view.parent as? DialogWindowProvider)?.window
         SideEffect {
-            view?.apply {
+            window?.apply {
                 addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
                 setDimAmount(0.6f)
+                isNavigationBarContrastEnforced = false
+                @Suppress("DEPRECATION")
+                navigationBarColor = FermuxColors.background.toArgb()
+                WindowCompat.getInsetsController(this, view).apply {
+                    isAppearanceLightStatusBars = false
+                    isAppearanceLightNavigationBars = false
+                }
             }
         }
 

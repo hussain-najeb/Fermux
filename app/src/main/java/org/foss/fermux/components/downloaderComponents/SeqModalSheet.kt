@@ -1,14 +1,19 @@
 package org.foss.fermux.components.downloaderComponents
 
 import androidx.compose.animation.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogWindowProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.foss.fermux.components.generalComponents.ModularSegmentedButtons
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
@@ -48,7 +53,22 @@ fun SequentialModalSheet(
         },
         sheetState = sheetState,
         containerColor = FermuxColors.darkPurple,
+        contentColor = FermuxColors.white,
+        contentWindowInsets = { WindowInsets(0) },
+        properties = ModalBottomSheetProperties(
+            isAppearanceLightStatusBars = false,
+            isAppearanceLightNavigationBars = false
+        ),
     ) {
+        val view = LocalView.current
+        SideEffect {
+            val window = (view as? DialogWindowProvider)?.window ?: (view.parent as? DialogWindowProvider)?.window
+            window?.apply {
+                isNavigationBarContrastEnforced = false
+                @Suppress("DEPRECATION")
+                navigationBarColor = FermuxColors.background.toArgb()
+            }
+        }
         Column {
             Box(
                 modifier = Modifier.fillMaxWidth(),
@@ -110,5 +130,11 @@ fun SequentialModalSheet(
             Spacer(modifier = Modifier.height(10.dp))
 
         }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(FermuxColors.background)
+                .windowInsetsBottomHeight(WindowInsets.navigationBars)
+        )
     }
 }

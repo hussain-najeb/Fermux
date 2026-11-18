@@ -28,6 +28,7 @@ import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.settings.logic.InfoListClass
 import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
+import org.foss.fermux.utils.Miscellaneous
 import org.foss.fermux.utils.clearCache
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.Aria2NextMode
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.Connectivity
@@ -164,6 +165,13 @@ fun AdvancedDownloaderSettings(
                 )
             },
             position = TilePosition.MIDDLE
+        ),
+        InfoListClass(
+            title = "Yt-dlp Arguments",
+            description = "Press to view all the arguments that ytdlp has for downloads that are more specialized than this high-level tab",
+            image = R.drawable.parentheses,
+            position = TilePosition.MIDDLE,
+            route = Miscellaneous.DownloaderArgs.route
         ),
         InfoListClass(
             title = "Aria2-Next",

@@ -1,19 +1,24 @@
 package org.foss.fermux.ytdlp.ui.history
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogWindowProvider
 import androidx.core.net.toUri
 import coil3.compose.AsyncImage
 import org.foss.fermux.R
@@ -63,7 +68,22 @@ fun InfoModalSheet(
         },
         sheetState = sheetState,
         containerColor = FermuxColors.darkPurple,
+        contentColor = FermuxColors.white,
+        contentWindowInsets = { WindowInsets(0) },
+        properties = ModalBottomSheetProperties(
+            isAppearanceLightStatusBars = false,
+            isAppearanceLightNavigationBars = false
+        ),
     ) {
+        val view = LocalView.current
+        SideEffect {
+            val window = (view as? DialogWindowProvider)?.window ?: (view.parent as? DialogWindowProvider)?.window
+            window?.apply {
+                isNavigationBarContrastEnforced = false
+                @Suppress("DEPRECATION")
+                navigationBarColor = FermuxColors.background.toArgb()
+            }
+        }
         Box(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -191,5 +211,11 @@ fun InfoModalSheet(
                 )
             }
         }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(FermuxColors.background)
+                .windowInsetsBottomHeight(WindowInsets.navigationBars)
+        )
     }
 }

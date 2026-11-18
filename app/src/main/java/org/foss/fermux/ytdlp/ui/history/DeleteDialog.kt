@@ -11,13 +11,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
+import androidx.core.view.WindowCompat
 import org.foss.fermux.components.buttons.AppTextButton
 import org.foss.fermux.ui.theme.FermuxColors
 
@@ -27,13 +30,27 @@ fun DeleteDatabaseDialog(
     onDismissRequest: () -> Unit
 ) {
     Dialog(
-        onDismissRequest = onDismissRequest
+        onDismissRequest = onDismissRequest,
+        properties = DialogProperties(
+            decorFitsSystemWindows = false
+        )
     ) {
-        val dialogWindow = (LocalView.current.parent as? DialogWindowProvider)?.window
+        val view = LocalView.current
+        val dialogWindow = (view.parent as? DialogWindowProvider)?.window
         SideEffect {
             dialogWindow?.apply {
                 addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
                 setDimAmount(0.6f)
+                // this is so verbose and annoying, there are three (i think) of this in the codebase
+                // that do the same thing only for the nav bar thing not to go an ugly white
+                // just remember that this could have been better (and without xml!)
+                isNavigationBarContrastEnforced = false
+                @Suppress("DEPRECATION")
+                navigationBarColor = FermuxColors.background.toArgb()
+                WindowCompat.getInsetsController(this, view).apply {
+                    isAppearanceLightStatusBars = false
+                    isAppearanceLightNavigationBars = false
+                }
             }
         }
 

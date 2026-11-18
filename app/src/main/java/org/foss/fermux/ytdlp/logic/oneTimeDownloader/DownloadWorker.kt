@@ -216,7 +216,6 @@ class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWork
                  seqFormat == SeqFormat.SeqAudio
         }
 
-
         var lastProgressUpdateAt = 0L
         var capturedMetadataJson: String? = null
 
@@ -322,7 +321,7 @@ private suspend fun DownloadWorker.historyRegistration(
     try {
         if (metadata != null && history) {
             val dao = DownloaderDb.getDatabase(applicationContext).downloadsDao
-            val instance = downloaderInstance.firstOrNull()
+            val instance = downloaderInstance.firstOrNull() ?: return
             val oldDownloaderInstance = dao.getSimilarInstance(metadata.extractor, metadata.mediaId)
 
             try {
@@ -330,15 +329,15 @@ private suspend fun DownloadWorker.historyRegistration(
                     DownloadsDatabaseField(
                         extractor = metadata.extractor,
                         videoId = metadata.mediaId,
-                        fileUri = instance?.uri.toString(),
+                        fileUri = instance.uri.toString(),
                         url = metadata.url,
                         title = metadata.title,
                         uploader = metadata.uploader,
                         thumbnail = metadata.thumbnail,
                         duration = metadata.duration,
                         resolution = metadata.resolution,
-                        size = instance?.sizeBytes,
-                        format = instance?.extension ?: "unknown format"
+                        size = instance.sizeBytes,
+                        format = instance.extension
                     )
                 )
                 oldDownloaderInstance?.let {
