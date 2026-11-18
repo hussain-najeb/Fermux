@@ -11,7 +11,6 @@ import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -150,7 +149,6 @@ class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWork
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.S)
     override suspend fun doWork(): Result {
 
         setForeground(
@@ -301,7 +299,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWork
 
         } catch (e: CancellationException) {
             val destroyed = YoutubeDL.destroyProcessById(taskId)
-            Log.e("DownloadWorker", "Cancelled id=$taskId stopReason=$stopReason destroyed=$destroyed", e)
+            Log.e("DownloadWorker", "Cancelled id=$taskId destroyed=$destroyed", e)
             throw e
         } catch (e: Exception) {
             Log.e("DownloadWorker", "Failed id=$taskId attempt=$runAttemptCount", e)
@@ -324,7 +322,7 @@ private suspend fun DownloadWorker.historyRegistration(
     try {
         if (metadata != null && history) {
             val dao = DownloaderDb.getDatabase(applicationContext).downloadsDao
-            val instance = downloaderInstance.single()
+            val instance = downloaderInstance.firstOrNull()
             val oldDownloaderInstance = dao.getSimilarInstance(metadata.extractor, metadata.mediaId)
 
             try {
@@ -332,15 +330,15 @@ private suspend fun DownloadWorker.historyRegistration(
                     DownloadsDatabaseField(
                         extractor = metadata.extractor,
                         videoId = metadata.mediaId,
-                        fileUri = instance.uri.toString(),
+                        fileUri = instance?.uri.toString(),
                         url = metadata.url,
                         title = metadata.title,
                         uploader = metadata.uploader,
                         thumbnail = metadata.thumbnail,
                         duration = metadata.duration,
                         resolution = metadata.resolution,
-                        size = instance.sizeBytes,
-                        format = instance.extension
+                        size = instance?.sizeBytes,
+                        format = instance?.extension ?: "unknown format"
                     )
                 )
                 oldDownloaderInstance?.let {

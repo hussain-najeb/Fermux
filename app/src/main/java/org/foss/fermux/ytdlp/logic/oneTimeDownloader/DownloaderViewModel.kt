@@ -11,8 +11,8 @@ import androidx.work.*
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.foss.fermux.dataStore.DataStoreDownloaderSettings
@@ -24,13 +24,24 @@ const val VIDEO = "video"
 const val AUDIO = "audio"
 const val URL = "url"
 
+fun Connectivity.toWorkConstraints(): Constraints = when (this) {
+    Connectivity.Wifi -> Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.UNMETERED)
+        .build()
+
+    Connectivity.Cellular -> Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.METERED)
+        .build()
+
+    Connectivity.Any -> Constraints.NONE
+}
+
 class DownloaderViewModel : ViewModel() {
     companion object {
         private const val DOWNLOAD_WORK_NAME = "fermux_actived_download"
     }
 
     var state by mutableStateOf<DownloadStatus>(DownloadStatus.Idle)
-    var connection by mutableStateOf(Connectivity.Any)
     var downloadUrl by mutableStateOf("")
     var downloaderLogs by mutableStateOf("")
     private var activeProcess by mutableStateOf<UUID?>(null)
@@ -45,24 +56,6 @@ class DownloaderViewModel : ViewModel() {
         "What does an LLM say about it?",
         "Did you paste a URL?"
     )
-
-    val wifiConstraint = when (connection) {
-        Connectivity.Wifi -> {
-            Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.UNMETERED)
-                .build()
-        }
-
-        Connectivity.Cellular -> {
-            Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build()
-        }
-
-        Connectivity.Any -> {
-            Constraints.NONE
-        }
-    }
 
     fun userPickedArgs() {
         if (downloadUrl.isBlank()) return
@@ -88,26 +81,31 @@ class DownloaderViewModel : ViewModel() {
         currentMetadata = null
 
         val settingsTab = DataStoreDownloaderSettings(context.applicationContext)
-        val requestedUrls = OneTimeWorkRequestBuilder<DownloadWorker>()
-            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-            .setInputData(
-                workDataOf(
-                    URL to downloadUrl,
-                    AUDIO to audio?.name,
-                    VIDEO to video?.name
-                )
-            )
-            .setConstraints(wifiConstraint)
-            .build()
 
-        activeProcess = requestedUrls.id
-
-        Log.d("DownloadAdmission", "Prepared download id=${requestedUrls.id}")
-
+        downloaderJob?.cancel()
         downloaderJob = viewModelScope.launch {
+            var requestedId: UUID? = null
             try {
                 val ytdlpDetails = settingsTab.ytdlpDetails.first()
                 showYtdlpDetails = ytdlpDetails
+                val wifiConstraint = settingsTab.wifi.first().toWorkConstraints()
+
+                val requestedUrls = OneTimeWorkRequestBuilder<DownloadWorker>()
+                    .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                    .setInputData(
+                        workDataOf(
+                            URL to downloadUrl,
+                            AUDIO to audio?.name,
+                            VIDEO to video?.name
+                        )
+                    )
+                    .setConstraints(wifiConstraint)
+                    .build()
+
+                requestedId = requestedUrls.id
+                activeProcess = requestedUrls.id
+
+                Log.d("DownloadAdmission", "Prepared download id=${requestedUrls.id}")
 
                 val workManager = WorkManager.getInstance(context)
                 val existingWork = workManager
@@ -138,8 +136,8 @@ class DownloaderViewModel : ViewModel() {
                     requestedUrls.id
                 }
                 workManager.getWorkInfoByIdFlow(observedId)
+                    .filterNotNull()
                     .onEach { workInfo ->
-                        workInfo ?: return@onEach
                         when (workInfo.state) {
                             WorkInfo.State.RUNNING -> {
                                 if (ytdlpDetails) {
@@ -205,23 +203,24 @@ class DownloaderViewModel : ViewModel() {
                             else -> {}
                         }
                     }
-                    .launchIn(viewModelScope)
+                    .first { it.state.isFinished }
 
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 Log.e(
                     "DownloadAdmission",
-                    "Failed to enqueue id=${requestedUrls.id}",
+                    "Failed to enqueue id=$requestedId",
                     e
                 )
-                if (activeProcess == requestedUrls.id) {
+                if (requestedId == null || activeProcess == requestedId) {
                     activeProcess = null
                     downloadErrorHandler(e)
                 }
             }
         }
     }
+
 
     private fun downloadErrorHandler(e: Exception) {
         Log.e("MetadataFetch", "Fetch failed: ${e.javaClass.simpleName}", e)

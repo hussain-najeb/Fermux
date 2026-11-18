@@ -32,23 +32,6 @@ class SequentialViewModel(
     private var downloaderJob: Job? = null
     private var allIDs: List<UUID> = emptyList()
     private val skippedID = mutableSetOf<UUID>()
-    var connection by mutableStateOf(Connectivity.Any)
-
-
-    // This is atomic, btw
-    val wifiConstraint = when (connection) {
-        Connectivity.Wifi -> {
-            Constraints.Builder().setRequiredNetworkType(NetworkType.UNMETERED).build()
-        }
-
-        Connectivity.Cellular -> {
-            Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-        }
-
-        Connectivity.Any -> {
-            Constraints.NONE
-        }
-    }
 
     fun startSequentiallyDownloading(
         context: Context,
@@ -56,30 +39,37 @@ class SequentialViewModel(
     ) {
         if (urls.isEmpty()) return
 
-        val requestedUrlBuilder = urls.map { url ->
-            OneTimeWorkRequestBuilder<DownloadWorker>().addTag("destroy-all-workers")
-                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                .setInputData(
-                    workDataOf(
-                        SEQUENTIAL_URL to url
-                    )
-                ).setConstraints(wifiConstraint).build()
-        }
-
-        state = SequentialDownloadQueueState(
-            phase = SequentialStatus.SeqDownload,
-            items = requestedUrlBuilder.mapIndexed { index, request ->
-                SequentialItem(
-                    id = request.id, url = urls[index]
-                )
-            }
-        )
         val settingsTab = DataStoreDownloaderSettings(context.applicationContext)
+        state = SequentialDownloadQueueState(phase = SequentialStatus.SeqDownload)
 
-        allIDs = requestedUrlBuilder.map { it.id }
+        downloaderJob?.cancel()
         downloaderJob = viewModelScope.launch {
+            var requestedUrlBuilder: List<OneTimeWorkRequest> = emptyList()
             try {
                 val ytdlpDetails = settingsTab.ytdlpDetails.first()
+                val wifiConstraint = settingsTab.wifi.first().toWorkConstraints()
+
+                requestedUrlBuilder = urls.map { url ->
+                    OneTimeWorkRequestBuilder<DownloadWorker>().addTag("destroy-all-workers")
+                        .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                        .setInputData(
+                            workDataOf(
+                                SEQUENTIAL_URL to url
+                            )
+                        ).setConstraints(wifiConstraint).build()
+                }
+
+                state = SequentialDownloadQueueState(
+                    phase = SequentialStatus.SeqDownload,
+                    items = requestedUrlBuilder.mapIndexed { index, request ->
+                        SequentialItem(
+                            id = request.id, url = urls[index]
+                        )
+                    }
+                )
+                allIDs = requestedUrlBuilder.map { it.id }
+                skippedID.clear()
+
                 val workManager = WorkManager.getInstance(context)
                 for (request in requestedUrlBuilder) {
                     if (request.id in skippedID) {
@@ -107,7 +97,7 @@ class SequentialViewModel(
                                     },
                                     progress = progress,
                                     metadata = currentMetadata,
-                                    logs = if (logChunk.isNullOrBlank() && ytdlpDetails) {
+                                    logs = if ((!ytdlpDetails || logChunk.isNullOrBlank())) {
                                         item.logs
                                     } else {
                                         item.logs + logChunk
@@ -175,6 +165,9 @@ class SequentialViewModel(
         WorkManager.getInstance(context).cancelAllWorkByTag("destroy-all-workers")
         downloaderJob?.cancel()
         downloadUrl = mutableStateListOf(SequentialItem())
+        downloadUrl.clear()
+        downloadUrl.add(SequentialItem())
+        skippedID.clear()
         state = SequentialDownloadQueueState(phase = SequentialStatus.SeqIdle)
     }
 

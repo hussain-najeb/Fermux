@@ -23,7 +23,6 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
@@ -39,10 +38,11 @@ import org.foss.fermux.ytdlp.logic.oneTimeDownloader.ScreenInfo
 import org.foss.fermux.ytdlp.ui.quickDownloads.QuickDownloadsStateMachine
 
 @Composable
-fun HomeScreen(navController: NavHostController) { // TODO. Add in animation between each transition so its smooth. App wide transition between each tab, not component animations
-
-    val downloaderViewModel: DownloaderViewModel = viewModel()
-    val downloaderSettingsViewModel: DownloaderSettingsViewModel = viewModel()
+fun HomeScreen(
+    navController: NavHostController,
+    downloaderViewModel: DownloaderViewModel,
+    downloaderSettingsViewModel: DownloaderSettingsViewModel
+) {
 
     val context = LocalContext.current
     val clipboard = LocalClipboard.current

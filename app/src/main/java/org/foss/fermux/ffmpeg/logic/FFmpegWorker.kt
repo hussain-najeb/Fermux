@@ -5,9 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.ServiceInfo
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.net.toUri
 import androidx.work.*
@@ -88,7 +86,6 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
         private const val FFMPEG_CHANNEL_ID = "Converter_Notif"
     }
 
-    @RequiresApi(Build.VERSION_CODES.S)
     override suspend fun doWork(): Result {
 
         setForeground(
@@ -273,7 +270,7 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                     }
                 }
             } catch (e: CancellationException) {
-                Log.e("fermuxFFmpeg", "FFmpeg conversion cancelled id=$id stopReason=$stopReason", e)
+                Log.e("fermuxFFmpeg", "FFmpeg conversion cancelled id=$id", e)
                 throw e
             } finally {
                 if (tempFile.exists()) tempFile.delete()

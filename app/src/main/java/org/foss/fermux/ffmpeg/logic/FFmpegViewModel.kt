@@ -16,7 +16,8 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.util.*
@@ -147,11 +148,12 @@ class FFmpegViewModel : ViewModel() {
 
             state = FFmpegStatus.Converting(0f, targetFormat, inputUri, FFmpegLogs)
 
-            workManager.getWorkInfoByIdFlow(request.id).onEach { workInfo ->
-                workInfo ?: return@onEach
+            workManager
+                .getWorkInfoByIdFlow(request.id)
+                .filterNotNull()
+                .onEach { workInfo ->
                 when (workInfo.state) {
                     WorkInfo.State.RUNNING -> {
-
                         val progress = workInfo.progress.getFloat("progress", 0f)
                         val logs = workInfo.progress.getString("line")
 
@@ -183,17 +185,14 @@ class FFmpegViewModel : ViewModel() {
 
                     else -> {}
                 }
-            }
-                .launchIn(viewModelScope)
+            }.first { it.state.isFinished }
         }
     }
-
 
     fun cancelButton(context: Context) {
         activeProcess?.let { id ->
             WorkManager.getInstance(context).cancelWorkById(id)
         }
-
         ffmpegJob?.cancel()
         ffmpegJob = null
         state = FFmpegStatus.Idle

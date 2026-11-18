@@ -12,11 +12,13 @@ import org.foss.fermux.components.downloaderComponents.DownloaderLogs
 import org.foss.fermux.ffmpeg.ui.ConverterScreen
 import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.FFmpegLogs
 import org.foss.fermux.main.HomeScreen
+import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.settings.ui.SettingsScreen
 import org.foss.fermux.settings.ui.aboutPage.AboutPage
 import org.foss.fermux.settings.ui.aboutPage.LibraryPage
 import org.foss.fermux.settings.ui.converter.SimpleFFmpegSetting
 import org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage
+import org.foss.fermux.ytdlp.logic.oneTimeDownloader.DownloaderViewModel
 import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
 import org.foss.fermux.ytdlp.ui.history.History
 import org.foss.fermux.ytdlp.ui.sequentialDownloader.SeqLogs
@@ -58,6 +60,8 @@ fun FermuxAppMainScreen() {
 
     val navController = rememberNavController()
     val seqView: SequentialViewModel = viewModel()
+    val settView: DownloaderSettingsViewModel = viewModel()
+    val downView: DownloaderViewModel = viewModel()
 
     NavHost(
         navController = navController,
@@ -76,7 +80,7 @@ fun FermuxAppMainScreen() {
         }
     ) {
         // Main Screens
-        composable(MainScreens.Home.route) { HomeScreen(navController) }
+        composable(MainScreens.Home.route) { HomeScreen(navController, downView, settView ) }
         composable(MainScreens.Settings.route) { SettingsScreen(navController) }
         composable(
             route = MainScreens.Downloader.route,
