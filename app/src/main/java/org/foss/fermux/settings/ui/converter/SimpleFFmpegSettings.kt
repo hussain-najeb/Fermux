@@ -53,9 +53,7 @@ fun SimpleFFmpegSetting(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val highlight = SpanStyle(color = FermuxColors.warmBlue, fontStyle = FontStyle.Italic)
-    val strongText = SpanStyle(color = FermuxColors.fermuxLightErrorTextColor)
     val normalText = SpanStyle(color = FermuxColors.white)
-
 
     val requestNotificationPermission = rememberNotificationPermissionRequest(
         onGranted = {
@@ -178,7 +176,7 @@ fun SimpleFFmpegSetting(
                     append("copies the original video without changing its codec, quality, or resolution. Conversion is faster, but the selected resolution is ignored.\n\n")
                     append("When on, ")
                 }
-                withStyle(highlight) { append("FFmpeg") }
+                withStyle(highlight) { append("FFmpeg ") }
                 withStyle(normalText) { append("re-encodes the video using the selected quality and resolution. It must be on for ") }
                 withStyle(highlight) { append("Hardware Acceleration") }
                 withStyle(normalText) { append(" and ") }

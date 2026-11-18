@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui.sequentialDownloader
+package org.foss.fermux.ytdlp.ui.sequentialDownloader.stateMachine
 
 import androidx.compose.animation.*
 import androidx.compose.material3.MaterialTheme
@@ -7,6 +7,8 @@ import androidx.navigation.NavController
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialDownloadQueueState
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialStatus
 import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
+import org.foss.fermux.ytdlp.ui.sequentialDownloader.SequentialDone
+import org.foss.fermux.ytdlp.ui.sequentialDownloader.SequentialIdle
 
 @Composable
 fun SequentialStateMachine(

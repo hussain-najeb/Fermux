@@ -14,8 +14,8 @@ import org.foss.fermux.components.generalComponents.ModularSegmentedButtons
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SeqFormat
-import org.foss.fermux.ytdlp.ui.sequentialDownloader.SeqAudioButtons
-import org.foss.fermux.ytdlp.ui.sequentialDownloader.SeqVideoButtons
+import org.foss.fermux.ytdlp.ui.sequentialDownloader.stateMachine.SeqAudioButtons
+import org.foss.fermux.ytdlp.ui.sequentialDownloader.stateMachine.SeqVideoButtons
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

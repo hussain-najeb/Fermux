@@ -20,7 +20,7 @@ import org.foss.fermux.settings.ui.downloader.SimpleDownloaderPage
 import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
 import org.foss.fermux.ytdlp.ui.history.History
 import org.foss.fermux.ytdlp.ui.sequentialDownloader.SeqLogs
-import org.foss.fermux.ytdlp.ui.sequentialDownloader.SequentialContent
+import org.foss.fermux.ytdlp.ui.sequentialDownloader.stateMachine.SequentialContent
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloadContent
 import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.DownloaderArgs
 

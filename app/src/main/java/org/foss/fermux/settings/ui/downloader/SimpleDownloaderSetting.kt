@@ -61,7 +61,6 @@ fun SimpleDownloaderPage(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val highlight = SpanStyle(color = FermuxColors.warmBlue, fontStyle = FontStyle.Italic)
-    val strongText = SpanStyle(color = FermuxColors.fermuxLightErrorTextColor)
     val normalText = SpanStyle(color = FermuxColors.white)
 
 

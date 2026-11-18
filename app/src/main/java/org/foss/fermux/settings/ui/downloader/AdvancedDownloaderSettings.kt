@@ -207,13 +207,13 @@ fun AdvancedDownloaderSettings(
                 withStyle(normalText) { append("options are essential for fragment downloading, the native ") }
                 withStyle(highlight) { append("HLS ") }
                 withStyle(normalText) { append("that comes with ") }
-                withStyle(highlight) { append("yt-dlp") }
+                withStyle(highlight) { append("yt-dlp ") }
                 withStyle(normalText) { append("is excellent, but there are options such as ") }
                 withStyle(highlight) { append("FFmpeg") }
                 withStyle(normalText) { append(" which comes with ") }
-                withStyle(highlight) { append(" TLS/HTTP ") }
+                withStyle(highlight) { append("TLS/HTTP ") }
                 withStyle(normalText) { append("support, or ") }
-                withStyle(highlight) { append("Aria2c ") }
+                withStyle(highlight) { append("Aria2-Next ") }
                 withStyle(normalText) { append("that comes as a separate setting.") }
             },
             dialogImage = R.drawable.aria2_hls,
@@ -323,7 +323,7 @@ fun AdvancedDownloaderSettings(
             specialDescription = buildAnnotatedString {
                 withStyle(normalText) { append("This setting uses ") }
                 withStyle(highlight) { append("QuickJsNG") }
-                withStyle(normalText) { append(", NG here means Next Gen, which is an improved version of the old QuickJs .Due to the nature of Youtube, this JS runtime is recommended by ") }
+                withStyle(normalText) { append(", NG here means Next Gen, which is an improved version of the old QuickJs. Due to the nature of Youtube, this JS runtime is recommended by ") }
                 withStyle(highlight) { append("yt-dlp") }
                 withStyle(normalText) { append(" to solve JS challenges, this should make Youtube downloads more reliable.") }
             },

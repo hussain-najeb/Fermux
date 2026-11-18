@@ -119,7 +119,7 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings_
 val DOWNLOAD_PATH = stringPreferencesKey("download_path")
 val DOWNLOADER_BELL_STATE = booleanPreferencesKey("bellState")
 val SLEEP_REQUEST_KEY = intPreferencesKey("sleep_request_seconds")
-val ARIA2_MODE_KEY = stringPreferencesKey("aria2c_mode")
+val ARIA2_MODE_KEY = stringPreferencesKey("aria2_mode")
 val THUMBNAIL_FORMATS = stringPreferencesKey("thumbnail_selection")
 val AUDIO_FORMATS = stringPreferencesKey("audio_formats")
 val VIDEO_FORMATS = stringPreferencesKey("video_formats")

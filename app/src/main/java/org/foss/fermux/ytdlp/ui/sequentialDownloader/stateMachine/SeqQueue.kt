@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui.sequentialDownloader
+package org.foss.fermux.ytdlp.ui.sequentialDownloader.stateMachine
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.padding
@@ -13,6 +13,7 @@ import org.foss.fermux.components.downloaderComponents.SeqMetadataCard
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialDownloadQueueState
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialItemStatus
 import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
+import org.foss.fermux.ytdlp.ui.sequentialDownloader.*
 
 @Composable
 fun SequentialQueue(

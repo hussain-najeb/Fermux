@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui.sequentialDownloader
+package org.foss.fermux.ytdlp.ui.sequentialDownloader.stateMachine
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -6,7 +6,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.withStyle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -27,8 +26,6 @@ fun SequentialContent(
     val state = sequentialViewModel.state
 
     var dialogDismiss by remember { mutableStateOf(false) }
-    val highlight = SpanStyle(color = FermuxColors.warmBlue, fontStyle = FontStyle.Italic)
-    val strongText = SpanStyle(color = FermuxColors.fermuxLightErrorTextColor)
     val normalText = SpanStyle(color = FermuxColors.white)
 
     LargeTopBarScaffold(

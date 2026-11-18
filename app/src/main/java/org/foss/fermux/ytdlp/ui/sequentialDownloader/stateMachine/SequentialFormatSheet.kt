@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui.sequentialDownloader
+package org.foss.fermux.ytdlp.ui.sequentialDownloader.stateMachine
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
