@@ -36,11 +36,9 @@ fun QuickDownloadsStateMachine(
         contentKey = { it::class }
     ) { targetState ->
         when (targetState) {
-            is DownloadStatus.Idle -> {}
-
-            is DownloadStatus.UserArgs -> {}
-
-            is DownloadStatus.QuickDownload -> {}
+            is DownloadStatus.Idle -> Unit
+            is DownloadStatus.UserArgs -> Unit
+            is DownloadStatus.QuickDownload -> Unit
 
             is DownloadStatus.LoadingMetadata -> {
                 QuickDownloadsMetadata()

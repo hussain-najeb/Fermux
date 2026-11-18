@@ -3,10 +3,7 @@ package org.foss.fermux.settings.ui.downloader
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -126,7 +123,7 @@ fun SimpleDownloaderPage(
             title = "History",
             description = "Enable/Disable history",
             liner = true,
-            image = if (history) R.drawable.history else R.drawable.history, // TODO. add in the appropriate icon for this
+            image = if (history) R.drawable.history_on else R.drawable.history_off,
             content = {
                 SettingsSwitch(
                     checked = history,
@@ -219,8 +216,7 @@ fun SimpleDownloaderPage(
                 navController = navController,
                 snackbarHostState = snackbarHostState
             )
-
-            Spacer(modifier = Modifier.padding(top = 10.dp))
+            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 }

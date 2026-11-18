@@ -29,7 +29,7 @@ fun SeqCompletedCard(
         modifier = modifier.fillMaxWidth().height(100.dp),
         color = FermuxColors.darkPurple,
         shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.dp, FermuxColors.warmPurple),
+        border = BorderStroke(1.dp, FermuxColors.fermuxFFmpegGreen),
         tonalElevation = 12.dp,
         shadowElevation = 12.dp
     ) {

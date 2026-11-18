@@ -69,6 +69,8 @@ fun QuickdownloadError(
                 FilterButton(
                     modifier = Modifier.padding(end = 5.dp),
                     image = R.drawable.close,
+                    activeColor = FermuxColors.fermuxErrorCardColor,
+                    activeIconColor = FermuxColors.white,
                     onClick = { onCancel() }
                 )
             }
@@ -79,9 +81,7 @@ fun QuickdownloadError(
 @Preview
 @Composable
 fun test22() {
-
     val nav = rememberNavController()
-
     Column(verticalArrangement = Arrangement.Center) {
         QuickdownloadError(
             navController = nav,

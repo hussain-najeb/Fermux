@@ -38,12 +38,6 @@ import org.foss.fermux.ytdlp.logic.oneTimeDownloader.DownloaderViewModel
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.ScreenInfo
 import org.foss.fermux.ytdlp.ui.quickDownloads.QuickDownloadsStateMachine
 
-
-// TODO. Make the tab itself have an "enabled" state where its off if quick downs are happening and make its color darker,
-//  as in, its not on and the user cant press it, also make it so if there is a download in the main tab, have an "enabled"
-//  option for the quick downloads to be off, synchronization is key, these CAN NOT happen asynchronously!
-//  also add a "cancel" button
-
 @Composable
 fun HomeScreen(navController: NavHostController) { // TODO. Add in animation between each transition so its smooth. App wide transition between each tab, not component animations
 
@@ -55,10 +49,9 @@ fun HomeScreen(navController: NavHostController) { // TODO. Add in animation bet
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val scroll = rememberScrollState()
-    val disabled = downloaderViewModel.state is DownloadStatus.Idle || downloaderViewModel.state is DownloadStatus.Error
+    val enabled = downloaderViewModel.state is DownloadStatus.Idle || downloaderViewModel.state is DownloadStatus.Error
 
     val quickDownloads by downloaderSettingsViewModel.quickDownloads.collectAsStateWithLifecycle()
-
 
     val speed = (downloaderViewModel.state as? DownloadStatus.Downloading)?.downloadProgress ?: 0f
     val iconRotate by animateFloatAsState(
@@ -88,7 +81,7 @@ fun HomeScreen(navController: NavHostController) { // TODO. Add in animation bet
                                 if (text.isNullOrBlank() || text.isEmpty()) {
                                     scope.launch {
                                         snackbarHostState.showSnackbar(
-                                            message = "Your url is empty, copy a url",
+                                            message = "Your clipboard doesn't have a url",
                                             duration = SnackbarDuration.Short
                                         )
                                     }
@@ -104,7 +97,7 @@ fun HomeScreen(navController: NavHostController) { // TODO. Add in animation bet
                     navController = navController
                 )
             },
-            enabled = disabled
+            enabled = enabled
         ),
         ScreenInfo(
             screen = MainScreens.Converter,

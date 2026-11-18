@@ -15,7 +15,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
@@ -33,7 +32,7 @@ import kotlin.math.roundToInt
 @Composable
 fun AdvancedFFmpegSettings(
     navController: NavController,
-    ffmpegSettingsViewModel: FFmpegSettingsViewModel = viewModel(),
+    ffmpegSettingsViewModel: FFmpegSettingsViewModel,
     snackbarHostState: SnackbarHostState
 ) {
 

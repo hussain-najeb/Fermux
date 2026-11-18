@@ -68,7 +68,6 @@ fun AdvancedDownloaderSettings(
             content = {
                 FilterButton(
                     modifier = Modifier.padding(3.dp),
-                    border = true,
                     image = R.drawable.restore,
                     onClick = {
                         scope.launch {

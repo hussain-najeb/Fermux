@@ -33,7 +33,6 @@ fun QuickDownloadsMetadata(
         )
     }
     var loadingMessage by remember { mutableStateOf(messages.first()) }
-
     LaunchedEffect(Unit) {
         while (true) {
             for (message in messages) {
