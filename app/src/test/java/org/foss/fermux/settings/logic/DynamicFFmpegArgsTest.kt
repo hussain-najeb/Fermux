@@ -11,7 +11,6 @@ import org.junit.jupiter.params.provider.EnumSource
 import org.junit.jupiter.params.provider.ValueSource
 
 
-// TODO. This is a test for ffmpeg pre: Crop, resizing, and any effect past the default impl that the app shipped with, test these features later when implemented
 
 class DynamicFFmpegArgsTest {
 

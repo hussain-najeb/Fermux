@@ -82,7 +82,7 @@ fun IdleCard(
                         }
                     )
                 }
-            } // TODO. Add the crop and edit stuff in the same thing like the downloader, a sidebar type of thing.
+            }
         }
     }
 }

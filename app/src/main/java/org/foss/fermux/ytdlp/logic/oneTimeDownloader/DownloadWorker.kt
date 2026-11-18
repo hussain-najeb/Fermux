@@ -227,7 +227,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWork
                 context = applicationContext,
                 url = url,
                 taskId = taskId,
-                aria2cMode = aria2cMode,
+                aria2Mode = aria2cMode,
                 audioFormats = audioFormat,
                 videoFormats = videoFormat,
                 videoComp = videoComp,
@@ -349,7 +349,6 @@ private suspend fun DownloadWorker.historyRegistration(
             } catch (e: Exception) {
                 Log.e("DownloadWorker", "Failed to save download to database", e)
             }
-
         }
 
     } catch (e: Exception) {

@@ -121,8 +121,6 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
 
                 val fileUriInput = inputData.getString("FFMPEG_URI_FILE")
                     ?: return failure(workDataOf("error" to "Missing FFMPEG_URI_FILE in input data"))
-
-
                 val originalName = inputData.getString("ORIGINAL_FILE_NAME") ?: "Converted_to_$id"
                 val baseName = originalName.substringBeforeLast(".")
                 val displayName = "$baseName.${targetFormat.workerFile}"

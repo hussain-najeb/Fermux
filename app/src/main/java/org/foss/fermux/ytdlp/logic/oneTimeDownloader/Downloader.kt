@@ -8,18 +8,6 @@ import java.io.File
 import java.util.*
 
 /*
-TODO:
- *  4- a RegEx for if "WARNING: [youtube] Unable to fetch GVS PO Token for web_safari client:
- *  Missing required Visitor Data. You may need to pass Visitor Data with --extractor-args "youtube:visitor_data=XXX"
- *   WARNING: [youtube] Unable to fetch GVS PO Token for web_safari client:
- *   Missing required Visitor Data. You may need to pass Visitor Data with
- *   --extractor-args "youtube:visitor_data=XXX" the user here gets a
- *   dialog and a reminder about the issue, brief rundown and how to fix it, including in that alert dialog the name of the
- *   extractor and whats with it. RegEx or a filter should have a value that is "extractorName" called in as a regex when the regex sees
- *   there is the word "cookies" involved, so you get what site is doing the cookies and if its an issue in the first place.
- */
-
-/*
 TODO. I probably need BG-Utils with deno JS runtime with ytdlp PO solver in the main lib, could be a PR and some change, just chuck in the whole thing
 THEMOSTCOMPLETEYTDLPCLIENTINTHEWORLD
  */
@@ -27,7 +15,7 @@ THEMOSTCOMPLETEYTDLPCLIENTINTHEWORLD
 suspend fun downloaderLogic(
     context: Context,
     showDetails: Boolean,
-    aria2cMode: Aria2NextMode = Aria2NextMode.Always,
+    aria2Mode: Aria2NextMode = Aria2NextMode.Always,
     thumbnail: ThumbnailFormat = ThumbnailFormat.Png,
     audioFormats: AudioFormat = AudioFormat.Mp3Format,
     videoFormats: VideoFormat = VideoFormat.Mp4Format,
@@ -101,7 +89,7 @@ suspend fun downloaderLogic(
         request.addOption("--sponsorblock-remove", sponsorBlockCategories.joinToString(","))
     }
 
-    val shouldUseAria2c = when (aria2cMode) {
+    val shouldUseAria2 = when (aria2Mode) {
         Aria2NextMode.Always -> true
         Aria2NextMode.EdgeCaseOnly -> videoQuality != VideoQuality.HD1080
         Aria2NextMode.Disabled -> false
@@ -109,7 +97,7 @@ suspend fun downloaderLogic(
 
     val aria2Argument = "aria2c:--summary-interval=1 -x 12 -s 12 -k 1M"
 
-    if (shouldUseAria2c) {
+    if (shouldUseAria2) {
         request.addOption("--downloader", "libaria2c.so")
         request.addOption(
             "--external-downloader-args", aria2Argument
@@ -117,7 +105,7 @@ suspend fun downloaderLogic(
     }
 
     when {
-        shouldUseAria2c -> Unit
+        shouldUseAria2 -> Unit
         externalDownloaders == ExternalDownloaders.FFmpegAsExternal -> {
             request.addOption("--hls-prefer-ffmpeg")
         }
@@ -138,11 +126,7 @@ suspend fun downloaderLogic(
         request.addOption("--embed-thumbnail")
     }
 
-    if (playlistStatus) {
-        request.addOption("--yes-playlist")
-    } else {
-        request.addOption("--no-playlist")
-    }
+    if (playlistStatus) request.addOption("--yes-playlist") else request.addOption("--no-playlist")
 
     audioQuality?.let {
         request.addOption("-x")
