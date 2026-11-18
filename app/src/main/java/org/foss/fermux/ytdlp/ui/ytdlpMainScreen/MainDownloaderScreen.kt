@@ -89,7 +89,7 @@ fun DownloadContent(
                     .background(FermuxColors.background)
             ) {
                 if (!upToDate) Text(
-                    text = "The current ytdlp version of is outdated, update the downloader in the preferences tab.",
+                    text = "The current ytdlp version is outdated, update the downloader in the preferences tab.",
                     color = FermuxColors.offWhiteTextColor,
                     fontSize = 14.sp,
                     fontStyle = FontStyle.Normal,
