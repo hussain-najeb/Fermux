@@ -288,7 +288,8 @@ fun AdvancedDownloaderSettings(
             dialogImage = R.drawable.speed,
             dialogContent = {
                 QuickDownloadSettingQuality(downloaderSettingsViewModel)
-            }
+            },
+            position = TilePosition.MIDDLE
         ),
         InfoListClass(
             title = "Clearing Cache",
@@ -327,7 +328,7 @@ fun AdvancedDownloaderSettings(
                 withStyle(highlight) { append("yt-dlp") }
                 withStyle(normalText) { append(" to solve JS challenges, this should make Youtube downloads more reliable.") }
             },
-            dialogImage = R.drawable.impersonation_on,
+            dialogImage = R.drawable.javascript,
             content = {
                 SettingsSwitch(
                     modifier = Modifier.padding(2.dp),

@@ -87,8 +87,7 @@ fun SimpleDownloaderPage(
     val simpleDownloaderSettings = listOf(
         InfoListClass(
             title = "Update Yt-dlp",
-            description = if (isCheckingForUpdate) ytdlpUpdateStatus
-                ?: "Checking for update..." else "Current version is $currentVersionName",
+            description = if (isCheckingForUpdate) ytdlpUpdateStatus ?: "Checking for update..." else "Current version is $currentVersionName",
             icon = Icons.Default.Update,
             dialogAppearance = true,
             dialogTitle = "Updating Yt-dlp",
@@ -118,7 +117,8 @@ fun SimpleDownloaderPage(
             title = "Notifications",
             description = "Press to enable notifications",
             image = if (bellState) R.drawable.bell_on else R.drawable.bell_off,
-            onClick = requestNotificationPermission
+            onClick = requestNotificationPermission,
+            position = TilePosition.MIDDLE
         ),
         InfoListClass(
             title = "History",

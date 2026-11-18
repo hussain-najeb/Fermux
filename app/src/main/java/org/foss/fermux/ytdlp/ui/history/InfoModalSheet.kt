@@ -12,7 +12,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
@@ -192,27 +191,5 @@ fun InfoModalSheet(
                 )
             }
         }
-    }
-}
-
-
-@Preview
-@Composable
-fun test15() {
-    Column(Modifier.fillMaxSize()) {
-        InfoModalSheet(
-            onDismissRequest = {},
-            thumbnail = "/home/Hussain/Downloads/galagcy.webp",
-            imageDescription = "",
-            title = "Something situation crazy",
-            uploader = "PenguinZ0",
-            duration = 234564,
-            format = "Webm",
-            size = 352534,
-            resolution = "1920x1080",
-            extractor = "Youtube",
-            url = "https://www.youtube.com/watch?v=fCK8-2pdtFU&t=5041s",
-            uri = "EGKWSNOPRSERFNKOP[eSNJOFGPnjoprSG"
-        )
     }
 }

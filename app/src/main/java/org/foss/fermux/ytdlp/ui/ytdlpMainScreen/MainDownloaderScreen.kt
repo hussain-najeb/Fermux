@@ -26,10 +26,8 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -171,7 +169,6 @@ fun DownloadContent(
                             }
                         },
                         keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Send,
                             capitalization = KeyboardCapitalization.None,
                             autoCorrectEnabled = false
                         ),
@@ -281,16 +278,5 @@ private fun Connections() {
             fontFamily = FontFamily.Default,
             modifier = Modifier.padding(10.dp)
         )
-    }
-}
-
-
-@Preview(showBackground = true, backgroundColor = 0xFF15152e)
-@Composable
-fun test20() {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-
     }
 }

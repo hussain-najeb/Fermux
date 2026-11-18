@@ -95,7 +95,6 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.compose.animation)
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.platform.launcher)
@@ -104,6 +103,4 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-    implementation(libs.jackson.databind)
-    implementation(libs.jackson.annotations)
 }

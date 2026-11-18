@@ -17,13 +17,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.IconTextButton
@@ -271,38 +269,5 @@ private fun BoxScope.AdditionalInfo(
                 }
             }
         }
-    }
-}
-
-
-@Preview(showBackground = true, backgroundColor = 0xFF181825)
-@Composable
-fun test3() {
-    val navController = rememberNavController()
-
-    Column(modifier = Modifier.fillMaxSize()) {
-
-        // To use this, remove "status", its less annoying that way.
-
-
-//          FinishedCardContent(
-//               metadata = DownloadMetadata(
-//                    mediaId = "",
-//                    url = "",
-//                    extractor = "",
-//                    title = "Example Video Title, TEST....TEST. This is a test",
-//                    thumbnail = "/home/Hussain/Downloads/tempdev/thumbnail.webp",
-//                    duration = 578,
-//                    uploader = "Example uploader, Youtube Channel, Or Null",
-//                    size = 35345455,
-//                    format = "",
-//                    audioQuality = 125.6,
-//                    resolution = "720p"
-//               ),
-//               onCancel = {},
-//               navController = navController,
-//               progress = 100F,
-//               showYtdlpDetails = true
-//          )
     }
 }

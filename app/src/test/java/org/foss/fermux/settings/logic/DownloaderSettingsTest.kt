@@ -40,7 +40,6 @@ class DownloaderSettingsTest {
 
         val categories = setOf("something something categories", "Something Something categories")
 
-        setting.setDownloadPath("/downloads")
         setting.setPlaylistStatus(false)
         setting.setSponsorBlockCategories(categories)
         setting.setSponsorBlock(false)
@@ -51,7 +50,6 @@ class DownloaderSettingsTest {
         setting.setSleepRequest(1)
         setting.setDownloaderBellState(false)
 
-        assertEquals("/downloads", setting.downloadPath.first())
         assertFalse(setting.playlistStatus.first())
         assertEquals(categories, setting.sponsorBlockCategories.first())
         assertFalse(setting.sponsorBlock.first())
@@ -95,7 +93,6 @@ class DownloaderSettingsTest {
     fun `clearing settings restores defaults`() = runTest {
         val setting = newFixture().repositoryOfTheProdCode
 
-        setting.setDownloadPath("/downloads")
         setting.setDownloaderBellState(false)
         setting.setSleepRequest(10)
         setting.setExternalDownloader(ExternalDownloaders.FFmpegAsExternal)
@@ -111,7 +108,6 @@ class DownloaderSettingsTest {
         setting.resetYtdlp()
 
 
-        assertEquals("", setting.downloadPath.first())
         assertFalse(setting.downloaderBellState.first())
         assertEquals(0, setting.sleepRequest.first())
         assertEquals(Aria2NextMode.Disabled, setting.aria2NextMode.first())
@@ -130,7 +126,6 @@ class DownloaderSettingsTest {
         val setting = newFixture().repositoryOfTheProdCode
         val categories = setOf("sponsor", "music_offtopic")
 
-        setting.setDownloadPath("/downloads")
         setting.setSleepRequest(10)
         setting.setAria2NextMode(Aria2NextMode.EdgeCaseOnly)
         setting.setYtdlpDetails(false)
@@ -145,7 +140,6 @@ class DownloaderSettingsTest {
         val snapshot = setting.resetYtdlp()
         setting.restoreYtdlp(snapshot)
 
-        assertEquals("/downloads", setting.downloadPath.first())
         assertEquals(10, setting.sleepRequest.first())
         assertEquals(Aria2NextMode.EdgeCaseOnly, setting.aria2NextMode.first())
         assertEquals(ExternalDownloaders.Disabled, setting.externalDownloaders.first())

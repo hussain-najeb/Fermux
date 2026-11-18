@@ -11,11 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.FilterButton
 import org.foss.fermux.ui.theme.FermuxColors
@@ -75,17 +73,5 @@ fun QuickdownloadError(
                 )
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun test22() {
-    val nav = rememberNavController()
-    Column(verticalArrangement = Arrangement.Center) {
-        QuickdownloadError(
-            navController = nav,
-            onCancel = {}
-        )
     }
 }

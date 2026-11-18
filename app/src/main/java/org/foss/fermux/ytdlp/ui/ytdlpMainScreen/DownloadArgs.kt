@@ -198,7 +198,7 @@ fun DownloaderArgs(navController: NavController) {
                 withStyle(highlight) { append(" yt-dlp ") }
                 withStyle(normalText) { append("does when there is any networking errors.") }
             },
-            dialogImage = R.drawable.audio_file,
+            dialogImage = R.drawable.yt_dlp,
             image = R.drawable.retry,
             dialogContent = {
                 ModularSlider(
@@ -207,7 +207,8 @@ fun DownloaderArgs(navController: NavController) {
                     trackRange = 10f..50f,
                     onOptionSelected = { downloaderSettingsViewModel.setRetries(it) }
                 )
-            }
+            },
+            position = TilePosition.MIDDLE
         ),
         InfoListClass(
             title = "Set Fragment Retries",
@@ -237,14 +238,15 @@ fun DownloaderArgs(navController: NavController) {
                     trackRange = 10f..50f,
                     onOptionSelected = { downloaderSettingsViewModel.setFragRetries(it) }
                 )
-            }
+            },
+            position = TilePosition.MIDDLE
         ),
         InfoListClass(
             title = "Sleep Duration",
             description = "Sleep request is a flag for delayed download between each request",
             icon = if (sleepRequest > 0) Icons.Filled.Flag else Icons.Outlined.Flag,
             dialogAppearance = true,
-            dialogTitle = "",
+            dialogTitle = "Sleep Duration",
             dialogImage = R.drawable.flag_full,
             specialDescription = buildAnnotatedString {
                 withStyle(normalText) { append("You can set the amounts of seconds in the slider, each number is a second that gets added between each ") }
@@ -300,7 +302,8 @@ fun DownloaderArgs(navController: NavController) {
                     dialogDescription = option.dialogDescription,
                     specialDescription = option.specialDescription,
                     dialogImage = option.dialogImage,
-                    dialogContent = option.dialogContent
+                    dialogContent = option.dialogContent,
+                    liner = option.liner
                 )
             }
             Spacer(modifier = Modifier.padding(top = 10.dp))

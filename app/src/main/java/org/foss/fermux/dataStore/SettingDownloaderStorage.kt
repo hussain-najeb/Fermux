@@ -11,7 +11,6 @@ import org.foss.fermux.ytdlp.logic.oneTimeDownloader.*
 
 interface DownloaderSettingsRepo {
 
-    val downloadPath: Flow<String>
     val downloaderBellState: Flow<Boolean>
     val sleepRequest: Flow<Int>
     val embedThumbnail: Flow<Boolean>
@@ -42,7 +41,6 @@ interface DownloaderSettingsRepo {
     val seqAudio: Flow<SeqAudioQuality>
     val seqVideo: Flow<SeqVideoQuality>
 
-    suspend fun setDownloadPath(value: String)
     suspend fun setDownloaderBellState(value: Boolean)
     suspend fun setSleepRequest(value: Int)
     suspend fun setAria2NextMode(value: Aria2NextMode)
@@ -79,7 +77,6 @@ interface DownloaderSettingsRepo {
 }
 
 data class DownloaderSettingsSnapshot(
-    val downloadPath: String?,
     val sleepRequest: Int?,
     val aria2NextMode: String?,
     val ytdlpDetails: Boolean?,
@@ -116,7 +113,6 @@ data class DownloaderArgumentsSnapshot(
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings_tab")
 
 
-val DOWNLOAD_PATH = stringPreferencesKey("download_path")
 val DOWNLOADER_BELL_STATE = booleanPreferencesKey("bellState")
 val SLEEP_REQUEST_KEY = intPreferencesKey("sleep_request_seconds")
 val ARIA2_MODE_KEY = stringPreferencesKey("aria2_mode")
@@ -153,7 +149,6 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
 
     constructor(context: Context) : this(context.dataStore)
 
-    override val downloadPath: Flow<String> = settingStore.data.map { preferences -> preferences[DOWNLOAD_PATH] ?: "" }
     override val downloaderBellState: Flow<Boolean> =
         settingStore.data.map { preferences -> preferences[DOWNLOADER_BELL_STATE] ?: false }
     override val sleepRequest: Flow<Int> = settingStore.data.map { preferences -> preferences[SLEEP_REQUEST_KEY] ?: 0 }
@@ -267,10 +262,6 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
         preferences[SEQ_VIDEO]
             ?.let { runCatching { SeqVideoQuality.valueOf(it) }.getOrNull() }
             ?: SeqVideoQuality.HD720
-    }
-
-    override suspend fun setDownloadPath(value: String) {
-        settingStore.edit { preferences -> preferences[DOWNLOAD_PATH] = value }
     }
 
     override suspend fun setDownloaderBellState(value: Boolean) {
@@ -453,7 +444,6 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
         lateinit var snapshot: DownloaderSettingsSnapshot
         settingStore.edit { preferences ->
             snapshot = DownloaderSettingsSnapshot(
-                downloadPath = preferences[DOWNLOAD_PATH],
                 sleepRequest = preferences[SLEEP_REQUEST_KEY],
                 aria2NextMode = preferences[ARIA2_MODE_KEY],
                 ytdlpDetails = preferences[DOWNLOADING_DETAILS],
@@ -474,7 +464,6 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
                 seqVideo = preferences[SEQ_VIDEO],
                 seqAudio = preferences[SEQ_AUDIO]
             )
-            preferences.remove(key = DOWNLOAD_PATH)
             preferences.remove(key = SLEEP_REQUEST_KEY)
             preferences.remove(key = ARIA2_MODE_KEY)
             preferences.remove(key = DOWNLOADING_DETAILS)
@@ -500,7 +489,6 @@ class DataStoreDownloaderSettings(private val settingStore: DataStore<Preference
 
     override suspend fun restoreYtdlp(snapshot: DownloaderSettingsSnapshot) {
         settingStore.edit { preferences ->
-            preferences.restore(DOWNLOAD_PATH, snapshot.downloadPath)
             preferences.restore(SLEEP_REQUEST_KEY, snapshot.sleepRequest)
             preferences.restore(ARIA2_MODE_KEY, snapshot.aria2NextMode)
             preferences.restore(DOWNLOADING_DETAILS, snapshot.ytdlpDetails)

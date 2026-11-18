@@ -104,7 +104,8 @@ fun SimpleFFmpegSetting(
             title = "Notifications",
             description = "Press to enable notifications",
             image = if (bellState) R.drawable.bell_on else R.drawable.bell_off,
-            onClick = requestNotificationPermission
+            onClick = requestNotificationPermission,
+            position = TilePosition.MIDDLE
         ),
         InfoListClass(
             title = "Normalize Audio",

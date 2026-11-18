@@ -20,9 +20,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(application) {
     private val settingsTab = DataStoreDownloaderSettings(application.applicationContext)
 
-    val downloadPath: StateFlow<String> = settingsTab.downloadPath
-        .stateIn(viewModelScope, SharingStarted.Lazily, "")
-
     val downloaderBellState: StateFlow<Boolean> = settingsTab.downloaderBellState
         .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
@@ -168,10 +165,6 @@ class DownloaderSettingsViewModel(application: Application) : AndroidViewModel(a
 
     fun setSponsorBlockCategories(value: Set<String>) {
         viewModelScope.launch { settingsTab.setSponsorBlockCategories(value) }
-    }
-
-    fun setDownloadPath(value: String) {
-        viewModelScope.launch { settingsTab.setDownloadPath(value) }
     }
 
     fun setDownloaderBellState(value: Boolean) {
