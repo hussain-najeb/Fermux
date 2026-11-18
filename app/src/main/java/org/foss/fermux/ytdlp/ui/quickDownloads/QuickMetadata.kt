@@ -49,7 +49,7 @@ fun QuickDownloadsMetadata(
             .height(60.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
-        color = FermuxColors.inActiveContainer,
+        color = FermuxColors.darkPurple,
         border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
     ) {
         Box(
@@ -62,7 +62,7 @@ fun QuickDownloadsMetadata(
                 fontStyle = FontStyle.Normal,
                 fontFamily = FontFamily.Default,
                 textAlign = TextAlign.Start,
-                color = FermuxColors.skyBlue
+                color = FermuxColors.white
             )
         }
 
