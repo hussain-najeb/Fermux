@@ -46,7 +46,7 @@ fun QuickDownloadsMetadata(
     Surface(
         modifier = Modifier
             .padding(8.dp)
-            .height(60.dp)
+            .height(80.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         color = FermuxColors.darkPurple,
