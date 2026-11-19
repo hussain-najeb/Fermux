@@ -10,10 +10,10 @@ fun SeqLogs(
     navController: NavController,
     sequentialViewModel: SequentialViewModel,
 ) {
-    val item = sequentialViewModel.state.items.firstOrNull()
-    val logs = item?.logs.orEmpty().ifBlank {
-        item?.error ?: "No logs were recorded for this download"
+    val item = sequentialViewModel.state.items.firstOrNull {
+        it.id == sequentialViewModel.selectedLogItemId
     }
+    val logs = item?.logs.orEmpty().ifBlank { "No logs were recorded for this download" }
     LoggingScreen(
         loggingTitle = "Logs",
         logs = logs,

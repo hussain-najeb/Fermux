@@ -14,22 +14,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import org.foss.fermux.R
 import org.foss.fermux.ui.theme.FermuxColors
-import org.foss.fermux.utils.Miscellaneous
 
 @Composable
 fun SeqFailedCard(
     modifier: Modifier,
-    navController: NavController
+    onClick: () -> Unit
 ) {
 
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { navController.navigate(Miscellaneous.DownloaderSeqLogs.route) }
+            .clickable(onClick = onClick)
             .height(100.dp),
         color = FermuxColors.darkPurple,
         shape = RoundedCornerShape(12.dp),
@@ -77,7 +74,6 @@ fun SeqFailedCard(
 @Preview(showBackground = true, backgroundColor = 0xFF102f60)
 @Composable
 fun test22() {
-    val navController = rememberNavController()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -86,7 +82,7 @@ fun test22() {
             modifier = Modifier
                 .padding(10.dp)
                 .fillMaxWidth(),
-            navController = navController
+            onClick = {}
         )
     }
 }

@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.foss.fermux.components.downloaderComponents.SeqMetadataCard
+import org.foss.fermux.utils.Miscellaneous
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialDownloadQueueState
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialItemStatus
 import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
@@ -84,7 +85,10 @@ fun SequentialQueue(
                     SequentialItemStatus.Failed -> {
                         SeqFailedCard(
                             modifier = Modifier.padding(6.dp),
-                            navController = navController
+                            onClick = {
+                                sequentialViewModel.selectedLogItemId = item.id
+                                navController.navigate(Miscellaneous.DownloaderSeqLogs.route)
+                            }
                         )
                     }
 

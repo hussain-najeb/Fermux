@@ -17,7 +17,7 @@ fun DownloaderLogs(
 
     LoggingScreen(
         loggingTitle = "Downloader Logs",
-        logs = downloaderViewModel.downloaderLogs,
+        logs = downloaderViewModel.downloaderLogs.ifBlank { "No logs were recorded for this download" },
         navController = navController
     )
 }

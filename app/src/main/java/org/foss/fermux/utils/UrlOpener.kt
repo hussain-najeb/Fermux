@@ -13,6 +13,6 @@ fun Context.openUrl(url: String) {
         }
         startActivity(intent)
     } catch (e: ActivityNotFoundException) {
-        Log.e("UrlOpener", "No app available to open media URI: $url", e)
+        Log.e("UrlOpener", "No app available to open URL: $url", e)
     }
 }

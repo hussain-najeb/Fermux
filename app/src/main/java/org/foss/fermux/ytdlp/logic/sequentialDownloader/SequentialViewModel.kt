@@ -26,6 +26,7 @@ class SequentialViewModel(
 ) : ViewModel() {
 
     var state by mutableStateOf(SequentialDownloadQueueState(phase = SequentialStatus.SeqIdle))
+    var selectedLogItemId by mutableStateOf<UUID?>(null)
     var showModalSheet by mutableStateOf(false)
         private set
     var downloadUrl = mutableStateListOf(SequentialItem())
@@ -40,6 +41,7 @@ class SequentialViewModel(
         if (urls.isEmpty()) return
 
         val settingsTab = DataStoreDownloaderSettings(context.applicationContext)
+        selectedLogItemId = null
         state = SequentialDownloadQueueState(phase = SequentialStatus.SeqDownload)
 
         downloaderJob?.cancel()
@@ -76,6 +78,7 @@ class SequentialViewModel(
                         continue
                     }
                     var currentMetadata: DownloadMetadata? = null
+                    var lastLogChunk: String? = null
                     workManager.enqueue(request)
 
                     val finished = workManager.getWorkInfoByIdFlow(request.id).filterNotNull().onEach { workInfo ->
@@ -87,6 +90,12 @@ class SequentialViewModel(
                             }
                             val progress = workInfo.progress.getFloat("progress", 0f)
                             val logChunk = workInfo.progress.getString("text")
+                            val newLogChunk = logChunk?.takeIf {
+                                ytdlpDetails && it.isNotBlank() && it != lastLogChunk
+                            }
+                            if (newLogChunk != null) {
+                                lastLogChunk = newLogChunk
+                            }
 
                             updateItem(request.id) { item ->
                                 item.copy(
@@ -97,10 +106,10 @@ class SequentialViewModel(
                                     },
                                     progress = progress,
                                     metadata = currentMetadata,
-                                    logs = if ((!ytdlpDetails || logChunk.isNullOrBlank())) {
-                                        item.logs
-                                    } else {
-                                        item.logs + logChunk
+                                    logs = when {
+                                        newLogChunk == null -> item.logs
+                                        item.logs.isEmpty() -> newLogChunk
+                                        else -> "${item.logs}\n$newLogChunk"
                                     }
 
                                 )
@@ -124,12 +133,18 @@ class SequentialViewModel(
                         }
 
                         WorkInfo.State.FAILED -> {
-                            val error = finished.outputData.getString("error")
+                            val error = finished.outputData.getString("error") ?: "Download failed"
 
                             updateItem(request.id) { item ->
+                                val updatedLogs = when {
+                                    error in item.logs -> item.logs
+                                    item.logs.isBlank() -> error
+                                    else -> "${item.logs}\n\n$error"
+                                }
                                 item.copy(
                                     status = SequentialItemStatus.Failed,
-                                    error = error ?: "Download failed",
+                                    error = error,
+                                    logs = updatedLogs
                                 )
                             }
 
@@ -167,6 +182,7 @@ class SequentialViewModel(
         downloadUrl.clear()
         downloadUrl.add(SequentialItem())
         skippedID.clear()
+        selectedLogItemId = null
         state = SequentialDownloadQueueState(phase = SequentialStatus.SeqIdle)
     }
 

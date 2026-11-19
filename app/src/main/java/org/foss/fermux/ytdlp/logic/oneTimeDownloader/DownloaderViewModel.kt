@@ -79,6 +79,7 @@ class DownloaderViewModel : ViewModel() {
 
         state = DownloadStatus.LoadingMetadata
         currentMetadata = null
+        downloaderLogs = ""
 
         val settingsTab = DataStoreDownloaderSettings(context.applicationContext)
 
@@ -135,6 +136,7 @@ class DownloaderViewModel : ViewModel() {
                     )
                     requestedUrls.id
                 }
+                var lastLogChunk: String? = null
                 workManager.getWorkInfoByIdFlow(observedId)
                     .filterNotNull()
                     .onEach { workInfo ->
@@ -142,8 +144,13 @@ class DownloaderViewModel : ViewModel() {
                             WorkInfo.State.RUNNING -> {
                                 if (ytdlpDetails) {
                                     val logs = workInfo.progress.getString("text")
-                                    if (!logs.isNullOrBlank()) {
-                                        downloaderLogs = (downloaderLogs + logs)
+                                    if (!logs.isNullOrBlank() && logs != lastLogChunk) {
+                                        lastLogChunk = logs
+                                        downloaderLogs = if (downloaderLogs.isEmpty()) {
+                                            logs
+                                        } else {
+                                            "$downloaderLogs\n$logs"
+                                        }
                                     }
                                 }
 
@@ -187,8 +194,15 @@ class DownloaderViewModel : ViewModel() {
                             }
 
                             WorkInfo.State.FAILED -> {
-                                val error = workInfo.outputData.getString("error")
-                                error?.let { state = DownloadStatus.Error(flavorError.random(), rawError = it) }
+                                val error = workInfo.outputData.getString("error") ?: "Download failed"
+                                state = DownloadStatus.Error(flavorError.random(), rawError = error)
+                                if (error.isNotBlank() && error !in downloaderLogs) {
+                                    downloaderLogs = if (downloaderLogs.isEmpty()) {
+                                        error
+                                    } else {
+                                        "$downloaderLogs\n\n$error"
+                                    }
+                                }
                                 activeProcess = null
                                 currentMetadata = null
                             }
@@ -227,6 +241,9 @@ class DownloaderViewModel : ViewModel() {
         val raw = when (e) {
             is TimeoutCancellationException -> "Timed out waiting for a response, check network connection"
             else -> e.message ?: e.toString()
+        }
+        if (raw.isNotBlank() && raw !in downloaderLogs) {
+            downloaderLogs = if (downloaderLogs.isEmpty()) raw else "$downloaderLogs\n\n$raw"
         }
         state = DownloadStatus.Error(flavorError.random(), raw)
     }

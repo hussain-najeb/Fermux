@@ -14,12 +14,13 @@ android {
         jniLibs {
             useLegacyPackaging = true
         }
-        splits {
-            abi {
-                isEnable = true
-                reset()
-                include("arm64-v8a", "armeabi-v7a", "x86", "x86_64")
-            }
+    }
+
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("arm64-v8a", "armeabi-v7a", "x86_64")
         }
     }
 
@@ -37,9 +38,9 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -64,6 +65,11 @@ android {
         unitTests.all {
             it.useJUnitPlatform()
         }
+    }
+
+    // Workaround for AGP/Kotlin 2.4.21 FIR Lint crash in lintVitalAnalyzeRelease
+    lint {
+        checkReleaseBuilds = false
     }
 }
 
