@@ -37,14 +37,12 @@ fun BackButton(
 
     val iconColor by animateColorAsState(
         targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.white,
-        animationSpec = tween(durationMillis = 150),
-        label = "Fermux Icon Colors"
+        animationSpec = tween(durationMillis = 150)
     )
 
     val buttonAnimation by animateFloatAsState(
         targetValue = if (isPressed) 0.95f else 1.0f,
-        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-        label = "Fermux Button Animation"
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
     )
 
     OutlinedButton(

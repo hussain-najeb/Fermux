@@ -19,7 +19,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.FilterButton
+import org.foss.fermux.components.buttons.StandardButton
 import org.foss.fermux.components.downloaderComponents.ModularFilterChip
 import org.foss.fermux.components.generalComponents.ModularSegmentedButtons
 import org.foss.fermux.components.settingsComponents.SettingsSwitch
@@ -71,7 +71,7 @@ fun AdvancedDownloaderSettings(
             image = R.drawable.restore,
             liner = true,
             content = {
-                FilterButton(
+                StandardButton(
                     modifier = Modifier.padding(3.dp),
                     image = R.drawable.restore,
                     onClick = {
@@ -305,7 +305,7 @@ fun AdvancedDownloaderSettings(
             image = R.drawable.eraser,
             liner = true,
             content = {
-                FilterButton(
+                StandardButton(
                     modifier = Modifier.padding(3.dp),
                     image = R.drawable.archive,
                     border = true,

@@ -10,85 +10,68 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import org.foss.fermux.ui.theme.FermuxColor
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
-fun ImageButton(
+fun SmallActionButton(
     modifier: Modifier = Modifier,
-    imageModifier: Modifier = Modifier,
     image: Int,
-    contentDescription: String? = null,
-    enabled: Boolean = true,
-    componentSize: Dp = 50.dp,
-    shape: Shape = RoundedCornerShape(8.dp),
-    color: FermuxColor = FermuxColors,
-    border: BorderStroke? = BorderStroke(1.dp, color.fermuxGenericBorder),
-    contentPadding: PaddingValues = PaddingValues(4.dp),
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    border: Boolean? = false
 ) {
 
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
-    val containerColor by animateColorAsState(
-        targetValue = if (isPressed) color.fermuxActiveButton else color.fermuxInActiveButton,
-        animationSpec = tween(200),
-        label = "Fermux Button Colors",
-    )
-
-    val contentColor by animateColorAsState(
-        targetValue = if (isPressed) color.downriver else color.white,
-        animationSpec = tween(200),
-        label = "Fermux Text Colors",
-    )
-
     val iconColor by animateColorAsState(
-        targetValue = if (isPressed) color.downriver else color.white,
-        animationSpec = tween(durationMillis = 150),
-        label = "Fermux Icon Colors"
+        targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.skyBlue,
+        animationSpec = tween(durationMillis = 150)
+    )
+
+    val containerColor by animateColorAsState(
+        targetValue = if (isPressed) FermuxColors.fermuxActiveButton else FermuxColors.transparent,
+        animationSpec = tween(150)
     )
 
     val buttonAnimation by animateFloatAsState(
-        targetValue = if (isPressed) 0.90f else 1.0f,
-        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-        label = "Fermux Button Animation"
+        targetValue = if (isPressed) 0.90f else 1f,
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
     )
 
-    ElevatedButton(
+    OutlinedButton(
         modifier = modifier.graphicsLayer {
             scaleX = buttonAnimation
             scaleY = buttonAnimation
         }
-            .size(componentSize),
-        shape = shape,
-        border = border,
+            .size(40.dp),
+        shape = RoundedCornerShape(8.dp),
+        contentPadding = PaddingValues(0.dp),
+        border = if (border == true) BorderStroke(1.dp, FermuxColors.fermuxHelperBorder)
+        else BorderStroke(1.dp, Color.Transparent),
         colors = ButtonDefaults.textButtonColors(
             containerColor = containerColor,
-            contentColor = contentColor
+            contentColor = FermuxColors.white
         ),
-        enabled = enabled,
-        contentPadding = contentPadding,
         interactionSource = interactionSource,
         onClick = onClick
     ) {
         Icon(
             painter = painterResource(id = image),
             tint = iconColor,
-            contentDescription = contentDescription,
-            modifier = imageModifier
+            contentDescription = "Undo",
         )
     }
+
+
 }

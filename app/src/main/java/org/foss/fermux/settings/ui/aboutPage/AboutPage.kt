@@ -16,7 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.FilterButton
+import org.foss.fermux.components.buttons.StandardButton
 import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.components.settingsComponents.TileOptions
 import org.foss.fermux.settings.logic.InfoListClass
@@ -38,7 +38,7 @@ fun AboutPage(navController: NavController) {
             icon = Icons.Default.Description,
             liner = true,
             content = {
-                FilterButton(
+                StandardButton(
                     modifier = Modifier.padding(3.dp),
                     border = true,
                     image = R.drawable.open_link,

@@ -36,7 +36,7 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.CancelButton
-import org.foss.fermux.components.buttons.FilterButton
+import org.foss.fermux.components.buttons.StandardButton
 import org.foss.fermux.components.generalComponents.AppSnackBar
 import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
@@ -187,7 +187,7 @@ fun DownloadContent(
                     horizontalAlignment = Alignment.End
                 ) {
                     // ClipBoard Button
-                    if (!doingTask) FilterButton(
+                    if (!doingTask) StandardButton(
                         image = R.drawable.copy,
                         modifier = Modifier.padding(15.dp),
                         onClick = {
@@ -207,7 +207,7 @@ fun DownloadContent(
                     )
 
                     // Download Button
-                    if (!doingTask) FilterButton(
+                    if (!doingTask) StandardButton(
                         modifier = Modifier.padding(15.dp),
                         image = R.drawable.download_side_bar,
                         activeColor = FermuxColors.fermuxErrorCardColor,
@@ -231,7 +231,7 @@ fun DownloadContent(
                     contentAlignment = Alignment.BottomStart
                 ) {
                     // SeqDownload Button
-                    if (!doingTask) FilterButton(
+                    if (!doingTask) StandardButton(
                         modifier = Modifier.padding(15.dp),
                         image = R.drawable.sequence,
                         onClick = {

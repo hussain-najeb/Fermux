@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.FilterButton
+import org.foss.fermux.components.buttons.StandardButton
 import org.foss.fermux.components.ffmpegComponents.FFmpegCard
 import org.foss.fermux.ffmpeg.logic.FFmpegStatus
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
@@ -78,7 +78,7 @@ fun IdleCard(
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    FilterButton(
+                    StandardButton(
                         image = R.drawable.upload,
                         activeColor = FermuxColors.fermuxFFmpegGreen,
                         activeIconColor = FermuxColors.white,

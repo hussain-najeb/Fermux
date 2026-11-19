@@ -24,7 +24,7 @@ import org.foss.fermux.ui.theme.FermuxColors
 @Composable
 fun IconTextButton(
     modifier: Modifier = Modifier,
-    image: Int,
+    image: Int? = null,
     text: String,
     enabled: Boolean? = true,
     border: BorderStroke? = BorderStroke(1.5.dp, FermuxColors.transparent),
@@ -42,26 +42,22 @@ fun IconTextButton(
 
     val containerColor by animateColorAsState(
         targetValue = if (isPressed) activeColor else inActiveColor,
-        animationSpec = tween(200),
-        label = "Fermux Button Colors",
+        animationSpec = tween(200)
     )
 
     val contentColor by animateColorAsState(
         targetValue = if (isPressed) activeColor else inActiveColor,
-        animationSpec = tween(200),
-        label = "Fermux Text Colors",
+        animationSpec = tween(200)
     )
 
     val iconColor by animateColorAsState(
         targetValue = if (isPressed) activeIconColor else inActiveIconColor,
-        animationSpec = tween(durationMillis = 200),
-        label = "Fermux Icon Colors"
+        animationSpec = tween(durationMillis = 200)
     )
 
     val iconRotate by animateFloatAsState(
         targetValue = if (isPressed) rotation1 else rotation2,
-        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-        label = "Fermux Icon Rotation"
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
     )
 
     val textColor by animateColorAsState(
@@ -72,8 +68,7 @@ fun IconTextButton(
 
     val buttonAnimation by animateFloatAsState(
         targetValue = if (isPressed) 0.90f else 1.0f,
-        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-        label = "Fermux Button Animation"
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
     )
 
     OutlinedButton(
@@ -107,7 +102,7 @@ fun IconTextButton(
         ),
         onClick = onClick
     ) {
-        Icon(
+        if (image != null) Icon(
             painter = painterResource(id = image),
             contentDescription = null,
             tint = iconColor,
@@ -115,7 +110,6 @@ fun IconTextButton(
         )
 
         Spacer(modifier = Modifier.width(8.dp))
-
         Text(
             text = text,
             fontSize = 15.sp,

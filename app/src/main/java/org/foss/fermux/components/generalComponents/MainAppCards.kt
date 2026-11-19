@@ -31,7 +31,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import org.foss.fermux.components.buttons.FilterButton
+import org.foss.fermux.components.buttons.StandardButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.MainScreens
 
@@ -158,7 +158,7 @@ fun MainAppCard(
                         )
                     }
                     if (buttonImage != null && iconModifier != null)
-                        FilterButton(
+                        StandardButton(
                             modifier = Modifier
                                 .align(Alignment.CenterVertically)
                                 .padding(end = 10.dp),

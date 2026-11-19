@@ -41,20 +41,17 @@ fun CancelButton(
 
     val buttonAnimation by animateFloatAsState(
         targetValue = if (isPressed) 0.90f else 1.0f,
-        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-        label = "Fermux Button Animation"
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
     )
 
     val containerColor by animateColorAsState(
         targetValue = if (isPressed) FermuxColors.fermuxActiveButton else FermuxColors.fermuxInActiveButton,
-        animationSpec = tween(200),
-        label = "Fermux Button Colors",
+        animationSpec = tween(200)
     )
 
     val iconColor by animateColorAsState(
         targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.fermuxTextError,
-        animationSpec = tween(150),
-        label = "Fermux Icon Color"
+        animationSpec = tween(150)
     )
 
     OutlinedButton(

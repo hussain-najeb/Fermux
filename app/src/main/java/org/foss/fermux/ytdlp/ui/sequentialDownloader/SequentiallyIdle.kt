@@ -24,7 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.CancelButton
-import org.foss.fermux.components.buttons.FilterButton
+import org.foss.fermux.components.buttons.StandardButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialItem
 import org.foss.fermux.ytdlp.logic.sequentialDownloader.SequentialViewModel
@@ -165,7 +165,7 @@ fun SequentialIdle(
                     modifier = Modifier.weight(1f),
                     contentAlignment = Alignment.BottomStart
                 ) {
-                    FilterButton(
+                    StandardButton(
                         modifier = Modifier
                             .padding(5.dp),
                         image = R.drawable.settings_2,
@@ -177,7 +177,7 @@ fun SequentialIdle(
                     modifier = Modifier.weight(1f),
                     contentAlignment = Alignment.BottomCenter
                 ) {
-                    FilterButton(
+                    StandardButton(
                         modifier = Modifier.padding(5.dp),
                         image = R.drawable.add,
                         onClick = {
@@ -190,7 +190,7 @@ fun SequentialIdle(
                     modifier = Modifier.weight(1f),
                     contentAlignment = Alignment.BottomEnd
                 ) {
-                    FilterButton(
+                    StandardButton(
                         modifier = Modifier
                             .padding(5.dp),
                         image = R.drawable.download_side_bar,

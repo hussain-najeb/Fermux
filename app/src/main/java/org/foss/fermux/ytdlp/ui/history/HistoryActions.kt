@@ -42,30 +42,26 @@ fun HistoryActions(
             border = BorderStroke(1.dp, FermuxColors.mutedBlue)
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Box {
                     SmallActionButton(
-                        modifier = Modifier
-                            .padding(3.dp),
+                        modifier = Modifier.padding(3.dp),
                         onClick = onDelete,
                         image = R.drawable.trash
                     )
                 }
                 Box {
                     SmallActionButton(
-                        modifier = Modifier
-                            .padding(3.dp),
+                        modifier = Modifier.padding(3.dp),
                         onClick = onMoreInfo,
                         image = R.drawable.more_info
                     )
                 }
                 Box {
                     SmallActionButton(
-                        modifier = Modifier
-                            .padding(3.dp),
+                        modifier = Modifier.padding(3.dp),
                         onClick = onCopyUrl,
                         image = R.drawable.copy
                     )

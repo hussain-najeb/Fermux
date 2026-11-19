@@ -22,7 +22,7 @@ import androidx.compose.ui.window.DialogWindowProvider
 import androidx.core.net.toUri
 import coil3.compose.AsyncImage
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.FilterButton
+import org.foss.fermux.components.buttons.StandardButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.openMedia
 import org.foss.fermux.utils.openUrl
@@ -120,7 +120,7 @@ fun InfoModalSheet(
                     .padding(14.dp),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                FilterButton(
+                StandardButton(
                     modifier = Modifier
                         .size(80.dp)
                         .padding(6.dp),
@@ -202,7 +202,7 @@ fun InfoModalSheet(
                     .padding(15.dp),
                 contentAlignment = Alignment.BottomEnd
             ) {
-                FilterButton(
+                StandardButton(
                     modifier = Modifier,
                     image = R.drawable.open_link,
                     onClick = {

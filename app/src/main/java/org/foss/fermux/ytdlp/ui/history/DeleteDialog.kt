@@ -21,7 +21,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
 import androidx.core.view.WindowCompat
-import org.foss.fermux.components.buttons.AppTextButton
+import org.foss.fermux.components.buttons.IconTextButton
 import org.foss.fermux.ui.theme.FermuxColors
 
 @Composable
@@ -87,13 +87,13 @@ fun DeleteDatabaseDialog(
                     verticalAlignment = Alignment.Bottom,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    AppTextButton(
+                    IconTextButton(
                         modifier = Modifier
                             .padding(5.dp),
                         text = "Cancel",
                         onClick = onDismissRequest
                     )
-                    AppTextButton(
+                    IconTextButton(
                         modifier = Modifier
                             .padding(5.dp),
                         inActiveColor = FermuxColors.fermuxTextError,

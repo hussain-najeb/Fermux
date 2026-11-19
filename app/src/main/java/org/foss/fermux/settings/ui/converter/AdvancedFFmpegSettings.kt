@@ -18,7 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.FilterButton
+import org.foss.fermux.components.buttons.StandardButton
 import org.foss.fermux.components.generalComponents.ModularSegmentedButtons
 import org.foss.fermux.components.generalComponents.ModularSlider
 import org.foss.fermux.components.settingsComponents.SettingsSwitch
@@ -57,7 +57,7 @@ fun AdvancedFFmpegSettings(
             image = R.drawable.restore,
             liner = true,
             content = {
-                FilterButton(
+                StandardButton(
                     modifier = Modifier.padding(3.dp),
                     border = true,
                     image = R.drawable.restore,

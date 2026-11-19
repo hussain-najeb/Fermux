@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.FilterButton
+import org.foss.fermux.components.buttons.StandardButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.Miscellaneous
 
@@ -60,11 +60,11 @@ fun QuickdownloadError(
                 modifier = Modifier.padding(5.dp),
                 horizontalArrangement = Arrangement.spacedBy(7.dp)
             ) {
-                FilterButton(
+                StandardButton(
                     onClick = { navController.navigate(Miscellaneous.DownloaderLogs.route) },
                     image = R.drawable.log
                 )
-                FilterButton(
+                StandardButton(
                     modifier = Modifier.padding(end = 5.dp),
                     image = R.drawable.close,
                     activeColor = FermuxColors.fermuxErrorCardColor,

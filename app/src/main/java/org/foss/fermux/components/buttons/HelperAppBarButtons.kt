@@ -44,8 +44,7 @@ fun HelperButton(
 
     val buttonAnimation by animateFloatAsState(
         targetValue = if (isPressed) 0.90f else 1.0f,
-        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-        label = "Fermux Button Animation"
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
     )
 
     OutlinedButton(
