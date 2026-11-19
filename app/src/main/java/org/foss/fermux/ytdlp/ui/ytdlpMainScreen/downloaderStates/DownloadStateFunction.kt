@@ -39,13 +39,13 @@ fun DownloaderCards(
         contentKey = { it::class }
     ) { targetState ->
         when (targetState) {
-            is DownloadStatus.Idle -> {}
+            is DownloadStatus.Idle -> Unit
 
             is DownloadStatus.UserArgs -> {
                 QualityState(downloaderViewModel)
             }
 
-            is DownloadStatus.QuickDownload -> null
+            is DownloadStatus.QuickDownload -> Unit
 
             is DownloadStatus.LoadingMetadata -> {
                 LoadingCard(
