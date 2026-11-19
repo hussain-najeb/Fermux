@@ -17,6 +17,7 @@ import org.foss.fermux.dataStore.DataStoreFFmpegSettings
 import org.foss.fermux.dataStore.FFmpegSettingsRepo
 import org.foss.fermux.settings.logic.buildFFmpegArgs
 import org.foss.fermux.utils.copyFileToDownloads
+import org.foss.youtube.next.YoutubeDL
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
@@ -133,9 +134,10 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                 }
                     ?: return failure(workDataOf("error" to "Could not open input stream for $uriFile, permission may have been lost"))
 
-                val nativeLibDir = applicationContext.applicationInfo.nativeLibraryDir
-                val ffmpegBinary = File(nativeLibDir, "libfermux_ffmpeg.so")
-                val ffprobeBinary = File(nativeLibDir, "libfermux_ffprobe.so")
+                YoutubeDL.initializeLib(applicationContext)
+                val ffmpegBinary = YoutubeDL.getFFmpegBinary()
+                val ffprobeBinary = YoutubeDL.getFFprobeBinary()
+                val ffmpegLibraryPath = YoutubeDL.getFFmpegLibraryPath()
 
                 if (!ffmpegBinary.exists() || !ffprobeBinary.exists()) {
                     Log.d("ffmpegBinary", "FFmpeg lib binaries not found at: $ffmpegBinary, $ffprobeBinary")
@@ -160,7 +162,7 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                 val ffprobeInfo = ffprobeProgress(
                     ffprobeBinary,
                     tempFile,
-                    nativeLibDir
+                    ffmpegLibraryPath
                 )
 
                 val process = withContext(Dispatchers.IO) {
@@ -179,7 +181,7 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                             add(outputFile.absolutePath)
                         }
                     ).apply {
-                        environment()["LD_LIBRARY_PATH"] = nativeLibDir
+                        environment()["LD_LIBRARY_PATH"] = ffmpegLibraryPath
                         redirectErrorStream(true)
                     }.start()
 

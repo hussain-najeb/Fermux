@@ -9,7 +9,7 @@ import java.io.IOException
 suspend fun ffprobeProgress(
     ffprobeBin: File,
     inputFile: File,
-    nativeDir: String
+    libraryPath: String
 ): Long? = withContext(Dispatchers.IO) {
     try {
         val progressProcess = ProcessBuilder(
@@ -22,7 +22,7 @@ suspend fun ffprobeProgress(
             "default=noprint_wrappers=1:nokey=1",
             inputFile.absolutePath
         ).apply {
-            environment()["LD_LIBRARY_PATH"] = nativeDir
+            environment()["LD_LIBRARY_PATH"] = libraryPath
             redirectErrorStream(true)
         }.start()
 
