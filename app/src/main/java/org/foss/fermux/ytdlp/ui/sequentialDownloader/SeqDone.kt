@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.IconTextButton
+import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.Miscellaneous
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialDownloadQueueState
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.SequentialItemStatus
@@ -69,6 +70,8 @@ fun SequentialDone(
             IconTextButton(
                 modifier = Modifier.padding(5.dp),
                 image = R.drawable.queue,
+                activeColor = FermuxColors.fermuxErrorCardColor,
+                activeIconColor = FermuxColors.white,
                 text = "New Queue",
                 onClick = {
                     sequentialViewModel.allDestroyer(context)

@@ -115,8 +115,11 @@ fun LoadingCard(
             modifier = Modifier
                 .align(Alignment.End)
                 .padding(end = 15.dp),
+
             text = "Cancel",
             image = R.drawable.cancel_buttons,
+            activeColor = FermuxColors.fermuxErrorCardColor,
+            activeIconColor = FermuxColors.white,
             onClick = { onCancel() }
         )
     }

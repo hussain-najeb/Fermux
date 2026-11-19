@@ -137,7 +137,7 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                 YoutubeDL.initializeLib(applicationContext)
                 val ffmpegBinary = YoutubeDL.getFFmpegBinary()
                 val ffprobeBinary = YoutubeDL.getFFprobeBinary()
-                val ffmpegLibraryPath = YoutubeDL.getFFmpegLibraryPath()
+                val ffmpegLibraryPath = YoutubeDL.getFFLibPath()
 
                 if (!ffmpegBinary.exists() || !ffprobeBinary.exists()) {
                     Log.d("ffmpegBinary", "FFmpeg lib binaries not found at: $ffmpegBinary, $ffprobeBinary")
