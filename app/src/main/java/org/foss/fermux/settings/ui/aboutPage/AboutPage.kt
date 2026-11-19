@@ -13,10 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.StandardButton
 import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.components.settingsComponents.TileOptions
 import org.foss.fermux.settings.logic.InfoListClass
@@ -36,16 +34,8 @@ fun AboutPage(navController: NavController) {
             title = "README Page",
             description = "Check Github Repo for more info",
             icon = Icons.Default.Description,
-            liner = true,
-            content = {
-                StandardButton(
-                    modifier = Modifier.padding(3.dp),
-                    border = true,
-                    image = R.drawable.open_link,
-                    onClick = {
-                        context.openUrl("https://github.com/hussain-najeb/Fermux")
-                    }
-                )
+            onClick = {
+                context.openUrl("https://github.com/hussain-najeb/Fermux")
             },
             position = TilePosition.SOLO
         ),

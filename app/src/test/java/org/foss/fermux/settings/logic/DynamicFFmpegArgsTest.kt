@@ -28,7 +28,7 @@ class DynamicFFmpegArgsTest {
         "WEBM, vp8_mediacodec",
     )
     fun hardwareEncodingSelectsTheTargetEncoder(format: FFmpegTargetFormat, encoder: String) {
-        val args = buildDynamicFFmpegArgs(
+        val args = buildFFmpegArgs(
             format,
             FFmpegUserPrefs(enableVideoCompression = true, useHardwareEncoder = true),
         )
@@ -42,7 +42,7 @@ class DynamicFFmpegArgsTest {
 
     @Test
     fun hardwareToggleAloneDoesNotTriggerReencoding() {
-        val args = buildDynamicFFmpegArgs(
+        val args = buildFFmpegArgs(
             FFmpegTargetFormat.MP4,
             FFmpegUserPrefs(useHardwareEncoder = true),
         )
@@ -52,7 +52,7 @@ class DynamicFFmpegArgsTest {
 
     @Test
     fun resolutionIsIgnoredWhenCompressionIsDisabled() {
-        val args = buildDynamicFFmpegArgs(
+        val args = buildFFmpegArgs(
             FFmpegTargetFormat.MP4,
             FFmpegUserPrefs(videoResolution = "720"),
         )
@@ -63,7 +63,7 @@ class DynamicFFmpegArgsTest {
     @ParameterizedTest
     @EnumSource(FFmpegTargetFormat::class, names = ["MP4", "MKV", "MOV", "AVI"])
     fun softwareCompressionUsesX264Crf(format: FFmpegTargetFormat) {
-        val args = buildDynamicFFmpegArgs(
+        val args = buildFFmpegArgs(
             format,
             FFmpegUserPrefs(enableVideoCompression = true, videoCrf = 18),
         )
@@ -78,7 +78,7 @@ class DynamicFFmpegArgsTest {
     @ParameterizedTest
     @CsvSource("-10, 0", "0, 0", "20, 20", "51, 51", "60, 51")
     fun softwareQualityIsClampedToEncoderRange(requested: Int, expected: Int) {
-        val args = buildDynamicFFmpegArgs(
+        val args = buildFFmpegArgs(
             FFmpegTargetFormat.MP4,
             FFmpegUserPrefs(enableVideoCompression = true, videoCrf = requested),
         )
@@ -88,7 +88,7 @@ class DynamicFFmpegArgsTest {
 
     @Test
     fun softwareCompressionUsesDefaultQualityWhenUnset() {
-        val args = buildDynamicFFmpegArgs(
+        val args = buildFFmpegArgs(
             FFmpegTargetFormat.MP4,
             FFmpegUserPrefs(enableVideoCompression = true),
         )
@@ -98,7 +98,7 @@ class DynamicFFmpegArgsTest {
 
     @Test
     fun qualitySettingAloneDoesNotTriggerReencoding() {
-        val args = buildDynamicFFmpegArgs(FFmpegTargetFormat.MP4, FFmpegUserPrefs(videoCrf = 18))
+        val args = buildFFmpegArgs(FFmpegTargetFormat.MP4, FFmpegUserPrefs(videoCrf = 18))
 
         assertEquals(listOf("-c:v", "copy", "-c:a", "copy"), args)
     }
@@ -106,8 +106,8 @@ class DynamicFFmpegArgsTest {
     @Test
     fun hardwareEncodingCurrentlyIgnoresQualitySlider() {
         val prefs = FFmpegUserPrefs(enableVideoCompression = true, useHardwareEncoder = true)
-        val low = buildDynamicFFmpegArgs(FFmpegTargetFormat.MP4, prefs.copy(videoCrf = 18))
-        val high = buildDynamicFFmpegArgs(FFmpegTargetFormat.MP4, prefs.copy(videoCrf = 28))
+        val low = buildFFmpegArgs(FFmpegTargetFormat.MP4, prefs.copy(videoCrf = 18))
+        val high = buildFFmpegArgs(FFmpegTargetFormat.MP4, prefs.copy(videoCrf = 28))
 
         assertEquals(low, high)
         assertOption(low, "-b:v", "4M")
@@ -115,7 +115,7 @@ class DynamicFFmpegArgsTest {
 
     @Test
     fun webmSoftwareCompressionUsesVpxCrf() {
-        val args = buildDynamicFFmpegArgs(
+        val args = buildFFmpegArgs(
             FFmpegTargetFormat.WEBM,
             FFmpegUserPrefs(enableVideoCompression = true, useHardwareEncoder = false),
         )
@@ -128,7 +128,7 @@ class DynamicFFmpegArgsTest {
     @ParameterizedTest
     @CsvSource("MP4, aac", "MKV, aac", "MOV, aac", "AVI, libmp3lame", "WEBM, opus")
     fun normalizationReencodesAudioWithoutReencodingVideo(format: FFmpegTargetFormat, encoder: String) {
-        val args = buildDynamicFFmpegArgs(format, FFmpegUserPrefs(normalizeAudio = true))
+        val args = buildFFmpegArgs(format, FFmpegUserPrefs(normalizeAudio = true))
 
         assertOption(args, "-c:v", "copy")
         assertOption(args, "-c:a", encoder)
@@ -139,7 +139,7 @@ class DynamicFFmpegArgsTest {
     @ParameterizedTest
     @CsvSource("WAV, pcm_s16le", "MP3, libmp3lame", "M4A, aac", "FLAC, flac", "OGG, vorbis")
     fun normalizationWorksWithAudioTargetArguments(format: FFmpegTargetFormat, encoder: String) {
-        val args = buildDynamicFFmpegArgs(format, FFmpegUserPrefs(normalizeAudio = true))
+        val args = buildFFmpegArgs(format, FFmpegUserPrefs(normalizeAudio = true))
 
         assertOption(args, "-c:a", encoder)
         assertOption(args, "-af", "loudnorm")
@@ -149,14 +149,14 @@ class DynamicFFmpegArgsTest {
 
     @Test
     fun monoDownmixAloneReencodesAudio() {
-        val args = buildDynamicFFmpegArgs(FFmpegTargetFormat.MP4, FFmpegUserPrefs(monoDownmix = true))
+        val args = buildFFmpegArgs(FFmpegTargetFormat.MP4, FFmpegUserPrefs(monoDownmix = true))
 
         assertEquals(listOf("-c:v", "copy", "-c:a", "aac", "-ac", "1"), args)
     }
 
     @Test
     fun disablingNormalizationKeepsOtherAudioSettings() {
-        val args = buildDynamicFFmpegArgs(
+        val args = buildFFmpegArgs(
             FFmpegTargetFormat.MP3,
             FFmpegUserPrefs(audioBitrate = "128k", monoDownmix = true, normalizeAudio = false),
         )
@@ -169,7 +169,7 @@ class DynamicFFmpegArgsTest {
     @ParameterizedTest
     @ValueSource(booleans = [false, true])
     fun videoAndAudioTransformationsCanBeCombined(hardware: Boolean) {
-        val args = buildDynamicFFmpegArgs(
+        val args = buildFFmpegArgs(
             FFmpegTargetFormat.MP4,
             FFmpegUserPrefs(
                 enableVideoCompression = true,
@@ -195,7 +195,7 @@ class DynamicFFmpegArgsTest {
 
     @Test
     fun automaticThreadLimitDoesNotEmitAnOverride() {
-        val args = buildDynamicFFmpegArgs(FFmpegTargetFormat.MP4, FFmpegUserPrefs())
+        val args = buildFFmpegArgs(FFmpegTargetFormat.MP4, FFmpegUserPrefs())
 
         assertFalse("-threads" in args)
     }
@@ -203,7 +203,7 @@ class DynamicFFmpegArgsTest {
     @ParameterizedTest
     @EnumSource(FFmpegTargetFormat::class, names = ["GIF", "JPG", "PNG"])
     fun imageTargetsIgnoreVideoAndAudioSettings(format: FFmpegTargetFormat) {
-        val args = buildDynamicFFmpegArgs(
+        val args = buildFFmpegArgs(
             format,
             FFmpegUserPrefs(
                 enableVideoCompression = true,
@@ -221,14 +221,14 @@ class DynamicFFmpegArgsTest {
 
     @Test
     fun videoWithoutTransformationsUsesStreamCopy() {
-        val args = buildDynamicFFmpegArgs(FFmpegTargetFormat.MP4, FFmpegUserPrefs())
+        val args = buildFFmpegArgs(FFmpegTargetFormat.MP4, FFmpegUserPrefs())
 
         assertEquals(listOf("-c:v", "copy", "-c:a", "copy"), args)
     }
 
     @Test
     fun mp4SoftwareEncodingUsesAvailableCompatibleCodecs() {
-        val args = buildDynamicFFmpegArgs(
+        val args = buildFFmpegArgs(
             FFmpegTargetFormat.MP4,
             FFmpegUserPrefs(
                 enableVideoCompression = true,
@@ -242,7 +242,7 @@ class DynamicFFmpegArgsTest {
 
     @Test
     fun webmEncodingUsesWebmCompatibleCodecs() {
-        val args = buildDynamicFFmpegArgs(
+        val args = buildFFmpegArgs(
             FFmpegTargetFormat.WEBM,
             FFmpegUserPrefs(enableVideoCompression = true, normalizeAudio = true),
         )
@@ -268,7 +268,7 @@ class DynamicFFmpegArgsTest {
 
     @Test
     fun aviAudioEncodingUsesMp3() {
-        val args = buildDynamicFFmpegArgs(FFmpegTargetFormat.AVI, FFmpegUserPrefs(audioBitrate = "128k"))
+        val args = buildFFmpegArgs(FFmpegTargetFormat.AVI, FFmpegUserPrefs(audioBitrate = "128k"))
 
         assertEquals(listOf("-c:v", "copy", "-c:a", "libmp3lame", "-b:a", "128k"), args)
     }

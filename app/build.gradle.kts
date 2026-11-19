@@ -1,3 +1,7 @@
+import com.android.build.api.variant.FilterConfiguration
+import java.io.FileInputStream
+import java.util.*
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -5,10 +9,36 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
+val keystorePropertiesFile: File = rootProject.file("keystore.properties")
+val splitApks = !project.hasProperty("noSplits")
+val abiFilterList = (findProperty("ABI_FILTERS") as? String)
+    ?.split(';')
+    ?.filter { it.isNotBlank() }
+    ?: listOf("arm64-v8a", "armeabi-v7a", "x86_64")
+
+val abiCodes = mapOf(
+    "armeabi-v7a" to 1,
+    "arm64-v8a" to 2,
+    "x86_64" to 3,
+)
 
 android {
     namespace = "org.foss.fermux"
     compileSdk = 37
+
+    if (keystorePropertiesFile.exists()) {
+        val keystoreProperties = Properties().apply {
+            FileInputStream(keystorePropertiesFile).use { load(it) }
+        }
+        signingConfigs {
+            create("release") {
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+                storeFile = file(keystoreProperties.getProperty("storeFile"))
+                storePassword = keystoreProperties.getProperty("storePassword")
+            }
+        }
+    }
 
     packaging {
         jniLibs {
@@ -16,11 +46,13 @@ android {
         }
     }
 
-    splits {
-        abi {
-            isEnable = true
-            reset()
-            include("arm64-v8a", "armeabi-v7a", "x86_64")
+    if (splitApks) {
+        splits {
+            abi {
+                isEnable = true
+                reset()
+                include("arm64-v8a", "armeabi-v7a", "x86_64")
+            }
         }
     }
 
@@ -34,13 +66,33 @@ android {
         versionName = "0.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        if (!splitApks) {
+            ndk {
+                abiFilters.addAll(abiFilterList)
+            }
+        }
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            if (keystorePropertiesFile.exists()) {
+                signingConfig = signingConfigs.getByName("release")
+            }
+        }
+        create("releaseTest") {
+            initWith(getByName("release"))
+            applicationIdSuffix = ".test"
+            versionNameSuffix = "-test"
+            signingConfig = signingConfigs.getByName("debug")
+            matchingFallbacks += listOf("release")
         }
     }
     compileOptions {
@@ -70,6 +122,28 @@ android {
     // Workaround for AGP/Kotlin 2.4.21 FIR Lint crash in lintVitalAnalyzeRelease
     lint {
         checkReleaseBuilds = false
+    }
+
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
+}
+
+androidComponents {
+    onVariants { variant ->
+        val baseVersionCode = android.defaultConfig.versionCode ?: 1
+        variant.outputs.forEach { output ->
+            val abi = if (splitApks) {
+                output.filters
+                    .find { it.filterType == FilterConfiguration.FilterType.ABI }
+                    ?.identifier
+            } else {
+                abiFilterList.singleOrNull()
+            }
+            val abiCode = abiCodes[abi] ?: 0
+            output.versionCode.set(baseVersionCode * 10 + abiCode)
+        }
     }
 }
 

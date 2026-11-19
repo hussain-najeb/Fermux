@@ -22,5 +22,6 @@ app/libs/ffmpeg-android-local.aar
 run.sh
 .idea/
 .kotlin/
-
-.kotlin/
+keystore.properties
+*.jks
+*.keystore

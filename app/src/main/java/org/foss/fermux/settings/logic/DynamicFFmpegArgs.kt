@@ -5,7 +5,7 @@ import org.foss.fermux.ffmpeg.logic.FFmpegUserPrefs
 import org.foss.fermux.ffmpeg.logic.MediaKind
 
 
-fun buildDynamicFFmpegArgs(
+fun buildFFmpegArgs(
     targetFormat: FFmpegTargetFormat,
     prefs: FFmpegUserPrefs
 ): List<String> {
@@ -17,10 +17,10 @@ fun buildDynamicFFmpegArgs(
             val profile = requireNotNull(targetFormat.videoEncodingProfile) {
                 "Missing video encoding profile for $targetFormat"
             }
-            val wantsVideoReencode = prefs.enableVideoCompression
-            val wantsAudioReencode = prefs.audioBitrate != null || prefs.normalizeAudio || prefs.monoDownmix
+            val wantsVideoReEncode = prefs.enableVideoCompression
+            val wantsAudioReEncode = prefs.audioBitrate != null || prefs.normalizeAudio || prefs.monoDownmix
 
-            if (wantsVideoReencode) {
+            if (wantsVideoReEncode) {
                 if (prefs.useHardwareEncoder) {
                     args += profile.hardwareVideoArgs
                 } else {
@@ -36,7 +36,7 @@ fun buildDynamicFFmpegArgs(
                 args += listOf("-c:v", "copy")
             }
 
-            if (wantsAudioReencode) {
+            if (wantsAudioReEncode) {
                 args += profile.audioArgs
                 prefs.audioBitrate?.let { args += listOf("-b:a", it) }
                 if (prefs.monoDownmix) args += listOf("-ac", "1")
@@ -51,13 +51,11 @@ fun buildDynamicFFmpegArgs(
             if (prefs.monoDownmix) args += listOf("-ac", "1")
             if (prefs.normalizeAudio) args += listOf("-af", "loudnorm")
         }
-
         MediaKind.Image -> {
             // Format-specific base arguments were added above.
         }
-
-        MediaKind.Idle -> null
-        MediaKind.Cancel -> null
+        MediaKind.Idle -> Unit
+        MediaKind.Cancel -> Unit
     }
 
     prefs.threadLimit?.let {
