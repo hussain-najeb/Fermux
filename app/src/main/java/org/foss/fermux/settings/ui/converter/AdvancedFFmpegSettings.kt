@@ -1,6 +1,5 @@
 package org.foss.fermux.settings.ui.converter
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -8,17 +7,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.StandardButton
 import org.foss.fermux.components.generalComponents.ModularSegmentedButtons
 import org.foss.fermux.components.generalComponents.ModularSlider
 import org.foss.fermux.components.settingsComponents.SettingsSwitch
@@ -55,27 +51,18 @@ fun AdvancedFFmpegSettings(
             title = "Reset Converter Settings",
             description = "Reset converter settings",
             image = R.drawable.restore,
-            liner = true,
-            content = {
-                StandardButton(
-                    modifier = Modifier.padding(3.dp),
-                    border = true,
-                    image = R.drawable.restore,
-                    onClick = {
-                        scope.launch {
-                            val oldSettings = ffmpegSettingsViewModel.resetFFmpegSettings()
-                            val result = snackbarHostState.showSnackbar(
-                                message = "Settings Reset",
-                                actionLabel = "Undo",
-                                duration = SnackbarDuration.Long
-                            )
-
-                            if (result == SnackbarResult.ActionPerformed) {
-                                ffmpegSettingsViewModel.restoreFFmpegSettings(oldSettings)
-                            }
-                        }
+            onClick = {
+                scope.launch {
+                    val oldSettings = ffmpegSettingsViewModel.resetFFmpegSettings()
+                    val result = snackbarHostState.showSnackbar(
+                        message = "Settings Reset",
+                        actionLabel = "Undo",
+                        duration = SnackbarDuration.Long
+                    )
+                    if (result == SnackbarResult.ActionPerformed) {
+                        ffmpegSettingsViewModel.restoreFFmpegSettings(oldSettings)
                     }
-                )
+                }
             },
             position = TilePosition.TOP
         ),

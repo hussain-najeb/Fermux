@@ -49,7 +49,7 @@ fun LibraryPage(navController: NavController) {
         ),
         InfoListClass(
             title = "YoutubeDL-Android Version",
-            description = "This app uses the YoutubeDL-Android-Next library to make the downloader work, it's version 0.1.5. Tap to view the github page",
+            description = "This app uses the YoutubeDL-Android-Next library to make the downloader work, it's version 0.1.6. Tap to view the github page",
             image = R.drawable.yt_dlp,
             onClick = { context.openUrl("https://github.com/hussain-najeb/youtubedl-android-next") },
             position = TilePosition.MIDDLE

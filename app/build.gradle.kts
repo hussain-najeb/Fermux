@@ -153,7 +153,6 @@ ksp {
 
 dependencies {
     implementation(libs.youtubedl.android.next)
-    debugImplementation(libs.youtubedl.android.next.x86)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
