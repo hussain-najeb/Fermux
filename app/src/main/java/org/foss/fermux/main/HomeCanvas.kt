@@ -1,5 +1,6 @@
 package org.foss.fermux.main
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Column
@@ -23,13 +24,15 @@ private data class CanvasInfo(
 private val circles = listOf(
     CanvasInfo(FermuxColors.darkPurple, 330.dp to 370.dp),
     CanvasInfo(FermuxColors.warmPurple, 250.dp to 290.dp),
-    CanvasInfo(FermuxColors.warmBlue,   170.dp to 210.dp),
-    CanvasInfo(FermuxColors.skyBlue,     95.dp to 135.dp),
+    CanvasInfo(FermuxColors.warmBlue, 170.dp to 210.dp),
+    CanvasInfo(FermuxColors.skyBlue, 95.dp to 135.dp),
 )
 
 @Composable
-fun HomeCanv() {
-
+fun HomeCanv(
+    ffColor: Boolean? = null,
+    ytColor: Boolean? = null
+    ) {
     val anim = rememberInfiniteTransition()
 
     val sizing = anim.animateFloat(
@@ -47,18 +50,32 @@ fun HomeCanv() {
         )
     )
 
-    Canvas(Modifier.fillMaxSize()
+    val colors = circles.mapIndexed { index, ring ->
+        animateColorAsState(
+            targetValue = when {
+                index != circles.lastIndex -> ring.color
+                ffColor == true -> FermuxColors.fermuxFFmpegGreen
+                ytColor == true -> FermuxColors.fermuxErrorCardColor
+                else -> ring.color
+            },
+            animationSpec = tween(500)
+        )
+    }
+
+    Canvas(
+        Modifier.fillMaxSize()
     ) {
         val radius = 20.dp.toPx()
         val bottomLeft = Offset(radius, size.height - radius)
 
-        circles.forEach { ring ->
+        circles.forEachIndexed { index, ring ->
             val (normal, grown) = ring.transitions
             drawCircle(
-                color = ring.color,
+                color = colors[index].value,
                 radius = lerp(normal.toPx(), grown.toPx(), sizing.value),
                 center = bottomLeft
             )
+
         }
     }
 }
@@ -70,6 +87,6 @@ fun test24() {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        HomeCanv()
+        HomeCanv(ffColor = true)
     }
 }
