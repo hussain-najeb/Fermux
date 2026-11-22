@@ -26,6 +26,7 @@ private val circles = listOf(
     CanvasInfo(FermuxColors.warmPurple, 250.dp to 290.dp),
     CanvasInfo(FermuxColors.warmBlue, 170.dp to 210.dp),
     CanvasInfo(FermuxColors.skyBlue, 95.dp to 135.dp),
+    CanvasInfo(FermuxColors.skyBlue, 35.dp to 65.dp)
 )
 
 @Composable

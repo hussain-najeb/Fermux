@@ -4,10 +4,7 @@ package org.foss.fermux.main
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.SnackbarDuration
@@ -26,9 +23,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
-import org.foss.fermux.components.generalComponents.AppSnackBar
-import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
 import org.foss.fermux.components.generalComponents.MainAppCard
+import org.foss.fermux.ffmpeg.logic.FFmpegStatus
+import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.MainScreens
@@ -41,7 +38,8 @@ import org.foss.fermux.ytdlp.ui.quickDownloads.QuickDownloadsStateMachine
 fun HomeScreen(
     navController: NavHostController,
     downloaderViewModel: DownloaderViewModel,
-    downloaderSettingsViewModel: DownloaderSettingsViewModel
+    downloaderSettingsViewModel: DownloaderSettingsViewModel,
+    ffmpegViewModel: FFmpegViewModel
 ) {
 
     val context = LocalContext.current
@@ -117,37 +115,42 @@ fun HomeScreen(
         ),
     )
 
-    LargeTopBarScaffold(
-        title = "Home Page",
-        snackbarHost = { AppSnackBar(snackbarHostState) }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(FermuxColors.background)
-                .verticalScroll(scroll)
-                .padding(top = 10.dp)
-                .padding(innerPadding),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            screens.forEach { screen ->
-                MainAppCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 5.dp, end = 5.dp, bottom = 3.dp, top = 3.dp),
-                    iconModifier = screen.iconModifier,
-                    title = screen.title,
-                    description = screen.description,
-                    image = screen.image,
-                    buttonImage = screen.buttonIcon,
-                    buttonOnClick = screen.onClick,
-                    route = screen.screen,
-                    enabled = screen.enabled,
-                    trailingContent = screen.trailingContent,
-                    navController = navController
-                )
-            }
+
+
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(FermuxColors.background)
+            .padding(top = 60.dp)
+            .verticalScroll(scroll),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        screens.forEach { screen ->
+            MainAppCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 5.dp, end = 5.dp, bottom = 3.dp, top = 3.dp),
+                iconModifier = screen.iconModifier,
+                title = screen.title,
+                description = screen.description,
+                image = screen.image,
+                buttonImage = screen.buttonIcon,
+                buttonOnClick = screen.onClick,
+                route = screen.screen,
+                enabled = screen.enabled,
+                trailingContent = screen.trailingContent,
+                navController = navController
+            )
         }
+    }
+
+    Box(contentAlignment = Alignment.BottomStart) {
+
+        val ffState = ffmpegViewModel.state is FFmpegStatus.Converting
+
+
+        HomeCanv(ffColor = ffState)
     }
 }

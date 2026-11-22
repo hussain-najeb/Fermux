@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
 import org.foss.fermux.components.downloaderComponents.DownloaderLogs
+import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.ui.ConverterScreen
 import org.foss.fermux.ffmpeg.ui.ffmpegStateCards.FFmpegLogs
 import org.foss.fermux.main.HomeScreen
@@ -62,6 +63,7 @@ fun FermuxAppMainScreen() {
     val seqView: SequentialViewModel = viewModel()
     val settView: DownloaderSettingsViewModel = viewModel()
     val downView: DownloaderViewModel = viewModel()
+    val ffView: FFmpegViewModel = viewModel()
 
     NavHost(
         navController = navController,
@@ -80,7 +82,7 @@ fun FermuxAppMainScreen() {
         }
     ) {
         // Main Screens
-        composable(MainScreens.Home.route) { HomeScreen(navController, downView, settView ) }
+        composable(MainScreens.Home.route) { HomeScreen(navController, downView, settView, ffView ) }
         composable(MainScreens.Settings.route) { SettingsScreen(navController) }
         composable(
             route = MainScreens.Downloader.route,
