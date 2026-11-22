@@ -1,7 +1,6 @@
 package org.foss.fermux.components.generalComponents
 
 import android.view.WindowManager
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -66,7 +65,6 @@ fun SettingAlertDialog(
                 .padding(10.dp),
             shape = RoundedCornerShape(12.dp),
             color = FermuxColors.mutedBlue,
-            border = BorderStroke(1.dp, FermuxColors.fermuxHelperBorder),
         ) {
             Column(modifier = Modifier.padding(4.dp)) {
                 Box(
@@ -88,7 +86,7 @@ fun SettingAlertDialog(
                         if (title != null)
                             Text(
                                 text = title,
-                                fontSize = 22.sp,
+                                fontSize = 20.sp,
                                 fontStyle = FontStyle.Normal,
                                 fontWeight = FontWeight.SemiBold,
                                 color = FermuxColors.white,
@@ -105,7 +103,7 @@ fun SettingAlertDialog(
                     if (specialDescription != null) {
                         Text(
                             text = specialDescription,
-                            fontSize = 18.sp,
+                            fontSize = 15.sp,
                             fontStyle = FontStyle.Normal,
                             fontWeight = FontWeight.SemiBold,
                             color = FermuxColors.white,
@@ -114,7 +112,7 @@ fun SettingAlertDialog(
                     } else if (description != null) {
                         Text(
                             text = description,
-                            fontSize = 18.sp,
+                            fontSize = 15.sp,
                             fontStyle = FontStyle.Normal,
                             fontWeight = FontWeight.SemiBold,
                             color = FermuxColors.white,

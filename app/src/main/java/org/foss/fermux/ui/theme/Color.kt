@@ -1,6 +1,15 @@
 package org.foss.fermux.ui.theme
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 
 data class FermuxColor(
 
@@ -66,3 +75,37 @@ data class FermuxColor(
 )
 
 val FermuxColors = FermuxColor()
+
+
+@Preview(showBackground = true, backgroundColor = 0xFF3d444f)
+@Composable
+fun test25() {
+    val colorList = listOf(
+        Color(0xFF19212c),
+        Color(0xFFb9c2ff),
+        Color(0xFF8494f8),
+        Color(0xFF293444),
+        Color(0xFF3148d6),
+        Color(0xFF2D2F49),
+        Color(0xFF102f60),
+        Color(0xFF15152e)
+    )
+    Column(
+        modifier = Modifier
+    ) {
+        colorList.forEach { color ->
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+
+                Text(
+                    color = color,
+                    text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vel neque iaculis, molestie elit at, laoreet tortor.",
+                    modifier = Modifier.fillMaxWidth().size(50.dp),
+                    overflow = TextOverflow.Visible
+                )
+            }
+        }
+    }
+}
