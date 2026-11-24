@@ -28,6 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
+import org.foss.fermux.components.generalComponents.AppSnackBar
 import org.foss.fermux.components.generalComponents.MainAppCard
 import org.foss.fermux.ffmpeg.logic.FFmpegStatus
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
@@ -52,10 +53,9 @@ fun HomeScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val scroll = rememberScrollState()
+
     val enabled = downloaderViewModel.state is DownloadStatus.Idle || downloaderViewModel.state is DownloadStatus.Error
-
     val quickDownloads by downloaderSettingsViewModel.quickDownloads.collectAsStateWithLifecycle()
-
     val speed = (downloaderViewModel.state as? DownloadStatus.Downloading)?.downloadProgress ?: 0f
     val iconRotate by animateFloatAsState(
         targetValue = speed,
@@ -84,7 +84,7 @@ fun HomeScreen(
                                 if (text.isNullOrBlank() || text.isEmpty()) {
                                     scope.launch {
                                         snackbarHostState.showSnackbar(
-                                            message = "Your clipboard doesn't have a url",
+                                            message = "Empty clipboard",
                                             duration = SnackbarDuration.Short
                                         )
                                     }
@@ -165,4 +165,14 @@ fun HomeScreen(
 
         HomeCanv(ffColor = ffState)
     }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .navigationBarsPadding(),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        AppSnackBar(snackbarHostState)
+    }
+
 }
