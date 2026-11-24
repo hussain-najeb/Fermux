@@ -7,6 +7,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,8 +23,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogWindowProvider
 import androidx.core.net.toUri
 import coil3.compose.AsyncImage
+import kotlinx.coroutines.launch
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.StandardButton
+import org.foss.fermux.components.generalComponents.AppSnackBar
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.openMedia
 import org.foss.fermux.utils.openUrl
@@ -48,6 +52,9 @@ fun InfoModalSheet(
 ) {
 
     val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
 
     val sheetState = rememberBottomSheetState(
         initialValue = SheetValue.Hidden,
@@ -84,131 +91,147 @@ fun InfoModalSheet(
                 navigationBarColor = FermuxColors.background.toArgb()
             }
         }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(),
-            contentAlignment = Alignment.TopCenter
-        ) {
-            Text(
-                text = "More Info?",
-                fontSize = 25.sp,
-                fontWeight = FontWeight.W500,
-                color = FermuxColors.white,
-                modifier = Modifier.padding(bottom = 25.dp)
-            )
-        }
-        Row {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 10.dp)
-                    .size(140.dp),
-                contentAlignment = Alignment.CenterStart
-            ) {
-                AsyncImage(
-                    model = thumbnail,
-                    contentDescription = imageDescription,
-                    contentScale = ContentScale.Crop,
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(12.dp))
-                        .border(1.dp, FermuxColors.white, RoundedCornerShape(12.dp)),
-                )
-            }
-            Box(
-                modifier = Modifier
-                    .wrapContentSize()
-                    .padding(14.dp),
-                contentAlignment = Alignment.CenterEnd
-            ) {
-                StandardButton(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .padding(6.dp),
-                    image = R.drawable.vlc,
-                    iconModifier = Modifier.size(50.dp),
-                    onClick = { context.openMedia(uri.toUri()) }
-                )
-            }
-        }
-        Box(
-            modifier = Modifier
-                .padding(start = 10.dp, top = 30.dp)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.BottomStart
-        ) {
-            Column {
-
-                Text(
-                    text = "Title: $title",
-                    fontSize = 20.sp,
-                    color = FermuxColors.white,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(start = 4.dp, top = 8.dp, bottom = 8.dp)
-                )
-
-                Text(
-                    text = "Uploader: $uploader",
-                    fontSize = 20.sp,
-                    color = FermuxColors.white,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(start = 4.dp, top = 8.dp, bottom = 8.dp)
-                )
-
-                Text(
-                    text = "Format: $format",
-                    fontSize = 20.sp,
-                    color = FermuxColors.white,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(start = 4.dp, top = 6.dp, bottom = 6.dp)
-
-                )
-
-                Text(
-                    text = "Duration: ${videoTime(duration)}",
-                    fontSize = 20.sp,
-                    color = FermuxColors.white,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(start = 4.dp, top = 6.dp, bottom = 6.dp)
-                )
-
-                Text(
-                    text = "Size: ${sizeFormatting(size)}",
-                    fontSize = 20.sp,
-                    color = FermuxColors.white,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(start = 4.dp, top = 6.dp, bottom = 6.dp)
-                )
-
-                Text(
-                    text = if (resolution.equals("audio only", ignoreCase = true))
-                        resolution else "Resolution: ${resolutionFormatting(resolution)}p",
-                    fontSize = 20.sp,
-                    color = FermuxColors.white,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(start = 4.dp, top = 6.dp, bottom = 6.dp)
-                )
-
-                Text(
-                    text = "Extractor: $extractor",
-                    fontSize = 20.sp,
-                    color = FermuxColors.white,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(bottom = 7.dp, start = 6.dp, top = 6.dp)
-                )
-            }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(15.dp),
-                contentAlignment = Alignment.BottomEnd
-            ) {
-                StandardButton(
-                    modifier = Modifier,
-                    image = R.drawable.open_link,
-                    onClick = {
-                        context.openUrl(url)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    Text(
+                        text = "More Info?",
+                        fontSize = 25.sp,
+                        fontWeight = FontWeight.W500,
+                        color = FermuxColors.white,
+                        modifier = Modifier.padding(bottom = 25.dp)
+                    )
+                }
+                Row {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 10.dp)
+                            .size(140.dp),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        AsyncImage(
+                            model = thumbnail,
+                            contentDescription = imageDescription,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(12.dp))
+                                .border(1.dp, FermuxColors.white, RoundedCornerShape(12.dp)),
+                        )
                     }
-                )
+                    Box(
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .padding(14.dp),
+                        contentAlignment = Alignment.CenterEnd
+                    ) {
+                        StandardButton(
+                            modifier = Modifier
+                                .size(80.dp)
+                                .padding(6.dp),
+                            image = R.drawable.vlc,
+                            iconModifier = Modifier.size(50.dp),
+                            onClick = {
+                                if (!context.openMedia(uri.toUri())) {
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar(
+                                            "Couldn't open selected media",
+                                            duration = SnackbarDuration.Short
+                                        )
+                                    }
+                                }
+                            }
+                        )
+                    }
+                }
+                Box(
+                    modifier = Modifier
+                        .padding(start = 10.dp, top = 30.dp)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.BottomStart
+                ) {
+                    Column {
+
+                        Text(
+                            text = "Title: $title",
+                            fontSize = 20.sp,
+                            color = FermuxColors.white,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(start = 4.dp, top = 8.dp, bottom = 8.dp)
+                        )
+
+                        Text(
+                            text = "Uploader: $uploader",
+                            fontSize = 20.sp,
+                            color = FermuxColors.white,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(start = 4.dp, top = 8.dp, bottom = 8.dp)
+                        )
+
+                        Text(
+                            text = "Format: $format",
+                            fontSize = 20.sp,
+                            color = FermuxColors.white,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(start = 4.dp, top = 6.dp, bottom = 6.dp)
+
+                        )
+
+                        Text(
+                            text = "Duration: ${videoTime(duration)}",
+                            fontSize = 20.sp,
+                            color = FermuxColors.white,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(start = 4.dp, top = 6.dp, bottom = 6.dp)
+                        )
+
+                        Text(
+                            text = "Size: ${sizeFormatting(size)}",
+                            fontSize = 20.sp,
+                            color = FermuxColors.white,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(start = 4.dp, top = 6.dp, bottom = 6.dp)
+                        )
+
+                        Text(
+                            text = if (resolution.equals("audio only", ignoreCase = true))
+                                resolution else "Resolution: ${resolutionFormatting(resolution)}p",
+                            fontSize = 20.sp,
+                            color = FermuxColors.white,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(start = 4.dp, top = 6.dp, bottom = 6.dp)
+                        )
+
+                        Text(
+                            text = "Extractor: $extractor",
+                            fontSize = 20.sp,
+                            color = FermuxColors.white,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(bottom = 7.dp, start = 6.dp, top = 6.dp)
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(15.dp),
+                        contentAlignment = Alignment.BottomEnd
+                    ) {
+                        StandardButton(
+                            modifier = Modifier,
+                            image = R.drawable.open_link,
+                            onClick = {
+                                context.openUrl(url)
+                            }
+                        )
+                    }
+                }
+            }
+            Box(modifier = Modifier.align(Alignment.BottomCenter)) {
+                AppSnackBar(snackbarHostState)
             }
         }
         Box(
