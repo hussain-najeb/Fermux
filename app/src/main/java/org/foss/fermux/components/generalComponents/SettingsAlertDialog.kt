@@ -97,7 +97,7 @@ fun SettingAlertDialog(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(7.dp),
+                        .padding(15.dp),
                     contentAlignment = Alignment.CenterStart
                 ) {
                     if (specialDescription != null) {

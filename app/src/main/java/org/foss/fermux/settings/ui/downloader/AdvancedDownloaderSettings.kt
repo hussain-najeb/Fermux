@@ -19,7 +19,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.StandardButton
 import org.foss.fermux.components.downloaderComponents.ModularFilterChip
 import org.foss.fermux.components.generalComponents.ModularSegmentedButtons
 import org.foss.fermux.components.settingsComponents.SettingsSwitch
@@ -69,25 +68,18 @@ fun AdvancedDownloaderSettings(
             title = "Reset Downloader Settings",
             description = "Reset downloader settings",
             image = R.drawable.restore,
-            liner = true,
-            content = {
-                StandardButton(
-                    modifier = Modifier.padding(3.dp),
-                    image = R.drawable.restore,
-                    onClick = {
-                        scope.launch {
-                            val oldSettings = downloaderSettingsViewModel.resetDownloaderSettings()
-                            val result = snackbarHostState.showSnackbar(
-                                message = "Settings Reset",
-                                actionLabel = "Undo",
-                                duration = SnackbarDuration.Long
-                            )
-                            if (result == SnackbarResult.ActionPerformed) {
-                                downloaderSettingsViewModel.restoreDownloaderSettings(oldSettings)
-                            }
-                        }
+            onClick = {
+                scope.launch {
+                    val oldSettings = downloaderSettingsViewModel.resetDownloaderSettings()
+                    val result = snackbarHostState.showSnackbar(
+                        message = "Settings Reset",
+                        actionLabel = "Undo",
+                        duration = SnackbarDuration.Long
+                    )
+                    if (result == SnackbarResult.ActionPerformed) {
+                        downloaderSettingsViewModel.restoreDownloaderSettings(oldSettings)
                     }
-                )
+                }
             },
             position = TilePosition.TOP
         ),
@@ -178,17 +170,18 @@ fun AdvancedDownloaderSettings(
             description = "Another option instead of the default fragment downloader",
             image = R.drawable.layers,
             dialogAppearance = true,
+            dialogImage = R.drawable.layers,
             dialogTitle = "Aria2-Next settings",
             specialDescription = buildAnnotatedString {
                 withStyle(normalText) { append("You") }
                 withStyle(strongText) { append(" MUST") }
                 withStyle(normalText) { append(" disable your chosen ") }
                 withStyle(highlight) { append("HLS ") }
-                withStyle(normalText) { append("option, so you can use these options. Use") }
+                withStyle(normalText) { append("option, so you can use these options.\n\n Use") }
                 withStyle(highlight) { append(" 'Edge Case'") }
                 withStyle(normalText) { append(" when using ") }
                 withStyle(highlight) { append("Aria2-Next ") }
-                withStyle(normalText) { append("and downloading media at the highest setting!") }
+                withStyle(normalText) { append("and downloading media at the highest setting.") }
             },
             dialogContent = {
                 ModularSegmentedButtons(
@@ -217,8 +210,9 @@ fun AdvancedDownloaderSettings(
                 withStyle(normalText) { append("that comes with ") }
                 withStyle(highlight) { append("yt-dlp ") }
                 withStyle(normalText) { append("is excellent, but there are options such as ") }
+                withStyle(highlight) { append("FFmpeg\n\n") }
                 withStyle(highlight) { append("FFmpeg") }
-                withStyle(normalText) { append(" which comes with ") }
+                withStyle(normalText) { append(" comes with ") }
                 withStyle(highlight) { append("TLS/HTTP ") }
                 withStyle(normalText) { append("support, or ") }
                 withStyle(highlight) { append("Aria2-Next ") }
@@ -260,8 +254,9 @@ fun AdvancedDownloaderSettings(
                 withStyle(highlight) { append("curl-impersonate") }
                 withStyle(normalText) { append(" to make") }
                 withStyle(highlight) { append(" yt-dlp") }
-                withStyle(normalText) { append(" requests seem like a normal browser and not a bot request which is increasingly important in today's internet, This setting supports") }
-                withStyle(highlight) { append(" ALL Android ABI's") }
+                withStyle(normalText) { append(" requests seem like a normal browser and not a bot request\n\n") }
+                withStyle(normalText) { append("TLS is increasingly important in today's internet, This setting supports") }
+                withStyle(highlight) { append(" all relevant Android ABI's") }
                 withStyle(normalText) { append(".") }
             },
             dialogImage = R.drawable.impersonation_on,
@@ -300,29 +295,6 @@ fun AdvancedDownloaderSettings(
             position = TilePosition.MIDDLE
         ),
         InfoListClass(
-            title = "Clearing Cache",
-            description = "Clearing cache for the app",
-            image = R.drawable.eraser,
-            liner = true,
-            content = {
-                StandardButton(
-                    modifier = Modifier.padding(3.dp),
-                    image = R.drawable.archive,
-                    border = true,
-                    onClick = {
-                        context.clearCache()
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = "Cache Cleared",
-                                duration = SnackbarDuration.Short
-                            )
-                        }
-                    }
-                )
-            },
-            position = TilePosition.MIDDLE
-        ),
-        InfoListClass(
             title = "Quick JS Engine",
             description = "JavaScript engine for yt-dlp",
             image = if (quickJS) R.drawable.flash_on else R.drawable.flash_off,
@@ -332,9 +304,10 @@ fun AdvancedDownloaderSettings(
             specialDescription = buildAnnotatedString {
                 withStyle(normalText) { append("This setting uses ") }
                 withStyle(highlight) { append("QuickJsNG") }
-                withStyle(normalText) { append(", NG here means Next Gen, which is an improved version of the old QuickJs. Due to the nature of Youtube, this JS runtime is recommended by ") }
+                withStyle(normalText) { append(", NG here means Next Gen, which is an improved version of the old QuickJs. Due to the nature of Youtube. \n\n") }
+                withStyle(normalText) { append("This JS runtime is recommended by ") }
                 withStyle(highlight) { append("yt-dlp") }
-                withStyle(normalText) { append(" to solve JS challenges, this should make Youtube downloads more reliable.") }
+                withStyle(normalText) { append(" to solve JS challenges, this should make Youtube downloads much more reliable.") }
             },
             dialogImage = R.drawable.javascript,
             content = {
@@ -343,6 +316,21 @@ fun AdvancedDownloaderSettings(
                     checked = quickJS,
                     onCheckedChange = downloaderSettingsViewModel::setQuickJS
                 )
+            },
+            position = TilePosition.MIDDLE
+        ),
+        InfoListClass(
+            title = "Clearing Cache",
+            description = "Clearing cache for the app",
+            image = R.drawable.eraser,
+            onClick = {
+                context.clearCache()
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = "Cache Cleared",
+                        duration = SnackbarDuration.Short
+                    )
+                }
             },
             position = TilePosition.BOTTOM
         )
