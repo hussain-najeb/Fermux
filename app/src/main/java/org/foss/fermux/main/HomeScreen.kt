@@ -120,9 +120,6 @@ fun HomeScreen(
         ),
     )
 
-
-
-
     Column(
         modifier = Modifier
             .fillMaxSize()

@@ -19,7 +19,7 @@ datastore = "1.3.0"
 kotlinSerialization = "2.4.21"
 junitJupiter = "6.1.3"
 coroutines = "1.11.0"
-youtubedlNext = "v0.1.7"
+youtubedlNext = "v1.0.0"
 
 
 [libraries]
