@@ -19,13 +19,11 @@ import org.foss.youtube.next.YoutubeDL
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
             navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT)
         )
         window.isNavigationBarContrastEnforced = false
-
         lifecycleScope.launch {
             try {
                 YoutubeDL.initializeLib(applicationContext)
@@ -35,7 +33,6 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-
             setSingletonImageLoaderFactory { context ->
                 ImageLoader.Builder(context)
                     .components {
@@ -44,7 +41,6 @@ class MainActivity : ComponentActivity() {
                     .build()
             }
             FermuxAppMainScreen()
-
         }
     }
 }

@@ -26,7 +26,7 @@ suspend fun execution(
 ): List<CopiedFile> {
 
     val response = try {
-        YoutubeDL.getInstance().execute(request, processId = taskId) { progress, _, line ->
+        YoutubeDL.execute(request, processId = taskId) { progress, _, line ->
             onUpdate(progress, line)
         }
     } catch (e: CancellationException) {
@@ -53,12 +53,10 @@ suspend fun execution(
 fun parseYtdlpMetadataJson(json: String): DownloadMetadata? {
     return try {
         val obj = JSONObject(json)
-
         fun optStringOrNull(key: String): String? {
             if (!obj.has(key) || obj.isNull(key)) return null
             return obj.optString(key).ifBlank { null }
         }
-
         val approxSize = obj.optDouble("filesize_approx")
             .takeIf { !it.isNaN() && it > 0 }
             ?.toLong()
@@ -88,12 +86,7 @@ fun parseYtdlpMetadataJson(json: String): DownloadMetadata? {
             resolution = resolution ?: ""
         )
 
-        // TODO. IF you add any flags, ADD ITS JSON ENTRY HERE!
-        // request.addOption("--no-simulate")
-        //     request.addOption(
-        //          "--print",
-        //          "before_dl:$FERMUX_METADATA_MARKER%(.{id,extractor_key,title,thumbnail,duration,uploader,filesize,filesize_approx,resolution,abr,ext,webpage_url})j"
-        //     )
+        // TODO. IF you add any flags, ADD ITS JSON ENTRY HERE! "filesize,filesize_approx,resolution,abr,ext,webpage_url})j"
 
     } catch (e: Exception) {
         Log.e("downloader JSON metadata parsing", "JSON metadata failed to be parsed", e)
