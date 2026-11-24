@@ -28,7 +28,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.foss.fermux.R
-import org.foss.fermux.components.buttons.SmallActionButton
 import org.foss.fermux.components.generalComponents.AppSnackBar
 import org.foss.fermux.components.generalComponents.MediumTopBarScaffold
 import org.foss.fermux.components.generalComponents.ModularSegmentedButtons
@@ -68,30 +67,24 @@ fun DownloaderArgs(navController: NavController) {
             title = "Reset Arguments",
             description = "Reset the arguments to their original state",
             image = R.drawable.restore,
-            content = {
-                SmallActionButton(
-                    modifier = Modifier,
-                    image = R.drawable.restore,
-                    onClick = {
-                        scope.launch {
-                            val oldArg = downloaderSettingsViewModel.resetArguments()
-                            val result = snackbarHostState.showSnackbar(
-                                message = "Settings Reset",
-                                actionLabel = "Undo",
-                                duration = SnackbarDuration.Short
-                            )
-                            if (result == SnackbarResult.ActionPerformed) downloaderSettingsViewModel.restoreArguments(
-                                oldArg
-                            )
-                        }
-                    }
-                )
+            onClick = {
+                scope.launch {
+                    val oldArg = downloaderSettingsViewModel.resetArguments()
+                    val result = snackbarHostState.showSnackbar(
+                        message = "Settings Reset",
+                        actionLabel = "Undo",
+                        duration = SnackbarDuration.Short
+                    )
+                    if (result == SnackbarResult.ActionPerformed) downloaderSettingsViewModel.restoreArguments(
+                        oldArg
+                    )
+                }
             },
             position = TilePosition.TOP
         ),
         InfoListClass(
             title = "Set Audio Format",
-            description = "Set the format of the audio when downloading. current format is $audioFormats",
+            description = "Set the format of the audio for downloads. current format is ${audioFormats.audioFormats}",
             image = R.drawable.audio_file,
             dialogAppearance = true,
             dialogTitle = "Audio Formats",
@@ -99,12 +92,7 @@ fun DownloaderArgs(navController: NavController) {
             dialogImage = R.drawable.audio_file,
             dialogContent = {
                 ModularSegmentedButtons(
-                    optionsList = listOf(
-                        AudioFormat.Mp3Format to "mp3",
-                        AudioFormat.OpusFormat to "opus",
-                        AudioFormat.FlacFormat to "flac",
-                        AudioFormat.M4aFormat to "m4a"
-                    ),
+                    optionsList = AudioFormat.entries.map { it to it.audioFormats },
                     selectedOption = audioFormats,
                     onSelected = { downloaderSettingsViewModel.setAudioFormat(it) }
                 )
@@ -113,7 +101,7 @@ fun DownloaderArgs(navController: NavController) {
         ),
         InfoListClass(
             title = "Set Video Format",
-            description = "This option sets the format of the video when downloading. current is $videoFormats",
+            description = "This option sets the format of the video when downloading. current is ${videoFormats.videoFormat}",
             image = R.drawable.file_video,
             dialogAppearance = true,
             dialogTitle = "Video Formats",
@@ -121,12 +109,7 @@ fun DownloaderArgs(navController: NavController) {
             dialogImage = R.drawable.file_video,
             dialogContent = {
                 ModularSegmentedButtons(
-                    optionsList = listOf(
-                        VideoFormat.Mp4Format to "mp4",
-                        VideoFormat.AviFormat to "avi",
-                        VideoFormat.Mkv to "mkv",
-                        VideoFormat.WebMFormat to "webm"
-                    ),
+                    optionsList = VideoFormat.entries.map { it to it.videoFormat },
                     selectedOption = videoFormats,
                     onSelected = { downloaderSettingsViewModel.setVideoFormat(it) }
                 )
@@ -152,7 +135,7 @@ fun DownloaderArgs(navController: NavController) {
         ),
         InfoListClass(
             title = "Set Thumbnail Format",
-            description = "Set the format of the thumbnail when downloading. current format is $thumbnailFormat",
+            description = "Set the format of the thumbnail when downloading. current format is ${thumbnailFormat.thumbnailFormat.ifEmpty { "off" }}",
             image = R.drawable.file_image,
             dialogAppearance = true,
             dialogTitle = "Thumbnail Formats",
@@ -184,6 +167,7 @@ fun DownloaderArgs(navController: NavController) {
                     }
                 )
             },
+            liner = true,
             position = TilePosition.MIDDLE
         ),
         InfoListClass(
@@ -217,7 +201,7 @@ fun DownloaderArgs(navController: NavController) {
             dialogAppearance = true,
             dialogTitle = "Fragment Retries",
             specialDescription = buildAnnotatedString {
-                withStyle(normalText) { append("This is also a flag for") }
+                withStyle(normalText) { append("A flag for") }
                 withStyle(highlight) { append(" yt-dlp ") }
                 withStyle(normalText) { append("that set the retries for each fragment before") }
                 withStyle(highlight) { append(" yt-dlp ") }
@@ -269,8 +253,10 @@ fun DownloaderArgs(navController: NavController) {
             image = if (playlist) R.drawable.playlist_on else R.drawable.playlist_off,
             content = {
                 SettingsSwitch(
-                    checked = playlist, onCheckedChange = { downloaderSettingsViewModel.setPlaylistState(it) })
+                    checked = playlist, onCheckedChange =  downloaderSettingsViewModel::setPlaylistState
+                )
             },
+            liner = true,
             position = TilePosition.BOTTOM
         )
     )
