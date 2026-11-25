@@ -43,7 +43,10 @@ data class FermuxColor(
     val transparent: Color = Color.Transparent,
 
     // Fermux FFmpeg card colors
-    val fermuxFFmpegGreen: Color = Color(0xFF388e3c),
+    val ffCoreGreen: Color = Color(0xFF388E3C),
+    val ffDarkGreen: Color = Color(0xFF6AAA6D),
+    val ffColor: Color = Color(0xFF9CC79E),
+    val ffSemiLight: Color = Color(0xFFCDE3CE),
 
     // Purple variations
     val warmPurple: Color = Color(0xFF3C3F68),
@@ -71,6 +74,9 @@ data class FermuxColor(
     val white: Color = Color.White,
     val offWhiteTextColor: Color = Color(0xFFC2C6C6),
     val fermuxLightErrorTextColor: Color = Color(0xFFf2b8b5),
+    val errDark: Color = Color(0xFFEF7C7F),
+    val errMid: Color = Color(0xFFF5A8AA),
+    val errSemiLight: Color = Color(0xFFFAD3D4),
     val fermuxTextError: Color = Color(0xFFea5054),
 )
 

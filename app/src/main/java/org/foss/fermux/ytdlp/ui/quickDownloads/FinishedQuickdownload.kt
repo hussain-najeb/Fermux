@@ -30,7 +30,7 @@ fun FinalQuickDownload(
             .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         color = FermuxColors.darkPurple,
-        border = BorderStroke(1.dp, FermuxColors.fermuxFFmpegGreen)
+        border = BorderStroke(1.dp, FermuxColors.ffCoreGreen)
     ) {
         Box(
             modifier = Modifier

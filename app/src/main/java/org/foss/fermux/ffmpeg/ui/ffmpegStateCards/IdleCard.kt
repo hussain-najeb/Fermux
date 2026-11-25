@@ -80,7 +80,7 @@ fun IdleCard(
 
                     StandardButton(
                         image = R.drawable.upload,
-                        activeColor = FermuxColors.fermuxFFmpegGreen,
+                        activeColor = FermuxColors.ffCoreGreen,
                         activeIconColor = FermuxColors.white,
                         onClick = {
                             fileLauncher.launch(arrayOf("*/*"))

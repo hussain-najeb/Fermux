@@ -159,12 +159,10 @@ fun HomeScreen(
     }
 
     Box(contentAlignment = Alignment.BottomStart) {
-
         val ffState = ffmpegViewModel.state is FFmpegStatus.Converting
-
-
-        HomeCanv(ffColor = ffState)
-    }
+        val ytState = downloaderViewModel.state is DownloadStatus.Downloading
+        HomeCanv(ffColor = ffState, ytColor = ytState)
+    } // looks good enough
 
     Box(
         modifier = Modifier

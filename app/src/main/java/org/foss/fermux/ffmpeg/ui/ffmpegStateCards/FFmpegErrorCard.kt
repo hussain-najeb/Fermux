@@ -101,7 +101,7 @@ fun FFmpegErrorMassage(
             )
             IconTextButton(
                 text = "Back",
-                activeColor = FermuxColors.fermuxFFmpegGreen,
+                activeColor = FermuxColors.ffCoreGreen,
                 activeIconColor = FermuxColors.white,
                 image = R.drawable.undo,
                 onClick = { onCancel() }

@@ -33,7 +33,7 @@ private val circles = listOf(
 fun HomeCanv(
     ffColor: Boolean? = null,
     ytColor: Boolean? = null
-    ) {
+) {
     val anim = rememberInfiniteTransition()
 
     val sizing = anim.animateFloat(
@@ -51,12 +51,26 @@ fun HomeCanv(
         )
     )
 
+    val ffColorSet = listOf(
+        FermuxColors.ffCoreGreen,
+        FermuxColors.ffDarkGreen,
+        FermuxColors.ffColor,
+        FermuxColors.ffSemiLight,
+        FermuxColors.white
+    )
+    val ytColorSet = listOf(
+        FermuxColors.fermuxTextError,
+        FermuxColors.errDark,
+        FermuxColors.errMid,
+        FermuxColors.errSemiLight,
+        FermuxColors.white,
+    )
+
     val colors = circles.mapIndexed { index, ring ->
         animateColorAsState(
             targetValue = when {
-                index != circles.lastIndex -> ring.color
-                ffColor == true -> FermuxColors.fermuxFFmpegGreen
-                ytColor == true -> FermuxColors.fermuxErrorCardColor
+                ffColor == true -> ffColorSet[index]
+                ytColor == true -> ytColorSet[index]
                 else -> ring.color
             },
             animationSpec = tween(500)
