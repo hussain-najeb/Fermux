@@ -116,7 +116,8 @@ fun HomeScreen(
             description = "An extensive Preferences tab for all your options",
             image = R.drawable.prefs,
             onClick = null,
-            enabled = true
+            enabled = true,
+            backColor = FermuxColors.deepBlue
         ),
     )
 
@@ -129,7 +130,6 @@ fun HomeScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Text(
             text = "Home",
             fontFamily = FontFamily.Default,
@@ -147,6 +147,7 @@ fun HomeScreen(
                 iconModifier = screen.iconModifier,
                 title = screen.title,
                 description = screen.description,
+                backColor = screen.color,
                 image = screen.image,
                 buttonImage = screen.buttonIcon,
                 buttonOnClick = screen.onClick,

@@ -1,5 +1,6 @@
 package org.foss.fermux.ytdlp.logic.oneTimeDownloader
 
+import android.graphics.Color
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -35,10 +36,7 @@ sealed class DownloadStatus {
 data class SequentialDownloadQueueState(
     val phase: SequentialStatus = SequentialStatus.SeqIdle,
     val items: List<SequentialItem> = emptyList()
-) {
-    val currentItem: SequentialItem?
-        get() = items.firstOrNull { it.status.isActive }
-}
+)
 
 enum class SequentialStatus {
     SeqIdle,
@@ -79,7 +77,8 @@ data class ScreenInfo(
     val buttonIcon: Int? = null,
     val onClick: (() -> Unit)? = null,
     val trailingContent: @Composable (() -> Unit)? = null,
-    val enabled: Boolean
+    val enabled: Boolean,
+    val backColor: Color
 )
 
 enum class FormatKind { Video, Audio, Idle }

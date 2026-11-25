@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -28,9 +29,12 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import org.foss.fermux.R
 import org.foss.fermux.components.buttons.StandardButton
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.MainScreens
@@ -48,31 +52,28 @@ fun MainAppCard(
     trailingContent: @Composable (() -> Unit)? = null,
     icon: ImageVector? = null,
     route: MainScreens,
+    backColor: Color,
     enabled: Boolean
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
     val iconBackground by animateColorAsState(
-        targetValue = if (isPressed) FermuxColors.deepBlue else FermuxColors.warmPurple,
-        animationSpec = tween(delayMillis = 10),
-        label = "color of main icons page"
+        targetValue = if (isPressed) backColor else FermuxColors.warmPurple,
+        animationSpec = tween(delayMillis = 10)
     )
 
     val titleColor by animateColorAsState(
-        targetValue = if (isPressed) FermuxColors.offWhiteTextColor else FermuxColors.white,
-        label = "color of main title of main page"
+        targetValue = if (isPressed) FermuxColors.offWhiteTextColor else FermuxColors.white
     )
 
     val descriptionBackground by animateColorAsState(
-        targetValue = if (isPressed) FermuxColors.fermuxSurface else FermuxColors.darkPurple,
-        label = "color of main background of the description surface"
+        targetValue = if (isPressed) FermuxColors.fermuxSurface else FermuxColors.darkPurple
     )
 
     val size by animateFloatAsState(
         targetValue = if (isPressed) 0.98f else 1f,
-        animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
-        label = ""
+        animationSpec = MaterialTheme.motionScheme.fastEffectsSpec()
     )
 
 
@@ -92,7 +93,7 @@ fun MainAppCard(
             .height(100.dp),
         color = descriptionBackground,
         shape = RoundedCornerShape(8.dp),
-        border = BorderStroke(1.5.dp, FermuxColors.warmPurple),
+        border = BorderStroke(1.5.dp, FermuxColors.mutedBlue),
         tonalElevation = 12.dp,
         shadowElevation = 12.dp
     ) {
@@ -172,4 +173,23 @@ fun MainAppCard(
         }
     }
     trailingContent?.invoke()
+}
+
+
+@Preview
+@Composable
+fun test26() {
+    Column(modifier = Modifier.fillMaxSize()) {
+    val nav = rememberNavController()
+        MainAppCard(
+            modifier = Modifier,
+            title = "Preferences",
+            description = "An extensive Preferences tab for all your options",
+            image = R.drawable.prefs,
+            route = MainScreens.Converter,
+            backColor = FermuxColors.deepBlue,
+            enabled = true,
+            navController = nav
+        )
+    }
 }
