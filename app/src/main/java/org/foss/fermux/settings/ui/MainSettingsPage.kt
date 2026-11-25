@@ -34,21 +34,21 @@ fun SettingsScreen(
                 description = "Changing the settings for Ytdlp",
                 image = R.drawable.yt_dlp,
                 route = SettingsScreens.SimpleDownloader.route,
-                position = TilePosition.TOP
+                position = TilePosition.SOLO
             ),
             InfoListClass(
                 title = "Converter Settings",
                 description = "Changing the settings for FFmpeg",
                 image = R.drawable.ffmpeg,
                 route = SettingsScreens.SimpleFFmpeg.route,
-                position = TilePosition.MIDDLE
+                position = TilePosition.SOLO
             ),
             InfoListClass(
                 title = "About",
                 description = "About page of the app",
                 icon = Icons.Default.Info,
                 route = SettingsScreens.AboutAppPage.route,
-                position = TilePosition.BOTTOM
+                position = TilePosition.SOLO
             )
         )
     }

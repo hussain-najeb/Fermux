@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
+package org.foss.fermux.ytdlp.ui.mainScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

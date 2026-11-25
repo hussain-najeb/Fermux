@@ -72,16 +72,56 @@ fun History(
             uri = item.fileUri,
         )
     }
+    // TODO, edit the notif pictures
 
     MediumTopBarScaffold(
         title = "History",
-        onBack = { navController.popBackStack() },
+        onBack = navController::popBackStack,
         snackbarHost = { AppSnackBar(snackbarHostState) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
-                .fillMaxSize().padding(innerPadding)
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
+
+            Box(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .padding(6.dp),
+                contentAlignment = Alignment.TopStart
+            ) {
+                Column {
+                    IconTextButton(
+                        text = "Filter",
+                        image = if (filter) R.drawable.filter_full else R.drawable.filter,
+                        onClick = { expanded = !expanded.also { filter = !filter } }
+                    )
+                    AnimatedVisibility(
+                        visible = expanded,
+                        enter = expandVertically(animationSpec = tween(250)) + fadeIn(initialAlpha = 0.5f),
+                        exit = shrinkVertically(animationSpec = tween(200)) + fadeOut(targetAlpha = 0.6f)
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            IconTextButton(
+                                modifier = Modifier.padding(top = 4.dp, bottom = 4.dp),
+                                text = "Sort A-Z",
+                                image = if (state.sorting == DownloadsSorter.TitleASC) R.drawable.sort_descending else R.drawable.sort_ascending,
+                                onClick = downloadsDatabaseViewModel::titleSorter
+
+                            )
+                            IconTextButton(
+                                text = "Sort By Size",
+                                image = if (state.sorting == DownloadsSorter.SizeASC) R.drawable.database_fill else R.drawable.database_empty,
+                                onClick = downloadsDatabaseViewModel::sizeSorter
+
+                            )
+                        }
+                    }
+                }
+            }
 
             LazyColumn(
                 modifier = modifier
@@ -90,50 +130,6 @@ fun History(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(5.dp),
-                        contentAlignment = Alignment.TopStart
-                    ) {
-                        Row(
-                            modifier = Modifier.wrapContentSize(),
-                        ) {
-                            IconTextButton(
-                                text = "Filter",
-                                image = if (filter) R.drawable.filter_full else R.drawable.filter,
-                                onClick = { expanded = !expanded.also { filter = !filter } }
-                            )
-                            AnimatedVisibility(
-                                visible = expanded,
-                                enter = expandHorizontally(animationSpec = tween(250)) + fadeIn(initialAlpha = 0.5f),
-                                exit = shrinkHorizontally(animationSpec = tween(200)) + fadeOut(targetAlpha = 0.6f)
-                            ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    IconTextButton(
-                                        modifier = Modifier.padding(start = 4.dp),
-                                        text = "Sort A-Z",
-                                        image = if (state.sorting == DownloadsSorter.TitleASC) R.drawable.sort_descending else R.drawable.sort_ascending,
-                                        onClick = {
-                                            downloadsDatabaseViewModel.titleSorter()
-                                        }
-                                    )
-                                    IconTextButton(
-                                        modifier = Modifier.padding(start = 4.dp),
-                                        text = "Sort By Size",
-                                        image = if (state.sorting == DownloadsSorter.SizeASC) R.drawable.database_fill else R.drawable.database_empty,
-                                        onClick = {
-                                            downloadsDatabaseViewModel.sizeSorter()
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
                 if (state.downloads.isEmpty()) item {
                     Spacer(modifier = Modifier.height(210.dp))
                     Column(

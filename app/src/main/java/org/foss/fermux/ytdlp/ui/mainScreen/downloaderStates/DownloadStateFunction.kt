@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates
+package org.foss.fermux.ytdlp.ui.mainScreen.downloaderStates
 
 import androidx.compose.animation.*
 import androidx.compose.material3.MaterialTheme
@@ -8,7 +8,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.DownloadStatus
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.DownloaderViewModel
-import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.formats.QualityState
+import org.foss.fermux.ytdlp.ui.mainScreen.formats.QualityState
 
 @Composable
 fun DownloaderCards(

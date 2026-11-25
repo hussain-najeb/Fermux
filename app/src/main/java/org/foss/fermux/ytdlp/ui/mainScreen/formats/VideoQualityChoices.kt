@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.formats
+package org.foss.fermux.ytdlp.ui.mainScreen.formats
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

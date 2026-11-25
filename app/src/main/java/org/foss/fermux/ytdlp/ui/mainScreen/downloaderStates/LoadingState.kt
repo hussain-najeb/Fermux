@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates
+package org.foss.fermux.ytdlp.ui.mainScreen.downloaderStates
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons

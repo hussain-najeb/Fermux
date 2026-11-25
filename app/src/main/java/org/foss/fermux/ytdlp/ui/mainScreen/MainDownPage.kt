@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui.ytdlpMainScreen
+package org.foss.fermux.ytdlp.ui.mainScreen
 
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -44,7 +44,7 @@ import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.Miscellaneous
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.DownloadStatus
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.DownloaderViewModel
-import org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates.DownloaderCards
+import org.foss.fermux.ytdlp.ui.mainScreen.downloaderStates.DownloaderCards
 
 @Composable
 fun DownloadContent(

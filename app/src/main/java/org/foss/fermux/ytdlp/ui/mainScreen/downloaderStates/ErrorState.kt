@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates
+package org.foss.fermux.ytdlp.ui.mainScreen.downloaderStates
 
 import android.content.ClipData
 import androidx.compose.foundation.layout.*

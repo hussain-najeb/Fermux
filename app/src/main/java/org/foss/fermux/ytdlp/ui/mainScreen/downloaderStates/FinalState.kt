@@ -1,4 +1,4 @@
-package org.foss.fermux.ytdlp.ui.ytdlpMainScreen.downloaderStates
+package org.foss.fermux.ytdlp.ui.mainScreen.downloaderStates
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
