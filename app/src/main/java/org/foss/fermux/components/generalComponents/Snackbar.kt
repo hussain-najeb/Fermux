@@ -1,7 +1,6 @@
 package org.foss.fermux.components.generalComponents
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -37,10 +36,9 @@ fun AppSnackBar(
                 modifier = Modifier
                     .padding(12.dp)
                     .padding(bottom = 15.dp)
-                    .width(250.dp)
-                    .border(1.dp, FermuxColors.fermuxHelperBorder, RoundedCornerShape(8.dp)),
+                    .width(250.dp),
                 shape = RoundedCornerShape(8.dp),
-                containerColor = FermuxColors.mutedBlue,
+                containerColor = FermuxColors.darkPurple,
                 contentColor = FermuxColors.white
             ) {
                 Row(
@@ -54,7 +52,7 @@ fun AppSnackBar(
                     ) {
                         Text(
                             text = data.visuals.message,
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             fontFamily = FontFamily.Default,
                         )
                     }

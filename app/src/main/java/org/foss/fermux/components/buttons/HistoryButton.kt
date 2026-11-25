@@ -35,7 +35,7 @@ fun SmallActionButton(
     val isPressed by interactionSource.collectIsPressedAsState()
 
     val iconColor by animateColorAsState(
-        targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.skyBlue,
+        targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.white,
         animationSpec = tween(durationMillis = 150)
     )
 

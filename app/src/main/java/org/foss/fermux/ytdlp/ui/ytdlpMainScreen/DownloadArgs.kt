@@ -75,9 +75,7 @@ fun DownloaderArgs(navController: NavController) {
                         actionLabel = "Undo",
                         duration = SnackbarDuration.Short
                     )
-                    if (result == SnackbarResult.ActionPerformed) downloaderSettingsViewModel.restoreArguments(
-                        oldArg
-                    )
+                    if (result == SnackbarResult.ActionPerformed) downloaderSettingsViewModel.restoreArguments(oldArg)
                 }
             },
             position = TilePosition.TOP
@@ -94,7 +92,7 @@ fun DownloaderArgs(navController: NavController) {
                 ModularSegmentedButtons(
                     optionsList = AudioFormat.entries.map { it to it.audioFormats },
                     selectedOption = audioFormats,
-                    onSelected = { downloaderSettingsViewModel.setAudioFormat(it) }
+                    onSelected =  downloaderSettingsViewModel::setAudioFormat
                 )
             },
             position = TilePosition.MIDDLE
@@ -111,7 +109,7 @@ fun DownloaderArgs(navController: NavController) {
                 ModularSegmentedButtons(
                     optionsList = VideoFormat.entries.map { it to it.videoFormat },
                     selectedOption = videoFormats,
-                    onSelected = { downloaderSettingsViewModel.setVideoFormat(it) }
+                    onSelected = downloaderSettingsViewModel::setVideoFormat
                 )
             },
             position = TilePosition.MIDDLE
@@ -128,7 +126,7 @@ fun DownloaderArgs(navController: NavController) {
             content = {
                 SettingsSwitch(
                     checked = videoComp,
-                    onCheckedChange = { downloaderSettingsViewModel.setVideoComp(it) }
+                    onCheckedChange = downloaderSettingsViewModel::setVideoComp
                 )
             },
             position = TilePosition.MIDDLE
@@ -150,7 +148,7 @@ fun DownloaderArgs(navController: NavController) {
                         ThumbnailFormat.WebP to "webp",
                     ),
                     selectedOption = thumbnailFormat,
-                    onSelected = { downloaderSettingsViewModel.setThumbnailFormat(it) }
+                    onSelected = downloaderSettingsViewModel::setThumbnailFormat
                 )
             },
             position = TilePosition.MIDDLE
@@ -162,9 +160,7 @@ fun DownloaderArgs(navController: NavController) {
             image = if (thumbnail) R.drawable.scissors_off else R.drawable.scissors_on,
             content = {
                 SettingsSwitch(
-                    checked = thumbnail, onCheckedChange = {
-                        downloaderSettingsViewModel.setEmbedThumbnail(it)
-                    }
+                    checked = thumbnail, onCheckedChange = downloaderSettingsViewModel::setEmbedThumbnail
                 )
             },
             liner = true,
@@ -189,7 +185,7 @@ fun DownloaderArgs(navController: NavController) {
                     sliderKey = retries,
                     trackSteps = 3,
                     trackRange = 10f..50f,
-                    onOptionSelected = { downloaderSettingsViewModel.setRetries(it) }
+                    onOptionSelected = downloaderSettingsViewModel::setRetries
                 )
             },
             position = TilePosition.MIDDLE
@@ -220,7 +216,7 @@ fun DownloaderArgs(navController: NavController) {
                     sliderKey = fragRetries,
                     trackSteps = 3,
                     trackRange = 10f..50f,
-                    onOptionSelected = { downloaderSettingsViewModel.setFragRetries(it) }
+                    onOptionSelected = downloaderSettingsViewModel::setFragRetries
                 )
             },
             position = TilePosition.MIDDLE
@@ -242,7 +238,7 @@ fun DownloaderArgs(navController: NavController) {
                     sliderKey = sleepRequest,
                     trackSteps = 4,
                     trackRange = 0f..5f,
-                    onOptionSelected = { downloaderSettingsViewModel.setSleepRequest(it) }
+                    onOptionSelected = downloaderSettingsViewModel::setSleepRequest
                 )
             },
             position = TilePosition.MIDDLE
@@ -263,7 +259,7 @@ fun DownloaderArgs(navController: NavController) {
 
     MediumTopBarScaffold(
         title = "Arguments",
-        onBack = { navController.popBackStack() },
+        onBack = navController::popBackStack,
         snackbarHost = { AppSnackBar(snackbarHostState) }
     ) { innerPadding ->
         Column(
