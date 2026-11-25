@@ -135,17 +135,17 @@ fun HomeScreen(
         Text(
             text = "Home",
             fontFamily = FontFamily.Default,
-            fontWeight = FontWeight.W400,
-            fontSize = 17.sp,
+            fontWeight = FontWeight.W500,
+            fontSize = 22.sp,
             color = Color.White,
-            modifier = Modifier.padding(10.dp)
+            modifier = Modifier.padding(30.dp)
         )
 
         screens.forEach { screen ->
             MainAppCard(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 5.dp, end = 5.dp, bottom = 3.dp, top = 3.dp),
+                    .padding(start = 5.dp, end = 5.dp, bottom = 8.dp, top = 3.dp),
                 iconModifier = screen.iconModifier,
                 title = screen.title,
                 description = screen.description,

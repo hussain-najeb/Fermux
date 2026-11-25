@@ -87,13 +87,10 @@ fun MainAppCard(
             .clickable(
                 interactionSource = interactionSource,
                 indication = null
-            ) {
-                navController.navigate(route.route)
-            }
-            .height(100.dp),
+            ) { navController.navigate(route.route) }.height(100.dp),
         color = descriptionBackground,
         shape = RoundedCornerShape(8.dp),
-        border = BorderStroke(1.5.dp, FermuxColors.mutedBlue),
+        border = BorderStroke(1.dp, FermuxColors.inActiveTextField),
         tonalElevation = 12.dp,
         shadowElevation = 12.dp
     ) {
@@ -179,7 +176,8 @@ fun MainAppCard(
 @Preview
 @Composable
 fun test26() {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().padding(3.dp)) {
+        Spacer(modifier = Modifier.height(30.dp))
     val nav = rememberNavController()
         MainAppCard(
             modifier = Modifier,
