@@ -6,7 +6,8 @@ data class DownloadsStateManager(
     val isDeleting: Boolean = false,
     val selectedDelete: DownloadsDatabaseField? = null,
     val selectedEntry: DownloadsDatabaseField? = null,
-    val isViewingInfo: Boolean? = false
+    val isViewingInfo: Boolean? = false,
+    val deleteAll: Boolean? = false
 )
 
 

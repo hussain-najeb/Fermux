@@ -304,8 +304,8 @@ fun AdvancedDownloaderSettings(
             specialDescription = buildAnnotatedString {
                 withStyle(normalText) { append("This setting uses ") }
                 withStyle(highlight) { append("QuickJsNG") }
-                withStyle(normalText) { append(", NG here means Next Gen, which is an improved version of the old QuickJs. Due to the nature of Youtube. \n\n") }
-                withStyle(normalText) { append("This JS runtime is recommended by ") }
+                withStyle(normalText) { append(", NG here means Next Gen, which is an improved version of the old QuickJs.") }
+                withStyle(normalText) { append("\n\n Due to the nature of Youtube, this JS runtime is recommended by ") }
                 withStyle(highlight) { append("yt-dlp") }
                 withStyle(normalText) { append(" to solve JS challenges, this should make Youtube downloads much more reliable.") }
             },
@@ -339,6 +339,8 @@ fun AdvancedDownloaderSettings(
         TileOptions(
             title = setting.title,
             description = setting.description,
+            activeColor = setting.activeColor,
+            contentColor = setting.contentColor,
             shape = setting.position.TileShaper(),
             icon = setting.icon,
             image = setting.image,

@@ -144,6 +144,8 @@ fun AdvancedFFmpegSettings(
         TileOptions(
             title = setting.title,
             description = setting.description,
+            activeColor = setting.activeColor,
+            contentColor = setting.contentColor,
             shape = setting.position.TileShaper(),
             image = setting.image,
             icon = setting.icon,

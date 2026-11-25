@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
@@ -27,15 +28,15 @@ fun TileOptions(
     shape: Shape = RoundedCornerShape(1.dp),
     icon: ImageVector? = null,
     image: Int? = null,
+    activeColor: Color?,
+    contentColor: Color?,
     onClick: () -> Unit,
-
     dialogShow: Boolean? = false,
     dialogTitle: String? = null,
     dialogDescription: String? = null,
     specialDescription: AnnotatedString? = null,
     dialogImage: Int? = null,
     dialogContent: @Composable (() -> Unit)? = null,
-
     liner: Boolean? = null,
     content: @Composable (() -> Unit)? = null,
     leadingContent: @Composable (() -> Unit)? = null,
@@ -44,16 +45,11 @@ fun TileOptions(
 
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
-
     var dialogShower by remember { mutableStateOf(false) }
-
-    val surfaceColor by animateColorAsState(
-        targetValue = if (isPressed) FermuxColors.fermuxActiveButton else FermuxColors.fermuxInActiveButton
-    )
+    val surfaceColor by animateColorAsState(targetValue = if (isPressed) activeColor ?: FermuxColors.fermuxActiveButton else FermuxColors.fermuxInActiveButton)
     val contentColor by animateColorAsState(
-        targetValue = if (isPressed) FermuxColors.downriver else FermuxColors.white,
-        animationSpec = tween(400),
-        label = "Fermux Container Colors",
+        targetValue = if (isPressed) contentColor ?: FermuxColors.downriver else FermuxColors.white,
+        animationSpec = tween(400)
     )
 
     Column(

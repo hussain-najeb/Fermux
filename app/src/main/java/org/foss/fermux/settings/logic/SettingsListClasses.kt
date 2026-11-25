@@ -3,6 +3,7 @@ package org.foss.fermux.settings.logic
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.AnnotatedString
@@ -38,10 +39,14 @@ enum class TilePosition {
     }
 }
 
+// this looks bad, but it could be worse. Hail the god-class!
 data class InfoListClass(
     val title: String,
     val description: String,
     val icon: ImageVector? = null,
+    val activeColor: Color? = null,
+    val inActiveColor: Color? = null,
+    val contentColor: Color? = null, // this looks really jumbled and is used in one screen for three options but what can you do
     val image: Int? = null,
     val position: TilePosition = TilePosition.MIDDLE,
     val route: String? = null,

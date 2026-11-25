@@ -183,6 +183,8 @@ fun SimpleDownloaderPage(
                 TileOptions(
                     title = setting.title,
                     description = setting.description,
+                    activeColor = setting.activeColor,
+                    contentColor = setting.contentColor,
                     shape = setting.position.TileShaper(),
                     icon = setting.icon,
                     image = setting.image,

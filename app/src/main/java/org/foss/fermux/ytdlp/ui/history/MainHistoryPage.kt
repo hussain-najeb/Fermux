@@ -56,6 +56,8 @@ fun History(
         )
     }
 
+
+
     state.selectedEntry?.let { item ->
         InfoModalSheet(
             onDismissRequest = { downloadsDatabaseViewModel.hideBottomSheet() },
@@ -85,42 +87,61 @@ fun History(
                 .padding(innerPadding)
         ) {
 
-            Box(
-                modifier = Modifier
-                    .wrapContentSize()
-                    .padding(6.dp),
-                contentAlignment = Alignment.TopStart
-            ) {
-                Column {
-                    IconTextButton(
-                        text = "Filter",
-                        image = if (filter) R.drawable.filter_full else R.drawable.filter,
-                        onClick = { expanded = !expanded.also { filter = !filter } }
-                    )
-                    AnimatedVisibility(
-                        visible = expanded,
-                        enter = expandVertically(animationSpec = tween(250)) + fadeIn(initialAlpha = 0.5f),
-                        exit = shrinkVertically(animationSpec = tween(200)) + fadeOut(targetAlpha = 0.6f)
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.Start
+            Row {
+                Box(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .padding(6.dp),
+                    contentAlignment = Alignment.TopStart
+                ) {
+                    Column {
+                        IconTextButton(
+                            text = "Filter",
+                            image = if (filter) R.drawable.filter_full else R.drawable.filter,
+                            onClick = { expanded = !expanded.also { filter = !filter } }
+                        )
+                        AnimatedVisibility(
+                            visible = expanded,
+                            enter = expandVertically(animationSpec = tween(250)) + fadeIn(initialAlpha = 0.5f),
+                            exit = shrinkVertically(animationSpec = tween(200)) + fadeOut(targetAlpha = 0.6f)
                         ) {
-                            IconTextButton(
-                                modifier = Modifier.padding(top = 4.dp, bottom = 4.dp),
-                                text = "Sort A-Z",
-                                image = if (state.sorting == DownloadsSorter.TitleASC) R.drawable.sort_descending else R.drawable.sort_ascending,
-                                onClick = downloadsDatabaseViewModel::titleSorter
+                            Column(
+                                horizontalAlignment = Alignment.Start
+                            ) {
+                                IconTextButton(
+                                    modifier = Modifier.padding(top = 4.dp, bottom = 4.dp),
+                                    text = "Sort A-Z",
+                                    image = if (state.sorting == DownloadsSorter.TitleASC) R.drawable.sort_descending else R.drawable.sort_ascending,
+                                    onClick = downloadsDatabaseViewModel::titleSorter
 
-                            )
-                            IconTextButton(
-                                text = "Sort By Size",
-                                image = if (state.sorting == DownloadsSorter.SizeASC) R.drawable.database_fill else R.drawable.database_empty,
-                                onClick = downloadsDatabaseViewModel::sizeSorter
+                                )
+                                IconTextButton(
+                                    text = "Sort By Size",
+                                    image = if (state.sorting == DownloadsSorter.SizeASC) R.drawable.database_fill else R.drawable.database_empty,
+                                    onClick = downloadsDatabaseViewModel::sizeSorter
 
-                            )
+                                )
+                            }
                         }
                     }
                 }
+
+                Box(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .wrapContentSize()
+                ) {
+                    IconTextButton(
+                        text = "Delete All",
+                        image = R.drawable.trash,
+                        onClick = {
+                            scope.launch {
+                                downloadsDatabaseViewModel.deleteAll()
+                            }
+                        }
+                    )
+                }
+
             }
 
             LazyColumn(

@@ -34,21 +34,26 @@ fun SettingsScreen(
                 description = "Changing the settings for Ytdlp",
                 image = R.drawable.yt_dlp,
                 route = SettingsScreens.SimpleDownloader.route,
-                position = TilePosition.SOLO
+                position = TilePosition.SOLO,
+                activeColor = FermuxColors.fermuxErrorCardColor,
+                contentColor = FermuxColors.white
             ),
             InfoListClass(
                 title = "Converter Settings",
                 description = "Changing the settings for FFmpeg",
                 image = R.drawable.ffmpeg,
                 route = SettingsScreens.SimpleFFmpeg.route,
-                position = TilePosition.SOLO
+                position = TilePosition.SOLO,
+                activeColor = FermuxColors.ffCoreGreen,
+                contentColor = FermuxColors.white
             ),
             InfoListClass(
                 title = "About",
                 description = "About page of the app",
                 icon = Icons.Default.Info,
                 route = SettingsScreens.AboutAppPage.route,
-                position = TilePosition.SOLO
+                position = TilePosition.SOLO,
+                activeColor = FermuxColors.white
             )
         )
     }
@@ -73,6 +78,8 @@ fun SettingsScreen(
                 TileOptions(
                     title = settingsList.title,
                     description = settingsList.description,
+                    activeColor = settingsList.activeColor,
+                    contentColor = settingsList.contentColor,
                     shape = settingsList.position.TileShaper(),
                     image = settingsList.image,
                     icon = settingsList.icon,

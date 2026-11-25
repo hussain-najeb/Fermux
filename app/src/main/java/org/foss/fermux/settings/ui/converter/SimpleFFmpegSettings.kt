@@ -219,6 +219,8 @@ fun SimpleFFmpegSetting(
                 TileOptions(
                     title = option.title,
                     description = option.description,
+                    activeColor = option.activeColor,
+                    contentColor = option.contentColor,
                     shape = option.position.TileShaper(),
                     image = option.image,
                     icon = option.icon,

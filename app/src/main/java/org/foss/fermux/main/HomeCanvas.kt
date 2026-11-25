@@ -22,11 +22,11 @@ private data class CanvasInfo(
 )
 
 private val circles = listOf(
-    CanvasInfo(FermuxColors.darkPurple, 330.dp to 370.dp),
-    CanvasInfo(FermuxColors.warmPurple, 250.dp to 290.dp),
-    CanvasInfo(FermuxColors.warmBlue, 170.dp to 210.dp),
-    CanvasInfo(FermuxColors.skyBlue, 95.dp to 135.dp),
-    CanvasInfo(FermuxColors.skyBlue, 35.dp to 65.dp)
+    CanvasInfo(FermuxColors.darkPurple, 230.dp to 270.dp),
+    CanvasInfo(FermuxColors.warmPurple, 190.dp to 230.dp),
+    CanvasInfo(FermuxColors.warmBlue,   150.dp to 190.dp),
+    CanvasInfo(FermuxColors.skyBlue,    110.dp to 150.dp),
+    CanvasInfo(FermuxColors.white,     70.dp to 110.dp)
 )
 
 @Composable
@@ -102,6 +102,6 @@ fun test24() {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        HomeCanv(ffColor = true)
+        HomeCanv(ffColor = false)
     }
 }

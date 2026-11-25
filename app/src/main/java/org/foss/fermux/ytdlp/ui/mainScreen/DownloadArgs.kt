@@ -273,6 +273,8 @@ fun DownloaderArgs(navController: NavController) {
                 TileOptions(
                     title = option.title,
                     description = option.description,
+                    activeColor = option.activeColor,
+                    contentColor = option.contentColor,
                     image = option.image,
                     icon = option.icon,
                     onClick = { option.onClick?.invoke() },

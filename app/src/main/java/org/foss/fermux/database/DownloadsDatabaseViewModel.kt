@@ -66,6 +66,19 @@ class DownloadsDatabaseViewModel(
         }
     }
 
+    fun hideDeleteAll() {
+        _state.update { it.copy(deleteAll = false) }
+    }
+
+    fun showDeleteAll() {
+        _state.update { it.copy(deleteAll = true) }
+    }
+
+    suspend fun deleteAll() {
+            dao.deleteAll()
+            _state.update { it.copy(deleteAll = false) }
+    }
+
     fun titleSorter() {
         _sorting.value = when (_sorting.value) {
             DownloadsSorter.TitleASC -> DownloadsSorter.TitleDESC
@@ -81,5 +94,4 @@ class DownloadsDatabaseViewModel(
             else -> DownloadsSorter.SizeASC
         }
     }
-
 }

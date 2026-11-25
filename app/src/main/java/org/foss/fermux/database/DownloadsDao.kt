@@ -13,6 +13,9 @@ interface DownloadsDao {
     @Upsert
     suspend fun upsertDownload(downloads: DownloadsDatabaseField)
 
+    @Query("DELETE FROM downloads")
+    suspend fun deleteAll()
+
     @Delete
     suspend fun deleteDownload(downloads: DownloadsDatabaseField)
 

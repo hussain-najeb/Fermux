@@ -71,6 +71,8 @@ fun AboutPage(navController: NavController) {
                 TileOptions(
                     title = aboutList.title,
                     description = aboutList.description,
+                    activeColor = aboutList.activeColor,
+                    contentColor = aboutList.contentColor,
                     shape = aboutList.position.TileShaper(),
                     icon = aboutList.icon,
                     image = aboutList.image,

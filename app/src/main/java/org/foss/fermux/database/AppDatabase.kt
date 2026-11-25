@@ -12,10 +12,10 @@ import androidx.room.RoomDatabase
     exportSchema = true,
     autoMigrations = []
 )
-abstract class AppDatabase : RoomDatabase() {
-    abstract val downloadsDao: DownloadsDao
-}
+abstract class AppDatabase : RoomDatabase() { abstract val downloadsDao: DownloadsDao }
+
 // TODO, add delete all
+
 object DownloaderDb {
     @Volatile
     private var instance: AppDatabase? = null
@@ -24,7 +24,6 @@ object DownloaderDb {
             context.applicationContext,
             klass = AppDatabase::class.java,
             name = "downloader.db"
-        )
-            .build().also { instance = it }
+        ).build().also { instance = it }
     }
 }
