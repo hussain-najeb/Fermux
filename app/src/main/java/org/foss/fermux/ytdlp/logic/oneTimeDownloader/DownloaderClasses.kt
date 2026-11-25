@@ -1,8 +1,8 @@
 package org.foss.fermux.ytdlp.logic.oneTimeDownloader
 
-import android.graphics.Color
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import org.foss.fermux.utils.MainScreens
 import java.util.*
@@ -62,10 +62,6 @@ enum class SequentialItemStatus {
     Failed,
     Cancelled
 }
-
-private val SequentialItemStatus.isActive: Boolean
-    get() = this == SequentialItemStatus.FetchingMetadata ||
-         this == SequentialItemStatus.Downloading
 
 data class ScreenInfo(
     val screen: MainScreens,

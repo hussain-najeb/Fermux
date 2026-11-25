@@ -100,7 +100,8 @@ fun HomeScreen(
                     navController = navController
                 )
             },
-            enabled = enabled
+            enabled = enabled,
+            backColor = FermuxColors.fermuxErrorCardColor
         ),
         ScreenInfo(
             screen = MainScreens.Converter,
@@ -108,7 +109,8 @@ fun HomeScreen(
             description = "A hardware accelerated, powerful conversion tab based on FFmpeg",
             image = R.drawable.ffmpeg,
             onClick = null,
-            enabled = true
+            enabled = true,
+            backColor = FermuxColors.ffCoreGreen
         ),
         ScreenInfo(
             screen = MainScreens.Settings,
@@ -147,7 +149,7 @@ fun HomeScreen(
                 iconModifier = screen.iconModifier,
                 title = screen.title,
                 description = screen.description,
-                backColor = screen.color,
+                backColor = screen.backColor,
                 image = screen.image,
                 buttonImage = screen.buttonIcon,
                 buttonOnClick = screen.onClick,
