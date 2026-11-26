@@ -28,7 +28,7 @@ fun IconTextButton(
     text: String,
     enabled: Boolean? = true,
     border: BorderStroke? = BorderStroke(1.5.dp, FermuxColors.transparent),
-    activeColor: Color = FermuxColors.skyBlue,
+    activeColor: Color = FermuxColors.white,
     inActiveColor: Color = FermuxColors.mutedBlue,
     activeIconColor: Color = FermuxColors.downriver,
     inActiveIconColor: Color = FermuxColors.white,
