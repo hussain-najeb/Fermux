@@ -74,9 +74,11 @@ class DownloadsDatabaseViewModel(
         _state.update { it.copy(deleteAll = true) }
     }
 
-    suspend fun deleteAll() {
+    fun deleteAll() {
+        viewModelScope.launch {
             dao.deleteAll()
             _state.update { it.copy(deleteAll = false) }
+        }
     }
 
     fun titleSorter() {

@@ -49,18 +49,24 @@ fun History(
     var cardKey by remember { mutableStateOf<String?>(null) }
     var filter by remember { mutableStateOf(false) }
 
-    state.selectedDelete?.let { item ->
+    state.selectedDelete?.let {
         DeleteDatabaseDialog(
-            onDismissRequest = { downloadsDatabaseViewModel.hideDeleteDialog() },
-            deletedItem = { downloadsDatabaseViewModel.deleteDownload(item) }
+            onDismissRequest = downloadsDatabaseViewModel::hideDeleteDialog,
+            deletedItem = { downloadsDatabaseViewModel.deleteDownload(it) }
         )
     }
+
+    if (state.deleteAll == true)
+    DeleteDatabaseDialog(
+        onDismissRequest = downloadsDatabaseViewModel::hideDeleteAll,
+        deletedItem = downloadsDatabaseViewModel::deleteAll
+    )
 
 
 
     state.selectedEntry?.let { item ->
         InfoModalSheet(
-            onDismissRequest = { downloadsDatabaseViewModel.hideBottomSheet() },
+            onDismissRequest = downloadsDatabaseViewModel::hideBottomSheet,
             thumbnail = item.thumbnail,
             imageDescription = item.title ?: "null",
             title = item.title ?: "null",
@@ -98,10 +104,17 @@ fun History(
                         text = "Delete All",
                         image = R.drawable.trash,
                         onClick = {
-                            scope.launch {
-                                downloadsDatabaseViewModel.deleteAll()
+                            if (state.downloads.isNotEmpty()) {
+                                downloadsDatabaseViewModel.showDeleteAll()
+                            } else {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = "History is empty",
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
                             }
-                        }
+                        },
                     )
                 }
 
