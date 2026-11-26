@@ -71,7 +71,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWork
             DOWNLOAD_CHANNEL_ID
         )
             .setSmallIcon(R.drawable.download_notif_cancel)
-            .setContentTitle("Download failed")
+            .setContentTitle("Download failed, press to view download page")
             .setContentText(text.take(120))
             .setCategory(NotificationCompat.CATEGORY_ERROR)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -154,7 +154,6 @@ class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWork
         setForeground(
             createDownloaderForegroundInfo()
         )
-
         val taskId = id
         val workerJob = currentCoroutineContext().job
 

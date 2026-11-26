@@ -14,8 +14,6 @@ import androidx.room.RoomDatabase
 )
 abstract class AppDatabase : RoomDatabase() { abstract val downloadsDao: DownloadsDao }
 
-// TODO, add delete all
-
 object DownloaderDb {
     @Volatile
     private var instance: AppDatabase? = null

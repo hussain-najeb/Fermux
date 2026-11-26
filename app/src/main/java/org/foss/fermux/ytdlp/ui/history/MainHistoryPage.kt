@@ -80,7 +80,6 @@ fun History(
             uri = item.fileUri,
         )
     }
-    // TODO, edit the notif pictures
 
     MediumTopBarScaffold(
         title = "History",
