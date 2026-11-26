@@ -43,9 +43,12 @@ import org.foss.fermux.components.buttons.CancelButton
 import org.foss.fermux.components.buttons.StandardButton
 import org.foss.fermux.components.generalComponents.AppSnackBar
 import org.foss.fermux.components.generalComponents.LargeTopBarScaffold
+import org.foss.fermux.components.settingsComponents.TileOptions
 import org.foss.fermux.settings.logic.DownloaderSettingsViewModel
+import org.foss.fermux.settings.logic.TilePosition
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.Miscellaneous
+import org.foss.fermux.utils.SettingsScreens
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.DownloadStatus
 import org.foss.fermux.ytdlp.logic.oneTimeDownloader.DownloaderViewModel
 import org.foss.fermux.ytdlp.ui.mainScreen.downloaderStates.DownloaderCards
@@ -62,23 +65,16 @@ fun DownloadContent(
     val scope = rememberCoroutineScope()
 
     val doingTask =
-        downloaderViewModel.state is DownloadStatus.LoadingMetadata ||
-             downloaderViewModel.state is DownloadStatus.Downloading ||
-             downloaderViewModel.state is DownloadStatus.UserArgs ||
-             downloaderViewModel.state is DownloadStatus.Completed ||
-             downloaderViewModel.state is DownloadStatus.Error
-
+        downloaderViewModel.state is DownloadStatus.LoadingMetadata || downloaderViewModel.state is DownloadStatus.Downloading || downloaderViewModel.state is DownloadStatus.UserArgs || downloaderViewModel.state is DownloadStatus.Completed || downloaderViewModel.state is DownloadStatus.Error
     val isError = downloaderViewModel.state is DownloadStatus.Error
     val clipboard = LocalClipboard.current
     val keyboardController = LocalSoftwareKeyboardController.current
-
     val submitUrl = {
         keyboardController?.hide()
         if (downloaderViewModel.downloadUrl.isBlank()) {
             scope.launch {
                 snackbarHostState.showSnackbar(
-                    message = "Please enter a URL",
-                    duration = SnackbarDuration.Short
+                    message = "Please enter a URL", duration = SnackbarDuration.Short
                 )
             }
         } else {
@@ -91,13 +87,9 @@ fun DownloadContent(
         onBack = navController::popBackStack,
         firstButton = { navController.navigate(Miscellaneous.DownloaderHistory.route) },
         firstImage = R.drawable.history,
-        snackbarHost = { AppSnackBar(snackbarHostState) }
-    ) { innerPadding ->
+        snackbarHost = { AppSnackBar(snackbarHostState) }) { innerPadding ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(FermuxColors.background),
+            modifier = Modifier.fillMaxSize().padding(innerPadding).background(FermuxColors.background),
         ) {
             Column(
                 modifier = Modifier
@@ -106,13 +98,9 @@ fun DownloadContent(
                     .imePadding()
                     .background(FermuxColors.background)
             ) {
-                if (!upToDate) Text(
-                    text = "The current ytdlp version is outdated, update the downloader in the preferences tab.",
-                    color = FermuxColors.offWhiteTextColor,
-                    fontSize = 14.sp,
-                    fontStyle = FontStyle.Normal,
-                    fontFamily = FontFamily.Default,
-                    modifier = Modifier.padding(7.dp)
+                DownloadUpdateButton(
+                    navController,
+                    upToDate
                 )
 
                 if (videoConversionWarning) Text(
@@ -294,6 +282,26 @@ private fun Connections() {
             fontStyle = FontStyle.Italic,
             fontFamily = FontFamily.Default,
             modifier = Modifier.padding(10.dp)
+        )
+    }
+}
+
+@Composable
+private fun DownloadUpdateButton(
+    navController: NavController,
+    isUpToDate: Boolean
+) {
+    Box(Modifier.fillMaxWidth()) {
+        if (!isUpToDate) TileOptions(
+            title = "Update yt-dlp",
+            description = "Your version of yt-dlp is seems to be outdated, click to go to the update page",
+            activeColor = FermuxColors.white,
+            image = R.drawable.update_icon,
+            contentColor = FermuxColors.downriver,
+            onClick = {
+                navController.navigate(SettingsScreens.SimpleDownloader.route)
+            },
+            shape = TilePosition.SOLO.TileShaper()
         )
     }
 }

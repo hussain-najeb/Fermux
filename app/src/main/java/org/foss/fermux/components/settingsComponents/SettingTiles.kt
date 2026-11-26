@@ -92,7 +92,7 @@ fun TileOptions(
                         painter = painterResource(id = image),
                         contentDescription = null,
                         modifier = Modifier
-                            .padding(end = 16.dp)
+                            .padding(end = 18.dp, start = 4.dp)
                             .size(28.dp)
                     )
                 }
