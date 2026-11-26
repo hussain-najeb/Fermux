@@ -57,6 +57,13 @@ class DownloaderViewModel : ViewModel() {
         "Did you paste a URL?"
     )
 
+    fun applySharedUrl(url: String) {
+        if (state is DownloadStatus.Idle || state is DownloadStatus.Error || state is DownloadStatus.Completed) {
+            state = DownloadStatus.Idle
+            downloadUrl = url
+        }
+    }
+
     fun userPickedArgs() {
         if (downloadUrl.isBlank()) return
         state = DownloadStatus.UserArgs

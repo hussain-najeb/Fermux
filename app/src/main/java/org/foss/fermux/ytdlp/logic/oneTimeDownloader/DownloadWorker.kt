@@ -54,7 +54,9 @@ class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWork
         "fermux://downloader".toUri(),
         applicationContext,
         MainActivity::class.java
-    )
+    ).apply {
+        flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+    }
 
     val openRoute = PendingIntent.getActivity(
         applicationContext,
@@ -71,7 +73,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) : CoroutineWork
             DOWNLOAD_CHANNEL_ID
         )
             .setSmallIcon(R.drawable.download_notif_cancel)
-            .setContentTitle("Download failed, press to view download page")
+            .setContentTitle("Download failed, click to view")
             .setContentText(text.take(120))
             .setCategory(NotificationCompat.CATEGORY_ERROR)
             .setPriority(NotificationCompat.PRIORITY_HIGH)

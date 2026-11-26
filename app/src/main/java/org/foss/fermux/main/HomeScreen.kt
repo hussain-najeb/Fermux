@@ -74,22 +74,22 @@ fun HomeScreen(
             onClick = {
                 if (quickDownloads) {
                     scope.launch {
-                        clipboard.getClipEntry()?.clipData?.getItemAt(0)?.text?.toString()
-                            .let { text ->
-                                if (text != null) {
-                                    downloaderViewModel.downloadUrl = text
-                                    downloaderViewModel.quickDownloads()
-                                    downloaderViewModel.startingDownload(context)
-                                }
-                                if (text.isNullOrBlank() || text.isEmpty()) {
-                                    scope.launch {
-                                        snackbarHostState.showSnackbar(
-                                            message = "Empty clipboard",
-                                            duration = SnackbarDuration.Short
-                                        )
-                                    }
-                                }
-                            }
+                        val clipData = clipboard.getClipEntry()?.clipData
+                        val text = if (clipData != null && clipData.itemCount > 0) {
+                            clipData.getItemAt(0)?.text?.toString()
+                        } else {
+                            null
+                        }
+                        if (!text.isNullOrBlank()) {
+                            downloaderViewModel.downloadUrl = text.trim()
+                            downloaderViewModel.quickDownloads()
+                            downloaderViewModel.startingDownload(context)
+                        } else {
+                            snackbarHostState.showSnackbar(
+                                message = "Empty clipboard",
+                                duration = SnackbarDuration.Short
+                            )
+                        }
                     }
                 }
             },

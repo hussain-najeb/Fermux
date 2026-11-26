@@ -13,6 +13,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -24,9 +25,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -66,6 +70,21 @@ fun DownloadContent(
 
     val isError = downloaderViewModel.state is DownloadStatus.Error
     val clipboard = LocalClipboard.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    val submitUrl = {
+        keyboardController?.hide()
+        if (downloaderViewModel.downloadUrl.isBlank()) {
+            scope.launch {
+                snackbarHostState.showSnackbar(
+                    message = "Please enter a URL",
+                    duration = SnackbarDuration.Short
+                )
+            }
+        } else {
+            downloaderViewModel.userPickedArgs()
+        }
+    }
 
     LargeTopBarScaffold(
         title = "Downloader",
@@ -124,8 +143,7 @@ fun DownloadContent(
                         value = downloaderViewModel.downloadUrl,
                         isError = isError,
                         shape = RoundedCornerShape(8.dp),
-                        minLines = 1,
-                        maxLines = 7,
+                        singleLine = true,
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = FermuxColors.fermuxGenericBorder,
                             unfocusedBorderColor = FermuxColors.fermuxHelperBorder,
@@ -170,7 +188,12 @@ fun DownloadContent(
                         },
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.None,
-                            autoCorrectEnabled = false
+                            autoCorrectEnabled = false,
+                            keyboardType = KeyboardType.Uri,
+                            imeAction = ImeAction.Go
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onGo = { submitUrl() }
                         ),
                     )
                 }
@@ -192,16 +215,20 @@ fun DownloadContent(
                         modifier = Modifier.padding(15.dp),
                         onClick = {
                             scope.launch {
-                                clipboard.getClipEntry()
-                                    ?.clipData
-                                    ?.getItemAt(0)
-                                    ?.text
-                                    ?.toString()
-                                    .let { text ->
-                                        if (text != null) {
-                                            downloaderViewModel.downloadUrl = text
-                                        }
-                                    }
+                                val clipData = clipboard.getClipEntry()?.clipData
+                                val text = if (clipData != null && clipData.itemCount > 0) {
+                                    clipData.getItemAt(0)?.text?.toString()
+                                } else {
+                                    null
+                                }
+                                if (!text.isNullOrBlank()) {
+                                    downloaderViewModel.downloadUrl = text.trim()
+                                } else {
+                                    snackbarHostState.showSnackbar(
+                                        message = "Empty clipboard",
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
                             }
                         }
                     )
@@ -212,17 +239,7 @@ fun DownloadContent(
                         image = R.drawable.download_side_bar,
                         activeColor = FermuxColors.fermuxErrorCardColor,
                         activeIconColor = FermuxColors.white,
-                        onClick = {
-                            downloaderViewModel.userPickedArgs()
-                            if (downloaderViewModel.downloadUrl.isEmpty()) {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(
-                                        message = "Please enter a URL",
-                                        duration = SnackbarDuration.Short
-                                    )
-                                }
-                            }
-                        }
+                        onClick = { submitUrl() }
                     )
                 }
                 Box(

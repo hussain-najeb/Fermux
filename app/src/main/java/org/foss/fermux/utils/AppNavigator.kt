@@ -1,8 +1,14 @@
 package org.foss.fermux.utils
 
+import android.content.Intent
+import android.net.Uri
+import android.util.Patterns
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.IntentCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -57,13 +63,41 @@ sealed class Miscellaneous(val route: String) {
 }
 
 @Composable
-fun FermuxAppMainScreen() {
+fun FermuxAppMainScreen(
+    incomingIntent: Intent? = null,
+    onIntentConsumed: () -> Unit = {}
+) {
 
+    val context = LocalContext.current
     val navController = rememberNavController()
     val seqView: SequentialViewModel = viewModel()
     val settView: DownloaderSettingsViewModel = viewModel()
     val downView: DownloaderViewModel = viewModel()
     val ffView: FFmpegViewModel = viewModel()
+
+    LaunchedEffect(incomingIntent) {
+        val intent = incomingIntent ?: return@LaunchedEffect
+        when (val action = intent.toIncomingAction()) {
+            is IncomingAction.SharedUrl -> {
+                downView.applySharedUrl(action.url)
+                navController.navigate(MainScreens.Downloader.route) { launchSingleTop = true }
+            }
+
+            is IncomingAction.SharedMedia -> {
+                ffView.applySharedMedia(context, action.uri)
+                navController.navigate(MainScreens.Converter.route) { launchSingleTop = true }
+            }
+
+            is IncomingAction.DeepLink -> {
+                if (navController.currentDestination?.route != MainScreens.Downloader.route) {
+                    navController.handleDeepLink(action.intent)
+                }
+            }
+
+            null -> Unit
+        }
+        onIntentConsumed()
+    }
 
     NavHost(
         navController = navController,
@@ -116,4 +150,33 @@ fun FermuxAppMainScreen() {
             )
         }
     }
+}
+
+private sealed interface IncomingAction {
+    data class SharedUrl(val url: String) : IncomingAction
+    data class SharedMedia(val uri: Uri) : IncomingAction
+    data class DeepLink(val intent: Intent) : IncomingAction
+}
+
+private fun Intent.toIncomingAction(): IncomingAction? = when (action) {
+    Intent.ACTION_SEND -> when {
+        type == "text/plain" -> getStringExtra(Intent.EXTRA_TEXT)
+            ?.takeIf { it.isNotBlank() }
+            ?.let { IncomingAction.SharedUrl(extractSharedUrl(it)) }
+
+        type?.let { it.startsWith("video/") || it.startsWith("audio/") || it.startsWith("image/") } == true -> (
+            IntentCompat.getParcelableExtra(this, Intent.EXTRA_STREAM, Uri::class.java)
+                ?: clipData?.takeIf { it.itemCount > 0 }?.getItemAt(0)?.uri
+            )?.let(IncomingAction::SharedMedia)
+
+        else -> null
+    }
+
+    Intent.ACTION_VIEW -> IncomingAction.DeepLink(this)
+    else -> null
+}
+
+private fun extractSharedUrl(text: String): String {
+    val matcher = Patterns.WEB_URL.matcher(text)
+    return if (matcher.find()) matcher.group() else text.trim()
 }

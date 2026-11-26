@@ -24,6 +24,7 @@
                 tools:node="merge"/>
         <activity
                 android:name=".main.MainActivity"
+                android:launchMode="singleTop"
                 android:windowSoftInputMode="adjustResize"
                 android:exported="true"
                 android:theme="@style/Theme.Fermux">
@@ -31,6 +32,18 @@
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/plain"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="video/*"/>
+                <data android:mimeType="audio/*"/>
+                <data android:mimeType="image/*"/>
             </intent-filter>
         </activity>
     </application>

@@ -56,6 +56,30 @@ class FFmpegViewModel : ViewModel() {
         )
     }
 
+    fun applySharedMedia(context: Context, uri: Uri) {
+        if (state !is FFmpegStatus.Converting) {
+            loadInputUri(context, uri)
+        }
+    }
+
+    fun loadInputUri(context: Context, uri: Uri) {
+        inputUri = uri
+        try {
+            context.contentResolver.takePersistableUriPermission(
+                uri,
+                android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+        } catch (e: SecurityException) {
+            Log.w("FFmpegViewModel", "Provider does not grant persistable URI permission for $uri", e)
+        }
+        updateInputKind(context)
+        if (inputKind == null) {
+            typeErrorClarification(context)
+        } else {
+            state = FFmpegStatus.MidConversion(inputUri = uri)
+        }
+    }
+
     fun updateInputKind(context: Context) {
         val uri = inputUri
         inputKind = uri?.let { detectInputKind(context, it) }

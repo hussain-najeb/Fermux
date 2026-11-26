@@ -1,7 +1,5 @@
 package org.foss.fermux.ffmpeg.ui.ffmpegStateCards
 
-import android.content.Intent
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -19,7 +17,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.StandardButton
 import org.foss.fermux.components.ffmpegComponents.FFmpegCard
-import org.foss.fermux.ffmpeg.logic.FFmpegStatus
 import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ui.theme.FermuxColors
 
@@ -35,23 +32,11 @@ fun IdleCard(
     val fileLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument()
     ) { uri ->
-            ffmpegViewModel.inputUri = uri
-            if (uri != null) {
-                try {
-                    context.contentResolver.takePersistableUriPermission(
-                        uri,
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    )
-                } catch (e: SecurityException) {
-                    Log.w("FFmpegIdleCard", "Provider does not grant persistable URI permission for $uri", e)
-                }
-                ffmpegViewModel.updateInputKind(context)
-                if (ffmpegViewModel.inputKind == null) {
-                    ffmpegViewModel.typeErrorClarification(context)
-                } else {
-                    ffmpegViewModel.state = FFmpegStatus.MidConversion(inputUri = uri)
-                }
-            }
+        if (uri != null) {
+            ffmpegViewModel.loadInputUri(context, uri)
+        } else {
+            ffmpegViewModel.inputUri = null
+        }
     }
 
 
