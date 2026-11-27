@@ -8,10 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Update
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -111,11 +108,16 @@ fun SimpleDownloaderPage(
                     onSelected = downloaderSettingsViewModel::checkYtdlpUpdate
                 )
             },
-            position = TilePosition.TOP
+            position = TilePosition.TOP,
+            content = {
+                if (isCheckingForUpdate) {
+                    LoadingIndicator(color = FermuxColors.white)
+                }
+            }
         ),
         InfoListClass(
             title = "Notifications",
-            description = "Press to enable notifications",
+            description = if (bellState) "Notification enabled" else "Press to enable notifications ",
             image = if (bellState) R.drawable.bell_on else R.drawable.bell_off,
             onClick = requestNotificationPermission,
             position = TilePosition.MIDDLE
