@@ -1,8 +1,6 @@
 package org.foss.fermux.ffmpeg.ui.ffmpegStateCards
 
 import android.net.Uri
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.foss.fermux.R
 import org.foss.fermux.components.buttons.IconTextButton
@@ -25,6 +22,7 @@ import org.foss.fermux.ffmpeg.logic.FFmpegViewModel
 import org.foss.fermux.ffmpeg.ui.MediaThumbnailImage
 import org.foss.fermux.ui.theme.FermuxColors
 import org.foss.fermux.utils.Miscellaneous
+import org.foss.fermux.utils.openMedia
 
 
 private enum class ProgressState { InProgress, Done }
@@ -34,11 +32,11 @@ private enum class ProgressState { InProgress, Done }
 fun ConversionCard(
     progress: Float? = null,
     pickedFileUri: Uri?,
+    ffmpegViewModel: FFmpegViewModel,
+    outputUri: Uri? = null,
     navController: NavController
 ) {
-    val ffmpegViewModel: FFmpegViewModel = viewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity)
     val context = LocalContext.current
-
 
     val conversionState = progress?.let {
         if (it >= 100f) ProgressState.Done else ProgressState.InProgress
@@ -121,6 +119,16 @@ fun ConversionCard(
                 image = if (conversionState == ProgressState.Done) R.drawable.undo else R.drawable.close,
                 onClick = { ffmpegViewModel.cancelButton(context) }
             )
+
+            IconTextButton(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                text = "Play",
+                enabled = conversionState == ProgressState.Done,
+                onClick = {
+                    outputUri?.let { context.openMedia(it) }
+                }
+            )
+
             IconTextButton(
                 modifier = Modifier
                     .align(Alignment.CenterVertically),

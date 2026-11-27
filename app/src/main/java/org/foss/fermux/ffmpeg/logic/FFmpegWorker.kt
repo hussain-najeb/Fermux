@@ -252,13 +252,13 @@ class FFmpegWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                     }
                     if (exitCode == 0) {
                         withContext(Dispatchers.IO) {
-                            copyFileToDownloads(
+                            val copied = copyFileToDownloads(
                                 applicationContext,
                                 outputFile,
                                 displayName,
                                 subFolder = "fermux/converter"
                             )
-                            Result.success()
+                            Result.success(workDataOf("outputFile" to copied.uri.toString()))
                         }
                     } else {
                         val logs = output.toString().take(8_000)

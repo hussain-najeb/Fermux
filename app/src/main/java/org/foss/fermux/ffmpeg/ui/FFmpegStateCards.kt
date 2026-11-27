@@ -50,11 +50,22 @@ fun FFmepgState(
             }
 
             is FFmpegStatus.Converting -> {
-                ConversionCard(targetState.progress, targetState.inputUri, navController = navController)
+                ConversionCard(
+                    targetState.progress,
+                    pickedFileUri = targetState.inputUri,
+                    navController = navController,
+                    ffmpegViewModel = ffmpegViewModel
+                )
             }
 
             is FFmpegStatus.Loaded -> {
-                ConversionCard(progress = 100f, targetState.inputUri, navController = navController)
+                ConversionCard(
+                    progress = 100f,
+                    pickedFileUri = targetState.inputUri,
+                    navController = navController,
+                    ffmpegViewModel = ffmpegViewModel,
+                    outputUri = targetState.outputFile
+                )
             }
 
             is FFmpegStatus.Error -> {

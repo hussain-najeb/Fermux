@@ -9,6 +9,7 @@ import android.webkit.MimeTypeMap
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.OneTimeWorkRequestBuilder
@@ -83,10 +84,8 @@ class FFmpegViewModel : ViewModel() {
     fun updateInputKind(context: Context) {
         val uri = inputUri
         inputKind = uri?.let { detectInputKind(context, it) }
-
         inputVideoCodec = null
         inputAudioCodec = null
-
         if (uri != null && inputKind == MediaKind.Video) {
             val extractor = MediaExtractor()
             try {
@@ -188,7 +187,8 @@ class FFmpegViewModel : ViewModel() {
                     }
 
                     WorkInfo.State.SUCCEEDED -> {
-                        state = FFmpegStatus.Loaded(targetFormat, inputUri, FFmpegLogs)
+                        val outputFile = workInfo.outputData.getString("outputFile")?.toUri()
+                        state = FFmpegStatus.Loaded(targetFormat, inputUri, FFmpegLogs, outputFile = outputFile)
                         activeProcess = null
                     }
 
@@ -210,6 +210,7 @@ class FFmpegViewModel : ViewModel() {
                     else -> {}
                 }
             }.first { it.state.isFinished }
+
         }
     }
 

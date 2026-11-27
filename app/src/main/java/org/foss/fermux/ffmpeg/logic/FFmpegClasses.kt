@@ -5,7 +5,7 @@ import android.net.Uri
 sealed class FFmpegStatus {
     data object Idle : FFmpegStatus()
     data class MidConversion(val inputUri: Uri) : FFmpegStatus()
-    data class Loaded(val filePicked: FFmpegTargetFormat, val inputUri: Uri, val ffmpegLogs: String) : FFmpegStatus()
+    data class Loaded(val filePicked: FFmpegTargetFormat, val inputUri: Uri, val ffmpegLogs: String, val outputFile: Uri?) : FFmpegStatus()
     data class Error(val flavourMessage: String, val rawError: String) : FFmpegStatus()
     data class Converting(
         val progress: Float,
